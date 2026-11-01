@@ -1,0 +1,60 @@
+# Preserve the committed research baseline: do not ignore inputs/, analysis/,
+# patches/, sources/, or build/ as a whole. Original firmware, experimental
+# images, ELF files, decompiler exports, and verification evidence are tracked.
+
+# Local Python environments and caches.
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+.coverage
+htmlcov/
+
+# Compiler caches and optional local Ghidra databases, not exported evidence.
+compiler-cache/
+.zig-cache/
+zig-cache/
+ghidra-project/
+ghidra-projects/
+*.gpr
+*.rep/
+*.gpr.lock
+*.gpr.lock~
+/toolchain/
+
+# Duplicate extraction and disposable local execution products.
+/build/extracted/
+/build/original/
+/build/local/
+/build/tmp/
+/build/ci/
+/build/reproduction-logs/
+**/uac2_adapter_native_test
+
+# Archive manifests at the root are regenerated for an export. Historical
+# originals are kept under evidence/baseline-2026-11-01/ and remain tracked.
+/ARCHIVE_MANIFEST.json
+/SHA256SUMS
+/deliverables/
+
+# Local credentials and environment overrides; example configuration is safe
+# to commit after review. No credentials are required for offline reproduction.
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+.git-credentials
+.netrc
+/secrets/
+
+# Editor and operating-system temporary files.
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~

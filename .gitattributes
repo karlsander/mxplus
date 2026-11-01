@@ -1,0 +1,28 @@
+# Reproducible text checkouts, including on systems with core.autocrlf enabled.
+* text=auto eol=lf
+
+# Firmware and compiled executables must retain their exact bytes.
+*.bin binary
+*.elf binary
+*.zip binary
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+
+# Historical digest manifests are byte-preserved evidence.
+ARCHIVE_MANIFEST.json -text
+SHA256SUMS -text
+
+# Keep generated research available in Git while excluding it from language
+# statistics and collapsing large generated diffs in GitHub's default view.
+analysis/** linguist-generated=true
+build/** linguist-generated=true
+sources/hardware/decomp/** linguist-generated=true
+sources/hardware/subcpu_linear.asm linguist-generated=true
+sources/hardware/subcpu_selected.asm linguist-generated=true
+sources/hardware/uac2_original_pump.asm linguist-generated=true
+research/usb_sources/** linguist-generated=true
+MX1_Research_Report.html linguist-generated=true
+inputs/** linguist-vendored=true

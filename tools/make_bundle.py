@@ -11,9 +11,10 @@ import argparse
 import hashlib
 import html
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import re
 import shutil
+import subprocess
 from zipfile import ZIP_DEFLATED, ZipFile
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -153,12 +154,59 @@ def included(path: Path) -> bool:
     return path.is_file()
 
 
+def bundle_inputs(report: Path) -> list[Path]:
+    """Select reviewed paths, never an arbitrary scan of a working directory.
+
+    A Git checkout supplies its tracked file list. A previously exported source
+    archive supplies its existing root manifest as a path allowlist; its old
+    hashes describe that export, while this run records current file hashes.
+    """
+    if (ROOT / ".git").exists():
+        tracked = subprocess.check_output(["git", "ls-files", "-z"], cwd=ROOT)
+        names = [p.decode() for p in tracked.split(b"\0") if p]
+    else:
+        manifest_path = ROOT / "ARCHIVE_MANIFEST.json"
+        if not manifest_path.is_file():
+            raise ValueError("Packaging requires a Git checkout or an existing root "
+                             "ARCHIVE_MANIFEST.json; refusing to scan unreviewed files")
+        manifest = json.loads(manifest_path.read_text())
+        if (not isinstance(manifest, dict) or manifest.get("format") != 1 or
+                not isinstance(manifest.get("files"), list) or not manifest["files"]):
+            raise ValueError("Invalid source archive manifest")
+        names = [entry.get("path") if isinstance(entry, dict) else None
+                 for entry in manifest["files"]]
+    names.append(report.relative_to(ROOT).as_posix())
+    generated_manifests = {"SHA256SUMS", "ARCHIVE_MANIFEST.json"}
+    paths = set()
+    for name in names:
+        if (not isinstance(name, str) or not name or
+                any(c in name for c in ("\\", ":", "\0", "\r", "\n"))):
+            raise ValueError("Invalid archive input path")
+        relative = PurePosixPath(name)
+        if (relative.is_absolute() or ".." in relative.parts or
+                relative.as_posix() != name):
+            raise ValueError("Archive input must be a normalized project-relative path: " + name)
+        if name in generated_manifests:
+            continue
+        path = ROOT / relative
+        if any(ROOT.joinpath(*relative.parts[:i]).is_symlink()
+               for i in range(1, len(relative.parts) + 1)):
+            raise ValueError("Archive input is a symlink or traverses one: " + name)
+        if not path.is_file():
+            raise ValueError("Listed archive input is missing or not a regular file: " + name)
+        if included(path):
+            paths.add(path)
+    return sorted(paths)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=ROOT.parent / "deliverables")
     args = parser.parse_args()
     out = args.output.resolve()
     out.mkdir(parents=True, exist_ok=True)
+    from check_reproduction import audit
+    audit()  # Check the current candidate, application, extension and evidence together.
     report = ROOT / "MX1_Research_Report.html"
     source = (ROOT / "docs/RESEARCH_REPORT.md").read_text()
     body = render_markdown(source)
@@ -169,17 +217,7 @@ def main() -> None:
         '<style>' + STYLE + '</style></head><body><a class="skip" href="#report">Skip to report</a>'
         '<main id="report">' + body + '</main></body></html>\n')
     shutil.copyfile(report, out / report.name)
-    reproduction = json.loads((ROOT / "analysis/reproduction.json").read_text())
-    if reproduction["status"] != "passed":
-        raise SystemExit("Cannot package a failed/incomplete reproduction run")
-    for kind in ("host", "device"):
-        build = json.loads((ROOT / "build" / (kind + "-probe") / "build-report.json").read_text())
-        name = "MX1_UAC1_HOST_PROBE_UNTESTED.bin" if kind == "host" else "MX1_UAC2_DEVICE_PROBE_UNTESTED.bin"
-        digest = hashlib.sha256((ROOT / "build" / (kind + "-probe") / name).read_bytes()).hexdigest()
-        evidence = json.loads((ROOT / "analysis" / ("container_" + kind + "_candidate_verification.json")).read_text())
-        if not digest == build["container_sha256"] == evidence["candidate_sha256"] == reproduction["candidate_sha256"][kind]:
-            raise SystemExit("Candidate hash disagrees with evidence: " + kind)
-    paths = sorted(p for p in ROOT.rglob("*") if included(p) and p.name not in {"SHA256SUMS", "ARCHIVE_MANIFEST.json"})
+    paths = bundle_inputs(report)
     manifest = [{"path": str(p.relative_to(ROOT)), "bytes": p.stat().st_size,
                  "sha256": hashlib.sha256(p.read_bytes()).hexdigest()} for p in paths]
     (ROOT / "ARCHIVE_MANIFEST.json").write_text(json.dumps({"format": 1, "files": manifest,

@@ -1,0 +1,80 @@
+{
+  "status": "passed",
+  "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+  "check_groups": 8,
+  "checks": [
+    {
+      "name": "original hash and four stored-byte checksums",
+      "passed": true
+    },
+    {
+      "name": "three original LZSS images match actual firmware decoder",
+      "passed": true,
+      "images": [
+        {
+          "name": "updater",
+          "bytes": 182828,
+          "sha256": "8984a4e0c668dcf6fce981f2c2e9223dfe93bb0f115bc43c8bb9ba95b3f1d3ec"
+        },
+        {
+          "name": "app_main",
+          "bytes": 918600,
+          "sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b"
+        },
+        {
+          "name": "app_usb",
+          "bytes": 224868,
+          "sha256": "fe52cf6c9e8ec8677963b1c4b876ddeaefae5136b7a5f1f49010e3cda9203a6e"
+        }
+      ]
+    },
+    {
+      "name": "full original extraction and no-op rebuild is byte-identical",
+      "passed": true,
+      "sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e"
+    },
+    {
+      "name": "literal-only repack with synthetic mutation; actual firmware decoder matches; untouched regions preserved",
+      "passed": true,
+      "fixtures": [
+        {
+          "component": "app_main",
+          "stored_bytes": 1033425,
+          "remaining_slot_bytes": 539375,
+          "actual_firmware_decoder_matches": true
+        },
+        {
+          "component": "app_usb",
+          "stored_bytes": 252977,
+          "remaining_slot_bytes": 795535,
+          "actual_firmware_decoder_matches": true
+        }
+      ],
+      "note": "Synthetic mutated images are not saved or offered for flashing"
+    },
+    {
+      "name": "decoded size change requires explicit opt-in and original decoder accepts resized codec fixture",
+      "passed": true,
+      "added_bytes": 32,
+      "note": "Codec-only append fixture; runtime scatter-loader correctness remains caller responsibility"
+    },
+    {
+      "name": "corrupted compressed byte is rejected by checksum validation",
+      "passed": true
+    },
+    {
+      "name": "truncated, oversized, trailing-data and uninitialized-ring streams rejected",
+      "passed": true,
+      "fixtures": 6
+    },
+    {
+      "name": "encoded component slot overflow rejected",
+      "passed": true
+    }
+  ],
+  "host_wall_seconds": 8.103,
+  "emulation_scope": "Unmodified Roland boot-USB LZSS decoder only",
+  "hardware_emulated": false,
+  "silicon_cycle_measurement": false,
+  "flash_acceptance_or_audio_functionality_tested": false
+}

@@ -1,0 +1,682 @@
+{
+  "format": 1,
+  "files": [
+    {
+      "path": "MX1_Research_Report.html",
+      "bytes": 38020,
+      "sha256": "0e6cdf28c5ab56e244272e17de2afc0d419a53e5dd05729673316dc6adcdda3d"
+    },
+    {
+      "path": "README.md",
+      "bytes": 7837,
+      "sha256": "5201de2966d07ef2a0bacafdda91ab527fa0cb9ec97879be4ee22a310f2817b8"
+    },
+    {
+      "path": "analysis/container_app_main.bin",
+      "bytes": 918600,
+      "sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b"
+    },
+    {
+      "path": "analysis/container_app_usb.bin",
+      "bytes": 224868,
+      "sha256": "fe52cf6c9e8ec8677963b1c4b876ddeaefae5136b7a5f1f49010e3cda9203a6e"
+    },
+    {
+      "path": "analysis/container_binding_verification.json",
+      "bytes": 2834,
+      "sha256": "25e1a3f47306403e7ecee976e87ee8b437c60788857237b94b3fca6e2cd04071"
+    },
+    {
+      "path": "analysis/container_boot_main.asm",
+      "bytes": 173817,
+      "sha256": "2fd8d73252cb31a08fe599c15378dbe815c18df8e579feefa5ccf325cd842472"
+    },
+    {
+      "path": "analysis/container_boot_main.bin",
+      "bytes": 10732,
+      "sha256": "ee79e341796e3911d219ad85179a4e11b23e72ac2e662ce33790b14a36a16677"
+    },
+    {
+      "path": "analysis/container_boot_usb.asm",
+      "bytes": 62676,
+      "sha256": "df8822f81edad9750a2d9f973c492b26147068950c41d96f808ef7ef2122e861"
+    },
+    {
+      "path": "analysis/container_boot_usb.bin",
+      "bytes": 4160,
+      "sha256": "4697f22e67b52683b71b2610d93c08d640d794d9d1ac77b5d92560035eec6eeb"
+    },
+    {
+      "path": "analysis/container_device_candidate_verification.json",
+      "bytes": 1406,
+      "sha256": "1764af7e6bc04ba674062e0be5ec6ebd9ddce37c2230772b7c57aa34a161adab"
+    },
+    {
+      "path": "analysis/container_ghidra-updater.log",
+      "bytes": 7837,
+      "sha256": "633e6b9626755b5093f074a2e5836ddc793d240ba37842bb1dfe985a55fe6e15"
+    },
+    {
+      "path": "analysis/container_ghidra_updater/decompiled.c",
+      "bytes": 1196848,
+      "sha256": "513362a10a286991ad9d0973b8490f006bfb53731065f3e0be221e52c051f808"
+    },
+    {
+      "path": "analysis/container_ghidra_updater/functions.tsv",
+      "bytes": 46760,
+      "sha256": "ee6263018c6496d55317ece7d9c02e087412ee2c520b4414396cc4d3697fe348"
+    },
+    {
+      "path": "analysis/container_ghidra_updater/references.tsv",
+      "bytes": 951206,
+      "sha256": "53e41ab3a88dd5388ad2480a353e75f187d1c4f1fc7ace94b352363ecd49142e"
+    },
+    {
+      "path": "analysis/container_host_candidate_verification.json",
+      "bytes": 1405,
+      "sha256": "80f69decdd0196bc8607e5c0ab9fef225a4e288ec8ceecc508c8526cb587e0eb"
+    },
+    {
+      "path": "analysis/container_initial_mapping.json",
+      "bytes": 5705,
+      "sha256": "c5caae0df1202b4b10d3d3e02d712e9eda3b12743c585e5320f1a28a7a0c05de"
+    },
+    {
+      "path": "analysis/container_manifest.json",
+      "bytes": 4858,
+      "sha256": "d83535d2647d613cba4b784d93f7cbecacc0563243e9c685d96ace7a1acf0ca4"
+    },
+    {
+      "path": "analysis/container_map-updater.json",
+      "bytes": 4148,
+      "sha256": "6d88df5541dfeee065b9059c908b81a0080cdc85c76bac407ff090ba3a6720ba"
+    },
+    {
+      "path": "analysis/container_map-updater.tsv",
+      "bytes": 207,
+      "sha256": "1aed31caef391df24b155d030fdd203db76310df81a36bd4f107169e0434dc41"
+    },
+    {
+      "path": "analysis/container_subcpu.bin",
+      "bytes": 16404,
+      "sha256": "43812718e448b386ccfa0d578ff0700d27c2e9e734dbbb80c08af5b880d4a16d"
+    },
+    {
+      "path": "analysis/container_update_path.c",
+      "bytes": 12795,
+      "sha256": "f53485340e556f43fb262cc9b674fad73da2adbc643cd61ce2949e0864003130"
+    },
+    {
+      "path": "analysis/container_updater.bin",
+      "bytes": 182828,
+      "sha256": "8984a4e0c668dcf6fce981f2c2e9223dfe93bb0f115bc43c8bb9ba95b3f1d3ec"
+    },
+    {
+      "path": "analysis/container_updater_verification.json",
+      "bytes": 2521,
+      "sha256": "7e5e0e3526f20023246e08340ab388f180d3db2ddb301bf8f4dc6bb9524b506d"
+    },
+    {
+      "path": "analysis/container_verification.json",
+      "bytes": 2557,
+      "sha256": "7e5ffefdef74d3b951e3df1e7640123ad195d53a0d91bf2fe1b78be2798663f5"
+    },
+    {
+      "path": "analysis/ghidra-main/decompiled.c",
+      "bytes": 2908649,
+      "sha256": "17bff98e3a4917bd55b351fa4547ee426214e2921286dac8b56da25365acad9a"
+    },
+    {
+      "path": "analysis/ghidra-main/functions.tsv",
+      "bytes": 112598,
+      "sha256": "bbde11cd1f65d0bbcf0a627314569ed0fde45f4f4e06a5653a0dc8d2f01b3edd"
+    },
+    {
+      "path": "analysis/ghidra-main/references.tsv",
+      "bytes": 2499821,
+      "sha256": "bd881517c395e11e5672533f73e4805630bd485959f91459fb4b6ecaff09221f"
+    },
+    {
+      "path": "analysis/ghidra-main.log",
+      "bytes": 9276,
+      "sha256": "c87353f83a9f9dcec3d7b1fee0fc5679313ea2b1d66910e84ea3b16b8f08e3ad"
+    },
+    {
+      "path": "analysis/ghidra-usb/decompiled.c",
+      "bytes": 1032966,
+      "sha256": "51fa42b70e79e668bcb18c2c761ba27295dbbe411a03306fbec7f3956a13c570"
+    },
+    {
+      "path": "analysis/ghidra-usb/functions.tsv",
+      "bytes": 40298,
+      "sha256": "9839b766d1403abe341edabed60ebbc97d4e041ef0437c20fd4e8e658776f5a0"
+    },
+    {
+      "path": "analysis/ghidra-usb/references.tsv",
+      "bytes": 756461,
+      "sha256": "40b736166066765a3de9a774282c569656f075158f7637429bc18d6aa94974bf"
+    },
+    {
+      "path": "analysis/ghidra-usb.log",
+      "bytes": 8816,
+      "sha256": "36deda4dc3ac39ef93d0e77f6788790fe9ab40b846f8bddbecc3df332c951a0f"
+    },
+    {
+      "path": "analysis/host_probe_verification.json",
+      "bytes": 7802,
+      "sha256": "6d1b7251354907c78861b65f493c933682c72bb8302c68b26ed289c29d942318"
+    },
+    {
+      "path": "analysis/main-strings.txt",
+      "bytes": 156725,
+      "sha256": "333322527e283586608e29681742ef6a330f0da1f6eb55435fe45f29863bf06e"
+    },
+    {
+      "path": "analysis/map-main.json",
+      "bytes": 4149,
+      "sha256": "4c0dffed815f879689cd254eeb15e4393e54b53e22c840e9950474fe966b146e"
+    },
+    {
+      "path": "analysis/map-main.tsv",
+      "bytes": 207,
+      "sha256": "5405364eef7e722424a83feb27cad5491423c052222c3777c19eef5676377e53"
+    },
+    {
+      "path": "analysis/map-usb.json",
+      "bytes": 4154,
+      "sha256": "ce366eb824c918d1df355f8d2264ee7b2288f7b968ef176b60807d15f0ad8664"
+    },
+    {
+      "path": "analysis/map-usb.tsv",
+      "bytes": 273,
+      "sha256": "e1a96e98ea04712d11f2a9381fa3ece3f31b5b90a2d29ee215a3d10a31f31fa8"
+    },
+    {
+      "path": "analysis/reproduction.json",
+      "bytes": 8698,
+      "sha256": "ac0e36c920310b2c2b1566565798f15063119f5984acd3b4488a44680b64a5ea"
+    },
+    {
+      "path": "analysis/strings-ascii.txt",
+      "bytes": 46053,
+      "sha256": "362b7fcceb020a4cbcc3af390073a29503fede502326d622bae9e277a709afc1"
+    },
+    {
+      "path": "analysis/usb-strings.txt",
+      "bytes": 27967,
+      "sha256": "3f7a85bd3d541e4dbb001c29a98b7980b17789f16cfda53606d7017964dbc03b"
+    },
+    {
+      "path": "analysis/usb_descriptors.json",
+      "bytes": 38082,
+      "sha256": "ed7cb760ee3a9d836c1c5ed99134c933bf8462dbbaddffc57a965b5522ba3fd7"
+    },
+    {
+      "path": "build/device-probe/MX1_UAC2_DEVICE_PROBE_UNTESTED.bin",
+      "bytes": 4194320,
+      "sha256": "b17f9005dd2b32b9fd89ccdd07c3a2ef0dda0854fb67ad5732a76390cc005d57"
+    },
+    {
+      "path": "build/device-probe/app_main.uac2_probe.bin",
+      "bytes": 919500,
+      "sha256": "59bf5d2e7d206315cbc6ae59e8072bff410ea3c2ff850062da5f405148642a9e"
+    },
+    {
+      "path": "build/device-probe/arm-verification.json",
+      "bytes": 7319,
+      "sha256": "9e2a84315f75d8efe7a1249262064e42674f20b64780247b8996841a591dfd1c"
+    },
+    {
+      "path": "build/device-probe/build-report.json",
+      "bytes": 9547,
+      "sha256": "c02344eae2dd23e33d7bc2b3a0fee37d1a7ce7a4988da788f041da82e285b1c5"
+    },
+    {
+      "path": "build/device-probe/uac2_configuration.h",
+      "bytes": 1814,
+      "sha256": "109e8917baf0f80986e89bdb3a0ebf3b2da6fc35271623a7fb2eaf0ffbf5ca27"
+    },
+    {
+      "path": "build/device-probe/uac2_device_probe.code.bin",
+      "bytes": 900,
+      "sha256": "9d40e88164364cf4996aed88e65abf870a0258ab6439cbc383891311d6f431e8"
+    },
+    {
+      "path": "build/device-probe/uac2_device_probe.elf",
+      "bytes": 69300,
+      "sha256": "a2ecb5ad49e4bc41e484252cddeee49d8db4dd7f5e7466bbb86194975e315a1e"
+    },
+    {
+      "path": "build/host-probe/MX1_UAC1_HOST_PROBE_UNTESTED.bin",
+      "bytes": 4194320,
+      "sha256": "516fc0a3baeaf179e018d7eff2eba376ba21eaed8b9e43a9b9860dce6f45dd58"
+    },
+    {
+      "path": "build/host-probe/app_usb.uac1_probe.bin",
+      "bytes": 226000,
+      "sha256": "c3f01a8f51b8c5746fcf9a0f8b06a18de5a158ba300375e1c91dd676787d824c"
+    },
+    {
+      "path": "build/host-probe/build-report.json",
+      "bytes": 8947,
+      "sha256": "655255d18b672ee3b48c52b3032a30502fb08425c87ac32468e90e95798d24d1"
+    },
+    {
+      "path": "build/host-probe/uac1_host_probe.code.bin",
+      "bytes": 1132,
+      "sha256": "dcf163c5f3edfa6f0ddde642b0aeb959e9c0e96a3b07982c9a819d251f06a937"
+    },
+    {
+      "path": "build/host-probe/uac1_host_probe.elf",
+      "bytes": 56512,
+      "sha256": "1f10fdfbecc9e773f92f0d2a8b378d440529eea205eb3874f2b7f5f5a9b2465e"
+    },
+    {
+      "path": "build/reproduction-logs/01-map-main.txt",
+      "bytes": 1856,
+      "sha256": "4699ca83c9cea02162c81863257e218e3f05360ee01528a792560fa933e32444"
+    },
+    {
+      "path": "build/reproduction-logs/02-map-usb.txt",
+      "bytes": 1861,
+      "sha256": "3a1d30e7f9dc9e7b2cc67decc719454d21cbf69866e157c00146fe01c889c8a4"
+    },
+    {
+      "path": "build/reproduction-logs/03-map-updater.txt",
+      "bytes": 1855,
+      "sha256": "20ea0b1600a498582c6450cac5b565d04c7ae07d32d913867ea5c1fe06316762"
+    },
+    {
+      "path": "build/reproduction-logs/04-container_verify.txt",
+      "bytes": 2557,
+      "sha256": "7e5ffefdef74d3b951e3df1e7640123ad195d53a0d91bf2fe1b78be2798663f5"
+    },
+    {
+      "path": "build/reproduction-logs/05-container_updater_verify.txt",
+      "bytes": 2521,
+      "sha256": "7e5e0e3526f20023246e08340ab388f180d3db2ddb301bf8f4dc6bb9524b506d"
+    },
+    {
+      "path": "build/reproduction-logs/06-container_binding_verify.txt",
+      "bytes": 2834,
+      "sha256": "25e1a3f47306403e7ecee976e87ee8b437c60788857237b94b3fca6e2cd04071"
+    },
+    {
+      "path": "build/reproduction-logs/07-usb-descriptor-scan.txt",
+      "bytes": 106,
+      "sha256": "8194b3bdd9247825e3d62047564dc1c81e3e52dce3432ea47750a77e6743fc35"
+    },
+    {
+      "path": "build/reproduction-logs/08-descriptor-tests.txt",
+      "bytes": 1494,
+      "sha256": "da9e55b832f18117e90d50a1fab99f3400fa59640fcd4f4efdeee872516b1b7c"
+    },
+    {
+      "path": "build/reproduction-logs/09-bridge-plan-tests.txt",
+      "bytes": 708,
+      "sha256": "f13291fd94fb37e62064766aa8eca693a5f31980d0af053033936bd35a90e37a"
+    },
+    {
+      "path": "build/reproduction-logs/10-build-host.txt",
+      "bytes": 1736,
+      "sha256": "ecff00d4e16e835d865256e09dfa41cc899ea2e83290b067905b3a88b06bbdc0"
+    },
+    {
+      "path": "build/reproduction-logs/11-arm-host.txt",
+      "bytes": 807,
+      "sha256": "473c93493a87683e99711a6ad2ae38a707a1234b2d5be73d07f34f719c3bfab5"
+    },
+    {
+      "path": "build/reproduction-logs/12-container-host-candidate.txt",
+      "bytes": 1405,
+      "sha256": "80f69decdd0196bc8607e5c0ab9fef225a4e288ec8ceecc508c8526cb587e0eb"
+    },
+    {
+      "path": "build/reproduction-logs/13-build-device.txt",
+      "bytes": 2119,
+      "sha256": "aadfff626b9d5904dcf4019aa58ca2da4f3f9c32a410e19b37fd1d55036c51d1"
+    },
+    {
+      "path": "build/reproduction-logs/14-arm-device.txt",
+      "bytes": 661,
+      "sha256": "6aef1cdad4387812a7d18bcc0117c6a357e9c43d001a685fdf926b51ca286ffb"
+    },
+    {
+      "path": "build/reproduction-logs/15-container-device-candidate.txt",
+      "bytes": 1406,
+      "sha256": "1764af7e6bc04ba674062e0be5ec6ebd9ddce37c2230772b7c57aa34a161adab"
+    },
+    {
+      "path": "build/reproduction-logs/16-original-audio-pump.txt",
+      "bytes": 1515,
+      "sha256": "38463310f1590b428c7dca99793ed9b49c500df82e8a4ac12106c53b8e057d47"
+    },
+    {
+      "path": "build/reproduction-logs/17-compile-native-controls.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "build/reproduction-logs/18-native-controls.txt",
+      "bytes": 67,
+      "sha256": "b654093037c82ebb37de3bcd6715c04c6ec49132a22572aeb935378359da88e3"
+    },
+    {
+      "path": "build/reproduction-logs/19-subcpu-evidence.txt",
+      "bytes": 166,
+      "sha256": "44c2fe605d5a0407c0e93958760acb6ee7699e354a84d584738d301c0629f8c1"
+    },
+    {
+      "path": "docs/DECOMPILATION.md",
+      "bytes": 7384,
+      "sha256": "462dcb040b0de88d0ec212780d4cea50cb3ed60da1323dbc5f45ceb51605a49b"
+    },
+    {
+      "path": "docs/DEVICE_PROBE.md",
+      "bytes": 10772,
+      "sha256": "90c65a5c70fa03aac7156de00f116bb656050f564b42db3cfc00722323e2d8ec"
+    },
+    {
+      "path": "docs/HARDWARE_VALIDATION.md",
+      "bytes": 14370,
+      "sha256": "e03b3377294bf76a721acb7d8ad0d9eaafe82aee7c3b6046d4efe2ee7b8466c7"
+    },
+    {
+      "path": "docs/HOST_PROBE.md",
+      "bytes": 15453,
+      "sha256": "6e88e5f9f118824d20fd768dae82afd438af824b6e34c3a14a701c49c60c21d3"
+    },
+    {
+      "path": "docs/RESEARCH_REPORT.md",
+      "bytes": 29909,
+      "sha256": "be047b00d51e3a198550081f7764e5f1622ec196cceb1eb32d41d7e4b35c0366"
+    },
+    {
+      "path": "inputs/MX1_UPD.original.bin",
+      "bytes": 4194320,
+      "sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e"
+    },
+    {
+      "path": "patches/uac1_host.ld",
+      "bytes": 391,
+      "sha256": "e00400d8826dd454b238f97c38a891f8ee7e3e852d0fb34bbbd3b950425dd4ad"
+    },
+    {
+      "path": "patches/uac1_host_probe.c",
+      "bytes": 6333,
+      "sha256": "a5c2ed57fc9ddc3b54a728406d48f4bcee0ee98b6c879bb75b7d8849ee4e3b6c"
+    },
+    {
+      "path": "patches/uac1_trampoline.S",
+      "bytes": 876,
+      "sha256": "30e884f3ee7575508c1b314af78ffd6bb29e859f38efff29efe751562e331623"
+    },
+    {
+      "path": "patches/uac2_device.ld",
+      "bytes": 434,
+      "sha256": "b7cda83a07ad2d750e672ab849f7e0b5159de8a26ff0f75f25b0713356b7acec"
+    },
+    {
+      "path": "patches/uac2_device_probe.c",
+      "bytes": 1451,
+      "sha256": "15f823aa19d8e9a8468cb5087dd7d3296c03a2b1f3f2be54b8be6aa4c2de80c9"
+    },
+    {
+      "path": "requirements.txt",
+      "bytes": 111,
+      "sha256": "dfd445821dd4234f18252fd90d875d551ff9b4d97126170e519a1b5eac5ee15c"
+    },
+    {
+      "path": "research/container-binding.md",
+      "bytes": 5909,
+      "sha256": "fb9c46d5a6c24fb79f70661c88fc80ffab88d684d41a18abc34f73215bf8fc5c"
+    },
+    {
+      "path": "research/container.md",
+      "bytes": 19795,
+      "sha256": "c9ed2a72c5fca0cd47778e4750e0dd4396ee71ab18ff75f38f583bccb300f8e9"
+    },
+    {
+      "path": "research/device-control.md",
+      "bytes": 23246,
+      "sha256": "622d165681dbda8aff4e9c743c7116d4e51881e3b9834768255f7fad8c6cd271"
+    },
+    {
+      "path": "research/device-reproducibility.md",
+      "bytes": 8445,
+      "sha256": "877ceb79d79e4d21ee02046bb8d4b9c6dd250700714a50785cf280f07a56423d"
+    },
+    {
+      "path": "research/hardware.md",
+      "bytes": 16266,
+      "sha256": "8d3a221c334240a3166e482e0e56b46262a21f95d4d0b74e8c1ee4605e13bcee"
+    },
+    {
+      "path": "research/linux-bridge.md",
+      "bytes": 17694,
+      "sha256": "fce1ad6d6596237ee9ea46128578ea293f4fc609ef84da062bc65a45c2be1ca0"
+    },
+    {
+      "path": "research/uac2-descriptor-audit.md",
+      "bytes": 12603,
+      "sha256": "f0ccf5a6bdb1eb8ad020243e7c2887d6a4dcdca5df447352e317d702b340e4cb"
+    },
+    {
+      "path": "research/usb-compatibility.md",
+      "bytes": 22665,
+      "sha256": "510b0c884aa09358ecce3486ba5c1b1a5494cc6872d7505afd5e12c386b9d564"
+    },
+    {
+      "path": "research/usb_sources/uac2-audio-only-design.json",
+      "bytes": 16348,
+      "sha256": "a6f14b814da8d137c698064e1f018b859aca604b9ca05ac84a976e23f3f2b176"
+    },
+    {
+      "path": "research/usb_sources/uac2-preserve-modes-design.json",
+      "bytes": 27636,
+      "sha256": "f38277ecadb65b58428eac9c4a52f514991e5d82dc471164deac8a0a213319f2"
+    },
+    {
+      "path": "sources/hardware/MX1SubcpuMap.java",
+      "bytes": 2729,
+      "sha256": "beea3398cb0a96b26f3b076d98dc76db796a9b15ef5884c4ce181edb303bd38e"
+    },
+    {
+      "path": "sources/hardware/decomp/decompiled.c",
+      "bytes": 95750,
+      "sha256": "8dceea1d817336c946dac35fed83150d16881f01b0be8e6ac6243815f82f3832"
+    },
+    {
+      "path": "sources/hardware/decomp/functions.tsv",
+      "bytes": 4848,
+      "sha256": "af4e9308fb9fd439f7438f2275b2d88fd6ac42433b92525774499e6ddb2fc827"
+    },
+    {
+      "path": "sources/hardware/decomp/references.tsv",
+      "bytes": 56810,
+      "sha256": "ea7a02a3ffba92e48a4f9460d6a7ab466be1c4b0da450fb378e9a468bf5fada8"
+    },
+    {
+      "path": "sources/hardware/disasm_main.py",
+      "bytes": 1792,
+      "sha256": "d45d57e103d6c0a717738d4f2e4d6f41eb0959c3d770c28f8e43b1157a30d62b"
+    },
+    {
+      "path": "sources/hardware/ghidra.log",
+      "bytes": 7914,
+      "sha256": "ae75544f457836ab16db15bc800ba1723c4d2e0b4fc3e6fba1a1fdf0d428466c"
+    },
+    {
+      "path": "sources/hardware/inspect_subcpu.py",
+      "bytes": 5427,
+      "sha256": "f712cf01811e33205c25d8e62b6ff2ad3f8933fe0f6be839e61267b813d34126"
+    },
+    {
+      "path": "sources/hardware/show_main_functions.py",
+      "bytes": 1478,
+      "sha256": "a1474660901039c53c37f01354129ed00b2395549cafb27455392567b362ae9d"
+    },
+    {
+      "path": "sources/hardware/subcpu.bin",
+      "bytes": 16404,
+      "sha256": "43812718e448b386ccfa0d578ff0700d27c2e9e734dbbb80c08af5b880d4a16d"
+    },
+    {
+      "path": "sources/hardware/subcpu_evidence.json",
+      "bytes": 17007,
+      "sha256": "50fbee2139b67307da0f28688f42ff2b02869e8049c623543a9f45bec38cf527"
+    },
+    {
+      "path": "sources/hardware/subcpu_linear.asm",
+      "bytes": 294737,
+      "sha256": "6eaa6d2ebca58b8265b830173d7f0b49071ab608babe3d5d14ff04a04ce90692"
+    },
+    {
+      "path": "sources/hardware/subcpu_selected.asm",
+      "bytes": 13567,
+      "sha256": "ab152721d6eb28282b137ac3b2d7284e2576bced14ca9a913692301e7c1e6ce6"
+    },
+    {
+      "path": "sources/hardware/uac2_adapter.c",
+      "bytes": 4372,
+      "sha256": "1356e6e0e9727833fb7bd5c5cb75bba966be54737ad33a8ef525c17917761e0f"
+    },
+    {
+      "path": "sources/hardware/uac2_adapter_native_test.c",
+      "bytes": 4414,
+      "sha256": "4f1a63bfc89a78c275590a8bf2caf89f3c4969279268e240cd8b44350da5bdbe"
+    },
+    {
+      "path": "sources/hardware/uac2_original_functions.txt",
+      "bytes": 23238,
+      "sha256": "6cdf43895ad4da1ff032cc30cbb5e37a80b8620e4cbd19d27bf18c3898c1627e"
+    },
+    {
+      "path": "sources/hardware/uac2_original_pump.asm",
+      "bytes": 13283,
+      "sha256": "c3034a1a887bb32ef89f285b4b56e71c411d01efdd4500dd1811f9cdd7d9dde6"
+    },
+    {
+      "path": "sources/hardware/uac2_pump_harness.py",
+      "bytes": 11442,
+      "sha256": "1b6a2d34ab49fb156ac7a2a1542a2ab1f21a2f19335474d3b958a0a6acaab209"
+    },
+    {
+      "path": "sources/hardware/uac2_pump_harness_results.json",
+      "bytes": 20390,
+      "sha256": "2a9b641a580929f4618b0da0fe98ed37e544ea7ba1970d49f4319e03486c1b8b"
+    },
+    {
+      "path": "sources/hardware/uac2_reproduction_audit.json",
+      "bytes": 1190,
+      "sha256": "a8d100d9bcf7ea6b409aa1d4d20c094e3c81bc72f44faf00f696c51748fa36ea"
+    },
+    {
+      "path": "tests/test_uac2_design.py",
+      "bytes": 5053,
+      "sha256": "a7e619cb703df076cb81c4592e09920d80257ae5d02efa0f1b116be00f210454"
+    },
+    {
+      "path": "tests/test_usb_descriptors.py",
+      "bytes": 2918,
+      "sha256": "3f9d4c8fd374cd5d8a64267289bf68640d616a21fa3ce0c4eff05f6b0456cbad"
+    },
+    {
+      "path": "tools/MX1Export.java",
+      "bytes": 2477,
+      "sha256": "a8649b2f3ee4c96d37a72490d69850c2371994826789e99bc6bf0350f13e0f05"
+    },
+    {
+      "path": "tools/MX1Map.java",
+      "bytes": 3935,
+      "sha256": "160333a46cfecb6ce34a8dce861154ac5f5cbd2a06137f657ea67e96ccc16a37"
+    },
+    {
+      "path": "tools/build_device_probe.py",
+      "bytes": 6577,
+      "sha256": "a3cd41386eb7cf2ed2122b4bd4e5f8bcb2274d89d6b00988d5db749cfa0360af"
+    },
+    {
+      "path": "tools/build_host_probe.py",
+      "bytes": 7245,
+      "sha256": "f5c81247b32bee9196b1184e06b961c9ce75d774ac768d3c04eda419052cdbdb"
+    },
+    {
+      "path": "tools/container_Map.java",
+      "bytes": 3938,
+      "sha256": "22e62668bcfc8ed3cec67c083500a9f8a80be7724da3b54299c2dd8782cd9c42"
+    },
+    {
+      "path": "tools/container_binding_verify.py",
+      "bytes": 4904,
+      "sha256": "a5d8a5cd757e55690f8614a83e75eef4572e6ff4fbd0b2ac53f225dc42fc8e52"
+    },
+    {
+      "path": "tools/container_candidate_verify.py",
+      "bytes": 4448,
+      "sha256": "090afd7eb5882614b77e81a2c1a8c45c601e0302d3ca70df8a44153dcf74cf27"
+    },
+    {
+      "path": "tools/container_tool.py",
+      "bytes": 17102,
+      "sha256": "f074a77a8fd6a2d4fb9a10b170d7a259b1b1b79e8b3228d6ff78b16bd0189aa2"
+    },
+    {
+      "path": "tools/container_updater_verify.py",
+      "bytes": 13806,
+      "sha256": "41f38489ebf39c61bfef214be90ae5b0056adbb72becf7f44451835b78046948"
+    },
+    {
+      "path": "tools/container_verify.py",
+      "bytes": 8822,
+      "sha256": "b16736798548a857ec6d825f919c7b321b317589aac13485359de1138b37540a"
+    },
+    {
+      "path": "tools/device_probe_verify.py",
+      "bytes": 14147,
+      "sha256": "920318f3cd8058378ac2d0f469b61bc8b66b79ef103f2cee722e643f02733674"
+    },
+    {
+      "path": "tools/host_probe_verify.py",
+      "bytes": 15079,
+      "sha256": "088cfe2f79f16c9d8d8afcfc5b79cc13a4123d83e2967497ca6c9b5b6ea4f792"
+    },
+    {
+      "path": "tools/linux_bridge.py",
+      "bytes": 17794,
+      "sha256": "2cfab376c264449d3bab879c1c08aaed8bb31beaea8869cf9cd7573e1c76202a"
+    },
+    {
+      "path": "tools/linux_bridge_test.py",
+      "bytes": 2741,
+      "sha256": "8a9abe8f92023af4e3799d03da78f4748603b2e7543f8ce699b1abb9437abc09"
+    },
+    {
+      "path": "tools/make_bundle.py",
+      "bytes": 9927,
+      "sha256": "0aa8d31e417ebeb8f84e46316f1fa22008162716f977761ed3c7fd67527d5076"
+    },
+    {
+      "path": "tools/memory_map.py",
+      "bytes": 3330,
+      "sha256": "4aea1994f383ef648203af1cba00d8f3d3e8346e2199381200e2babb148bae05"
+    },
+    {
+      "path": "tools/reproduce.py",
+      "bytes": 6472,
+      "sha256": "339a5c129adf43d2028c3b2810d7f92d9d47934c01f52f9e17da905f019c750d"
+    },
+    {
+      "path": "tools/uac2_design.py",
+      "bytes": 8178,
+      "sha256": "fa02f27556f54ac1a0c06a0ae712a97c62180edb2c33d747050ab728a73fd551"
+    },
+    {
+      "path": "tools/usb_descriptors.py",
+      "bytes": 18299,
+      "sha256": "cf6c76bc38d9e9da9de31ca01d302ed9d8da65594c09020f0c662fb615460cd7"
+    }
+  ],
+  "hardware_validation": false,
+  "reproduction_status": "passed"
+}

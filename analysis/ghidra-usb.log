@@ -1,0 +1,101 @@
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/scratch/7c277c91200b/toolchain/ghidra-home-usb
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/scratch/7c277c91200b/toolchain/ghidra-home-usb
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/scratch/7c277c91200b/toolchain/ghidra-home-usb
+openjdk version "17.0.21" 2026-10-20
+OpenJDK Runtime Environment Temurin-17.0.21+9 (build 17.0.21+9)
+OpenJDK 64-Bit Server VM Temurin-17.0.21+9 (build 17.0.21+9, mixed mode)
+INFO  Using log config file: jar:file:/workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Framework/Generic/lib/Generic.jar!/generic.log4j.xml (LoggingInitialization)  
+INFO  Using log file: /workspace/scratch/7c277c91200b/toolchain/ghidra-home-usb/.ghidra/.ghidra_11.0.3_PUBLIC/application.log (LoggingInitialization)  
+INFO  Loading user preferences: /workspace/scratch/7c277c91200b/toolchain/ghidra-home-usb/.ghidra/.ghidra_11.0.3_PUBLIC/preferences (Preferences)  
+INFO  Searching for classes... (ClassSearcher)  
+INFO  Class search complete (1374 ms) (ClassSearcher)  
+INFO  Initializing SSL Context (SSLContextInitializer)  
+INFO  Initializing Random Number Generator... (SecureRandomFactory)  
+INFO  Random Number Generator initialization complete: NativePRNGNonBlocking (SecureRandomFactory)  
+INFO  Trust manager disabled, cacerts have not been set (ApplicationTrustManagerFactory)  
+INFO  HEADLESS Script Paths:
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Debug/Debugger-agent-frida/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/VersionTracking/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/MicrosoftCodeAnalyzer/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/GnuDemangler/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Debug/Debugger-agent-dbgmodel-traceloader/ghidra_scripts
+    /workspace/scratch/7c277c91200b/mx1-research/tools
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/Base/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/Python/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Processors/PIC/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Debug/Debugger/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/FileFormats/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/Decompiler/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/FunctionID/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Debug/Debugger-rmi-trace/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Processors/JVM/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/PDB/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/BytePatterns/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Processors/DATA/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/SystemEmulation/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Processors/8051/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Processors/Atmel/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/BSim/ghidra_scripts (HeadlessAnalyzer)  
+INFO  HEADLESS: execution starts (HeadlessAnalyzer)  
+INFO  Creating project: /workspace/scratch/7c277c91200b/toolchain/mx1usb (HeadlessAnalyzer)  
+INFO  Creating project: /workspace/scratch/7c277c91200b/toolchain/mx1usb (DefaultProject)  
+INFO  REPORT: Processing input files:  (HeadlessAnalyzer)  
+INFO       project: /workspace/scratch/7c277c91200b/toolchain/mx1usb (HeadlessAnalyzer)  
+INFO  IMPORTING: file:///workspace/scratch/7c277c91200b/mx1-research/analysis/container_app_usb.bin (HeadlessAnalyzer)  
+INFO  Successfully applied "-loader-baseAddr" to "Base Address" (old: "null", new: "0x60000000") (AutoImporter)  
+INFO  Using Loader: Raw Binary (AutoImporter)  
+INFO  Using Language/Compiler: ARM:LE:32:Cortex:default (AutoImporter)  
+INFO  IMPORTING: Loaded 0 additional files (HeadlessAnalyzer)  
+INFO  SCRIPT: /workspace/scratch/7c277c91200b/mx1-research/tools/MX1Map.java (HeadlessAnalyzer)  
+INFO  MX1Map.java> MX1 runtime mappings and 117 indirect-function seeds created; entry=1004629 (GhidraScript)  
+INFO  ANALYZING all memory and code: file:///workspace/scratch/7c277c91200b/mx1-research/analysis/container_app_usb.bin (HeadlessAnalyzer)  
+WARN  Decompiling 60016f6c, pcode error at 60016a58: Unable to resolve constructor at 60016a58 (DecompileCallback)  
+WARN  Decompiling 6001676c, pcode error at 60016290: Unable to resolve constructor at 60016290 (DecompileCallback)  
+INFO  Packed database cache: /tmp/root-Ghidra/packed-db-cache (PackedDatabaseCache)  
+INFO  Applied data type archive: generic_clib (ApplyDataArchiveAnalyzer)  
+INFO  -----------------------------------------------------
+    ARM Constant Reference Analyzer            4.983 secs
+    ARM Symbol                                 0.002 secs
+    ASCII Strings                              0.302 secs
+    Apply Data Archives                        0.719 secs
+    Call Convention ID                         0.024 secs
+    Call-Fixup Installer                       0.026 secs
+    Create Address Tables                      0.016 secs
+    Create Address Tables - One Time           0.068 secs
+    Create Function                            0.460 secs
+    Data Reference                             0.008 secs
+    Decompiler Switch Analysis                 2.031 secs
+    Demangler GNU                              0.011 secs
+    Disassemble                                0.677 secs
+    Disassemble Entry Points                   0.005 secs
+    Embedded Media                             0.016 secs
+    External Entry References                  0.000 secs
+    Function Start Pre Search                  0.014 secs
+    Function Start Search                      0.261 secs
+    Function Start Search After Code           0.351 secs
+    Function Start Search After Data           0.052 secs
+    Function Start Search delayed - One Time   0.063 secs
+    Non-Returning Functions - Discovered       0.165 secs
+    Reference                                  0.432 secs
+    Shared Return Calls                        0.125 secs
+    Stack                                      2.340 secs
+    Subroutine References                      0.439 secs
+    Subroutine References - One Time           0.000 secs
+-----------------------------------------------------
+     Total Time   13 secs
+-----------------------------------------------------
+ (AutoAnalysisManager)  
+INFO  REPORT: Analysis succeeded for file: file:///workspace/scratch/7c277c91200b/mx1-research/analysis/container_app_usb.bin (HeadlessAnalyzer)  
+INFO  SCRIPT: /workspace/scratch/7c277c91200b/mx1-research/tools/MX1Export.java (HeadlessAnalyzer)  
+WARN  Decompiling 60016148, pcode error at 60016290: Unable to resolve constructor at 60016290 (DecompileCallback)  
+WARN  Decompiling 60016754, pcode error at 60016290: Unable to resolve constructor at 60016290 (DecompileCallback)  
+WARN  Decompiling 6001676c, pcode error at 60016290: Unable to resolve constructor at 60016290 (DecompileCallback)  
+WARN  Decompiling 60016998, pcode error at 60016a58: Unable to resolve constructor at 60016a58 (DecompileCallback)  
+WARN  Decompiling 60016ef8, pcode error at 60016a58: Unable to resolve constructor at 60016a58 (DecompileCallback)  
+WARN  Decompiling 60016f58, pcode error at 60016a58: Unable to resolve constructor at 60016a58 (DecompileCallback)  
+WARN  Decompiling 60016f6c, pcode error at 60016a58: Unable to resolve constructor at 60016a58 (DecompileCallback)  
+INFO  MX1Export.java> MX1 exported functions=1392 decompiler failures=0 to /workspace/scratch/7c277c91200b/mx1-research/analysis/ghidra-usb (GhidraScript)  
+INFO  ANALYZING changes made by post scripts: file:///workspace/scratch/7c277c91200b/mx1-research/analysis/container_app_usb.bin (HeadlessAnalyzer)  
+INFO  REPORT: Post-analysis succeeded for file: file:///workspace/scratch/7c277c91200b/mx1-research/analysis/container_app_usb.bin (HeadlessAnalyzer)  
+INFO  REPORT: Save succeeded for: /container_app_usb.bin (mx1usb:/container_app_usb.bin) (HeadlessAnalyzer)  
+INFO  REPORT: Import succeeded (HeadlessAnalyzer)  

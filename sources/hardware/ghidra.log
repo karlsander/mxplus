@@ -1,0 +1,93 @@
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/scratch/7c277c91200b/toolchain/ghidra-home-hardware
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/scratch/7c277c91200b/toolchain/ghidra-home-hardware
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/scratch/7c277c91200b/toolchain/ghidra-home-hardware
+openjdk version "17.0.21" 2026-10-20
+OpenJDK Runtime Environment Temurin-17.0.21+9 (build 17.0.21+9)
+OpenJDK 64-Bit Server VM Temurin-17.0.21+9 (build 17.0.21+9, mixed mode)
+INFO  Using log config file: jar:file:/workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Framework/Generic/lib/Generic.jar!/generic.log4j.xml (LoggingInitialization)  
+INFO  Using log file: /workspace/scratch/7c277c91200b/toolchain/ghidra-home-hardware/.ghidra/.ghidra_11.0.3_PUBLIC/application.log (LoggingInitialization)  
+INFO  Loading user preferences: /workspace/scratch/7c277c91200b/toolchain/ghidra-home-hardware/.ghidra/.ghidra_11.0.3_PUBLIC/preferences (Preferences)  
+INFO  Searching for classes... (ClassSearcher)  
+INFO  Class search complete (1272 ms) (ClassSearcher)  
+INFO  Initializing SSL Context (SSLContextInitializer)  
+INFO  Initializing Random Number Generator... (SecureRandomFactory)  
+INFO  Random Number Generator initialization complete: NativePRNGNonBlocking (SecureRandomFactory)  
+INFO  Trust manager disabled, cacerts have not been set (ApplicationTrustManagerFactory)  
+INFO  HEADLESS Script Paths:
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Debug/Debugger-agent-frida/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/VersionTracking/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/MicrosoftCodeAnalyzer/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/GnuDemangler/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Debug/Debugger-agent-dbgmodel-traceloader/ghidra_scripts
+    /workspace/scratch/7c277c91200b/mx1-research/sources/hardware
+    /workspace/scratch/7c277c91200b/mx1-research/tools
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/Base/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/Python/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Processors/PIC/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Debug/Debugger/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/FileFormats/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/Decompiler/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/FunctionID/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Debug/Debugger-rmi-trace/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Processors/JVM/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/PDB/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/BytePatterns/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Processors/DATA/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/SystemEmulation/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Processors/8051/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Processors/Atmel/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/BSim/ghidra_scripts (HeadlessAnalyzer)  
+INFO  HEADLESS: execution starts (HeadlessAnalyzer)  
+INFO  Creating project: /workspace/scratch/7c277c91200b/mx1-research/sources/hardware/ghidra-project/subcpu (HeadlessAnalyzer)  
+INFO  Creating project: /workspace/scratch/7c277c91200b/mx1-research/sources/hardware/ghidra-project/subcpu (DefaultProject)  
+INFO  REPORT: Processing input files:  (HeadlessAnalyzer)  
+INFO       project: /workspace/scratch/7c277c91200b/mx1-research/sources/hardware/ghidra-project/subcpu (HeadlessAnalyzer)  
+INFO  IMPORTING: file:///workspace/scratch/7c277c91200b/mx1-research/sources/hardware/subcpu.bin (HeadlessAnalyzer)  
+INFO  Successfully applied "-loader-baseAddr" to "Base Address" (old: "null", new: "0x08000000") (AutoImporter)  
+INFO  Using Loader: Raw Binary (AutoImporter)  
+INFO  Using Language/Compiler: ARM:LE:32:Cortex:default (AutoImporter)  
+INFO  IMPORTING: Loaded 0 additional files (HeadlessAnalyzer)  
+INFO  SCRIPT: /workspace/scratch/7c277c91200b/mx1-research/sources/hardware/MX1SubcpuMap.java (HeadlessAnalyzer)  
+INFO  MX1SubcpuMap.java> SUB-CPU: mapped flash, observed RAM initialization, STM32F1 MMIO, 42 seeds (GhidraScript)  
+INFO  ANALYZING all memory and code: file:///workspace/scratch/7c277c91200b/mx1-research/sources/hardware/subcpu.bin (HeadlessAnalyzer)  
+INFO  Packed database cache: /tmp/root-Ghidra/packed-db-cache (PackedDatabaseCache)  
+INFO  Applied data type archive: generic_clib (ApplyDataArchiveAnalyzer)  
+INFO  -----------------------------------------------------
+    ARM Constant Reference Analyzer            0.831 secs
+    ARM Symbol                                 0.002 secs
+    ASCII Strings                              0.397 secs
+    Apply Data Archives                        0.954 secs
+    Call Convention ID                         0.006 secs
+    Call-Fixup Installer                       0.008 secs
+    Create Address Tables                      0.004 secs
+    Create Address Tables - One Time           0.086 secs
+    Create Function                            0.080 secs
+    Data Reference                             0.034 secs
+    Decompiler Switch Analysis                 0.556 secs
+    Demangler GNU                              0.011 secs
+    Disassemble                                0.064 secs
+    Disassemble Entry Points                   0.003 secs
+    Embedded Media                             0.009 secs
+    External Entry References                  0.000 secs
+    Function Start Pre Search                  0.014 secs
+    Function Start Search                      0.209 secs
+    Function Start Search After Code           0.039 secs
+    Function Start Search After Data           0.023 secs
+    Function Start Search delayed - One Time   0.015 secs
+    Non-Returning Functions - Discovered       0.064 secs
+    Reference                                  0.212 secs
+    Shared Return Calls                        0.027 secs
+    Stack                                      0.487 secs
+    Subroutine References                      0.099 secs
+    Subroutine References - One Time           0.000 secs
+-----------------------------------------------------
+     Total Time   4 secs
+-----------------------------------------------------
+ (AutoAnalysisManager)  
+INFO  REPORT: Analysis succeeded for file: file:///workspace/scratch/7c277c91200b/mx1-research/sources/hardware/subcpu.bin (HeadlessAnalyzer)  
+INFO  SCRIPT: /workspace/scratch/7c277c91200b/mx1-research/tools/MX1Export.java (HeadlessAnalyzer)  
+INFO  MX1Export.java> MX1 exported functions=171 decompiler failures=0 to mx1-research/sources/hardware/decomp (GhidraScript)  
+INFO  ANALYZING changes made by post scripts: file:///workspace/scratch/7c277c91200b/mx1-research/sources/hardware/subcpu.bin (HeadlessAnalyzer)  
+INFO  REPORT: Post-analysis succeeded for file: file:///workspace/scratch/7c277c91200b/mx1-research/sources/hardware/subcpu.bin (HeadlessAnalyzer)  
+INFO  REPORT: Save succeeded for: /subcpu.bin (subcpu:/subcpu.bin) (HeadlessAnalyzer)  
+INFO  REPORT: Import succeeded (HeadlessAnalyzer)  

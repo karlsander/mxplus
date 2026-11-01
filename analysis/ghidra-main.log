@@ -1,0 +1,105 @@
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/scratch/7c277c91200b/toolchain/ghidra-home
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/scratch/7c277c91200b/toolchain/ghidra-home
+Picked up JAVA_TOOL_OPTIONS: -Duser.home=/workspace/scratch/7c277c91200b/toolchain/ghidra-home
+openjdk version "17.0.21" 2026-10-20
+OpenJDK Runtime Environment Temurin-17.0.21+9 (build 17.0.21+9)
+OpenJDK 64-Bit Server VM Temurin-17.0.21+9 (build 17.0.21+9, mixed mode)
+INFO  Using log config file: jar:file:/workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Framework/Generic/lib/Generic.jar!/generic.log4j.xml (LoggingInitialization)  
+INFO  Using log file: /workspace/scratch/7c277c91200b/toolchain/ghidra-home/.ghidra/.ghidra_11.0.3_PUBLIC/application.log (LoggingInitialization)  
+INFO  Loading user preferences: /workspace/scratch/7c277c91200b/toolchain/ghidra-home/.ghidra/.ghidra_11.0.3_PUBLIC/preferences (Preferences)  
+INFO  Searching for classes... (ClassSearcher)  
+INFO  Class search complete (1392 ms) (ClassSearcher)  
+INFO  Initializing SSL Context (SSLContextInitializer)  
+INFO  Initializing Random Number Generator... (SecureRandomFactory)  
+INFO  Random Number Generator initialization complete: NativePRNGNonBlocking (SecureRandomFactory)  
+INFO  Trust manager disabled, cacerts have not been set (ApplicationTrustManagerFactory)  
+INFO  HEADLESS Script Paths:
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Debug/Debugger-agent-frida/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/VersionTracking/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/MicrosoftCodeAnalyzer/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/GnuDemangler/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Debug/Debugger-agent-dbgmodel-traceloader/ghidra_scripts
+    /workspace/scratch/7c277c91200b/mx1-research/tools
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/Base/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/Python/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Processors/PIC/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Debug/Debugger/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/FileFormats/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/Decompiler/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/FunctionID/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Debug/Debugger-rmi-trace/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Processors/JVM/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/PDB/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/BytePatterns/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Processors/DATA/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/SystemEmulation/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Processors/8051/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Processors/Atmel/ghidra_scripts
+    /workspace/scratch/7c277c91200b/toolchain/ghidra_11.0.3_PUBLIC/Ghidra/Features/BSim/ghidra_scripts (HeadlessAnalyzer)  
+INFO  HEADLESS: execution starts (HeadlessAnalyzer)  
+INFO  Creating project: /workspace/scratch/7c277c91200b/toolchain/mx1main (HeadlessAnalyzer)  
+INFO  Creating project: /workspace/scratch/7c277c91200b/toolchain/mx1main (DefaultProject)  
+INFO  REPORT: Processing input files:  (HeadlessAnalyzer)  
+INFO       project: /workspace/scratch/7c277c91200b/toolchain/mx1main (HeadlessAnalyzer)  
+INFO  IMPORTING: file:///workspace/scratch/7c277c91200b/mx1-research/analysis/container_app_main.bin (HeadlessAnalyzer)  
+INFO  Successfully applied "-loader-baseAddr" to "Base Address" (old: "null", new: "0x60000000") (AutoImporter)  
+INFO  Using Loader: Raw Binary (AutoImporter)  
+INFO  Using Language/Compiler: ARM:LE:32:Cortex:default (AutoImporter)  
+INFO  IMPORTING: Loaded 0 additional files (HeadlessAnalyzer)  
+INFO  SCRIPT: /workspace/scratch/7c277c91200b/mx1-research/tools/MX1Map.java (HeadlessAnalyzer)  
+INFO  MX1Map.java> MX1 runtime mappings and 699 indirect-function seeds created; entry=1008e65 (GhidraScript)  
+INFO  ANALYZING all memory and code: file:///workspace/scratch/7c277c91200b/mx1-research/analysis/container_app_main.bin (HeadlessAnalyzer)  
+WARN  Decompiling 6007005c, pcode error at 6006f4ec: Unable to resolve constructor at 6006f4ec (DecompileCallback)  
+WARN  Decompiling 6007005c, pcode error at 600700e0: Unable to resolve constructor at 600700e0 (DecompileCallback)  
+WARN  Decompiling 6005d938, pcode error at 6005d084: Unable to resolve constructor at 6005d084 (DecompileCallback)  
+WARN  Decompiling 6005e178, pcode error at 6005dc24: Unable to resolve constructor at 6005dc24 (DecompileCallback)  
+INFO  Packed database cache: /tmp/root-Ghidra/packed-db-cache (PackedDatabaseCache)  
+INFO  Applied data type archive: generic_clib (ApplyDataArchiveAnalyzer)  
+INFO  -----------------------------------------------------
+    ARM Constant Reference Analyzer            8.351 secs
+    ARM Symbol                                 0.004 secs
+    ASCII Strings                              0.499 secs
+    Apply Data Archives                        0.719 secs
+    Call Convention ID                         0.038 secs
+    Call-Fixup Installer                       0.065 secs
+    Create Address Tables                      0.016 secs
+    Create Address Tables - One Time           3.217 secs
+    Create Function                            0.942 secs
+    Data Reference                             1.261 secs
+    Decompiler Switch Analysis                 9.614 secs
+    Demangler GNU                              0.015 secs
+    Disassemble                                1.133 secs
+    Disassemble Entry Points                   0.018 secs
+    Embedded Media                             0.038 secs
+    External Entry References                  0.000 secs
+    Function Start Pre Search                  0.038 secs
+    Function Start Search                      0.390 secs
+    Function Start Search After Code           0.400 secs
+    Function Start Search After Data           0.103 secs
+    Function Start Search delayed - One Time   0.104 secs
+    Non-Returning Functions - Discovered       0.379 secs
+    Reference                                  2.661 secs
+    Shared Return Calls                        0.245 secs
+    Stack                                      4.450 secs
+    Subroutine References                      0.442 secs
+    Subroutine References - One Time           0.000 secs
+-----------------------------------------------------
+     Total Time   35 secs
+-----------------------------------------------------
+ (AutoAnalysisManager)  
+INFO  REPORT: Analysis succeeded for file: file:///workspace/scratch/7c277c91200b/mx1-research/analysis/container_app_main.bin (HeadlessAnalyzer)  
+INFO  SCRIPT: /workspace/scratch/7c277c91200b/mx1-research/tools/MX1Export.java (HeadlessAnalyzer)  
+WARN  Decompiling 6005cf3c, pcode error at 6005d084: Unable to resolve constructor at 6005d084 (DecompileCallback)  
+WARN  Decompiling 6005d754, pcode error at 6005d084: Unable to resolve constructor at 6005d084 (DecompileCallback)  
+WARN  Decompiling 6005d938, pcode error at 6005d084: Unable to resolve constructor at 6005d084 (DecompileCallback)  
+WARN  Decompiling 6005db64, pcode error at 6005dc24: Unable to resolve constructor at 6005dc24 (DecompileCallback)  
+WARN  Decompiling 6005e104, pcode error at 6005dc24: Unable to resolve constructor at 6005dc24 (DecompileCallback)  
+WARN  Decompiling 6005e164, pcode error at 6005dc24: Unable to resolve constructor at 6005dc24 (DecompileCallback)  
+WARN  Decompiling 6005e178, pcode error at 6005dc24: Unable to resolve constructor at 6005dc24 (DecompileCallback)  
+WARN  Decompiling 6007005c, pcode error at 6006f4ec: Unable to resolve constructor at 6006f4ec (DecompileCallback)  
+WARN  Decompiling 6007005c, pcode error at 600700e0: Unable to resolve constructor at 600700e0 (DecompileCallback)  
+INFO  MX1Export.java> MX1 exported functions=3929 decompiler failures=0 to /workspace/scratch/7c277c91200b/mx1-research/analysis/ghidra-main (GhidraScript)  
+INFO  ANALYZING changes made by post scripts: file:///workspace/scratch/7c277c91200b/mx1-research/analysis/container_app_main.bin (HeadlessAnalyzer)  
+INFO  REPORT: Post-analysis succeeded for file: file:///workspace/scratch/7c277c91200b/mx1-research/analysis/container_app_main.bin (HeadlessAnalyzer)  
+INFO  REPORT: Save succeeded for: /container_app_main.bin (mx1main:/container_app_main.bin) (HeadlessAnalyzer)  
+INFO  REPORT: Import succeeded (HeadlessAnalyzer)  

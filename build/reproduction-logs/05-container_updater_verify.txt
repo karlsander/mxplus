@@ -1,0 +1,98 @@
+{
+  "status": "passed",
+  "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+  "check_groups": 7,
+  "checks": [
+    {
+      "name": "actual trailer parser accepts original and returns start/end/block size",
+      "passed": true,
+      "fields": [
+        64,
+        767,
+        4096
+      ]
+    },
+    {
+      "name": "actual parser rejects wrong payload size and zero block size",
+      "passed": true
+    },
+    {
+      "name": "actual pre-write tag check accepts original and rejects changed SUB-CPU tag",
+      "passed": true,
+      "accepted_component_code": 2
+    },
+    {
+      "name": "actual flash checksum routine validates all four original components",
+      "passed": true,
+      "checksums": [
+        {
+          "component": "updater",
+          "checksum": 17557094
+        },
+        {
+          "component": "subcpu",
+          "checksum": 1474955
+        },
+        {
+          "component": "app_main",
+          "checksum": 61550830
+        },
+        {
+          "component": "app_usb",
+          "checksum": 16870974
+        }
+      ]
+    },
+    {
+      "name": "actual block writer and readback comparison process synthetic repack; all post-write checksums pass",
+      "passed": true,
+      "blocks_written": 704,
+      "first_flash_offset": 262144,
+      "flash_end_exclusive": 3145728,
+      "preserved_ranges": [
+        [
+          0,
+          262144
+        ],
+        [
+          3145728,
+          4194304
+        ]
+      ],
+      "scope": "Flash erase/program and file I/O are stubs; original loop, arithmetic and memcmp execute"
+    },
+    {
+      "name": "actual post-write checksum rejects one corrupted stored byte",
+      "passed": true
+    },
+    {
+      "name": "actual readback comparison stops on first simulated sector mismatch",
+      "passed": true,
+      "error_code": 7
+    }
+  ],
+  "host_wall_seconds": 2.354,
+  "unmodified_original_functions_executed": [
+    "0x600056d0 trailer parser",
+    "0x60005458 component-tag gate",
+    "0x60005232 stored-byte checksum",
+    "0x60005584 sector write loop",
+    "0x600051d0 readback comparison",
+    "0x6002173c memcmp"
+  ],
+  "stubbed_environment": [
+    "File stat/open/seek/read/close",
+    "Flash read",
+    "Flash erase/program",
+    "Bus-mode changes",
+    "UI notifications"
+  ],
+  "not_verified": [
+    "Real flash controller behavior",
+    "Power-loss recovery",
+    "Boot ROM and full boot",
+    "Sub-CPU programming",
+    "USB/audio behavior",
+    "Physical device acceptance"
+  ]
+}

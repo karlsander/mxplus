@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "groups": [
+    "Original ARM startup loads extension and preserves all existing initialized data",
+    "Original Roland descriptor classifier behavior preserved through trampoline",
+    "Synthetic generic UAC1 profile reaches selection using original parser and ABI builder",
+    "Unsupported formats, rates, endpoint layouts and speeds stay rejected",
+    "Mismatched IN and OUT rates rejected",
+    "Non-Roland vendor descriptors cannot bypass strict generic-profile validation",
+    "Origin markers require both standard alt0 and alt1 and track later overwrites",
+    "Original Roland full parser and policy output unchanged",
+    "New classifier rejects truncated and zero-length descriptor chains",
+    "New hooks preserve AAPCS r4-r11, stack pointer and return address"
+  ]
+}

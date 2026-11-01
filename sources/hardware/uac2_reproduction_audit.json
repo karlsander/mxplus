@@ -1,0 +1,37 @@
+{
+  "status": "pass",
+  "audit": "Fresh compilation in a separate output and compiler-cache directory reproduces exact update/main/extension/descriptor bytes",
+  "files": [
+    {
+      "file": "MX1_UAC2_DEVICE_PROBE_UNTESTED.bin",
+      "bytes": 4194320,
+      "sha256": "b17f9005dd2b32b9fd89ccdd07c3a2ef0dda0854fb67ad5732a76390cc005d57",
+      "byte_identical_fresh_build": true
+    },
+    {
+      "file": "app_main.uac2_probe.bin",
+      "bytes": 919500,
+      "sha256": "59bf5d2e7d206315cbc6ae59e8072bff410ea3c2ff850062da5f405148642a9e",
+      "byte_identical_fresh_build": true
+    },
+    {
+      "file": "uac2_device_probe.code.bin",
+      "bytes": 900,
+      "sha256": "9d40e88164364cf4996aed88e65abf870a0258ab6439cbc383891311d6f431e8",
+      "byte_identical_fresh_build": true
+    },
+    {
+      "file": "uac2_configuration.h",
+      "bytes": 1814,
+      "sha256": "109e8917baf0f80986e89bdb3a0ebf3b2da6fc35271623a7fb2eaf0ffbf5ca27",
+      "byte_identical_fresh_build": true
+    }
+  ],
+  "compiler": "ziglang0.13.0",
+  "python": "3.12.14",
+  "capstone": "5.0.6",
+  "unicorn": "2.1.4",
+  "pyelftools": "0.33",
+  "native_test_compiler": "gcc13.3.0",
+  "physical_hardware_test": false
+}

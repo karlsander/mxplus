@@ -1,0 +1,790 @@
+{
+  "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+  "subcpu_sha256": "43812718e448b386ccfa0d578ff0700d27c2e9e734dbbb80c08af5b880d4a16d",
+  "input_offset": "0x40040",
+  "size_bytes": 16404,
+  "load_address": "0x8000000",
+  "initial_sp": "0x200015b0",
+  "reset_vector": "0x8000315",
+  "vector_layout": "matches ST STM32F100xB low/medium-density value-line template",
+  "vectors": [
+    {
+      "irq": 0,
+      "vector_offset": "0x40",
+      "stm32f100_role": "WWDG",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 1,
+      "vector_offset": "0x44",
+      "stm32f100_role": "PVD",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 2,
+      "vector_offset": "0x48",
+      "stm32f100_role": "TAMPER",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 3,
+      "vector_offset": "0x4c",
+      "stm32f100_role": "RTC",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 4,
+      "vector_offset": "0x50",
+      "stm32f100_role": "FLASH",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 5,
+      "vector_offset": "0x54",
+      "stm32f100_role": "RCC",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 6,
+      "vector_offset": "0x58",
+      "stm32f100_role": "EXTI0",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 7,
+      "vector_offset": "0x5c",
+      "stm32f100_role": "EXTI1",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 8,
+      "vector_offset": "0x60",
+      "stm32f100_role": "EXTI2",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 9,
+      "vector_offset": "0x64",
+      "stm32f100_role": "EXTI3",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 10,
+      "vector_offset": "0x68",
+      "stm32f100_role": "EXTI4",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 11,
+      "vector_offset": "0x6c",
+      "stm32f100_role": "DMA1_Channel1",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 12,
+      "vector_offset": "0x70",
+      "stm32f100_role": "DMA1_Channel2",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 13,
+      "vector_offset": "0x74",
+      "stm32f100_role": "DMA1_Channel3",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 14,
+      "vector_offset": "0x78",
+      "stm32f100_role": "DMA1_Channel4",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 15,
+      "vector_offset": "0x7c",
+      "stm32f100_role": "DMA1_Channel5",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 16,
+      "vector_offset": "0x80",
+      "stm32f100_role": "DMA1_Channel6",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 17,
+      "vector_offset": "0x84",
+      "stm32f100_role": "DMA1_Channel7",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 18,
+      "vector_offset": "0x88",
+      "stm32f100_role": "ADC1",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 19,
+      "vector_offset": "0x8c",
+      "stm32f100_role": "reserved",
+      "handler": "0x00000000",
+      "custom_handler": false
+    },
+    {
+      "irq": 20,
+      "vector_offset": "0x90",
+      "stm32f100_role": "reserved",
+      "handler": "0x00000000",
+      "custom_handler": false
+    },
+    {
+      "irq": 21,
+      "vector_offset": "0x94",
+      "stm32f100_role": "reserved",
+      "handler": "0x00000000",
+      "custom_handler": false
+    },
+    {
+      "irq": 22,
+      "vector_offset": "0x98",
+      "stm32f100_role": "reserved",
+      "handler": "0x00000000",
+      "custom_handler": false
+    },
+    {
+      "irq": 23,
+      "vector_offset": "0x9c",
+      "stm32f100_role": "EXTI9_5",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 24,
+      "vector_offset": "0xa0",
+      "stm32f100_role": "TIM1_BRK_TIM15",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 25,
+      "vector_offset": "0xa4",
+      "stm32f100_role": "TIM1_UP_TIM16",
+      "handler": "0x08000d35",
+      "custom_handler": true
+    },
+    {
+      "irq": 26,
+      "vector_offset": "0xa8",
+      "stm32f100_role": "TIM1_TRG_COM_TIM17",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 27,
+      "vector_offset": "0xac",
+      "stm32f100_role": "TIM1_CC",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 28,
+      "vector_offset": "0xb0",
+      "stm32f100_role": "TIM2",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 29,
+      "vector_offset": "0xb4",
+      "stm32f100_role": "TIM3",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 30,
+      "vector_offset": "0xb8",
+      "stm32f100_role": "TIM4",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 31,
+      "vector_offset": "0xbc",
+      "stm32f100_role": "I2C1_EV",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 32,
+      "vector_offset": "0xc0",
+      "stm32f100_role": "I2C1_ER",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 33,
+      "vector_offset": "0xc4",
+      "stm32f100_role": "I2C2_EV",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 34,
+      "vector_offset": "0xc8",
+      "stm32f100_role": "I2C2_ER",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 35,
+      "vector_offset": "0xcc",
+      "stm32f100_role": "SPI1",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 36,
+      "vector_offset": "0xd0",
+      "stm32f100_role": "SPI2",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 37,
+      "vector_offset": "0xd4",
+      "stm32f100_role": "USART1",
+      "handler": "0x08001135",
+      "custom_handler": true
+    },
+    {
+      "irq": 38,
+      "vector_offset": "0xd8",
+      "stm32f100_role": "USART2",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 39,
+      "vector_offset": "0xdc",
+      "stm32f100_role": "USART3",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 40,
+      "vector_offset": "0xe0",
+      "stm32f100_role": "EXTI15_10",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 41,
+      "vector_offset": "0xe4",
+      "stm32f100_role": "RTC_Alarm",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 42,
+      "vector_offset": "0xe8",
+      "stm32f100_role": "CEC",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 43,
+      "vector_offset": "0xec",
+      "stm32f100_role": "reserved",
+      "handler": "0x00000000",
+      "custom_handler": false
+    },
+    {
+      "irq": 44,
+      "vector_offset": "0xf0",
+      "stm32f100_role": "reserved",
+      "handler": "0x00000000",
+      "custom_handler": false
+    },
+    {
+      "irq": 45,
+      "vector_offset": "0xf4",
+      "stm32f100_role": "reserved",
+      "handler": "0x00000000",
+      "custom_handler": false
+    },
+    {
+      "irq": 46,
+      "vector_offset": "0xf8",
+      "stm32f100_role": "reserved",
+      "handler": "0x00000000",
+      "custom_handler": false
+    },
+    {
+      "irq": 47,
+      "vector_offset": "0xfc",
+      "stm32f100_role": "reserved",
+      "handler": "0x00000000",
+      "custom_handler": false
+    },
+    {
+      "irq": 48,
+      "vector_offset": "0x100",
+      "stm32f100_role": "reserved",
+      "handler": "0x00000000",
+      "custom_handler": false
+    },
+    {
+      "irq": 49,
+      "vector_offset": "0x104",
+      "stm32f100_role": "reserved",
+      "handler": "0x00000000",
+      "custom_handler": false
+    },
+    {
+      "irq": 50,
+      "vector_offset": "0x108",
+      "stm32f100_role": "reserved",
+      "handler": "0x00000000",
+      "custom_handler": false
+    },
+    {
+      "irq": 51,
+      "vector_offset": "0x10c",
+      "stm32f100_role": "reserved",
+      "handler": "0x00000000",
+      "custom_handler": false
+    },
+    {
+      "irq": 52,
+      "vector_offset": "0x110",
+      "stm32f100_role": "reserved",
+      "handler": "0x00000000",
+      "custom_handler": false
+    },
+    {
+      "irq": 53,
+      "vector_offset": "0x114",
+      "stm32f100_role": "reserved",
+      "handler": "0x00000000",
+      "custom_handler": false
+    },
+    {
+      "irq": 54,
+      "vector_offset": "0x118",
+      "stm32f100_role": "TIM6_DAC",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    },
+    {
+      "irq": 55,
+      "vector_offset": "0x11c",
+      "stm32f100_role": "TIM7",
+      "handler": "0x0800032f",
+      "custom_handler": false
+    }
+  ],
+  "peripheral_literal_locations": [
+    {
+      "image_offset": "0x6a0",
+      "address": "0x40012400",
+      "role": "ADC1"
+    },
+    {
+      "image_offset": "0xa20",
+      "address": "0x40010800",
+      "role": "GPIOA"
+    },
+    {
+      "image_offset": "0xa24",
+      "address": "0x40010c00",
+      "role": "GPIOB"
+    },
+    {
+      "image_offset": "0xa28",
+      "address": "0x40011000",
+      "role": "GPIOC"
+    },
+    {
+      "image_offset": "0xa2c",
+      "address": "0x40011400",
+      "role": "GPIOD"
+    },
+    {
+      "image_offset": "0xa30",
+      "address": "0x40011800",
+      "role": "GPIOE"
+    },
+    {
+      "image_offset": "0xb18",
+      "address": "0x40021000",
+      "role": "RCC"
+    },
+    {
+      "image_offset": "0xb30",
+      "address": "0x40021000",
+      "role": "RCC"
+    },
+    {
+      "image_offset": "0xb48",
+      "address": "0x40021000",
+      "role": "RCC"
+    },
+    {
+      "image_offset": "0xb60",
+      "address": "0x40021000",
+      "role": "RCC"
+    },
+    {
+      "image_offset": "0xc04",
+      "address": "0x40021000",
+      "role": "RCC"
+    },
+    {
+      "image_offset": "0xd28",
+      "address": "0x40021000",
+      "role": "RCC"
+    },
+    {
+      "image_offset": "0xd84",
+      "address": "0x40012c00",
+      "role": "TIM1"
+    },
+    {
+      "image_offset": "0x1078",
+      "address": "0x40012c00",
+      "role": "TIM1"
+    },
+    {
+      "image_offset": "0x10f8",
+      "address": "0x40012c00",
+      "role": "TIM1"
+    },
+    {
+      "image_offset": "0x13c4",
+      "address": "0x40013800",
+      "role": "USART1"
+    },
+    {
+      "image_offset": "0x1818",
+      "address": "0x40012c00",
+      "role": "TIM1"
+    },
+    {
+      "image_offset": "0x1d04",
+      "address": "0x40012400",
+      "role": "ADC1"
+    },
+    {
+      "image_offset": "0x23f8",
+      "address": "0x40013800",
+      "role": "USART1"
+    },
+    {
+      "image_offset": "0x297c",
+      "address": "0x40011800",
+      "role": "GPIOE"
+    },
+    {
+      "image_offset": "0x37c4",
+      "address": "0x40011800",
+      "role": "GPIOE"
+    },
+    {
+      "image_offset": "0x37cc",
+      "address": "0x40011800",
+      "role": "GPIOE"
+    },
+    {
+      "image_offset": "0x37d4",
+      "address": "0x40011800",
+      "role": "GPIOE"
+    },
+    {
+      "image_offset": "0x37dc",
+      "address": "0x40012400",
+      "role": "ADC1"
+    },
+    {
+      "image_offset": "0x37e4",
+      "address": "0x40012400",
+      "role": "ADC1"
+    },
+    {
+      "image_offset": "0x37ec",
+      "address": "0x40012400",
+      "role": "ADC1"
+    },
+    {
+      "image_offset": "0x37f4",
+      "address": "0x40012400",
+      "role": "ADC1"
+    },
+    {
+      "image_offset": "0x37fc",
+      "address": "0x40010c00",
+      "role": "GPIOB"
+    },
+    {
+      "image_offset": "0x3804",
+      "address": "0x40010c00",
+      "role": "GPIOB"
+    },
+    {
+      "image_offset": "0x380c",
+      "address": "0x40010800",
+      "role": "GPIOA"
+    },
+    {
+      "image_offset": "0x3814",
+      "address": "0x40010800",
+      "role": "GPIOA"
+    },
+    {
+      "image_offset": "0x381c",
+      "address": "0x40010800",
+      "role": "GPIOA"
+    },
+    {
+      "image_offset": "0x3824",
+      "address": "0x40010800",
+      "role": "GPIOA"
+    },
+    {
+      "image_offset": "0x382c",
+      "address": "0x40011000",
+      "role": "GPIOC"
+    },
+    {
+      "image_offset": "0x3834",
+      "address": "0x40011000",
+      "role": "GPIOC"
+    },
+    {
+      "image_offset": "0x383c",
+      "address": "0x40011000",
+      "role": "GPIOC"
+    },
+    {
+      "image_offset": "0x3844",
+      "address": "0x40011000",
+      "role": "GPIOC"
+    },
+    {
+      "image_offset": "0x384c",
+      "address": "0x40011000",
+      "role": "GPIOC"
+    },
+    {
+      "image_offset": "0x3854",
+      "address": "0x40011000",
+      "role": "GPIOC"
+    },
+    {
+      "image_offset": "0x385c",
+      "address": "0x40011000",
+      "role": "GPIOC"
+    },
+    {
+      "image_offset": "0x3864",
+      "address": "0x40011000",
+      "role": "GPIOC"
+    },
+    {
+      "image_offset": "0x386c",
+      "address": "0x40011800",
+      "role": "GPIOE"
+    },
+    {
+      "image_offset": "0x3874",
+      "address": "0x40011800",
+      "role": "GPIOE"
+    },
+    {
+      "image_offset": "0x387c",
+      "address": "0x40011800",
+      "role": "GPIOE"
+    },
+    {
+      "image_offset": "0x3884",
+      "address": "0x40011800",
+      "role": "GPIOE"
+    },
+    {
+      "image_offset": "0x388c",
+      "address": "0x40011800",
+      "role": "GPIOE"
+    },
+    {
+      "image_offset": "0x3894",
+      "address": "0x40011800",
+      "role": "GPIOE"
+    },
+    {
+      "image_offset": "0x389c",
+      "address": "0x40011800",
+      "role": "GPIOE"
+    },
+    {
+      "image_offset": "0x38a4",
+      "address": "0x40011800",
+      "role": "GPIOE"
+    },
+    {
+      "image_offset": "0x38ac",
+      "address": "0x40011400",
+      "role": "GPIOD"
+    },
+    {
+      "image_offset": "0x38b4",
+      "address": "0x40011400",
+      "role": "GPIOD"
+    },
+    {
+      "image_offset": "0x38bc",
+      "address": "0x40011400",
+      "role": "GPIOD"
+    },
+    {
+      "image_offset": "0x38c4",
+      "address": "0x40011400",
+      "role": "GPIOD"
+    },
+    {
+      "image_offset": "0x38cc",
+      "address": "0x40011400",
+      "role": "GPIOD"
+    },
+    {
+      "image_offset": "0x38d4",
+      "address": "0x40011400",
+      "role": "GPIOD"
+    },
+    {
+      "image_offset": "0x38dc",
+      "address": "0x40011400",
+      "role": "GPIOD"
+    },
+    {
+      "image_offset": "0x38e4",
+      "address": "0x40011400",
+      "role": "GPIOD"
+    },
+    {
+      "image_offset": "0x38ec",
+      "address": "0x40010c00",
+      "role": "GPIOB"
+    },
+    {
+      "image_offset": "0x38f4",
+      "address": "0x40010c00",
+      "role": "GPIOB"
+    },
+    {
+      "image_offset": "0x38fc",
+      "address": "0x40010c00",
+      "role": "GPIOB"
+    },
+    {
+      "image_offset": "0x3904",
+      "address": "0x40010c00",
+      "role": "GPIOB"
+    },
+    {
+      "image_offset": "0x390c",
+      "address": "0x40010c00",
+      "role": "GPIOB"
+    },
+    {
+      "image_offset": "0x3914",
+      "address": "0x40010c00",
+      "role": "GPIOB"
+    },
+    {
+      "image_offset": "0x391c",
+      "address": "0x40010c00",
+      "role": "GPIOB"
+    },
+    {
+      "image_offset": "0x3924",
+      "address": "0x40010c00",
+      "role": "GPIOB"
+    },
+    {
+      "image_offset": "0x392c",
+      "address": "0x40011400",
+      "role": "GPIOD"
+    },
+    {
+      "image_offset": "0x3934",
+      "address": "0x40011400",
+      "role": "GPIOD"
+    },
+    {
+      "image_offset": "0x393c",
+      "address": "0x40011400",
+      "role": "GPIOD"
+    },
+    {
+      "image_offset": "0x3944",
+      "address": "0x40011400",
+      "role": "GPIOD"
+    },
+    {
+      "image_offset": "0x394c",
+      "address": "0x40011400",
+      "role": "GPIOD"
+    },
+    {
+      "image_offset": "0x3954",
+      "address": "0x40011400",
+      "role": "GPIOD"
+    },
+    {
+      "image_offset": "0x395c",
+      "address": "0x40011400",
+      "role": "GPIOD"
+    },
+    {
+      "image_offset": "0x3964",
+      "address": "0x40011400",
+      "role": "GPIOD"
+    }
+  ],
+  "observed_scatter_records": [
+    {
+      "source": "0x8003f74",
+      "destination": "0x20000000",
+      "length": 160,
+      "copy_routine": "0x800015c"
+    },
+    {
+      "source": "0x8004014",
+      "destination": "0x200000a0",
+      "length": 5392,
+      "copy_routine": "0x8000178"
+    }
+  ],
+  "evidence_limits": [
+    "Vector/peripheral agreement is strong identification, not a PCB marking inspection.",
+    "Literal occurrence alone is not proof of execution; see startup call chain and decompilation.",
+    "STM32F100V8 or VB package hypothesis also depends on live GPIOE/PD pin usage."
+  ]
+}

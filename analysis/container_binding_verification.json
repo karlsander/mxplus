@@ -1,0 +1,98 @@
+{
+  "status": "passed",
+  "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+  "registration_record_address": "0x6002b0ac",
+  "registration_record_hex": "00000000000000007d83006091830060",
+  "match_flags": {
+    "VID": false,
+    "PID": false,
+    "device_class": false,
+    "interface_class": false
+  },
+  "probe_callback": "0x6000837d",
+  "remove_callback": "0x60008391",
+  "registration_task": "0x60008958",
+  "registration_call": "0x60008976",
+  "registration_disassembly": [
+    "60008958: 90b0       sub sp, #0x40",
+    "6000895a: 2c22       movs r2, #0x2c",
+    "6000895c: 7d49       ldr r1, [pc, #0x1f4]",
+    "6000895e: 6846       mov r0, sp",
+    "60008960: 0cf08dfb   bl #0x6001507e",
+    "60008964: 7ca0       adr r0, #0x1f0",
+    "60008966: 0cf053f9   bl #0x60014c10",
+    "6000896a: 00f0bbfc   bl #0x600092e4",
+    "6000896e: 08b1       cbz r0, #0x60008974",
+    "60008970: 7fa0       adr r0, #0x1fc",
+    "60008972: 04e0       b #0x6000897e",
+    "60008974: 8248       ldr r0, [pc, #0x208]",
+    "60008976: 00f03ffd   bl #0x600093f8",
+    "6000897a: 10b1       cbz r0, #0x60008982",
+    "6000897c: 81a0       adr r0, #0x204",
+    "6000897e: 0cf047f9   bl #0x60014c10"
+  ],
+  "original_binder_cases": [
+    {
+      "device_class": 0,
+      "interface_class": 1,
+      "vendor_id": 4660,
+      "product_id": 22136,
+      "mask": 0,
+      "result": 0,
+      "driver_attached": true,
+      "probe_events": 1
+    },
+    {
+      "device_class": 1,
+      "interface_class": 1,
+      "vendor_id": 4660,
+      "product_id": 22136,
+      "mask": 0,
+      "result": 0,
+      "driver_attached": true,
+      "probe_events": 1
+    },
+    {
+      "device_class": 239,
+      "interface_class": 1,
+      "vendor_id": 4660,
+      "product_id": 22136,
+      "mask": 0,
+      "result": 0,
+      "driver_attached": true,
+      "probe_events": 1
+    },
+    {
+      "device_class": 255,
+      "interface_class": 255,
+      "vendor_id": 4660,
+      "product_id": 22136,
+      "mask": 0,
+      "result": 0,
+      "driver_attached": true,
+      "probe_events": 1
+    },
+    {
+      "device_class": 0,
+      "interface_class": 8,
+      "vendor_id": 4660,
+      "product_id": 22136,
+      "mask": 0,
+      "result": 0,
+      "driver_attached": true,
+      "probe_events": 1
+    }
+  ],
+  "negative_control_with_artificial_interface_class_filter": {
+    "device_class": 0,
+    "interface_class": 1,
+    "vendor_id": 4660,
+    "product_id": 22136,
+    "mask": 8,
+    "result": 4294967295,
+    "driver_attached": false,
+    "probe_events": 0
+  },
+  "conclusion": "Original audio driver registration is wildcard; no earlier vendor/class registration patch is needed",
+  "limitations": "Probe queue delivery and RTOS critical sections are stubbed; downstream selection, hardware USB and streaming are not tested here"
+}

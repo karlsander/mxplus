@@ -1,0 +1,244 @@
+{
+  "status": "OFFLINE EXPERIMENT; NOT HARDWARE VALIDATED",
+  "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+  "patched_app_sha256": "c3f01a8f51b8c5746fcf9a0f8b06a18de5a158ba300375e1c91dd676787d824c",
+  "container_sha256": "516fc0a3baeaf179e018d7eff2eba376ba21eaed8b9e43a9b9860dce6f45dd58",
+  "extension_sha256": "dcf163c5f3edfa6f0ddde642b0aeb959e9c0e96a3b07982c9a819d251f06a937",
+  "compiler": "ziglang 0.13.0 (Clang/LLVM), thumb-freestanding-eabi cortex_m3 ReleaseSmall",
+  "symbols": {
+    "mx1_uac1_policy": 16826305,
+    "mx1_uac1_configuration": 16826517,
+    "mx1_original_configuration": 16826497,
+    "mx1_uac1_classify": 16826085,
+    "mx1_original_classify": 16826477
+  },
+  "scatter_extension": {
+    "insert_offset": 224728,
+    "runtime_address": 16826084,
+    "insert_length": 1132,
+    "startup_updates": [
+      {
+        "offset": 232,
+        "before": 48100,
+        "after": 49232
+      },
+      {
+        "offset": 256,
+        "before": 1610837464,
+        "after": 1610838596
+      },
+      {
+        "offset": 276,
+        "before": 1610837556,
+        "after": 1610838688
+      },
+      {
+        "offset": 296,
+        "before": 1610837556,
+        "after": 1610838688
+      },
+      {
+        "offset": 316,
+        "before": 1610837580,
+        "after": 1610838712
+      },
+      {
+        "offset": 336,
+        "before": 1610837604,
+        "after": 1610838736
+      }
+    ]
+  },
+  "patches": [
+    {
+      "label": "descriptor classifier hook",
+      "file_offset": 41246,
+      "runtime_address": 1610653982,
+      "original": "2de9f04191f805c00026",
+      "replacement": "dff804f000bfe5be0001"
+    },
+    {
+      "label": "configuration parser hook with strict-origin markers",
+      "file_offset": 41442,
+      "runtime_address": 1610654178,
+      "original": "2de9f04f87b004460d46",
+      "replacement": "dff804f000bf95c00001"
+    },
+    {
+      "label": "selection callback pointer",
+      "file_offset": 30792,
+      "runtime_address": 1610643528,
+      "original": "f97b0060",
+      "replacement": "c1bf0001"
+    }
+  ],
+  "container": {
+    "base_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+    "output_sha256": "516fc0a3baeaf179e018d7eff2eba376ba21eaed8b9e43a9b9860dce6f45dd58",
+    "byte_identical_to_original": false,
+    "changes": [
+      {
+        "name": "app_usb",
+        "decoded_bytes_changed": 1297,
+        "old_decoded_size": 224868,
+        "new_decoded_size": 226000,
+        "decoded_size_change_explicitly_allowed": true,
+        "old_decoded_sha256": "fe52cf6c9e8ec8677963b1c4b876ddeaefae5136b7a5f1f49010e3cda9203a6e",
+        "new_decoded_sha256": "c3f01a8f51b8c5746fcf9a0f8b06a18de5a158ba300375e1c91dd676787d824c",
+        "old_stored_size": 137970,
+        "new_stored_size": 254250,
+        "encoding": "literal-only LZSS"
+      }
+    ],
+    "boot_images_and_trailer_unchanged": true,
+    "all_bytes_outside_update_range_unchanged": true,
+    "container_validation": {
+      "sha256": "516fc0a3baeaf179e018d7eff2eba376ba21eaed8b9e43a9b9860dce6f45dd58",
+      "size": 4194320,
+      "is_supplied_original": false,
+      "format_scope": "Observed Roland MX-1 firmware 1.051132 layout only",
+      "boot_base": 16777216,
+      "boot_images": [
+        {
+          "name": "boot_main",
+          "header_offset": 0,
+          "payload_offset": 48,
+          "payload_size": 10732,
+          "load_address": 16777216,
+          "initial_sp": 16848040,
+          "reset_vector": 16778465,
+          "sha256": "ee79e341796e3911d219ad85179a4e11b23e72ac2e662ce33790b14a36a16677",
+          "header_hex": "45534339312e303030000000ec290000000040000868aa0a000000001043223401230000b004000051116301ffffffff"
+        },
+        {
+          "name": "boot_usb",
+          "header_offset": 32768,
+          "payload_offset": 32816,
+          "payload_size": 4160,
+          "load_address": 16777216,
+          "initial_sp": 16847432,
+          "reset_vector": 16778385,
+          "sha256": "4697f22e67b52683b71b2610d93c08d640d794d9d1ac77b5d92560035eec6eeb",
+          "header_hex": "45534339312e30303000000040100000000040000868aa0a000000001043223401230000b004000051116301ffffffff"
+        }
+      ],
+      "components": [
+        {
+          "name": "updater",
+          "header_offset": 65536,
+          "payload_offset": 65600,
+          "slot_end": 262144,
+          "slot_capacity": 196544,
+          "label": "PX-11:Updater",
+          "build_timestamp": "14-1217_14:20:05",
+          "version": "1.000954",
+          "entry_address_field": 1610612736,
+          "load_address": 1610612736,
+          "stored_size": 142898,
+          "checksum": 17557094,
+          "checksum_algorithm": "sum of stored payload bytes modulo 2^32",
+          "checksum_valid": true,
+          "compression": "lzss-zero-init-4096-18",
+          "decoded_size": 182828,
+          "stored_sha256": "f362f3ddca51d1ab74957f741676b0b7c5886e38e6f0ac5e9b0b3ec13d6b35eb",
+          "padding_is_ff": true,
+          "decoded_sha256": "8984a4e0c668dcf6fce981f2c2e9223dfe93bb0f115bc43c8bb9ba95b3f1d3ec"
+        },
+        {
+          "name": "subcpu",
+          "header_offset": 262144,
+          "payload_offset": 262208,
+          "slot_end": 524288,
+          "slot_capacity": 262080,
+          "label": "PX-11:SUB-CPU",
+          "build_timestamp": "15-0108_09:10:28",
+          "version": "1.011052",
+          "entry_address_field": 134217728,
+          "load_address": 134217728,
+          "stored_size": 16404,
+          "checksum": 1474955,
+          "checksum_algorithm": "sum of stored payload bytes modulo 2^32",
+          "checksum_valid": true,
+          "compression": "none",
+          "decoded_size": 16404,
+          "stored_sha256": "43812718e448b386ccfa0d578ff0700d27c2e9e734dbbb80c08af5b880d4a16d",
+          "padding_is_ff": true,
+          "decoded_sha256": "43812718e448b386ccfa0d578ff0700d27c2e9e734dbbb80c08af5b880d4a16d"
+        },
+        {
+          "name": "app_main",
+          "header_offset": 524288,
+          "payload_offset": 524352,
+          "slot_end": 2097152,
+          "slot_capacity": 1572800,
+          "label": "PX-11:Appli",
+          "build_timestamp": "16-0906_11:04:55",
+          "version": "1.051132",
+          "entry_address_field": 1610612736,
+          "load_address": 1610612736,
+          "stored_size": 505462,
+          "checksum": 61550830,
+          "checksum_algorithm": "sum of stored payload bytes modulo 2^32",
+          "checksum_valid": true,
+          "compression": "lzss-zero-init-4096-18",
+          "decoded_size": 918600,
+          "stored_sha256": "b016bc02632f719c7bec4a092e1d23c55824920e6957546cb151710a02c9580c",
+          "padding_is_ff": true,
+          "decoded_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b"
+        },
+        {
+          "name": "app_usb",
+          "header_offset": 2097152,
+          "payload_offset": 2097216,
+          "slot_end": 3145728,
+          "slot_capacity": 1048512,
+          "label": "PX-11:Appli",
+          "build_timestamp": "16-0906_11:04:55",
+          "version": "1.051132",
+          "entry_address_field": 1610612736,
+          "load_address": 1610612736,
+          "stored_size": 254250,
+          "checksum": 23955122,
+          "checksum_algorithm": "sum of stored payload bytes modulo 2^32",
+          "checksum_valid": true,
+          "compression": "lzss-zero-init-4096-18",
+          "decoded_size": 226000,
+          "stored_sha256": "ccfc92b764c2fad505c6c6869dc9000fa83a58190b38a2c9d1f9face9e7ca816",
+          "padding_is_ff": true,
+          "decoded_sha256": "c3f01a8f51b8c5746fcf9a0f8b06a18de5a158ba300375e1c91dd676787d824c"
+        }
+      ],
+      "trailer_offset": 4194304,
+      "trailer_hex": "40000000ff0200000010000000004000",
+      "trailer_words_le": [
+        64,
+        767,
+        4096,
+        4194304
+      ],
+      "update_plan": {
+        "start_block": 64,
+        "end_block_inclusive": 767,
+        "block_size": 4096,
+        "payload_size": 4194304,
+        "flash_start": 262144,
+        "flash_end_exclusive": 3145728,
+        "evidence": "Original updater 0x600056d0 reads trailer; 0x60005584 writes inclusive block range"
+      },
+      "unproven_fields": [
+        "ESC91 boot header fields other than signature and payload length",
+        "Boot-ROM behavior and acceptance checks outside traced updater path"
+      ]
+    },
+    "hardware_validation": "not performed; research output only"
+  },
+  "limits": [
+    "UAC1 AudioStreaming class 1/subclass 2/protocol 0",
+    "High-speed only; bInterval 1 (125 microseconds)",
+    "Separate IN and OUT interfaces, only alt0+alt1",
+    "Fixed single rate 44100/48000/96000; identical in/out",
+    "Stereo PCM, 24 significant bits in 4-byte subframes",
+    "No explicit feedback endpoint, rate SET_CUR, UAC2, packed PCM or generic MIDI",
+    "Enumeration and policy experiment, not proven streaming interoperability"
+  ]
+}

@@ -1,0 +1,259 @@
+{
+  "status": "pass",
+  "groups": [
+    {
+      "name": "Original ARM startup loads extension and preserves all existing initialized data",
+      "status": "pass",
+      "extension_bytes": 1132
+    },
+    {
+      "name": "Original Roland descriptor classifier behavior preserved through trampoline",
+      "status": "pass",
+      "interfaces": 9,
+      "instruction_counts": [
+        {
+          "offset": 9,
+          "original_instructions": 24,
+          "patched_instructions": 46
+        },
+        {
+          "offset": 18,
+          "original_instructions": 25,
+          "patched_instructions": 47
+        },
+        {
+          "offset": 33,
+          "original_instructions": 104,
+          "patched_instructions": 126
+        },
+        {
+          "offset": 74,
+          "original_instructions": 104,
+          "patched_instructions": 126
+        },
+        {
+          "offset": 115,
+          "original_instructions": 27,
+          "patched_instructions": 49
+        },
+        {
+          "offset": 124,
+          "original_instructions": 107,
+          "patched_instructions": 129
+        },
+        {
+          "offset": 165,
+          "original_instructions": 107,
+          "patched_instructions": 129
+        },
+        {
+          "offset": 206,
+          "original_instructions": 101,
+          "patched_instructions": 123
+        },
+        {
+          "offset": 235,
+          "original_instructions": 75,
+          "patched_instructions": 97
+        }
+      ]
+    },
+    {
+      "name": "Synthetic generic UAC1 profile reaches selection using original parser and ABI builder",
+      "status": "pass",
+      "cases": [
+        {
+          "rate": 44100,
+          "original": {
+            "selection": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "in_alternates": 0,
+            "out_alternates": 0,
+            "policy_instructions": 37,
+            "info_hex": "34127856000100000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+          },
+          "modified": {
+            "selection": [
+              1,
+              1,
+              0,
+              1,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "in_alternates": 2,
+            "out_alternates": 2,
+            "policy_instructions": 130,
+            "info_hex": "3412785600010000010000000200000000000000000000a544ac0000040102a50000000000000000000000000000000000000000000000000200000000000000000000a544ac0000040102a5000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "rate": 48000,
+          "original": {
+            "selection": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "in_alternates": 0,
+            "out_alternates": 0,
+            "policy_instructions": 37,
+            "info_hex": "34127856000100000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+          },
+          "modified": {
+            "selection": [
+              1,
+              1,
+              0,
+              1,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "in_alternates": 2,
+            "out_alternates": 2,
+            "policy_instructions": 137,
+            "info_hex": "3412785600010000010000000200000000000000000000a580bb0000040102a50000000000000000000000000000000000000000000000000200000000000000000000a580bb0000040102a5000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "rate": 96000,
+          "original": {
+            "selection": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "in_alternates": 0,
+            "out_alternates": 0,
+            "policy_instructions": 37,
+            "info_hex": "34127856000100000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+          },
+          "modified": {
+            "selection": [
+              1,
+              1,
+              0,
+              1,
+              1,
+              0,
+              0,
+              0,
+              0
+            ],
+            "in_alternates": 2,
+            "out_alternates": 2,
+            "policy_instructions": 134,
+            "info_hex": "3412785600010000010000000200000000000000000000a500770100040102a50000000000000000000000000000000000000000000000000200000000000000000000a500770100040102a5000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Unsupported formats, rates, endpoint layouts and speeds stay rejected",
+      "status": "pass",
+      "cases": [
+        "packed24",
+        "16bit",
+        "32significantbits",
+        "mono",
+        "44channels",
+        "UAC2",
+        "interval4",
+        "multi_rate",
+        "continuous_rate",
+        "float_pcm",
+        "explicit_feedback",
+        "tiny_packet",
+        "high_bandwidth",
+        "endpoint_zero",
+        "reserved_endpoint_address",
+        "reserved_endpoint_usage",
+        "adaptive_endpoint",
+        "alt5",
+        "unsupported88200",
+        "full_speed"
+      ]
+    },
+    {
+      "name": "Mismatched IN and OUT rates rejected",
+      "status": "pass"
+    },
+    {
+      "name": "Non-Roland vendor descriptors cannot bypass strict generic-profile validation",
+      "status": "pass"
+    },
+    {
+      "name": "Origin markers require both standard alt0 and alt1 and track later overwrites",
+      "status": "pass",
+      "cases": [
+        "later_vendor_overwrites_standard_alt1",
+        "duplicate_standard_alt1_without_alt0",
+        "earlier_vendor_followed_by_standard_alt1_without_alt0"
+      ]
+    },
+    {
+      "name": "Original Roland full parser and policy output unchanged",
+      "status": "pass",
+      "selection": [
+        1,
+        2,
+        0,
+        1,
+        2,
+        0,
+        1,
+        1,
+        0
+      ]
+    },
+    {
+      "name": "New classifier rejects truncated and zero-length descriptor chains",
+      "status": "pass",
+      "cases": 5
+    },
+    {
+      "name": "New hooks preserve AAPCS r4-r11, stack pointer and return address",
+      "status": "pass",
+      "cases": [
+        "standard_alt1",
+        "standard_alt0",
+        "unsupported_format",
+        "vendor_class_trampoline",
+        "configuration_parser_trampoline",
+        "policy_vid_1234",
+        "policy_vid_0582"
+      ]
+    }
+  ],
+  "original_app_sha256": "fe52cf6c9e8ec8677963b1c4b876ddeaefae5136b7a5f1f49010e3cda9203a6e",
+  "patched_app_sha256": "c3f01a8f51b8c5746fcf9a0f8b06a18de5a158ba300375e1c91dd676787d824c",
+  "scope": "Original ARM startup/parser/policy plus compiled extension executed in Unicorn; no USB bus, DSP, DMA or physical device.",
+  "instruction_measurement": "Executed instruction counts only; not cycle counts or real-time performance predictions."
+}

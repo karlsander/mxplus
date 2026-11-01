@@ -1,0 +1,71 @@
+{
+  "status": "OFFLINE EXPERIMENT; NOT HARDWARE VALIDATED",
+  "container_sha256": "516fc0a3baeaf179e018d7eff2eba376ba21eaed8b9e43a9b9860dce6f45dd58",
+  "symbols": {
+    "mx1_uac1_policy": 16826305,
+    "mx1_uac1_configuration": 16826517,
+    "mx1_original_configuration": 16826497,
+    "mx1_uac1_classify": 16826085,
+    "mx1_original_classify": 16826477
+  },
+  "scatter_extension": {
+    "insert_offset": 224728,
+    "runtime_address": 16826084,
+    "insert_length": 1132,
+    "startup_updates": [
+      {
+        "offset": 232,
+        "before": 48100,
+        "after": 49232
+      },
+      {
+        "offset": 256,
+        "before": 1610837464,
+        "after": 1610838596
+      },
+      {
+        "offset": 276,
+        "before": 1610837556,
+        "after": 1610838688
+      },
+      {
+        "offset": 296,
+        "before": 1610837556,
+        "after": 1610838688
+      },
+      {
+        "offset": 316,
+        "before": 1610837580,
+        "after": 1610838712
+      },
+      {
+        "offset": 336,
+        "before": 1610837604,
+        "after": 1610838736
+      }
+    ]
+  },
+  "patches": [
+    {
+      "label": "descriptor classifier hook",
+      "file_offset": 41246,
+      "runtime_address": 1610653982,
+      "original": "2de9f04191f805c00026",
+      "replacement": "dff804f000bfe5be0001"
+    },
+    {
+      "label": "configuration parser hook with strict-origin markers",
+      "file_offset": 41442,
+      "runtime_address": 1610654178,
+      "original": "2de9f04f87b004460d46",
+      "replacement": "dff804f000bf95c00001"
+    },
+    {
+      "label": "selection callback pointer",
+      "file_offset": 30792,
+      "runtime_address": 1610643528,
+      "original": "f97b0060",
+      "replacement": "c1bf0001"
+    }
+  ]
+}

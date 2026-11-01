@@ -1,0 +1,1 @@
+Wrote analysis/usb_descriptors.json: 2 device descriptor(s), 4 configuration(s), 4 MX-1 stream alternates

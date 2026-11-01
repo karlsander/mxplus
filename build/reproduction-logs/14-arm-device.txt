@@ -1,0 +1,13 @@
+{
+  "status": "pass",
+  "groups": [
+    "Actual startup copies extension and preserves existing initialized data",
+    "Patched initializer veneer, original registration, and live rate descriptors",
+    "Original request dispatch reaches compiled UAC2 handler with correct replies",
+    "Compiled rejection path executes original EP0 stall routine",
+    "Original GET_DESCRIPTOR and other-speed paths use new live descriptor",
+    "Original descriptor walker produces identical endpoint hardware tables",
+    "Initializer returns failure for invalid rates and failed stock stages",
+    "Original backup initializer retains descriptor and callback tables"
+  ]
+}

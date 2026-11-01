@@ -1,0 +1,144 @@
+{
+  "sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
+  "load_base": 1610612736,
+  "file_size": 918600,
+  "runtime_entry": 16813669,
+  "resident_code_end": 1611467660,
+  "operations": [
+    {
+      "call": 1610612750,
+      "kind": "copy",
+      "destination": 16777984,
+      "length": 62372,
+      "source": 1611467660
+    },
+    {
+      "call": 1610612758,
+      "kind": "zero",
+      "destination": 16840356,
+      "length": 0
+    },
+    {
+      "call": 1610612768,
+      "kind": "copy",
+      "destination": 16842752,
+      "length": 132,
+      "source": 1611530032
+    },
+    {
+      "call": 1610612776,
+      "kind": "zero",
+      "destination": 16842888,
+      "length": 29148
+    },
+    {
+      "call": 1610612786,
+      "kind": "copy",
+      "destination": 16908288,
+      "length": 0,
+      "source": 1611530164
+    },
+    {
+      "call": 1610612794,
+      "kind": "zero",
+      "destination": 16908288,
+      "length": 32768
+    },
+    {
+      "call": 1610612804,
+      "kind": "copy",
+      "destination": 536870912,
+      "length": 1172,
+      "source": 1611530164
+    },
+    {
+      "call": 1610612812,
+      "kind": "zero",
+      "destination": 536872084,
+      "length": 43680
+    },
+    {
+      "call": 1610612822,
+      "kind": "copy",
+      "destination": 1073774592,
+      "length": 0,
+      "source": 1611531336
+    },
+    {
+      "call": 1610612830,
+      "kind": "zero",
+      "destination": 1073774592,
+      "length": 0
+    },
+    {
+      "call": 1610612840,
+      "kind": "copy",
+      "destination": 1074024448,
+      "length": 0,
+      "source": 1611531336
+    },
+    {
+      "call": 1610612848,
+      "kind": "zero",
+      "destination": 1074024448,
+      "length": 0
+    },
+    {
+      "call": 1610612856,
+      "kind": "zero",
+      "destination": 1611467664,
+      "length": 5843264
+    }
+  ],
+  "startup_disassembly": [
+    "60000000: 4ff00800   mov.w r0, #8",
+    "60000004: 80f31188   msr basepri, r0",
+    "60000008: 3648       ldr r0, [pc, #0xd8]",
+    "6000000a: 3749       ldr r1, [pc, #0xdc]",
+    "6000000c: 374a       ldr r2, [pc, #0xdc]",
+    "6000000e: 00f037f8   bl #0x60000080",
+    "60000012: 3748       ldr r0, [pc, #0xdc]",
+    "60000014: 3749       ldr r1, [pc, #0xdc]",
+    "60000016: 00f042f8   bl #0x6000009e",
+    "6000001a: 3748       ldr r0, [pc, #0xdc]",
+    "6000001c: 3749       ldr r1, [pc, #0xdc]",
+    "6000001e: 384a       ldr r2, [pc, #0xe0]",
+    "60000020: 00f02ef8   bl #0x60000080",
+    "60000024: 3748       ldr r0, [pc, #0xdc]",
+    "60000026: 3849       ldr r1, [pc, #0xe0]",
+    "60000028: 00f039f8   bl #0x6000009e",
+    "6000002c: 3748       ldr r0, [pc, #0xdc]",
+    "6000002e: 3849       ldr r1, [pc, #0xe0]",
+    "60000030: 384a       ldr r2, [pc, #0xe0]",
+    "60000032: 00f025f8   bl #0x60000080",
+    "60000036: 3848       ldr r0, [pc, #0xe0]",
+    "60000038: 3849       ldr r1, [pc, #0xe0]",
+    "6000003a: 00f030f8   bl #0x6000009e",
+    "6000003e: 3848       ldr r0, [pc, #0xe0]",
+    "60000040: 3849       ldr r1, [pc, #0xe0]",
+    "60000042: 394a       ldr r2, [pc, #0xe4]",
+    "60000044: 00f01cf8   bl #0x60000080",
+    "60000048: 3848       ldr r0, [pc, #0xe0]",
+    "6000004a: 3949       ldr r1, [pc, #0xe4]",
+    "6000004c: 00f027f8   bl #0x6000009e",
+    "60000050: 3848       ldr r0, [pc, #0xe0]",
+    "60000052: 3949       ldr r1, [pc, #0xe4]",
+    "60000054: 394a       ldr r2, [pc, #0xe4]",
+    "60000056: 00f013f8   bl #0x60000080",
+    "6000005a: 3948       ldr r0, [pc, #0xe4]",
+    "6000005c: 3949       ldr r1, [pc, #0xe4]",
+    "6000005e: 00f01ef8   bl #0x6000009e",
+    "60000062: 3948       ldr r0, [pc, #0xe4]",
+    "60000064: 3949       ldr r1, [pc, #0xe4]",
+    "60000066: 3a4a       ldr r2, [pc, #0xe8]",
+    "60000068: 00f00af8   bl #0x60000080",
+    "6000006c: 3948       ldr r0, [pc, #0xe4]",
+    "6000006e: 3a49       ldr r1, [pc, #0xe8]",
+    "60000070: 00f015f8   bl #0x6000009e",
+    "60000074: 3948       ldr r0, [pc, #0xe4]",
+    "60000076: 3a49       ldr r1, [pc, #0xe8]",
+    "60000078: 00f011f8   bl #0x6000009e",
+    "6000007c: 3948       ldr r0, [pc, #0xe4]",
+    "6000007e: 0047       bx r0"
+  ]
+}

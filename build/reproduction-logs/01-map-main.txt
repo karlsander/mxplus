@@ -1,0 +1,93 @@
+{
+  "sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
+  "load_base": 1610612736,
+  "file_size": 918600,
+  "runtime_entry": 16813669,
+  "resident_code_end": 1611467660,
+  "operations": [
+    {
+      "call": 1610612750,
+      "kind": "copy",
+      "destination": 16777984,
+      "length": 62372,
+      "source": 1611467660
+    },
+    {
+      "call": 1610612758,
+      "kind": "zero",
+      "destination": 16840356,
+      "length": 0
+    },
+    {
+      "call": 1610612768,
+      "kind": "copy",
+      "destination": 16842752,
+      "length": 132,
+      "source": 1611530032
+    },
+    {
+      "call": 1610612776,
+      "kind": "zero",
+      "destination": 16842888,
+      "length": 29148
+    },
+    {
+      "call": 1610612786,
+      "kind": "copy",
+      "destination": 16908288,
+      "length": 0,
+      "source": 1611530164
+    },
+    {
+      "call": 1610612794,
+      "kind": "zero",
+      "destination": 16908288,
+      "length": 32768
+    },
+    {
+      "call": 1610612804,
+      "kind": "copy",
+      "destination": 536870912,
+      "length": 1172,
+      "source": 1611530164
+    },
+    {
+      "call": 1610612812,
+      "kind": "zero",
+      "destination": 536872084,
+      "length": 43680
+    },
+    {
+      "call": 1610612822,
+      "kind": "copy",
+      "destination": 1073774592,
+      "length": 0,
+      "source": 1611531336
+    },
+    {
+      "call": 1610612830,
+      "kind": "zero",
+      "destination": 1073774592,
+      "length": 0
+    },
+    {
+      "call": 1610612840,
+      "kind": "copy",
+      "destination": 1074024448,
+      "length": 0,
+      "source": 1611531336
+    },
+    {
+      "call": 1610612848,
+      "kind": "zero",
+      "destination": 1074024448,
+      "length": 0
+    },
+    {
+      "call": 1610612856,
+      "kind": "zero",
+      "destination": 1611467664,
+      "length": 5843264
+    }
+  ]
+}

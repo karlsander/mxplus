@@ -1,0 +1,5 @@
+# Tested with CPython 3.12.14 on Linux x86-64.
+capstone==5.0.6
+unicorn==2.1.4
+pyelftools==0.33
+ziglang==0.13.0

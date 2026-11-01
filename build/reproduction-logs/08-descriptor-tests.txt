@@ -1,0 +1,16 @@
+test_all_terminal_clock_and_stream_references_resolve (test_uac2_design.UAC2DesignTests.test_all_terminal_clock_and_stream_references_resolve) ... ok
+test_audio_alternates_and_endpoint_framing (test_uac2_design.UAC2DesignTests.test_audio_alternates_and_endpoint_framing) ... ok
+test_highest_rate_packet_capacity_has_one_frame_headroom (test_uac2_design.UAC2DesignTests.test_highest_rate_packet_capacity_has_one_frame_headroom) ... ok
+test_iad_excludes_vendor_midi_and_shared_clock_is_read_only (test_uac2_design.UAC2DesignTests.test_iad_excludes_vendor_midi_and_shared_clock_is_read_only) ... ok
+test_original_probe_and_preserving_lengths (test_uac2_design.UAC2DesignTests.test_original_probe_and_preserving_lengths) ... ok
+test_preserved_midi_is_exact_original_bytes (test_uac2_design.UAC2DesignTests.test_preserved_midi_is_exact_original_bytes) ... ok
+test_empty_and_short_input (test_usb_descriptors.USBDescriptorTests.test_empty_and_short_input) ... ok
+test_endpoint_usage_and_period (test_usb_descriptors.USBDescriptorTests.test_endpoint_usage_and_period) ... ok
+test_exact_mx1_evidence (test_usb_descriptors.USBDescriptorTests.test_exact_mx1_evidence) ... ok
+test_reject_configuration_lengths (test_usb_descriptors.USBDescriptorTests.test_reject_configuration_lengths) ... ok
+test_reject_truncated_rate_list (test_usb_descriptors.USBDescriptorTests.test_reject_truncated_rate_list) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.485s
+
+OK

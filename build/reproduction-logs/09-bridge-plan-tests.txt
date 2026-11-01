@@ -1,0 +1,10 @@
+test_96khz_multichannel_target_fits_conservative_buffer_budget (__main__.BridgeTests.test_96khz_multichannel_target_fits_conservative_buffer_budget) ... ok
+test_actions_are_read_only_without_apply (__main__.BridgeTests.test_actions_are_read_only_without_apply) ... ok
+test_card_id_rejects_pcm_and_shell_syntax (__main__.BridgeTests.test_card_id_rejects_pcm_and_shell_syntax) ... ok
+test_channel_count_and_direction (__main__.BridgeTests.test_channel_count_and_direction) ... ok
+test_setup_apply_requires_truthful_power_selection (__main__.BridgeTests.test_setup_apply_requires_truthful_power_selection) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.004s
+
+OK

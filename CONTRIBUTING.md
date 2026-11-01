@@ -1,6 +1,6 @@
 # Contributing to mxplus
 
-Useful contributions make a firmware change reproducible or resolve a specific unknown about the MX-1's USB behavior. The most valuable next evidence is identified in [ROADMAP.md](ROADMAP.md). Read the [research report](docs/RESEARCH_REPORT.md) and the relevant [host](docs/HOST_PROBE.md) or [device](docs/DEVICE_PROBE.md) report before expanding a probe.
+Useful contributions make a firmware change reproducible or resolve a specific unknown about the MX-1's audio behavior. The most valuable next evidence is identified in [ROADMAP.md](ROADMAP.md). Read the [research report](docs/RESEARCH_REPORT.md) and the relevant [host](docs/HOST_PROBE.md), [device](docs/DEVICE_PROBE.md), or [routing](docs/CHANNEL_ROUTING.md) report before expanding a probe.
 
 The current images are offline research candidates. No physical flashing, recovery, class-driver enumeration or audio interoperability has been demonstrated. Keep that distinction in issues, pull requests and filenames.
 
@@ -23,11 +23,11 @@ The input is `inputs/MX1_UPD.original.bin`. Its SHA-256 must be:
 26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e
 ```
 
-The reproduction runner executes 19 offline stages and writes `analysis/reproduction.json` plus `build/reproduction-logs/`. It regenerates both candidate containers, their patched applications and extensions, and the relevant instruction-level evidence. It does not access USB hardware or flash a mixer. A successful baseline gives a concrete comparison for your change; retain a failed stage's log when reporting a problem.
+The reproduction runner executes 22 offline stages and writes `analysis/reproduction.json` plus `build/reproduction-logs/`. It regenerates all three candidate containers, their patched applications and extensions, and the relevant instruction-level evidence. It does not access USB hardware or flash a mixer. A successful baseline gives a concrete comparison for your change; retain a failed stage's log when reporting a problem.
 
 ## Choose a bounded change
 
-Keep the two firmware experiments independent. The host probe extends the USB application used by AIRA USB1–4; the device probe extends the main application's USB-B behavior. A combined image would be a new experiment requiring its own evidence. The Linux bridge can be developed separately using stock MX-1 firmware.
+Keep the three firmware experiments independent. The host probe extends the USB application used by AIRA USB1–4; the device probe extends the main application's USB-B behavior; the routing probe changes channel source selection in the main application. A combined image would be a new experiment requiring its own evidence. The Linux bridge can be developed separately using stock MX-1 firmware.
 
 Describe the observed problem, the original path that produces it, and the intended new behavior. For a parser change, supply the descriptor bytes that trigger it. For a control change, supply the setup request and expected response or stall. For a pump change, describe the start/stop sequence, stream states and required hardware inputs. Prefer one resolved behavior over an unsupported compatibility claim.
 

@@ -1,6 +1,6 @@
 # Offline continuous integration
 
-The [verification workflow](../.github/workflows/verify.yml) rebuilds both
+The [verification workflow](../.github/workflows/verify.yml) rebuilds all three
 experimental candidates and runs the same offline checks used in the research.
 A successful run establishes that the checked-out source, generated firmware,
 and recorded hashes agree. It does not establish safe flashing, recovery, USB
@@ -38,7 +38,7 @@ python tools/check_reproduction.py --check-committed
 ```
 
 `tools/reproduce.py` checks the exact original firmware, extracts its programs,
-then runs these 19 named stages in order:
+then runs these 22 named stages in order:
 
 | Stage | Name | Purpose |
 |---:|---|---|
@@ -61,8 +61,11 @@ then runs these 19 named stages in order:
 | 17 | `compile-native-controls` | Compile the native class-control boundary harness |
 | 18 | `native-controls` | Run the native request/response boundary cases |
 | 19 | `subcpu-evidence` | Regenerate panel-controller evidence and disassembly |
+| 20 | `build-routing` | Compile and package the independent channel-routing experiment |
+| 21 | `arm-routing` | Check all patch bytes and startup copies; execute panel, routing and original DSP control paths with explicit models |
+| 22 | `container-routing-candidate` | Execute original loader/updater checks against the rebuilt routing image |
 
-The final consistency check requires all 19 expected stages to have passed and
+The final consistency check requires all 22 expected stages to have passed and
 the reproduction report to declare `hardware_access: false`. It hashes the
 actual original firmware and each candidate's update container, decoded
 application, and compiled code blob, checks their agreement with the current

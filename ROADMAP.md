@@ -1,12 +1,12 @@
 # mxplus roadmap
 
-The first investigation produced reproducible binary analysis and two compiled, offline-verified experiments. The next decisive work is physical evidence. This roadmap sets milestones and exit criteria; it does not promise dates or imply that an untested feature already works.
+The first investigation produced reproducible binary analysis and two compiled, offline-verified USB experiments. A separate channel-routing experiment now extends that work. Physical evidence remains necessary for all three. This roadmap sets milestones and exit criteria; it does not promise dates or imply that an untested feature already works on a mixer.
 
-The [research report](docs/RESEARCH_REPORT.md) explains the current conclusions. [docs/HARDWARE_VALIDATION.md](docs/HARDWARE_VALIDATION.md) supplies the staged bench plan. Keep the USB1–4 and USB-B experiments separate while establishing their behavior.
+The [research report](docs/RESEARCH_REPORT.md) explains the original conclusions, with the [routing report](docs/CHANNEL_ROUTING.md) covering the follow-up. [docs/HARDWARE_VALIDATION.md](docs/HARDWARE_VALIDATION.md) supplies the staged bench plan. Keep the USB1–4, USB-B and routing experiments separate while establishing their behavior.
 
 ## 1. Preserve a reproducible research baseline
 
-**Present result:** all six embedded programs are extracted; container structure, runtime maps and selected original ARM paths are understood. Both firmware experiments rebuild with exact-input and exact-patch guards. The offline runner records 19 stages, and the committed-evidence check binds regenerated binary identities to both the actual committed artifact files and reviewed build reports.
+**Present result:** all six embedded programs are extracted; container structure, runtime maps and selected original ARM paths are understood. All three firmware experiments rebuild with exact-input and exact-patch guards. The offline runner records 22 stages, and the committed-evidence check binds regenerated binary identities to both the actual committed artifact files and reviewed build reports.
 
 **Next work:** maintain those guards and evidence as changes arrive, add real descriptor captures as fixtures, and resolve new discrepancies before changing an expected result. Keep the original input and frozen archive manifests intact. Optional Ghidra annotation can improve function names and analysis without pretending the exports are complete source code.
 
@@ -54,7 +54,31 @@ The bridge keeps stock MX-1 firmware and connects it to a Linux USB host, while 
 
 **Exit criterion:** repeatable iOS-to-MX-1 and MX-1-to-iOS audio on stock mixer firmware, with board, kernel, gadget configuration, routing commands and measured limitations recorded. Success here does not validate either native firmware probe. See [research/linux-bridge.md](research/linux-bridge.md).
 
-## 6. Expand compatibility and define a release boundary
+## 6. Validate channel source routing on a physical mixer
+
+The independent [routing candidate](docs/CHANNEL_ROUTING.md) assigns raw analog,
+digital, AIRA, return and computer sources to the eleven physical strips.
+Holding a destination SELECT and turning TEMPO chooses its source. The DSP task
+applies changes after the original parameter queue, with no new ARM audio copy
+loop. Mono strips expose individual source lanes; stereo strips also expose
+pairs. The requested split selects `An5` on 5/6 and `An6` on USB2.
+
+**First question:** do distinct test signals on inputs 5 and 6 emerge separately
+through the 5/6 and USB2 strips with USB2 disconnected, and does Auto restore the
+stock path? Then establish native/computer source levels, stereo ordering,
+duplication, return-bus behavior, all three rates, reconnect, rate changes,
+mode changes and source switching during ordinary parameter updates.
+
+**Exit criterion:** documented physical routing results tied to the candidate
+hash, including the requested split and independent copies of a source.
+Source-bank compatibility is supported by original DSP instruction patterns,
+but the offline model does not execute numerical DSP arithmetic. Live stereo
+operand writes are sequential; click-free switching and real-time margin
+remain unmeasured. Routes currently reset to Auto on power-up and do not apply
+in External Mixer mode. Persistent scene integration and that additional mode
+need separate work.
+
+## 7. Expand compatibility and define a release boundary
 
 After the individual experiments have physical evidence, evaluate specific additions such as explicit feedback, real clock-lock reporting, more host formats, class-compliant MIDI or a combined image. Each addition needs its own original-path analysis, byte guards, tests and hardware scope. Retained Roland VID/PID and host driver caching must be accounted for when interpreting class-driver results; USB identity policy also needs a deliberate decision before a distributable release.
 

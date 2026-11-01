@@ -2,6 +2,10 @@
 
 **Investigation date: 1 November 2026.** This report concerns the exact original firmware supplied for this investigation. It records working offline tools and two compiled firmware experiments, alongside the evidence needed to assess their limits.
 
+The later [channel-routing experiment](CHANNEL_ROUTING.md) is documented
+separately. It adds SELECT + TEMPO source assignment and a third independent
+candidate; the current reproduction pipeline covers all three in 22 stages.
+
 ## 1. Outcome
 
 The supplied firmware can be unpacked, inspected, modified and rebuilt. Its compressed programs are now decoded, its relevant runtime memory maps are reconstructed, and selected original ARM routines have been executed against newly compiled extensions. Two complete experimental update images have been produced:

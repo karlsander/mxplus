@@ -1,0 +1,2274 @@
+{
+  "status": "pass",
+  "component": "main",
+  "main_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
+  "scope": "Original instruction writes only; physical signal flow not emulated",
+  "entry_points": {
+    "dsp_initialization": {
+      "runtime": "0x0100a282",
+      "decoded_offset": "0x000dab0e"
+    },
+    "ak4115_initialization": {
+      "runtime": "0x60001404",
+      "decoded_offset": "0x00001404"
+    }
+  },
+  "modeled_hardware": {
+    "0x4002dff4": "Ready (1) on each read",
+    "0x40100048": "Incrementing count on reads",
+    "0x4010000c": "Reset complete (0) when read"
+  },
+  "stubbed_helpers_in_digital_cases": {
+    "0x600030aa": "Digital mode GPIO/control selection",
+    "0x600012dc": "AK4115 serial register write helper"
+  },
+  "dsp_initialization": [
+    {
+      "rate": 44100,
+      "original_instructions": 288,
+      "dsp_rate_selector": "0x20",
+      "clock_control": "0xa312220c",
+      "serial_config": {
+        "0x40100508": "0x88003006",
+        "0x40100510": "0x88003004",
+        "0x40100518": "0x88003002",
+        "0x40100520": "0x88003000",
+        "0x40100528": "0x98003016",
+        "0x40100530": "0x98003014",
+        "0x40100538": "0x98003012",
+        "0x40100540": "0x88223010",
+        "0x40100548": "0x8822300e",
+        "0x40100550": "0x8822300c",
+        "0x40100558": "0x8822300a"
+      },
+      "register_writes": [
+        {
+          "address": "0x4002dff8",
+          "size": 4,
+          "value": "0x10"
+        },
+        {
+          "address": "0x4002dff8",
+          "size": 4,
+          "value": "0x11"
+        },
+        {
+          "address": "0x4002dffc",
+          "size": 4,
+          "value": "0x1"
+        },
+        {
+          "address": "0x4002dffc",
+          "size": 4,
+          "value": "0x11"
+        },
+        {
+          "address": "0x40100004",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100604",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x4010000c",
+          "size": 4,
+          "value": "0x1"
+        },
+        {
+          "address": "0x40100044",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100028",
+          "size": 4,
+          "value": "0x6"
+        },
+        {
+          "address": "0x40100068",
+          "size": 4,
+          "value": "0x800080"
+        },
+        {
+          "address": "0x40100040",
+          "size": 4,
+          "value": "0xa312220c"
+        },
+        {
+          "address": "0x401000f0",
+          "size": 4,
+          "value": "0xc060"
+        },
+        {
+          "address": "0x401000f4",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x401000f8",
+          "size": 4,
+          "value": "0x80409030"
+        },
+        {
+          "address": "0x401000fc",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100088",
+          "size": 4,
+          "value": "0x400000"
+        },
+        {
+          "address": "0x4010008c",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x401000a8",
+          "size": 4,
+          "value": "0x400000"
+        },
+        {
+          "address": "0x401000ac",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100080",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100084",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x401000a0",
+          "size": 4,
+          "value": "0x700000"
+        },
+        {
+          "address": "0x401000a4",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100090",
+          "size": 4,
+          "value": "0x8044"
+        },
+        {
+          "address": "0x40100094",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100098",
+          "size": 4,
+          "value": "0x8308034"
+        },
+        {
+          "address": "0x4010009c",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x401000b0",
+          "size": 4,
+          "value": "0x8044"
+        },
+        {
+          "address": "0x401000b4",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x401000b8",
+          "size": 4,
+          "value": "0x8044"
+        },
+        {
+          "address": "0x401000bc",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100580",
+          "size": 4,
+          "value": "0x80133003"
+        },
+        {
+          "address": "0x40100584",
+          "size": 4,
+          "value": "0x80113003"
+        },
+        {
+          "address": "0x40100588",
+          "size": 4,
+          "value": "0x80113003"
+        },
+        {
+          "address": "0x40100504",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100508",
+          "size": 4,
+          "value": "0x88003006"
+        },
+        {
+          "address": "0x4010050c",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100510",
+          "size": 4,
+          "value": "0x88003004"
+        },
+        {
+          "address": "0x40100514",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100518",
+          "size": 4,
+          "value": "0x88003002"
+        },
+        {
+          "address": "0x4010051c",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100520",
+          "size": 4,
+          "value": "0x88003000"
+        },
+        {
+          "address": "0x40100524",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100528",
+          "size": 4,
+          "value": "0x98003016"
+        },
+        {
+          "address": "0x4010052c",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100530",
+          "size": 4,
+          "value": "0x98003014"
+        },
+        {
+          "address": "0x40100534",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100538",
+          "size": 4,
+          "value": "0x98003012"
+        },
+        {
+          "address": "0x4010053c",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100540",
+          "size": 4,
+          "value": "0x88223010"
+        },
+        {
+          "address": "0x40100544",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100548",
+          "size": 4,
+          "value": "0x8822300e"
+        },
+        {
+          "address": "0x4010054c",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100550",
+          "size": 4,
+          "value": "0x8822300c"
+        },
+        {
+          "address": "0x40100554",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100558",
+          "size": 4,
+          "value": "0x8822300a"
+        },
+        {
+          "address": "0x4010055c",
+          "size": 4,
+          "value": "0x20"
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "original_instructions": 296,
+      "dsp_rate_selector": "0x30",
+      "clock_control": "0xa412220c",
+      "serial_config": {
+        "0x40100508": "0x88003006",
+        "0x40100510": "0x88003004",
+        "0x40100518": "0x88003002",
+        "0x40100520": "0x88003000",
+        "0x40100528": "0x98003016",
+        "0x40100530": "0x98003014",
+        "0x40100538": "0x98003012",
+        "0x40100540": "0x88223010",
+        "0x40100548": "0x8822300e",
+        "0x40100550": "0x8822300c",
+        "0x40100558": "0x8822300a"
+      },
+      "register_writes": [
+        {
+          "address": "0x4002dff8",
+          "size": 4,
+          "value": "0x10"
+        },
+        {
+          "address": "0x4002dff8",
+          "size": 4,
+          "value": "0x11"
+        },
+        {
+          "address": "0x4002dffc",
+          "size": 4,
+          "value": "0x1"
+        },
+        {
+          "address": "0x4002dffc",
+          "size": 4,
+          "value": "0x11"
+        },
+        {
+          "address": "0x40100004",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100604",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x4010000c",
+          "size": 4,
+          "value": "0x1"
+        },
+        {
+          "address": "0x40100044",
+          "size": 4,
+          "value": "0x30"
+        },
+        {
+          "address": "0x40100028",
+          "size": 4,
+          "value": "0x6"
+        },
+        {
+          "address": "0x40100068",
+          "size": 4,
+          "value": "0x800080"
+        },
+        {
+          "address": "0x40100040",
+          "size": 4,
+          "value": "0xa412220c"
+        },
+        {
+          "address": "0x401000f0",
+          "size": 4,
+          "value": "0xc060"
+        },
+        {
+          "address": "0x401000f4",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x401000f8",
+          "size": 4,
+          "value": "0x80409030"
+        },
+        {
+          "address": "0x401000fc",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100088",
+          "size": 4,
+          "value": "0x400000"
+        },
+        {
+          "address": "0x4010008c",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x401000a8",
+          "size": 4,
+          "value": "0x400000"
+        },
+        {
+          "address": "0x401000ac",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100080",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100084",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x401000a0",
+          "size": 4,
+          "value": "0x700000"
+        },
+        {
+          "address": "0x401000a4",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100090",
+          "size": 4,
+          "value": "0x8044"
+        },
+        {
+          "address": "0x40100094",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100098",
+          "size": 4,
+          "value": "0x8308034"
+        },
+        {
+          "address": "0x4010009c",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x401000b0",
+          "size": 4,
+          "value": "0x8044"
+        },
+        {
+          "address": "0x401000b4",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x401000b8",
+          "size": 4,
+          "value": "0x8044"
+        },
+        {
+          "address": "0x401000bc",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100580",
+          "size": 4,
+          "value": "0x80133003"
+        },
+        {
+          "address": "0x40100584",
+          "size": 4,
+          "value": "0x80113003"
+        },
+        {
+          "address": "0x40100588",
+          "size": 4,
+          "value": "0x80113003"
+        },
+        {
+          "address": "0x40100504",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100508",
+          "size": 4,
+          "value": "0x88003006"
+        },
+        {
+          "address": "0x4010050c",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100510",
+          "size": 4,
+          "value": "0x88003004"
+        },
+        {
+          "address": "0x40100514",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100518",
+          "size": 4,
+          "value": "0x88003002"
+        },
+        {
+          "address": "0x4010051c",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100520",
+          "size": 4,
+          "value": "0x88003000"
+        },
+        {
+          "address": "0x40100524",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100528",
+          "size": 4,
+          "value": "0x98003016"
+        },
+        {
+          "address": "0x4010052c",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100530",
+          "size": 4,
+          "value": "0x98003014"
+        },
+        {
+          "address": "0x40100534",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100538",
+          "size": 4,
+          "value": "0x98003012"
+        },
+        {
+          "address": "0x4010053c",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100540",
+          "size": 4,
+          "value": "0x88223010"
+        },
+        {
+          "address": "0x40100544",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100548",
+          "size": 4,
+          "value": "0x8822300e"
+        },
+        {
+          "address": "0x4010054c",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100550",
+          "size": 4,
+          "value": "0x8822300c"
+        },
+        {
+          "address": "0x40100554",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100558",
+          "size": 4,
+          "value": "0x8822300a"
+        },
+        {
+          "address": "0x4010055c",
+          "size": 4,
+          "value": "0x20"
+        }
+      ]
+    },
+    {
+      "rate": 96000,
+      "original_instructions": 298,
+      "dsp_rate_selector": "0x31",
+      "clock_control": "0xa412220c",
+      "serial_config": {
+        "0x40100508": "0x88003006",
+        "0x40100510": "0x88003004",
+        "0x40100518": "0x88003002",
+        "0x40100520": "0x88003000",
+        "0x40100528": "0x98003016",
+        "0x40100530": "0x98003014",
+        "0x40100538": "0x98003012",
+        "0x40100540": "0x88223010",
+        "0x40100548": "0x8822300e",
+        "0x40100550": "0x8822300c",
+        "0x40100558": "0x8822300a"
+      },
+      "register_writes": [
+        {
+          "address": "0x4002dff8",
+          "size": 4,
+          "value": "0x10"
+        },
+        {
+          "address": "0x4002dff8",
+          "size": 4,
+          "value": "0x11"
+        },
+        {
+          "address": "0x4002dffc",
+          "size": 4,
+          "value": "0x1"
+        },
+        {
+          "address": "0x4002dffc",
+          "size": 4,
+          "value": "0x11"
+        },
+        {
+          "address": "0x40100004",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100604",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x4010000c",
+          "size": 4,
+          "value": "0x1"
+        },
+        {
+          "address": "0x40100044",
+          "size": 4,
+          "value": "0x31"
+        },
+        {
+          "address": "0x40100028",
+          "size": 4,
+          "value": "0x6"
+        },
+        {
+          "address": "0x40100068",
+          "size": 4,
+          "value": "0x800080"
+        },
+        {
+          "address": "0x40100040",
+          "size": 4,
+          "value": "0xa412220c"
+        },
+        {
+          "address": "0x401000f0",
+          "size": 4,
+          "value": "0xc060"
+        },
+        {
+          "address": "0x401000f4",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x401000f8",
+          "size": 4,
+          "value": "0x80409030"
+        },
+        {
+          "address": "0x401000fc",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100088",
+          "size": 4,
+          "value": "0x400000"
+        },
+        {
+          "address": "0x4010008c",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x401000a8",
+          "size": 4,
+          "value": "0x400000"
+        },
+        {
+          "address": "0x401000ac",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100080",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100084",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x401000a0",
+          "size": 4,
+          "value": "0x700000"
+        },
+        {
+          "address": "0x401000a4",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100090",
+          "size": 4,
+          "value": "0x8044"
+        },
+        {
+          "address": "0x40100094",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100098",
+          "size": 4,
+          "value": "0x8308034"
+        },
+        {
+          "address": "0x4010009c",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x401000b0",
+          "size": 4,
+          "value": "0x8044"
+        },
+        {
+          "address": "0x401000b4",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x401000b8",
+          "size": 4,
+          "value": "0x8044"
+        },
+        {
+          "address": "0x401000bc",
+          "size": 4,
+          "value": "0x0"
+        },
+        {
+          "address": "0x40100580",
+          "size": 4,
+          "value": "0x80136003"
+        },
+        {
+          "address": "0x40100584",
+          "size": 4,
+          "value": "0x80136003"
+        },
+        {
+          "address": "0x40100588",
+          "size": 4,
+          "value": "0x80136003"
+        },
+        {
+          "address": "0x40100504",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100508",
+          "size": 4,
+          "value": "0x88003006"
+        },
+        {
+          "address": "0x4010050c",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100510",
+          "size": 4,
+          "value": "0x88003004"
+        },
+        {
+          "address": "0x40100514",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100518",
+          "size": 4,
+          "value": "0x88003002"
+        },
+        {
+          "address": "0x4010051c",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100520",
+          "size": 4,
+          "value": "0x88003000"
+        },
+        {
+          "address": "0x40100524",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100528",
+          "size": 4,
+          "value": "0x98003016"
+        },
+        {
+          "address": "0x4010052c",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100530",
+          "size": 4,
+          "value": "0x98003014"
+        },
+        {
+          "address": "0x40100534",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100538",
+          "size": 4,
+          "value": "0x98003012"
+        },
+        {
+          "address": "0x4010053c",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100540",
+          "size": 4,
+          "value": "0x88223010"
+        },
+        {
+          "address": "0x40100544",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100548",
+          "size": 4,
+          "value": "0x8822300e"
+        },
+        {
+          "address": "0x4010054c",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100550",
+          "size": 4,
+          "value": "0x8822300c"
+        },
+        {
+          "address": "0x40100554",
+          "size": 4,
+          "value": "0x20"
+        },
+        {
+          "address": "0x40100558",
+          "size": 4,
+          "value": "0x8822300a"
+        },
+        {
+          "address": "0x4010055c",
+          "size": 4,
+          "value": "0x20"
+        }
+      ]
+    }
+  ],
+  "digital_mode_selection": [
+    {
+      "rate": 44100,
+      "mode": 0,
+      "serial_config": "0x88113008",
+      "original_instructions": 121,
+      "stubbed_calls": [
+        {
+          "function": "0x600030aa",
+          "arguments": [
+            0,
+            1074791680,
+            0
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            0,
+            59
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            1,
+            107
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            2,
+            0
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            3,
+            88
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            4,
+            239
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            5,
+            255
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            6,
+            131
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            10,
+            34
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            11,
+            50
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            36,
+            4
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            37,
+            18
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            38,
+            16
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            39,
+            0
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            40,
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "rate": 44100,
+      "mode": 1,
+      "serial_config": "0x98113018",
+      "original_instructions": 125,
+      "stubbed_calls": [
+        {
+          "function": "0x600030aa",
+          "arguments": [
+            1,
+            1074791680,
+            0
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            0,
+            59
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            1,
+            107
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            2,
+            128
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            3,
+            89
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            4,
+            239
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            5,
+            255
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            6,
+            131
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            10,
+            34
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            11,
+            50
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            36,
+            4
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            37,
+            18
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            38,
+            16
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            39,
+            0
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            40,
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "mode": 0,
+      "serial_config": "0x88113008",
+      "original_instructions": 123,
+      "stubbed_calls": [
+        {
+          "function": "0x600030aa",
+          "arguments": [
+            0,
+            1074791680,
+            0
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            0,
+            59
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            1,
+            107
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            2,
+            0
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            3,
+            88
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            4,
+            239
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            5,
+            255
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            6,
+            131
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            10,
+            32
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            11,
+            50
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            36,
+            4
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            37,
+            18
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            38,
+            16
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            39,
+            2
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            40,
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "rate": 48000,
+      "mode": 1,
+      "serial_config": "0x98113018",
+      "original_instructions": 127,
+      "stubbed_calls": [
+        {
+          "function": "0x600030aa",
+          "arguments": [
+            1,
+            1074791680,
+            0
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            0,
+            59
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            1,
+            107
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            2,
+            128
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            3,
+            89
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            4,
+            239
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            5,
+            255
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            6,
+            131
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            10,
+            32
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            11,
+            50
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            36,
+            4
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            37,
+            18
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            38,
+            16
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            39,
+            2
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            40,
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "rate": 96000,
+      "mode": 0,
+      "serial_config": "0x88113008",
+      "original_instructions": 127,
+      "stubbed_calls": [
+        {
+          "function": "0x600030aa",
+          "arguments": [
+            0,
+            1074791680,
+            0
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            0,
+            55
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            1,
+            107
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            2,
+            0
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            3,
+            88
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            4,
+            239
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            5,
+            255
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            6,
+            131
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            10,
+            32
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            11,
+            50
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            36,
+            4
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            37,
+            18
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            38,
+            16
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            39,
+            10
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            40,
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "rate": 96000,
+      "mode": 1,
+      "serial_config": "0x98113018",
+      "original_instructions": 131,
+      "stubbed_calls": [
+        {
+          "function": "0x600030aa",
+          "arguments": [
+            1,
+            1074791680,
+            0
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            0,
+            55
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            1,
+            107
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            2,
+            128
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            3,
+            89
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            4,
+            239
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            5,
+            255
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            6,
+            131
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            10,
+            32
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            11,
+            50
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            36,
+            4
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            37,
+            18
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            38,
+            16
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            39,
+            10
+          ]
+        },
+        {
+          "function": "0x600012dc",
+          "arguments": [
+            537067520,
+            40,
+            11
+          ]
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "No physical audio, ADC/DAC clocks, serial bus, PLL lock or DSP execution is modeled.",
+    "The low slot fields are recorded as raw values; physical analog/return lane order requires separate evidence.",
+    "DSP program source-operand behavior and per-channel routing are outside this audit.",
+    "Instruction counts are not CPU cycles or processing-headroom measurements."
+  ],
+  "dsp_task_dispatch": {
+    "status": "pass",
+    "task_records": {
+      "dsp": {
+        "runtime": "0x600751c8",
+        "entry": "0x60024a45",
+        "priority": 11
+      },
+      "panel": {
+        "runtime": "0x60075234",
+        "entry": "0x6000f3bd",
+        "priority": 15
+      }
+    },
+    "original_dispatcher": "0x0100e220",
+    "original_handler": "0x60024bae",
+    "original_epilogue": {
+      "runtime": "0x60024c52",
+      "decoded_offset": "0x00024c52",
+      "bytes": "07b0bde8f083"
+    },
+    "event": 8,
+    "dispatch_trace": [
+      "wait",
+      "original_parameter_handler",
+      "modeled_empty_parameter_queue",
+      "original_handler_epilogue",
+      "wait"
+    ],
+    "empty_handler_mmio_writes": 0,
+    "event_post_helper": "0x0100e266",
+    "observed_flag_post_arguments": [
+      291,
+      8
+    ],
+    "flag_match_helper": "0x010073b8",
+    "auto_clear_check": "First match returned 8 and cleared pending flags; second did not match.",
+    "modeled": [
+      "RTOS wait supplied one event 8; stopped on the subsequent wait.",
+      "Parameter queue pop at 0x6000bd6c returned empty.",
+      "Flag posting at 0x010032f2 recorded arguments and returned success.",
+      "Flag matching used initialized synthetic flag/wait records."
+    ],
+    "not_tested": [
+      "RTOS scheduling, interrupt timing or concurrent execution."
+    ]
+  },
+  "pc_operand_format": {
+    "status": "pass",
+    "program_descriptor": {
+      "runtime": "0x600cb780",
+      "decoded_offset": "0x000cb780",
+      "source": "0x600cad4c",
+      "length": 2610
+    },
+    "descriptor_parent": "0x600779cc",
+    "uploader_entry": "0x0100bfe2",
+    "program_memory_sha256": "039b17e226e3e125037e903d3b0839b8e1f56db19dd85195c2259a8029a5d197",
+    "modeled_dma": [
+      {
+        "source": "0x600cad4c",
+        "destination": "0x40150000",
+        "length": 2608
+      }
+    ],
+    "original_boundary_writes": [
+      {
+        "destination": "0x40150a30",
+        "value": "0x0"
+      }
+    ],
+    "pc_import_instructions": [
+      {
+        "logical_byte_offset": "0x20",
+        "halfwords": "1e05 0fe0 1fe2 a000 0033"
+      },
+      {
+        "logical_byte_offset": "0x2a",
+        "halfwords": "7809 0fe0 8fe2 1fe4 9fe6 a001 0020 0035 a012"
+      },
+      {
+        "logical_byte_offset": "0x3c",
+        "halfwords": "7809 0fe0 8fe2 1fe4 9fe6 a002 0021 0037 a013"
+      },
+      {
+        "logical_byte_offset": "0x4e",
+        "halfwords": "7809 0fe0 8fe2 1fe4 9fe6 a003 0022 0039 a014"
+      },
+      {
+        "logical_byte_offset": "0x60",
+        "halfwords": "7809 0fe0 8fe2 1fe4 9fe6 a004 0023 003b a015"
+      },
+      {
+        "logical_byte_offset": "0x72",
+        "halfwords": "7809 0fe0 8fe2 1fe4 9fe6 a005 0024 003d a016"
+      },
+      {
+        "logical_byte_offset": "0x84",
+        "halfwords": "7809 0fe0 8fe2 1fe4 9fe6 a006 0025 003f a017"
+      },
+      {
+        "logical_byte_offset": "0x96",
+        "halfwords": "7809 0fe0 8fe2 1fe4 9fe6 a007 0026 0041 a018"
+      },
+      {
+        "logical_byte_offset": "0xa8",
+        "halfwords": "7809 0fe0 8fe2 1fe4 9fe6 a008 0027 0043 a019"
+      },
+      {
+        "logical_byte_offset": "0xba",
+        "halfwords": "7809 0fe0 8fe2 1fe4 9fe6 a009 0028 0045 a01a"
+      },
+      {
+        "logical_byte_offset": "0xcc",
+        "halfwords": "7809 0fe0 8fe2 1fe4 9fe6 a00a 0029 0047 a01b"
+      },
+      {
+        "logical_byte_offset": "0xde",
+        "halfwords": "7809 0fe0 8fe2 1fe4 9fe6 a00b 002a 0049 a01c"
+      },
+      {
+        "logical_byte_offset": "0xf0",
+        "halfwords": "7809 0fe0 8fe2 1fe4 9fe6 a00c 002b 004b a01d"
+      },
+      {
+        "logical_byte_offset": "0x102",
+        "halfwords": "7809 0fe0 8fe2 1fe4 9fe6 a00d 002c 004d a01e"
+      },
+      {
+        "logical_byte_offset": "0x114",
+        "halfwords": "7809 0fe0 8fe2 1fe4 9fe6 a00e 002d 004f a01f"
+      },
+      {
+        "logical_byte_offset": "0x126",
+        "halfwords": "7809 0fe0 8fe2 1fe4 9fe6 a00f 002e 0051 a020"
+      },
+      {
+        "logical_byte_offset": "0x138",
+        "halfwords": "7809 0fe0 8fe2 1fe4 9fe6 a010 002f 0053 a021"
+      },
+      {
+        "logical_byte_offset": "0x14a",
+        "halfwords": "7809 0fe0 8fe2 1fe4 9fe6 a011 0030 0055 a022"
+      },
+      {
+        "logical_byte_offset": "0x15c",
+        "halfwords": "1e05 8fe0 9fe2 0031 a023"
+      }
+    ],
+    "serial_import_instructions": [
+      {
+        "logical_byte_offset": "0x16a",
+        "halfwords": "0c03 0fe0 6000"
+      },
+      {
+        "logical_byte_offset": "0x170",
+        "halfwords": "1e05 0fe0 8fe2 6001 000c"
+      },
+      {
+        "logical_byte_offset": "0x17a",
+        "halfwords": "1e05 0fe0 8fe2 6002 000d"
+      },
+      {
+        "logical_byte_offset": "0x184",
+        "halfwords": "1e05 0fe0 8fe2 6003 000e"
+      },
+      {
+        "logical_byte_offset": "0x18e",
+        "halfwords": "1e05 0fe0 8fe2 6004 000f"
+      },
+      {
+        "logical_byte_offset": "0x198",
+        "halfwords": "1e05 0fe0 8fe2 6005 0010"
+      },
+      {
+        "logical_byte_offset": "0x1a2",
+        "halfwords": "1e05 0fe0 8fe2 6008 0011"
+      },
+      {
+        "logical_byte_offset": "0x1ac",
+        "halfwords": "1e05 0fe0 8fe2 6009 0014"
+      },
+      {
+        "logical_byte_offset": "0x1b6",
+        "halfwords": "1e05 0fe0 8fe2 600a 0015"
+      },
+      {
+        "logical_byte_offset": "0x1c0",
+        "halfwords": "1e05 0fe0 8fe2 600b 0016"
+      },
+      {
+        "logical_byte_offset": "0x1ca",
+        "halfwords": "1e05 0fe0 8fe2 600c 0017"
+      },
+      {
+        "logical_byte_offset": "0x1d4",
+        "halfwords": "1e05 0fe0 8fe2 600d 0018"
+      },
+      {
+        "logical_byte_offset": "0x1de",
+        "halfwords": "1e05 0fe0 8fe2 600e 0019"
+      },
+      {
+        "logical_byte_offset": "0x1e8",
+        "halfwords": "1e05 0fe0 8fe2 600f 001a"
+      },
+      {
+        "logical_byte_offset": "0x1f2",
+        "halfwords": "1e05 0fe0 8fe2 6010 001b"
+      },
+      {
+        "logical_byte_offset": "0x1fc",
+        "halfwords": "1e05 0fe0 8fe2 6011 001c"
+      },
+      {
+        "logical_byte_offset": "0x206",
+        "halfwords": "1e05 0fe0 8fe2 6006 001d"
+      },
+      {
+        "logical_byte_offset": "0x210",
+        "halfwords": "1e05 0fe0 8fe2 6007 0012"
+      },
+      {
+        "logical_byte_offset": "0x21a",
+        "halfwords": "0c03 8fe0 0013"
+      }
+    ],
+    "finding": "Both 18-lane import chains use 0fe0 reads and ordinary 8feX stores; the PC import does not require the normal program's 1040/44c7/BEDA block.",
+    "interpretation": "Original matching import encodings support compatible a000..a011 and 6000..6011 sample operands. This is firmware-derived evidence, not a proprietary DSP arithmetic emulation.",
+    "limitations": [
+      "Bulk DMA and command-window storage are modeled.",
+      "No proprietary DSP instruction execution or physical audio is tested."
+    ]
+  },
+  "native_input_gates": {
+    "status": "pass",
+    "native_initializer": {
+      "runtime": "0x600251f2",
+      "decoded_offset": "0x000251f2",
+      "coefficient_indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "initial_value": "0x3f800000",
+      "mmio_writes": 52
+    },
+    "connection_callbacks": [
+      {
+        "callback": "0x60027b44",
+        "mode": 0,
+        "connected": 0,
+        "parameter_reads": [
+          25,
+          12
+        ],
+        "selector_offsets": [
+          "0x1de",
+          "0x1f8"
+        ],
+        "written_value": "0x3f800000",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027b44",
+        "mode": 0,
+        "connected": 1,
+        "parameter_reads": [
+          25,
+          12
+        ],
+        "selector_offsets": [
+          "0x1de",
+          "0x1f8"
+        ],
+        "written_value": "0x0",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027b44",
+        "mode": 2,
+        "connected": 0,
+        "parameter_reads": [
+          25,
+          12
+        ],
+        "selector_offsets": [
+          "0x1de",
+          "0x1f8"
+        ],
+        "written_value": "0x3f800000",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027b44",
+        "mode": 2,
+        "connected": 1,
+        "parameter_reads": [
+          25,
+          12
+        ],
+        "selector_offsets": [
+          "0x1de",
+          "0x1f8"
+        ],
+        "written_value": "0x3f800000",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027b7c",
+        "mode": 0,
+        "connected": 0,
+        "parameter_reads": [
+          25
+        ],
+        "selector_offsets": [
+          "0x212",
+          "0x22c"
+        ],
+        "written_value": "0x3f800000",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027b7c",
+        "mode": 0,
+        "connected": 1,
+        "parameter_reads": [
+          25
+        ],
+        "selector_offsets": [
+          "0x212",
+          "0x22c"
+        ],
+        "written_value": "0x0",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027b7c",
+        "mode": 2,
+        "connected": 0,
+        "parameter_reads": [
+          25
+        ],
+        "selector_offsets": [
+          "0x212",
+          "0x22c"
+        ],
+        "written_value": "0x3f800000",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027b7c",
+        "mode": 2,
+        "connected": 1,
+        "parameter_reads": [
+          25
+        ],
+        "selector_offsets": [
+          "0x212",
+          "0x22c"
+        ],
+        "written_value": "0x3f800000",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027bf8",
+        "mode": 0,
+        "connected": 0,
+        "parameter_reads": [
+          25
+        ],
+        "selector_offsets": [
+          "0x246",
+          "0x260"
+        ],
+        "written_value": "0x3f800000",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027bf8",
+        "mode": 0,
+        "connected": 1,
+        "parameter_reads": [
+          25
+        ],
+        "selector_offsets": [
+          "0x246",
+          "0x260"
+        ],
+        "written_value": "0x0",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027bf8",
+        "mode": 2,
+        "connected": 0,
+        "parameter_reads": [
+          25
+        ],
+        "selector_offsets": [
+          "0x246",
+          "0x260"
+        ],
+        "written_value": "0x3f800000",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027bf8",
+        "mode": 2,
+        "connected": 1,
+        "parameter_reads": [
+          25
+        ],
+        "selector_offsets": [
+          "0x246",
+          "0x260"
+        ],
+        "written_value": "0x3f800000",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027c20",
+        "mode": 0,
+        "connected": 0,
+        "parameter_reads": [
+          25
+        ],
+        "selector_offsets": [
+          "0x27a",
+          "0x294"
+        ],
+        "written_value": "0x3f800000",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027c20",
+        "mode": 0,
+        "connected": 1,
+        "parameter_reads": [
+          25
+        ],
+        "selector_offsets": [
+          "0x27a",
+          "0x294"
+        ],
+        "written_value": "0x0",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027c20",
+        "mode": 2,
+        "connected": 0,
+        "parameter_reads": [
+          25
+        ],
+        "selector_offsets": [
+          "0x27a",
+          "0x294"
+        ],
+        "written_value": "0x3f800000",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027c20",
+        "mode": 2,
+        "connected": 1,
+        "parameter_reads": [
+          25
+        ],
+        "selector_offsets": [
+          "0x27a",
+          "0x294"
+        ],
+        "written_value": "0x3f800000",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027c48",
+        "mode": 0,
+        "connected": 0,
+        "parameter_reads": [
+          25
+        ],
+        "selector_offsets": [
+          "0x2ae",
+          "0x2c8"
+        ],
+        "written_value": "0x3f800000",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027c48",
+        "mode": 0,
+        "connected": 1,
+        "parameter_reads": [
+          25
+        ],
+        "selector_offsets": [
+          "0x2ae",
+          "0x2c8"
+        ],
+        "written_value": "0x0",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027c48",
+        "mode": 2,
+        "connected": 0,
+        "parameter_reads": [
+          25
+        ],
+        "selector_offsets": [
+          "0x2ae",
+          "0x2c8"
+        ],
+        "written_value": "0x3f800000",
+        "native_coefficient_writes": 0
+      },
+      {
+        "callback": "0x60027c48",
+        "mode": 2,
+        "connected": 1,
+        "parameter_reads": [
+          25
+        ],
+        "selector_offsets": [
+          "0x2ae",
+          "0x2c8"
+        ],
+        "written_value": "0x3f800000",
+        "native_coefficient_writes": 0
+      }
+    ],
+    "modeled": [
+      "Normal input object explicitly selects DSP0.",
+      "Connection cases replace system-parameter getter 0x6001a896: mode is 0 or 2; digital direction is input (0)."
+    ],
+    "finding": "These original connection callbacks change two embedded PC selectors only; they do not update the native input coefficient gates.",
+    "limitations": [
+      "Driver connection state, external clocking, and physical audio are not emulated.",
+      "This does not prove that no other firmware path can change a native gate."
+    ]
+  }
+}

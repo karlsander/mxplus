@@ -166,7 +166,8 @@ class ReproductionIdentityTests(unittest.TestCase):
     def test_incomplete_reproduction_is_rejected(self):
         self.reproduction["checks"].pop()
         self.write_json("analysis/reproduction.json", self.reproduction)
-        with self.assertRaisesRegex(ValueError, "complete ordered 19-stage"):
+        with self.assertRaisesRegex(ValueError,
+                                    f"complete ordered {len(CHECK.EXPECTED_STAGES)}-stage"):
             CHECK.audit()
 
     def test_current_evidence_mode_does_not_read_git(self):

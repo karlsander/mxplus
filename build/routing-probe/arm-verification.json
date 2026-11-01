@@ -1,0 +1,386 @@
+{
+  "status": "pass",
+  "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
+  "patched_app_sha256": "03717a17250aebd42c2412439b218f02acdec5bc0258245f9dbc22740ecdd251",
+  "candidate_container_sha256": "1810461b87255931fdce8696dff0c0b1c28758e3a95e28ac02b4e01723526c21",
+  "extension_sha256": "8f85f7611f95a512e797605a058af5ab05964f97a779fbe14f5630b884a92a25",
+  "groups": [
+    {
+      "name": "Every application change matches recorded guarded patches and scatter insertion",
+      "status": "pass",
+      "patch_sites": 3,
+      "extension_bytes": 1596,
+      "sram_bytes_remaining": 800
+    },
+    {
+      "name": "Actual original startup installs routing code and preserves existing initialized data and BSS",
+      "status": "pass",
+      "runtime_interval": [
+        "0x0100f6a4",
+        "0x100fce0"
+      ],
+      "original_destinations_unchanged": true
+    },
+    {
+      "name": "Original physical decoder, queue and logical key/encoder dispatch",
+      "status": "pass",
+      "key_press_type": 2,
+      "key_release_type": 1,
+      "encoder_move_type": 4,
+      "select_ids": [
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51
+      ],
+      "cases": 32
+    },
+    {
+      "name": "Original encoder1 reaches tempo parameter 0x1a; encoder0 does not",
+      "status": "pass",
+      "clock_mode": "internal",
+      "parameter_store": "stubbed; calls observed"
+    },
+    {
+      "name": "Registered callback and aligned renderer hook bytes match symbols",
+      "status": "pass"
+    },
+    {
+      "name": "Inactive original display is preserved through displaced-instruction trampoline",
+      "status": "pass",
+      "cases": [
+        {
+          "state": "idle",
+          "characters": [
+            [
+              1,
+              3,
+              52
+            ],
+            [
+              1,
+              2,
+              36
+            ],
+            [
+              1,
+              1,
+              50
+            ],
+            [
+              1,
+              0,
+              49
+            ]
+          ]
+        },
+        {
+          "state": "other_page",
+          "characters": [
+            [
+              1,
+              3,
+              52
+            ],
+            [
+              1,
+              2,
+              36
+            ],
+            [
+              1,
+              1,
+              50
+            ],
+            [
+              1,
+              0,
+              49
+            ]
+          ]
+        },
+        {
+          "state": "other_boot",
+          "characters": [
+            [
+              1,
+              3,
+              52
+            ],
+            [
+              1,
+              2,
+              36
+            ],
+            [
+              1,
+              1,
+              50
+            ],
+            [
+              1,
+              0,
+              49
+            ]
+          ]
+        },
+        {
+          "state": "modal",
+          "characters": []
+        }
+      ]
+    },
+    {
+      "name": "All 11 strips: press, +/-/zero route rotation, release restores display/tempo",
+      "status": "pass",
+      "source_delta": "one signed step per nonzero physical event",
+      "routes": "API calls captured; audio tested separately"
+    },
+    {
+      "name": "Plain SELECT taps preserve original press/release and never adjust a route",
+      "status": "pass",
+      "strips": 11,
+      "high_level_select_actions": "original calls observed; bodies stubbed"
+    },
+    {
+      "name": "Unheld TEMPO runs original decoded event through parameter adjustment",
+      "status": "pass",
+      "delta": -3,
+      "tempo_parameter": 26
+    },
+    {
+      "name": "Existing modified gestures, modes and unheld tempo events pass unchanged",
+      "status": "pass",
+      "cases": [
+        "no_select",
+        "two_selects",
+        "modifier",
+        "other_page",
+        "other_boot",
+        "modal"
+      ]
+    },
+    {
+      "name": "Every SELECT plus any second physical key disables route editing",
+      "status": "pass",
+      "physical_key_ids": [
+        0,
+        84
+      ],
+      "ordered_pairs": 924
+    },
+    {
+      "name": "Overlapping SELECT presses suspend editing; remaining held SELECT resumes it",
+      "status": "pass",
+      "first_strip": 0,
+      "second_strip": 10
+    },
+    {
+      "name": "SELECT press/release on another page never overwrites its display",
+      "status": "pass"
+    },
+    {
+      "name": "VALUE encoder remains original while SELECT is held",
+      "status": "pass"
+    },
+    {
+      "name": "Final UI and real route APIs change only the selected state and post DSP event 8",
+      "status": "pass",
+      "mixer_modes": [
+        0,
+        1
+      ],
+      "strips_per_mode": 11,
+      "boundaries": [
+        "Original parameter getter returns supplied mode",
+        "Original RTOS event-post call is recorded, not scheduled"
+      ],
+      "audio_execution": "The DSP task is not run by this UI case"
+    },
+    {
+      "name": "Real mode guards show modE, preserve routes/tempo during hold, and restore tempo on release",
+      "status": "pass",
+      "cases": [
+        "external_mixer mode 2",
+        "diagnostic DSP program greater than 3"
+      ],
+      "strips_per_case": 11,
+      "route_api_stubs": false,
+      "boundaries": [
+        "Original parameter getter returns supplied mode",
+        "DSP task mode is supplied memory state",
+        "Final parameter setter and character delivery are observed"
+      ]
+    },
+    {
+      "name": "All tested compiled/original callbacks preserve r4-r11, SP and return control",
+      "status": "pass"
+    },
+    {
+      "name": "Original ARM DSP uploader reconstructs all 36 normal-program chunks and guarded source operands",
+      "status": "pass",
+      "executed": [
+        "0x0100bfe2 descriptor wrapper",
+        "0x0100ab32 uploader",
+        "0x0100ab04 original boundary-write helper"
+      ],
+      "modeled": [
+        "bulk DMA byte copying",
+        "DSP programming-command storage semantics"
+      ],
+      "program_hashes": [
+        "ad9da6b0a0d250259477738ea60b85407b3da1c37e707ff8c0140dcb91fd78ec",
+        "4c17a48ac7ed9d143f0ea085cf32ad96f807b2f7dbd8986e36c0053e389a66f7"
+      ]
+    },
+    {
+      "name": "Original factory DSP graph uses identical direct-copy read bindings for raw PC and serial inputs",
+      "status": "pass",
+      "component": "app_main",
+      "decoded_descriptor_offset": 833408,
+      "descriptor_runtime": "0x600cb780",
+      "program_source_runtime": "0x600cad4c",
+      "program_sha256": "039b17e226e3e125037e903d3b0839b8e1f56db19dd85195c2259a8029a5d197",
+      "raw_pc_import_range": [
+        "0x20",
+        "0x166"
+      ],
+      "serial_import_range": [
+        "0x16a",
+        "0x220"
+      ],
+      "common_read_binding": "0x0fe0",
+      "common_write_binding": "0x8fe2",
+      "inference": "Both raw source banks are consumed as compatible ordinary DSP audio operands",
+      "limitation": "This is guarded original-program evidence, not execution of ESC2 arithmetic"
+    },
+    {
+      "name": "AUTO boot, original empty parameter drain, no DSP programming writes, AAPCS preserved",
+      "status": "pass"
+    },
+    {
+      "name": "Every permitted source on every destination executes actual compiled menu and original DSP writers",
+      "status": "pass",
+      "source_choices": 53,
+      "strips": 11,
+      "source_destination_visits": 519,
+      "mono_stereo_pairs_skipped": true,
+      "four_character_labels": true,
+      "largest_single_route_drain_commands": 4,
+      "largest_single_route_drain_instructions": 400
+    },
+    {
+      "name": "Analog 5/6 split produces independent original-5/6 and USB2 input reads; own PC summand suppressed",
+      "status": "pass",
+      "original_strip_label": "An5 ",
+      "usb2_label": "An6 ",
+      "usb2_connected": false
+    },
+    {
+      "name": "Duplicate raw PC source survives other destination PC suppression; Return copy preserves original Return reads",
+      "status": "pass",
+      "model_boundary": "Address/token independence, not ESC2 numeric sample execution"
+    },
+    {
+      "name": "External Mixer restores stock operands and connection policy, blocks UI edits, resumes saved routes in Control Surface",
+      "status": "pass"
+    },
+    {
+      "name": "Queued parameter drain reasserts selected sources after full DSP program reload",
+      "status": "pass"
+    },
+    {
+      "name": "Original queued connection callback runs first; routing flush then overrides its unwanted PC summand",
+      "status": "pass",
+      "queue_message": "type0/group1",
+      "callback": "0x60027bf8",
+      "observed_selector_requests": [
+        [
+          582,
+          1065353216,
+          true
+        ],
+        [
+          608,
+          1065353216,
+          true
+        ],
+        [
+          582,
+          0,
+          true
+        ],
+        [
+          608,
+          0,
+          true
+        ]
+      ],
+      "modeled": "Parameter accessor and queue contents; real callback lookup/table fixture and callback execute"
+    },
+    {
+      "name": "Diagnostic programs, invalid strip IDs and invalid display accesses are excluded",
+      "status": "pass"
+    },
+    {
+      "name": "AUTO restoration matches original DIGITAL direction and all five native connection truth tables",
+      "status": "pass",
+      "original_writers": [
+        "0x100ab04",
+        "0x100baee"
+      ],
+      "original_callbacks_executed": 60,
+      "modes": [
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "name": "Original serial-I/O initialization at all three rates and both digital modes",
+      "status": "pass",
+      "sample_rates": [
+        44100,
+        48000,
+        96000
+      ],
+      "cases": 9
+    },
+    {
+      "name": "Original DSP event dispatch, harmless empty parameter queue and flag delivery",
+      "status": "pass",
+      "event": 8,
+      "empty_handler_mmio_writes": 0
+    },
+    {
+      "name": "Independent factory graph audit matches all 18 raw PC and 18 serial read bindings",
+      "status": "pass",
+      "numeric_dsp_execution": false
+    },
+    {
+      "name": "Original native input gates and connection callbacks distinguish native and PC paths",
+      "status": "pass",
+      "native_gates": 13,
+      "connection_callback_cases": 20
+    }
+  ],
+  "hardware_access": false,
+  "scope": "Integrated candidate ARM instructions with explicit DSP and peripheral models",
+  "details": {
+    "ui": "ui-verification.json",
+    "audio": "audio-verification.json",
+    "hardware_initialization": "hardware-audit.json"
+  },
+  "limits": [
+    "No physical flashing, recovery, panel operation, audio or USB transport has been validated",
+    "DSP execution and MMIO assumptions are stated in the separate audio report",
+    "Instruction counts do not measure real-time deadline margin or CPU cycles"
+  ]
+}

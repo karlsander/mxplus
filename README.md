@@ -1,10 +1,10 @@
 # mxplus
 
-Firmware research and experimental USB audio extensions for the **Roland MX-1**.
+Firmware research, channel routing and experimental USB audio extensions for the **Roland MX-1**.
 
-The project aims to accept compatible USB audio devices on the four AIRA host ports and make the computer USB-B port usable with a standard audio driver, including on iPhone and iPad. It contains the original firmware, reverse-engineering evidence, reproducible build tools, and two separately compiled firmware experiments.
+The project investigates channel source reassignment, compatible USB audio devices on the four AIRA host ports, and a standard audio driver for the computer USB-B port, including on iPhone and iPad. It contains the original firmware, reverse-engineering evidence, reproducible build tools, and three separately compiled firmware experiments.
 
-**Neither experimental image has been flashed to a mixer or demonstrated to carry audio on physical USB hardware.** The current results establish selected code paths and binary integration through offline tests. They do not establish working iOS audio, general USB-device compatibility, or a verified recovery procedure.
+**None of the experimental images has been flashed to a mixer or demonstrated to carry audio on physical hardware.** The current results establish selected code paths and binary integration through offline tests. They do not establish working iOS audio, general USB-device compatibility, audible channel routing, or a verified recovery procedure.
 
 ## Current status
 
@@ -13,6 +13,7 @@ The initial investigation and offline evidence were completed on **1 November 20
 | Area | Implemented or established | Next evidence needed |
 | --- | --- | --- |
 | Firmware reconstruction | Six embedded programs extracted; compression, checksums and runtime mappings recovered; original ARM decoder/updater exercised against rebuilt images | Physical update and recovery behavior |
+| Channel source routing | SELECT + TEMPO source selection on all 11 strips; 53 choices on stereo strips, mono-side choices on mono strips, duplication and the 5/6-to-USB2 split | Physical source order, levels, live switching and sustained audio |
 | USB1–4 host ports | Compiled extension admits a narrow high-speed, stereo UAC1 profile while retaining Roland selection paths | Matching real-device descriptors, transfer behavior and clock handling |
 | USB-B computer port | Compiled UAC2 descriptor, fixed-clock controls and capture-startup change; stereo and 18-channel modes retained | Class-driver enumeration, capture-first packets and sustained audio |
 | External Linux bridge | Stock-firmware host-to-UAC2-gadget planner and setup helper | A suitable board with independent host/device controllers and bench testing |
@@ -33,7 +34,7 @@ python3 -m venv .venv
 .venv/bin/python tools/check_reproduction.py --check-committed
 ```
 
-The reproduction runner regenerates decoded images, maps, both candidates and their offline checks. It records the 19 stages in [analysis/reproduction.json](analysis/reproduction.json) and logs under `build/reproduction-logs/`. The final check compares rebuilt firmware/application/extension hashes with the current evidence, hashes of the actual artifact files committed at Git `HEAD`, and the committed build-report hashes. After dependencies are installed, these checks operate on local files: they do not connect to a mixer, flash hardware or configure a USB gadget.
+The reproduction runner regenerates decoded images, maps, all three candidates and their offline checks. It records the 22 stages in [analysis/reproduction.json](analysis/reproduction.json) and logs under `build/reproduction-logs/`. The final check compares rebuilt firmware/application/extension hashes with the current evidence, hashes of the actual artifact files committed at Git `HEAD`, and the committed build-report hashes. After dependencies are installed, these checks operate on local files: they do not connect to a mixer, flash hardware or configure a USB gadget.
 
 The only supported input is [inputs/MX1_UPD.original.bin](inputs/MX1_UPD.original.bin), **4,194,320 bytes**, with SHA-256:
 
@@ -49,8 +50,9 @@ Both application headers identify `1.051132`, dated `16-0906_11:04:55`, matching
 | --- | --- | --- |
 | `build/host-probe/MX1_UAC1_HOST_PROBE_UNTESTED.bin` | USB-host application only | [UAC1 host probe](docs/HOST_PROBE.md): restricted stereo enumeration and selection; the transport remains unverified |
 | `build/device-probe/MX1_UAC2_DEVICE_PROBE_UNTESTED.bin` | Main application only | [UAC2 device probe](docs/DEVICE_PROBE.md): high-speed audio presentation, read-only clock and capture-first startup |
+| `build/routing-probe/MX1_CHANNEL_ROUTING_UNTESTED.bin` | Main application only | [Channel-routing probe](docs/CHANNEL_ROUTING.md): select a strip's source by holding SELECT and turning TEMPO |
 
-Neither image includes the other's change. Both preserve the original boot programs, updater and panel-controller payload. Their adjacent `build-report.json` files record patch sites, relocation changes, extension placement and exact hashes. Preserving boot bytes does not prove that a failed update can be recovered.
+Each image is an independent experiment. All three preserve the original boot programs, updater and panel-controller payload. Their adjacent `build-report.json` files record patch sites, relocation changes, extension placement and exact hashes. Preserving boot bytes does not prove that a failed update can be recovered.
 
 The USB-B probe retains proprietary MIDI and implicit feedback; its clock-validity response describes the configured rate, not measured PLL lock. The original full-speed configuration has no audio endpoints. It is not a universal class-compliance claim. The [device report](docs/DEVICE_PROBE.md) and [compatibility analysis](research/usb-compatibility.md) explain these boundaries.
 

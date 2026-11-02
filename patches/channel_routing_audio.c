@@ -7,6 +7,7 @@
  * See research/channel-routing-audio.md for binary evidence and limits.
  */
 #include "channel_routing.h"
+#include "internal_sources.h"
 
 struct source { uint16_t operand; char label[4]; };
 #define MONO(op, label) {op, label}
@@ -22,7 +23,7 @@ static const struct source sources[MX1_ROUTE_SOURCE_COUNT] = {
     USB(1, 0x600a), USB(2, 0x600c), USB(3, 0x600e), USB(4, 0x6010),
     PAIR(0x6006, "rtn "), MONO(0x6006, "rt L"), MONO(0x6007, "rt R"),
     PC(1, 0xa000), PC(2, 0xa002), PC(3, 0xa004), PC(4, 0xa006),
-    PC(5, 0xa008), PC(6, 0xa00a), PC(7, 0xa00c), PC(8, 0xa00e), PC(9, 0xa010)
+    PC(5, 0xa008), PC(6, 0xa00a), PC(7, 0xa00c), PC(8, 0xa00e), PC(9, 0xa010), MONO(MX1_INTERNAL_NOISE_OPERAND, "NSE "), MONO(MX1_INTERNAL_BD_OPERAND, "BD  ")
 };
 
 /* DSP logical byte offsets, NOT CPU-addressed little-endian halfwords. */
@@ -162,6 +163,12 @@ void mx1_route_flush(void)
     route_restore();
     if (route_ready) route_store(MX1_STRIP_COUNT, 0);
     uint32_t external = parameter(0x19) == 2;
+    uint32_t internal_mask = 0;
+    if (!external) for (uint32_t strip = 0; strip < MX1_STRIP_COUNT; ++strip) {
+        if (mx1_route_state[strip] == MX1_ROUTE_NSE) internal_mask |= MX1_INTERNAL_NOISE_BIT;
+        if (mx1_route_state[strip] == MX1_ROUTE_BD) internal_mask |= 1u << strip;
+    }
+    mx1_internal_routes(internal_mask);
     for (uint32_t strip = 0; strip < MX1_STRIP_COUNT; ++strip) {
         uint32_t value = external ? 0 : mx1_route_state[strip];
         uint32_t previous = applied[strip];
@@ -174,6 +181,7 @@ void mx1_route_flush(void)
             for (uint32_t side = 0; side < count; ++side) {
                 uint32_t read = value ? ((sources[value].operand & 0xefff) + (side && (sources[value].operand & 0x1000)))
                                       : stock_operands[lane + side];
+                if (value == MX1_ROUTE_BD) read = MX1_INTERNAL_BD_OPERAND + strip;
                 operand(input_sites[lane + side], read);
             }
             applied[strip] = (uint8_t)value;

@@ -67,6 +67,11 @@ class ReproductionIdentityTests(unittest.TestCase):
                 "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"]})
             self.write_json(prefix + "boot-verification.json", {
                 "status": "pass", "candidate_sha256": hashes["container_sha256"]})
+            for generator in ('core', 'audio', 'ui'):
+                self.write_json(prefix + 'generator-' + generator + '-verification.json', {
+                    'status': 'pass', 'patched_app_sha256': hashes['patched_app_sha256']})
+            self.write_json(prefix + 'generator-dsp-verification.json', {'status': 'passed'})
+            self.write_json(prefix + 'generator-exchange-audit.json', {'status': 'pass'})
             self.reproduction["candidate_sha256"][kind] = hashes["container_sha256"]
             self.write_json("analysis/container_" + kind + "_candidate_verification.json", {
                 "status": "passed", "original_sha256": self.original_sha,
@@ -171,6 +176,15 @@ class ReproductionIdentityTests(unittest.TestCase):
         self.write("tools/build_host_probe.py", b"retired builder")
         with self.assertRaisesRegex(ValueError, "Retired parallel build"):
             CHECK.audit()
+
+    def test_generator_report_from_another_candidate_is_rejected(self):
+        for name in ('core', 'audio', 'ui'):
+            path = 'build/mainline/generator-' + name + '-verification.json'
+            before = (self.root / path).read_bytes()
+            self.edit_json(path, lambda r: r.update(patched_app_sha256='0' * 64))
+            with self.assertRaisesRegex(ValueError, 'Generator .* evidence failed'):
+                CHECK.audit()
+            self.write(path, before)
 
     def test_boot_report_from_another_candidate_is_rejected(self):
         self.edit_json("build/mainline/boot-verification.json",

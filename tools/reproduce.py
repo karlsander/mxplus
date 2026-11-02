@@ -102,6 +102,13 @@ def main() -> None:
     run("build-mainline", [py, "tools/build_firmware.py", source, "--output", "build/mainline"])
     run("arm-mainline", [py, "tools/mainline_verify.py", source,
                         "--build", "build/mainline", "--output", "build/mainline/arm-verification.json"])
+    for name in ('core', 'audio', 'ui'):
+        run('generator-' + name, [py, 'tools/internal_sources_' + name + '_verify.py', source,
+            '--build', 'build/mainline', '--output', 'build/mainline/generator-' + name + '-verification.json'])
+    run('generator-dsp', [py, 'tools/internal_sources_dsp_verify.py',
+        '--output', 'build/mainline/generator-dsp-verification.json'])
+    run('generator-exchange-audit', [py, 'tools/internal_sources_audio_audit.py', source,
+        '--output', 'build/mainline/generator-exchange-audit.json'])
     run("container-mainline-candidate", [py, "tools/container_candidate_verify.py", source,
         "build/mainline/MXPLUS_MAINLINE_UNTESTED.bin", "--output", "analysis/container_mainline_candidate_verification.json"])
     run("boot-mainline", [py, "tools/boot_path_verify.py", "--firmware", source,

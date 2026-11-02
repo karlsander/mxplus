@@ -1,46 +1,47 @@
 # Mainline integration
 
-The only maintained custom firmware combines channel routing and USB-B UAC2.
-The USB-host unlock is excluded, with its evidence retained as documentation.
-This replaces the three separate builders, output directories and CI targets.
-The display-marker diagnostic is not part of mainline. Routing now uses scene
-and system reserved fields for snapshots and restart persistence; see
-[storage integration](ROUTING_STORAGE.md).
+The only maintained custom firmware combines channel routing, USB-B UAC2,
+white noise (`NSE`) and a per-strip bass drum sequencer (`BD`). USB-host unlocking
+remains excluded. The display-marker diagnostic is not part of mainline.
+Routing assignments use the stock snapshot and delayed system-save paths; see
+[storage integration](ROUTING_STORAGE.md). BD patterns currently live in RAM.
 
 ## Memory and binary integration
 
-Both features modify only the main application. The USB application, boot
-programs, updater and panel-controller payload remain byte-identical to stock.
-The descriptor, rate and reply buffer in the retired USB-B build occupied
-read-only code SRAM; the combined build fixes that placement before testing.
+Only the main application changes. The USB application, boot programs, updater
+and panel-controller payload remain byte-identical to stock. The recovered
+internal-source candidate placed mutable state in read-only SRAM. This build
+separates state and code without changing the original MPU configuration.
 
-| Runtime interval (end exclusive) | Contents | Initialization |
-| --- | --- | --- |
-| `0x0100f6a4..0x0100ffec` | 2,376 bytes of code/constants, read-only after MPU setup | Extended original first startup copy |
-| `0x01017264..0x0101727c` | Desired/applied routing cache and startup-ready flag, padded to 24 bytes | Extended original writable BSS clear |
-| `0x0101727c..0x010173e0` | 355-byte mutable USB descriptor plus padding | Repurposed formerly zero-length startup copy |
-| `0x010173e0..0x010173f4` | USB rate and 14-byte reply buffer, padded to 20 bytes | Extended original writable BSS clear |
+| Runtime interval (end exclusive) | Contents |
+| --- | --- |
+| `0x01017264..0x0101727c` | Routing desired/applied cache and startup-ready flag, 24 bytes |
+| `0x0101727c..0x010173e0` | Mutable USB descriptor and padding, 356 bytes |
+| `0x010173e0..0x010173f4` | USB rate/reply state, 20 bytes |
+| `0x010173f4..0x0101784c` | Generator patterns, voices, clock and transient UI state |
+| `0x01018000..0x01019a54` | Mainline code/constants, 6,740 bytes, read-only after MPU setup |
 
-The code slot has 20 bytes remaining before `0x01010000`. The 400-byte writable
-reservation begins exactly at the original BSS end, stays inside stock MPU
-region 2 (`0x01010000..0x01018000`), and overlaps neither RTOS pool. General
-allocation remains `0x01013e18..0x01014e18`; stacks remain
-`0x01020000..0x01028000`. No MPU or allocator configuration is changed.
+Writable state stays inside stock MPU region 2 (`0x01010000..0x01018000`).
+Code has 9,644 bytes remaining before its reviewed `0x0101c000` limit.
+General allocation remains `0x01013e18..0x01014e18`; stacks remain
+`0x01020000..0x01028000`. Neither pool overlaps the extension. No MPU or
+allocator configuration is changed.
 
-The load-image insertion is 2,732 bytes at main decoded offset `0xdff30`:
-2,376 code bytes followed by 356 descriptor bytes. Only code is copied into the
-executable slot. Main decoded literal `0xe8` extends the first copy accordingly;
-`0x100`, `0x128`, `0x13c`, `0x150` shift existing initialized-data sources.
-`0x108` extends writable BSS clearing from `0x71dc` to `0x736c` bytes.
-The originally zero-length copy described by `0x10c/0x110/0x114` now loads the
-USB descriptor to `0x0101727c`. The following original stack-pool zero is
-unchanged. These startup literals are resident at `0x60000000 + decoded offset`.
-The existing nonempty copy/zero regions retain their destinations and contents.
+The 10,224-byte load image is appended at main decoded offset
+`0xe0448`, after all original bytes. The originally zero-length
+startup copy described by main decoded literals `0x10c/0x110/0x114` copies this
+blob to `0x01017264`. It initializes writable sections, zero padding and code
+before the stock MPU setup. Every originally nonempty copy/zero operation,
+including the original BSS clear, is unchanged. Original initialized-data
+source offsets do not move. These descriptor literals reside at runtime
+`0x60000000 + decoded offset`.
 
-The builder guards every overwritten byte and the original whole-file hash,
-section types/sizes/addresses, exported functions, state objects and slot bounds.
-`build-report.json` is authoritative for regenerated hashes and branch targets.
-`mainline.load.bin` is the inserted load data, not a separate flashable firmware.
+The builder guards the whole input hash, every overwritten byte, section
+permissions/types/addresses, exported functions, state bounds, original startup
+map and allocator records. `build-report.json` records exact patches, callback
+and branch targets, load sections and component checksums. `mainline.load.bin`
+is startup data, not another flashable firmware. The archive's old builder,
+linker and firmware were not imported.
 
 ## Verification
 
@@ -50,7 +51,7 @@ requests, panel gestures and DSP programming helpers against this exact image.
 An integration case initializes USB and interleaves routing changes with clock
 requests on the same emulated RAM at all three rates. Code pages are protected
 against writes. Dirty-start tests verify the entire initialized descriptor,
-zeroed state, untouched neighbors and allocator separation.
+initialized generator defaults, zeroed route/USB state, untouched neighbors and allocator separation.
 
 USB hardware/FIFO start, RTOS scheduling boundaries and DSP arithmetic remain
 modeled or unexecuted as specified by each report. Boot tests stop before the
@@ -61,7 +62,7 @@ USB timing or deadline margin.
 ## Bench sequence
 
 1. Identify this exact image and keep monitoring muted for the first boot.
-2. Confirm SELECT labels, end stops and routing still work; save/recall differing
+2. Confirm steady/blinking SELECT toggles, labels, end stops and routing; save/recall differing
    snapshots and restart after allowing several seconds for autosave.
 3. Connect USB-B to a host using its class audio driver; record OS/driver,
    negotiated speed, sample rate and channel configuration. A Roland driver
@@ -72,3 +73,8 @@ USB timing or deadline margin.
 
 Retain `UNTESTED` until combined-image hardware evidence supports a narrower
 status. Prior routing success does not establish USB audio behavior.
+
+Test NSE first at a low fader level, then one BD voice, then multiple voices at
+all rates while monitoring USB playback/capture. The generator exchange-port
+mapping and worst-case IRQ deadline margin require hardware measurement; see
+[internal sources](INTERNAL_SOURCES.md). No physical test of this image is claimed.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the sole MX-1 mainline routing and USB-B firmware candidate.
+"""Build the sole MX-1 routing, internal-source and USB-B candidate.
 
 Only files are read/written. The exact stock input and every overwritten site
 are guarded. USB-host unlocking is excluded. This never flashes a unit.
@@ -16,14 +16,11 @@ import sys
 
 from elftools.elf.elffile import ELFFile
 
-from firmware_patch import inject
-from firmware_patch import exact_patch
+from firmware_patch import exact_patch, inject, ENTRY, DATA_START, LIMIT
 from container_tool import (COMPONENT_BY_NAME, ORIGINAL_SHA256, FormatError,
                             component_unpacked, repack_image, sha256)
 
 ROOT = Path(__file__).resolve().parents[1]
-ENTRY = 0x0100F6A4
-LIMIT = 0x01010000
 
 
 def absolute_jump(address: int, target: int) -> bytes:
@@ -32,15 +29,6 @@ def absolute_jump(address: int, target: int) -> bytes:
         raise FormatError("Patch instruction address must be even")
     prefix = b"\x00\xbf" if address & 2 else b""
     return prefix + bytes.fromhex("dff800f0") + struct.pack("<I", target | 1)
-
-
-def patch_ui(image: bytearray, symbols: dict, changes: list) -> None:
-    exact_patch(image, 0xF5D8, struct.pack("<I", 0x60010B49),
-                struct.pack("<I", symbols["mx1_route_ui_event"] | 1), changes,
-                "Panel event callback: hold SELECT and turn TEMPO")
-    exact_patch(image, 0x13356, bytes.fromhex("feb50446c54804f07cff"),
-                absolute_jump(0x60013356, symbols["mx1_route_ui_display"]), changes,
-                "Tempo display overlay with relocated original prologue")
 
 
 def build(firmware: Path, out: Path) -> dict:
@@ -69,7 +57,9 @@ def build(firmware: Path, out: Path) -> dict:
     env = dict(os.environ, ZIG_GLOBAL_CACHE_DIR=str(cache.resolve()),
                ZIG_LOCAL_CACHE_DIR=str(cache.resolve()))
     sources = [ROOT / "patches" / p for p in (
-        "channel_routing_audio.c", "channel_routing_ui.c", "channel_routing_ui.S", "usb_audio.c")]
+        "channel_routing_audio.c", "channel_routing_ui.c", "channel_routing_ui.S", "usb_audio.c",
+        "internal_sources.c", "internal_sources_dsp.c", "internal_sources_audio.c",
+        "internal_sources_clock.S", "internal_sources_ui.c", "internal_sources_ui.S")]
     from uac2_design import prototype_configuration
     config = prototype_configuration(preserve_modes=True)
     (out / "uac2_configuration.h").write_text("#define MX1_UAC2_CONFIGURATION_BYTES {" +
@@ -83,7 +73,14 @@ def build(firmware: Path, out: Path) -> dict:
                "-femit-bin=" + str(elf), "-I", str(ROOT / "patches"), "-I", str(out)]
     required = ("mx1_route_ui_event", "mx1_route_ui_display", "mx1_route_get",
                 "mx1_route_adjust", "mx1_route_label", "mx1_route_recall", "mx1_uac2_initialize",
-                "mx1_uac2_set_rate", "mx1_uac2_class_request", "mx1_uac2_start", *REQUIRED_SYMBOLS)
+                "mx1_uac2_set_rate", "mx1_uac2_class_request", "mx1_uac2_start",
+                "mx1_sources_ui_event", "mx1_sources_ui_press", "mx1_sources_ui_release",
+                "mx1_sources_ui_steps", "mx1_sources_ui_select_leds", "mx1_sources_ui_value", "mx1_sources_ui_tempo",
+                "mx1_sources_ui_target", "mx1_bd_step_get", "mx1_bd_step_toggle",
+                "mx1_bd_step_adjust", "mx1_bd_current_step", "mx1_internal_routes",
+                "mx1_internal_render", "mx1_internal_audio_frame", "mx1_internal_step",
+                "mx1_internal_transport_reset", "mx1_internal_clock_start",
+                "mx1_internal_clock_stop", "mx1_internal_clock_step", *REQUIRED_SYMBOLS)
     for name in required:
         command += ["--force_undefined", name]
     command += ["-cflags", "-ffreestanding", "-fno-builtin", "-fno-unwind-tables",
@@ -102,7 +99,7 @@ def build(firmware: Path, out: Path) -> dict:
             raise FormatError("Unresolved extension relocation")
         allocated = [s.name for s in ef.iter_sections()
                      if s["sh_flags"] & 2 and s["sh_size"]]
-        if allocated != [".text", ".route_state", ".usb_data", ".usb_state"] or text["sh_type"] != "SHT_PROGBITS":
+        if set(allocated) != {".text", ".route_state", ".usb_data", ".usb_state", ".generator_data"} or text["sh_type"] != "SHT_PROGBITS":
             raise FormatError("ELF contains allocated bytes outside the injected section")
         state = ef.get_section_by_name(".route_state")
         if (state["sh_type"] != "SHT_NOBITS" or state["sh_addr"] != 0x01017264
@@ -145,36 +142,27 @@ def build(firmware: Path, out: Path) -> dict:
                 raise FormatError("Unexpected USB state object: " + name)
         symbols = {s.name: s.entry["st_value"]
                    for s in table.iter_symbols()
-                   if s.name.startswith("mx1_")}
+                   if s.name.startswith(("mx1_", "mxkick_", "mxnoise_"))}
+        generator = ef.get_section_by_name('.generator_data')
+        if (generator['sh_type'] != 'SHT_PROGBITS' or generator['sh_addr'] != 0x010173f4
+                or generator['sh_flags'] & 7 != 3 or generator['sh_addr']+generator['sh_size'] > ENTRY):
+            raise FormatError('Generator state outside writable MPU region')
+        sections = []
+        load = bytearray(ENTRY + len(blob) - DATA_START)
+        for section in (state, usb_data, usb_state, generator, text):
+            address, length = section['sh_addr'], section['sh_size']
+            contents = bytes(length) if section['sh_type'] == 'SHT_NOBITS' else section.data()
+            load[address-DATA_START:address-DATA_START+length] = contents
+            sections.append({'name': section.name, 'address': address, 'size': length,
+                             'sha256': sha256(contents), 'flags': section['sh_flags']})
+        writable_end = generator['sh_addr'] + generator['sh_size']
     if not all(name in symbols for name in required):
         raise FormatError("Compiler omitted required routing exports")
-    modified, scatter = inject(original, blob)
-    cut = scatter['insert_offset'] + len(blob)
-    modified[cut:cut] = descriptor_blob
-    for update in scatter['startup_updates']:
-        if update['offset'] == 0xe8: continue
-        value = (0x60000000 + cut if update['offset'] == 0x114
-                 else update['after'] + len(descriptor_blob))
-        struct.pack_into('<I', modified, update['offset'], value)
-        update['after'] = value
-    scatter['code_length'] = len(blob)
-    scatter['insert_length'] += len(descriptor_blob)
-    blob += descriptor_blob
-    changes: list[dict] = []
-    # Original BSS ends exactly at the reserved state start. Extend only its
-    # zero count, preserving every existing destination and allocator record.
-    from memory_map import recover
-    bss = recover(original)["operations"][3]
-    if bss != {"call": 0x60000028, "kind": "zero", "destination": 0x01010088,
-               "length": 0x71dc}:
-        raise FormatError("Unexpected original writable SRAM BSS")
-    exact_patch(modified, 0x108, struct.pack("<I", 0x71dc),
-                struct.pack("<I", 0x736c), changes,
-                "Zero 400-byte mainline writable state reservation after original writable SRAM BSS")
-    exact_patch(modified, 0x10c, struct.pack('<I', 0x01020000), struct.pack('<I', 0x0101727c), changes,
-                "Repurpose zero-length startup copy for writable USB descriptor")
-    exact_patch(modified, 0x110, bytes(4), struct.pack('<I', 356), changes,
-                "Initialize 356-byte USB descriptor storage after writable BSS clear")
+    code_length = len(blob)
+    blob = bytes(load)
+    modified, scatter = inject(original, blob, code_length)
+    scatter['sections'] = sections
+    changes = scatter['startup_updates'].copy()
     exact_patch(modified, 0xd980, bytes.fromhex('10b500f01ff80d48'),
                 absolute_jump(0x6000d980, symbols['mx1_uac2_initialize']), changes, "USB-B UAC2 initializer")
     exact_patch(modified, 0xb4afc, struct.pack('<I', 0x600b499c),
@@ -186,7 +174,17 @@ def build(firmware: Path, out: Path) -> dict:
     exact_patch(modified, 0x1e786, bytes.fromhex("3eb50c46002202216846"),
                 absolute_jump(0x6001e786, symbols["mx1_route_recall"]), changes,
                 "Scene recall routes and normal-boot latest-route restoration")
-    patch_ui(modified, symbols, changes)
+    from internal_sources_ui_patch import patch_ui as patch_sources_ui
+    patch_sources_ui(modified, symbols, changes)
+    for offset, old, name in (
+        (0xa7dc, '00b5ba48cdb00178', 'mx1_internal_clock_start'),
+        (0xa810, '10b5ad4cccb02178', 'mx1_internal_clock_stop'),
+        (0xa894, 'f0b5934cadf5197d', 'mx1_internal_clock_step')):
+        exact_patch(modified, offset, bytes.fromhex(old), absolute_jump(0x60000000+offset, symbols[name]),
+                    changes, 'Original transport/step callback plus internal-source clock')
+    exact_patch(modified, 0x168c, struct.pack('<I',0x01009841),
+                struct.pack('<I',symbols['mx1_internal_audio_frame']|1), changes,
+                'Original computer-audio sample pump followed by internal sources')
     audio = patch_audio(modified, symbols, changes)
     for change in changes:
         change["component"] = "app_main"
@@ -203,15 +201,16 @@ def build(firmware: Path, out: Path) -> dict:
         "sources": {str(p.relative_to(ROOT)): sha256(p.read_bytes()) for p in [
             *sources, ROOT / "patches/channel_routing.h", ROOT / "patches/mainline.ld",
             Path(__file__).resolve(), ROOT / "tools/routing_audio_patch.py",
-            ROOT / "tools/firmware_patch.py", ROOT / "tools/uac2_design.py"]},
+            ROOT / "tools/firmware_patch.py", ROOT / "tools/uac2_design.py",
+            ROOT / "tools/internal_sources_ui_patch.py", *sorted((ROOT/"patches").glob("internal_sources*.h"))]},
         "scatter_extension": scatter, "patches": changes,
-        "writable_state": {"start": 0x01017264, "size": 400, "end_exclusive": 0x010173f4, "startup_zero_length_offset": 0x108},
+        "writable_state": {"start": 0x01017264, "size": writable_end-DATA_START, "end_exclusive": writable_end, "startup_copy_operation": 4},
         "audio_routing": audio, "container": container,
         "sram_bytes_remaining": LIMIT - ENTRY - scatter['code_length'],
         "hardware_access": False,
         "limits": [
-            "Routing predecessor passed user bench tests; combined USB-B mainline awaits hardware testing",
-            "Routing and USB-B audio combined; USB-host application remains stock",
+            "Routing predecessor passed user bench tests; combined USB-B/internal-source mainline awaits hardware testing",
+            "Routing, NSE/BD generators and USB-B audio combined; USB-host application remains stock",
             "Real-time deadline margin and electrical/DMA behavior require hardware measurement",
         ],
     }

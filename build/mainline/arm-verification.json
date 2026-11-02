@@ -1,38 +1,69 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758",
-  "candidate_container_sha256": "88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba",
-  "extension_sha256": "859b0ffc16473fcefcce41c53029821f1013c206f8b00d32203fbbc0e166be68",
+  "patched_app_sha256": "d6cda6d3344a63f62008cea4eabfdb5b3aa6092344359f5c527ffba847f0985f",
+  "candidate_container_sha256": "08b8f2f783718b8039dc66ddfc14aa2ce13f63447df4df73eb10fa098e77fd94",
+  "extension_sha256": "c12cfa87b28d9f916f61861f11bcd10c319d6a09f394504fbe20cfea3d136906",
   "groups": [
     {
-      "name": "Every application change matches recorded guarded patches and scatter insertion",
+      "name": "Every changed byte is guarded; only the original empty startup copy is repurposed",
       "status": "pass",
-      "patch_sites": 12,
-      "extension_bytes": 2732,
-      "sram_bytes_remaining": 20
+      "extension_bytes": 10224,
+      "code_address": "0x1018000",
+      "sram_bytes_remaining": 9644
     },
     {
-      "name": "Actual original startup installs routing code and preserves existing initialized data and BSS",
+      "name": "Original startup initializes all sections and preserves every original nonempty region",
       "status": "pass",
-      "runtime_interval": [
-        "0x0100f6a4",
-        "0x100ffec"
-      ],
-      "existing_nonempty_destinations_unchanged": true,
-      "repurposed_empty_copy": "USB descriptor at 0x0101727c"
+      "sections": [
+        {
+          "name": ".route_state",
+          "address": 16872036,
+          "size": 24,
+          "sha256": "9d908ecfb6b256def8b49a7c504e6c889c4b0e41fe6ce3e01863dd7b61a20aa0",
+          "flags": 3
+        },
+        {
+          "name": ".usb_data",
+          "address": 16872060,
+          "size": 356,
+          "sha256": "aec06110cfbdecf3cc13a0477a7fafa618556294eca691e6675511be31f96d00",
+          "flags": 3
+        },
+        {
+          "name": ".usb_state",
+          "address": 16872416,
+          "size": 20,
+          "sha256": "de47c9b27eb8d300dbb5f2c353e632c393262cf06340c4fa7f1b40c4cbd36f90",
+          "flags": 3
+        },
+        {
+          "name": ".generator_data",
+          "address": 16872436,
+          "size": 1112,
+          "sha256": "82edd16789a4e66f04688fc5f37a18f2963db6207a66abf2166da5f52366fdff",
+          "flags": 3
+        },
+        {
+          "name": ".text",
+          "address": 16875520,
+          "size": 6740,
+          "sha256": "6d4594954d2d47d887d50b035e4a941ec8dfb3704f4508b517a2c52db1595ecf",
+          "flags": 54
+        }
+      ]
     },
     {
       "name": "Original MPU makes injected code read-only and new route state read-write",
       "status": "pass",
-      "code_protection": "0x01001000..0x0100ffff enforced in all UI/audio instruction cases",
+      "code_protection": "0x01001000..0x0100ffff and 0x01018000..0x0101ffff protected against writes",
       "state_interval": [
         "0x1017264",
-        "0x10173f4"
+        "0x101784c"
       ]
     },
     {
-      "name": "Dirty cold startup clears state; original RTOS pools cannot allocate its reservation",
+      "name": "Dirty cold startup initializes state; original RTOS pools cannot allocate its reservation",
       "status": "pass",
       "general_pool": [
         "0x01013e18",
@@ -42,7 +73,7 @@
         "0x01020000",
         "0x01028000"
       ],
-      "state_reservation_bytes": 400,
+      "state_reservation_bytes": 1512,
       "descriptor_initialized_bytes": 356,
       "patterns": [
         85,
@@ -52,7 +83,7 @@
     {
       "name": "Actual startup copies extension and preserves existing initialized data",
       "status": "pass",
-      "extension_bytes": 2732
+      "extension_bytes": 10224
     },
     {
       "name": "Patched initializer veneer, original registration, and live rate descriptors",
@@ -654,15 +685,16 @@
     {
       "name": "Every permitted source on every destination executes actual compiled menu and original DSP writers",
       "status": "pass",
-      "source_choices": 53,
+      "source_choices": 55,
       "strips": 11,
-      "source_destination_visits": 519,
+      "source_destination_visits": 541,
       "mono_stereo_pairs_skipped": true,
       "four_character_labels": true,
+      "generator_active_masks_checked": true,
       "endpoints_clamp_without_event_posts": true,
       "inward_turn_resumes": true,
       "largest_single_route_drain_commands": 4,
-      "largest_single_route_drain_instructions": 581
+      "largest_single_route_drain_instructions": 694
     },
     {
       "name": "Analog 5/6 split produces independent original-5/6 and USB2 input reads; own PC summand suppressed",

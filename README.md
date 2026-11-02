@@ -1,6 +1,6 @@
 # mxplus
 
-One MX-1 firmware build: channel source routing and experimental USB-B UAC2 audio.
+One MX-1 firmware build: channel routing, internal noise/bass drum sources and experimental USB-B UAC2 audio.
 
 **The routing predecessor, including encoder end stops, passed the user's bench
 test. The combined mainline image has not yet been tested on hardware.** USB-B
@@ -30,8 +30,11 @@ The original is not an alternative maintained custom firmware.
 
 ## Features
 
-- Hold a strip's SELECT and turn TEMPO to choose its source. The menu stops at
-  `Auto` and `P9 R`. Routes save with mixer snapshots and restore after restart. See [routing](docs/CHANNEL_ROUTING.md).
+- Press an already selected strip's SELECT to toggle source editing (blinking)
+  and normal editing (steady). TEMPO chooses the source; the menu stops at
+  `Auto` and `BD`. Holding SELECT + TEMPO also works. Routes save with mixer snapshots and restore after restart. See [routing](docs/CHANNEL_ROUTING.md).
+- `NSE` generates white noise; `BD` provides a per-strip 16-step bass drum
+  pattern. Patterns are currently RAM-only. See [internal sources](docs/INTERNAL_SOURCES.md).
 - USB-B advertises UAC2 audio with stereo and 18-channel alternates. The mixer
   selects the fixed rate; USB MIDI remains proprietary. See [USB audio](docs/DEVICE_PROBE.md).
 - AIRA USB1–4 retain the original firmware implementation. The generic-host

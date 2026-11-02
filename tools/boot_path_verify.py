@@ -201,19 +201,16 @@ def audit(original: bytes, candidate: bytes, build: dict, applied_address: int) 
             if op['length']:
                 expected = (main[op['source'] - BASE:op['source'] - BASE + op['length']]
                             if op['kind'] == 'copy' else bytes(op['length']))
-                if index == 3:
-                    from uac2_design import prototype_configuration
-                    expected = bytes(op['length'] - 376) + prototype_configuration(preserve_modes=True) + bytes(21)
                 assert machine.read(op['destination'], op['length']) == expected
         state = symbols['mx1_route_state']
         assert machine.read(state, 11) == bytes(11)
         assert machine.read(applied_address, 11) == bytes(11)
         start = build['scatter_extension']['runtime_address']
-        end = start + build['scatter_extension']['code_length']
-        assert machine.read(end, 0x01010000 - end) == bytes([pattern]) * (0x01010000 - end)
+        end = start + build['scatter_extension']['insert_length']
+        assert machine.read(end, 0x01020000 - end) == bytes([pattern]) * (0x01020000 - end)
         cold_cases.append({'dirty_byte': hex(pattern), 'routes': 'all Auto',
             'desired_and_applied_state_zero': True,
-            'extension_end': hex(end), 'untouched_gap_bytes': 0x01010000 - end})
+            'extension_end': hex(end), 'untouched_gap_bytes': 0x01020000 - end})
     checks.append({'name': 'Actual cold startup installs initialized route state without relying on zero SRAM',
                    'status': 'pass', 'cases': cold_cases})
 
@@ -227,9 +224,11 @@ def audit(original: bytes, candidate: bytes, build: dict, applied_address: int) 
         machine.uc.mem_map(0xE000E000, 0x2000)
         records = struct.unpack('<8I', machine.read(0x0100F234, 0x20))
         assert records == (1, 0, 0x8000, 0x01020000, 2, 0, 0x1000, 0x01013E18)
-        extension_before = machine.read(0x0100F6A4, 0x95C)
+        extension_start = build['scatter_extension']['runtime_address']
+        extension_size = build['scatter_extension']['insert_length']
+        extension_before = machine.read(extension_start, extension_size)
         machine.call(0x01006338, count=500_000)
-        assert machine.read(0x0100F6A4, 0x95C) == extension_before
+        assert machine.read(extension_start, extension_size) == extension_before
         pools = []
         for control, length, base in ((0x01014E18, 0x8000, 0x01020000),
                                       (0x01014E5C, 0x1000, 0x01013E18)):
@@ -321,12 +320,20 @@ def main():
         elf = ELFFile(stream)
         text = elf.get_section_by_name('.text')
         build = json.loads((args.build / 'build-report.json').read_text())
-        assert sha256(text.data() + elf.get_section_by_name('.usb_data').data()) == build['extension_sha256']
+        blob = bytearray(build['scatter_extension']['insert_length'])
+        for section in elf.iter_sections():
+            if section['sh_flags'] & 2 and section['sh_size']:
+                offset = section['sh_addr'] - build['scatter_extension']['runtime_address']
+                assert 0 <= offset <= len(blob) - section['sh_size']
+                if section['sh_type'] != 'SHT_NOBITS':
+                    blob[offset:offset + section['sh_size']] = section.data()
+        assert sha256(blob) == build['extension_sha256']
         applied = elf.get_section_by_name('.symtab').get_symbol_by_name('applied')
         assert len(applied) == 1 and applied[0]['st_size'] == 11
         applied_address = applied[0]['st_value']
         assert applied_address == 0x0101726f
-        assert build["writable_state"] == {"start": 0x01017264, "size": 400, "end_exclusive": 0x010173f4, "startup_zero_length_offset": 0x108}
+        assert build["writable_state"]["start"] == 0x01017264
+        assert build["writable_state"]["end_exclusive"] <= 0x01018000
     report = audit(args.firmware.read_bytes(),
         (args.build / 'MXPLUS_MAINLINE_UNTESTED.bin').read_bytes(),
         build, applied_address)

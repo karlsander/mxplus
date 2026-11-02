@@ -53,14 +53,14 @@
     {
       "name": "Original MPU makes injected code read-only and new route state read-write",
       "status": "pass",
-      "code_protection": "0x01001000..0x0100ffff enforced in all UI/audio instruction cases",
+      "code_protection": "0x01001000..0x0100ffff and 0x01018000..0x0101ffff protected against writes",
       "state_interval": [
         "0x1017264",
-        "0x10173f4"
+        "0x101784c"
       ]
     },
     {
-      "name": "Dirty cold startup clears state; original RTOS pools cannot allocate its reservation",
+      "name": "Dirty cold startup initializes state; original RTOS pools cannot allocate its reservation",
       "status": "pass",
       "general_pool": [
         "0x01013e18",
@@ -70,7 +70,7 @@
         "0x01020000",
         "0x01028000"
       ],
-      "state_reservation_bytes": 400,
+      "state_reservation_bytes": 1512,
       "descriptor_initialized_bytes": 356,
       "patterns": [
         85,

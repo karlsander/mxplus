@@ -20,93 +20,65 @@ from arm_machine import Machine, BASE
 from memory_map import recover
 
 
-def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
-    """Account for every changed byte and execute the complete startup copies."""
+def verify_layout(original: bytes, patched: bytes, build: dict) -> list:
     assert sha256(original) == build['original_app_sha256']
     assert sha256(patched) == build['patched_app_sha256']
     scatter = build['scatter_extension']
     cut, size = scatter['insert_offset'], scatter['insert_length']
-    assert cut == 0xdff30 and scatter['runtime_address'] == 0x0100f6a4
-    code_size = scatter['code_length']
-    assert 0 < code_size <= 0x95c and code_size % 4 == 0
-    assert size == code_size + 356
-    assert len(patched) == len(original) + size
-    extension = patched[cut:cut + size]
-    assert sha256(extension) == build['extension_sha256']
-    assert build['sram_bytes_remaining'] == 0x95c - code_size
-
-    # Independently replay the recorded changes. Unrecorded changes, overlapping
-    # patches, wrong old bytes, or a shifted existing destination must fail.
-    expected = bytearray(original[:cut] + extension + original[cut:])
-    modified = set(range(cut, cut + size))
-    updates = scatter['startup_updates']
-    assert [u['offset'] for u in updates] == [0xe8, 0x100, 0x114, 0x128, 0x13c, 0x150]
-    for update in updates:
-        off = update['offset']
-        assert struct.unpack_from('<I', expected, off)[0] == update['before']
-        expected_after = (update['before'] + code_size if off == 0xe8 else
-                          BASE + cut + code_size if off == 0x114 else update['before'] + size)
-        assert update['after'] == expected_after
-        struct.pack_into('<I', expected, off, update['after'])
-        modified.update(range(off, off + 4))
+    assert cut == len(original) and len(patched) == cut+size
+    assert scatter['runtime_address'] == 0x01017264
+    assert scatter['code_address'] == 0x01018000
+    assert 0 < scatter['code_length'] <= 0x4000 and scatter['code_length'] % 4 == 0
+    assert build['sram_bytes_remaining'] == 0x4000 - scatter['code_length']
+    blob = patched[cut:]
+    assert sha256(blob) == build['extension_sha256']
+    assert size == 0xd9c+scatter['code_length']
+    expected = bytearray(original+blob)
+    occupied = set()
     for patch in build['patches']:
         assert patch['component'] == 'app_main'
         off = patch['file_offset']
-        before, after = bytes.fromhex(patch['original']), bytes.fromhex(patch['replacement'])
-        assert before and len(before) == len(after)
-        assert 0 <= off <= len(expected) - len(before)
-        positions = set(range(off, off + len(before)))
-        assert not positions & modified, 'Overlapping or unreviewed patch'
-        assert expected[off:off + len(before)] == before
-        expected[off:off + len(after)] = after
-        modified.update(positions)
-    assert bytes(expected) == patched, 'Unaccounted application byte changes'
-
-    old_map = recover(original)['operations']
-    new_map = recover(patched)['operations']
-    assert len(old_map) == len(new_map)
-    for index, (old, new) in enumerate(zip(old_map, new_map)):
-        if index == 4:
-            assert old['length'] == 0 and old['destination'] == 0x01020000
-            assert new == dict(old, destination=0x0101727c, length=356, source=BASE + cut + code_size)
-            continue
-        assert old['kind'] == new['kind'] and old['destination'] == new['destination']
-        assert new['length'] == old['length'] + (code_size if index == 0 else 400 if index == 3 else 0)
-        if old['kind'] == 'copy':
-            assert new['source'] == old['source'] + (size if old['source'] >= BASE + cut else 0)
-
-    started = []
-    for image in (original, patched):
-        machine = Machine(image, scatter=False)
-        machine.uc.reg_write(UC_ARM_REG_SP, 0x2001fff0)
-        machine.write(0x0100f6a4, b'\xcc' * size)
-        machine.uc.emu_start(BASE | 1, BASE + 0x7e, timeout=2_000_000, count=2_000_000)
-        assert machine.uc.reg_read(UC_ARM_REG_PC) == BASE + 0x7e
-        for index, operation in enumerate(recover(image)['operations']):
-            length = operation['length']
-            if not length:
-                continue
-            contents = (image[operation['source'] - BASE:operation['source'] - BASE + length]
-                        if operation['kind'] == 'copy' else bytes(length))
-            if image is patched and index == 3:
-                contents = bytes(length - 376) + extension[code_size:] + bytes(20)
-            assert machine.read(operation['destination'], length) == contents
-        started.append(machine)
-    for operation in old_map:
-        if operation['destination'] != 0x01000300 and operation['length']:
-            address, length = operation['destination'], operation['length']
-            assert started[0].read(address, length) == started[1].read(address, length)
-    assert started[1].read(0x0100f6a4, code_size) == extension[:code_size]
-    assert started[1].read(0x0101727c, 356) == extension[code_size:]
-    return [
-        {'name': 'Every application change matches recorded guarded patches and scatter insertion',
-         'status': 'pass', 'patch_sites': len(build['patches']), 'extension_bytes': size,
-         'sram_bytes_remaining': 0x95c - code_size},
-        {'name': 'Actual original startup installs routing code and preserves existing initialized data and BSS',
-         'status': 'pass', 'runtime_interval': ['0x0100f6a4', hex(0x0100f6a4 + code_size)],
-         'existing_nonempty_destinations_unchanged': True,
-         'repurposed_empty_copy': 'USB descriptor at 0x0101727c'},
-    ]
+        old,new = bytes.fromhex(patch['original']),bytes.fromhex(patch['replacement'])
+        positions = set(range(off,off+len(old)))
+        assert old and 0 <= off <= cut-len(old)
+        assert not positions & occupied and len(old)==len(new)
+        assert expected[off:off+len(old)] == old
+        expected[off:off+len(new)] = new
+        occupied.update(positions)
+    assert bytes(expected) == patched
+    old_ops,new_ops = recover(original)['operations'],recover(patched)['operations']
+    assert len(old_ops)==len(new_ops)
+    for i,(old,new) in enumerate(zip(old_ops,new_ops)):
+        if i == 4:
+            assert old == {'call':0x60000032,'kind':'copy','destination':0x01020000,'length':0,'source':0x600dffb4}
+            assert new == dict(old,destination=0x01017264,length=size,source=BASE+cut)
+        else: assert old == new
+    machine=Machine(patched,scatter=False)
+    machine.write(0x01017264,b'\xa5'*0x4d9c)
+    machine.uc.reg_write(UC_ARM_REG_SP,0x2001fff0)
+    machine.uc.emu_start(BASE|1,BASE+0x7e,timeout=5_000_000,count=3_000_000)
+    assert machine.uc.reg_read(UC_ARM_REG_PC)==BASE+0x7e
+    for op in new_ops:
+        if not op['length']:continue
+        contents = (patched[op['source']-BASE:op['source']-BASE+op['length']]
+                    if op['kind']=='copy' else bytes(op['length']))
+        assert machine.read(op['destination'],op['length'])==contents
+    assert machine.read(0x01017264,size)==blob
+    sections=scatter['sections']
+    assert [s['name'] for s in sections]==['.route_state','.usb_data','.usb_state','.generator_data','.text']
+    covered=set()
+    for section in sections:
+        off=section['address']-0x01017264
+        assert sha256(blob[off:off+section['size']])==section['sha256']
+        assert not covered & set(range(off,off+section['size']))
+        covered.update(range(off,off+section['size']))
+        assert section['flags']&7 == (6 if section['name']=='.text' else 3)
+    assert all(byte==0 for i,byte in enumerate(blob) if i not in covered)
+    return [{'name':'Every changed byte is guarded; only the original empty startup copy is repurposed',
+             'status':'pass','extension_bytes':size,'code_address':hex(scatter['code_address']),
+             'sram_bytes_remaining':build['sram_bytes_remaining']},
+            {'name':'Original startup initializes all sections and preserves every original nonempty region',
+             'status':'pass','sections':sections}]
 
 
 def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:

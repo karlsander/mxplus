@@ -38,7 +38,7 @@ python tools/check_reproduction.py --check-committed
 ```
 
 `tools/reproduce.py` checks the exact original firmware, extracts its programs,
-then runs these 17 stages in order:
+then runs these 22 stages in order:
 
 1. `map-main`
 2. `map-usb`
@@ -51,12 +51,17 @@ then runs these 17 stages in order:
 9. `bridge-plan-tests`
 10. `build-mainline`
 11. `arm-mainline`
-12. `container-mainline-candidate`
-13. `boot-mainline`
-14. `original-audio-pump`
-15. `compile-native-controls`
-16. `native-controls`
-17. `subcpu-evidence`
+12. `generator-core`
+13. `generator-audio`
+14. `generator-ui`
+15. `generator-dsp`
+16. `generator-exchange-audit`
+17. `container-mainline-candidate`
+18. `boot-mainline`
+19. `original-audio-pump`
+20. `compile-native-controls`
+21. `native-controls`
+22. `subcpu-evidence`
 
 The final gate requires the complete ordered pipeline and compares the one
 mainline container, decoded application and load-image blob against both current

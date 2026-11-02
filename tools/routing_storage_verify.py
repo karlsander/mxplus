@@ -84,7 +84,7 @@ def verify(original, patched, build):
 
     # All 64 user slots round-trip via original save, copy and recall code.
     m.boot()
-    routes = bytes([1, 6, 7, 9, 5, 8, 11, 20, 26, 50, 52])
+    routes = bytes([1, 6, 7, 9, 5, 8, 11, 20, 26, 53, 54])
     baseline = bytes((i * 17 + 3) & 255 for i in range(MIX_SIZE))
     for slot in range(1, 65):
         m.write(MIX, baseline)
@@ -116,7 +116,7 @@ def verify(original, patched, build):
     # Latest edits reach both system copies; snapshots are not overwritten.
     before = cold.read(MIX + MIX_SIZE, MIX_SIZE*65)
     cold.call(symbols['mx1_route_adjust'], 10, 0xffffffff)
-    assert cold.routes()[10] == 51
+    assert cold.routes()[10] == 53
     assert cold.read(SYSTEM_RECORD, 16) == record(cold.routes())
     assert cold.read(SYSTEM_RECORD + SYSTEM_SIZE, 16) == record(routes), 'Autosave shadow must stay dirty until stock timer observes it'
     assert cold.read(MIX + MIX_SIZE, MIX_SIZE*65) == before
@@ -152,7 +152,7 @@ def verify(original, patched, build):
         cold.write(SCENE_RECORD, raw)
         assert cold.routes() == bytes(11)
     for strip in range(11):
-        for value in range(53, 256):
+        for value in range(55, 256):
             data = bytearray(record(routes)); data[4+strip] = value
             cold.write(SCENE_RECORD, data)
             assert cold.call(symbols["mx1_route_get"], strip)[0] == 0

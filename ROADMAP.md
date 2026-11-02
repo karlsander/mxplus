@@ -1,11 +1,13 @@
 # Mainline roadmap
 
-One maintained firmware contains routing and USB-B UAC2. The routing predecessor
+One maintained firmware contains routing, internal NSE/BD sources and USB-B UAC2. The routing predecessor
 passed user bench tests including encoder end stops. The combined image has
 offline evidence but still needs its own physical test.
 
 1. Verify combined-image boot, routing, snapshot save/recall, delayed restart
-   persistence and unchanged ordinary controls.
+   persistence, SELECT editing toggles and unchanged ordinary controls. Test
+   generator levels, clock behavior, exchange mapping and IRQ margin with one
+   and eleven BD voices. BD pattern persistence is not yet implemented.
 2. Establish class-driver USB-B enumeration, playback, capture-only and duplex.
 3. Cover stop/restart, reconnect, stereo/18-channel and mixed alternates, all
    three rates, channel order/levels and sustained audio.

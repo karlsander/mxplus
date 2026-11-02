@@ -21,7 +21,8 @@ EXPECTED_STAGES = (
     "map-main", "map-usb", "map-updater", "container_verify",
     "container_updater_verify", "container_binding_verify",
     "usb-descriptor-scan", "descriptor-tests", "bridge-plan-tests",
-    "build-mainline", "arm-mainline", "container-mainline-candidate", "boot-mainline", "original-audio-pump",
+    "build-mainline", "arm-mainline", "generator-core", "generator-audio", "generator-ui",
+    "generator-dsp", "generator-exchange-audit", "container-mainline-candidate", "boot-mainline", "original-audio-pump",
     "compile-native-controls", "native-controls", "subcpu-evidence",
 )
 ARTIFACTS = {
@@ -60,7 +61,8 @@ def audit(check_committed: bool = False) -> dict:
                     "build/device-probe/MX1_UAC2_DEVICE_PROBE_UNTESTED.bin",
                     "build/routing-probe/MX1_CHANNEL_ROUTING_UNTESTED.bin",
                     "build/display-marker/MX1_DISPLAY_MARKER_UNTESTED.bin",
-                    "tools/build_host_probe.py", "tools/build_device_probe.py", "tools/build_routing_probe.py"):
+                    "tools/build_host_probe.py", "tools/build_device_probe.py", "tools/build_routing_probe.py",
+                    "tools/build_generator_probe.py", "build/generator-probe"):
         require(not (ROOT / retired).exists(), "Retired parallel build remains: " + retired)
     reproduction = read("analysis/reproduction.json")
     require(reproduction.get("status") == "passed", "Reproduction did not pass")
@@ -125,6 +127,15 @@ def audit(check_committed: bool = False) -> dict:
         boot = read(prefix + "boot-verification.json")
         require(boot.get("status") == "pass" and boot.get("candidate_sha256") == actual["container_sha256"],
                 "Mainline boot evidence missing or belongs to another candidate")
+        for name in ('core', 'audio', 'ui'):
+            generator = read(prefix + 'generator-' + name + '-verification.json')
+            require(generator.get('status') == 'pass' and
+                    generator.get('patched_app_sha256') == actual['patched_app_sha256'],
+                    'Generator ' + name + ' evidence failed or belongs to another candidate')
+        require(read(prefix + 'generator-dsp-verification.json').get('status') == 'passed',
+                'Generator numerical evidence failed')
+        require(read(prefix + 'generator-exchange-audit.json').get('status') == 'pass',
+                'Generator exchange audit failed')
         if check_committed:
             committed = json.loads(committed_bytes(report_path))
             for key, value in actual.items():

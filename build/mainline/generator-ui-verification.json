@@ -1,0 +1,160 @@
+{
+  "status": "pass",
+  "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
+  "patched_app_sha256": "d6cda6d3344a63f62008cea4eabfdb5b3aa6092344359f5c527ffba847f0985f",
+  "ui_only_fixture": false,
+  "groups": [
+    {
+      "name": "Exact original hook bytes and all final veneer targets match",
+      "status": "pass"
+    },
+    {
+      "name": "Original SELECT actions toggle steady normal / blinking source edit on both mixer pages",
+      "status": "pass",
+      "strips": 11,
+      "pages": [
+        5,
+        15
+      ],
+      "startup_gradient_retained": true,
+      "original_select": "0x60016532, held-key helpers execute unchanged",
+      "parameter_get_set": "Modeled; final physical LED delivery recorded"
+    },
+    {
+      "name": "Original linked-pair selection and hidden right SELECT LED survive source editing; modifiers cancel toggle",
+      "status": "pass"
+    },
+    {
+      "name": "Original gradient requires no current channel; selected channel renders BFX mask",
+      "status": "pass",
+      "gradient_current_channel": -1,
+      "selected_current_channel": 7,
+      "interpretation": "BD view uses selected BD channel with CHANNEL SETTING BFX unfocused"
+    },
+    {
+      "name": "Original display widths and font require a blank positive pitch sign",
+      "status": "pass",
+      "font_table": "SRAM 0x0100ecd4",
+      "plus_and_minus_segments": 64,
+      "positive": " 12",
+      "negative": "-12"
+    },
+    {
+      "name": "All 16 pads on all 11 strips toggle only on release; all five channel focuses permit BD",
+      "status": "pass",
+      "address_cases": 176,
+      "channel_focuses": [
+        0,
+        1,
+        2,
+        3,
+        5
+      ]
+    },
+    {
+      "name": "Held-note encoders bind pitch/decay to that step, normalize deltas, suppress taps and restore",
+      "status": "pass",
+      "cases": 44,
+      "encoder_zero": "consumed without edit or toggle suppression"
+    },
+    {
+      "name": "Zero encoder movement does not convert an ordinary tap into an edit",
+      "status": "pass"
+    },
+    {
+      "name": "Pitch signed semitone and decay displays format all parameter limits",
+      "status": "pass",
+      "value_characters": 3,
+      "tempo_characters": 4
+    },
+    {
+      "name": "Captured release stays owned and cannot toggle a different channel after context changes",
+      "status": "pass",
+      "cases": 7
+    },
+    {
+      "name": "Overlapping pad holds cancel taps and consume ambiguous encoders without touching BFX/PAN/TEMPO",
+      "status": "pass"
+    },
+    {
+      "name": "Modifier or SELECT arriving during a held pad cancels its tap and preserves other actions",
+      "status": "pass",
+      "cases": 7
+    },
+    {
+      "name": "BFX focus, scene/control modes, non-BD sources and blocked states retain stock step actions",
+      "status": "pass",
+      "cases": 12
+    },
+    {
+      "name": "Every other physical button held before a pad preserves the original gesture",
+      "status": "pass",
+      "cases": 69
+    },
+    {
+      "name": "Existing SELECT plus TEMPO source picker and unmodified VALUE survive on every strip",
+      "status": "pass"
+    },
+    {
+      "name": "All sixteen RGB calls distinguish enabled notes, playhead, held note and off pads",
+      "status": "pass",
+      "enabled_color": 18,
+      "playhead_color": 22,
+      "held_color": 7,
+      "hardware_sink": "stock dispatcher executes; final LED driver call recorded"
+    },
+    {
+      "name": "Inactive step-renderer trampoline preserves exact stock palette and LED-dispatch calls",
+      "status": "pass",
+      "channel_focuses": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        13
+      ]
+    },
+    {
+      "name": "Unheld VALUE and TEMPO retain original character output through both trampolines",
+      "status": "pass"
+    },
+    {
+      "name": "Final candidate physical picker, labels, held encoders and displays execute real route/BD state",
+      "status": "pass",
+      "strips": 11,
+      "initialized_steps": 176,
+      "core_api": "compiled, no state API stubs",
+      "preserved": "Every other step and strip remains byte-identical"
+    },
+    {
+      "name": "Final candidate sixteen-step clock publication feeds actual LED playhead and stopped display",
+      "status": "pass",
+      "step_publications": 20,
+      "transport": "Explicit supplied running byte; clock hook has separate checks"
+    },
+    {
+      "name": "All executed entries preserve r4-r11, SP and normal return control",
+      "status": "pass"
+    }
+  ],
+  "sources": {
+    "patches/internal_sources_ui.c": "4dd3e7ab195dbdc7e9b781e3584c70f6d2b6876f2af5c14a59ceb7ec0f9067f1",
+    "patches/internal_sources_ui.h": "ab846ecac7d41caf8aab26ac067eab3d82e30242435ee5f97f1939c52364e49e",
+    "patches/internal_sources_ui.S": "bcdd5960a851a5a0ebeabd18ed02c44c35d86c6e710583b7bd9fec48eb303fcf",
+    "tools/internal_sources_ui_patch.py": "be2553bef99b64d15af3ebc42d3d965d85b2ef3d806956c96eca792d9b42867d",
+    "tools/internal_sources_ui_verify.py": "220285d7f2e951ec3d8fa8576ba98aaf457b28533d1b98d49a55a79620165124"
+  },
+  "boundaries": [
+    "Parameter storage returns explicit supplied values",
+    "Gesture isolation models BD APIs; final-candidate integration executes compiled route/BD state APIs",
+    "Core/audio/clock hooks have separate checks; supplied UI transport state is not a timing test",
+    "Page dispatch modeled; selection cases execute original 0x60016532 and held-key helpers; parameter access modeled",
+    "Original packet decoder, event queue and physical key bits execute unchanged",
+    "Original font loop, segment lookup and LED dispatcher execute; final hardware calls are observed",
+    "No physical scan wiring, LED appearance, MIDI/clock jitter or deadline margin measured"
+  ]
+}

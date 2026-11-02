@@ -1,0 +1,72 @@
+{
+  "archive": "mxplus-nse-bd-recovery-2026-11-02.zip",
+  "archive_sha256": "9d668520418c4f957c31670d258d526c485b55774f0c3d2243967d870326da49",
+  "recovered_commit": "2d04fb191b220f38315462d757b57be8a991cd0d",
+  "files": [
+    {
+      "path": "patches/internal_sources_ui.c",
+      "archive_sha256": "ad04a1fe4fbdca1eaeb379eeb7ff99a4cf874c416d30d85fd3a50724f98ccff2"
+    },
+    {
+      "path": "patches/internal_sources.c",
+      "archive_sha256": "93b55298542816739e54956a07b2c3c8a8ea54ebd8a894185eefcdb21db32106"
+    },
+    {
+      "path": "patches/internal_sources_dsp.c",
+      "archive_sha256": "b903b242aa7caec31dd88f12fae62f6ef568d323dac3730cc6085154b4ddef83"
+    },
+    {
+      "path": "patches/internal_sources_audio.c",
+      "archive_sha256": "bbe89452808dd50040ffd9b7f5caa6210dae92875fc843d63970d10deff354eb"
+    },
+    {
+      "path": "patches/internal_sources_ui.h",
+      "archive_sha256": "7a54474690043b9ef0bcb2a59e154201556936a336070f9cb57081a8699febf9"
+    },
+    {
+      "path": "patches/internal_sources.h",
+      "archive_sha256": "084ed1f909bf212ad557835ae6dd86d296bfe933b5550777a52f255f9b2b5869"
+    },
+    {
+      "path": "patches/internal_sources_dsp.h",
+      "archive_sha256": "c29db9076daddb7dd7fbe577466a34982a32e94d2b307ceb4e2b12b8f145eec6"
+    },
+    {
+      "path": "patches/internal_sources_ui.S",
+      "archive_sha256": "c1eeb2ebddf076b761eb54e7d597da0829151d79d0e15e11bad0c53ae1f88eae"
+    },
+    {
+      "path": "patches/internal_sources_clock.S",
+      "archive_sha256": "a76646274168f47a5c8bcf87264957c09a79a47eba0384bf987fca1a745d426a"
+    },
+    {
+      "path": "tools/internal_sources_audio_audit.py",
+      "archive_sha256": "7b56aa18eaad355ef2806c3b2dfbe0d7531baf539ecdc0488ec5c996d6a68215"
+    },
+    {
+      "path": "tools/internal_sources_ui_verify.py",
+      "archive_sha256": "f9371a7613fdd86414aed5ad4703cd063b3e388d061a87ba4f9f32f6fa6caa81"
+    },
+    {
+      "path": "tools/internal_sources_audio_verify.py",
+      "archive_sha256": "2e5253631db0fab2efcf2e58e7036a9528b6a854ccea2d01b642625b3a943abc"
+    },
+    {
+      "path": "tools/internal_sources_dsp_verify.py",
+      "archive_sha256": "30937744ef6d75dfd0d1776354430816ca1c76b12d69a59fdc4c7adf4eebd6e0"
+    },
+    {
+      "path": "tools/internal_sources_core_verify.py",
+      "archive_sha256": "8c5c5c0c0e051252c3328bf007514396d8559cd1a0321247ba61678bd2af62db"
+    },
+    {
+      "path": "tools/internal_sources_ui_patch.py",
+      "archive_sha256": "abd16c5d03577a763aacebb5dfbdd36eaa8d702f6938b73a5cab6f3825b41d97"
+    },
+    {
+      "path": "tools/internal_sources_storage_audit.py",
+      "archive_sha256": "51e230b7a3786e03e4db1ab5dfc78e57e2a53ba8d23dceb6b8675ca8a2fb0b0e"
+    }
+  ],
+  "note": "Imported source evidence; recovered code predates current mainline fixes. Archive prompts are historical context, not current instructions."
+}

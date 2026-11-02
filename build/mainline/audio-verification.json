@@ -46,15 +46,16 @@
     {
       "name": "Every permitted source on every destination executes actual compiled menu and original DSP writers",
       "status": "pass",
-      "source_choices": 53,
+      "source_choices": 55,
       "strips": 11,
-      "source_destination_visits": 519,
+      "source_destination_visits": 541,
       "mono_stereo_pairs_skipped": true,
       "four_character_labels": true,
+      "generator_active_masks_checked": true,
       "endpoints_clamp_without_event_posts": true,
       "inward_turn_resumes": true,
       "largest_single_route_drain_commands": 4,
-      "largest_single_route_drain_instructions": 581
+      "largest_single_route_drain_instructions": 694
     },
     {
       "name": "Analog 5/6 split produces independent original-5/6 and USB2 input reads; own PC summand suppressed",
@@ -124,7 +125,7 @@
       ]
     }
   ],
-  "patched_app_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758",
+  "patched_app_sha256": "d6cda6d3344a63f62008cea4eabfdb5b3aa6092344359f5c527ffba847f0985f",
   "source_choices": [
     {
       "id": 0,
@@ -443,6 +444,18 @@
       "left_operand": 40977,
       "right_operand": 40977,
       "label": "P9 R"
+    },
+    {
+      "id": 53,
+      "left_operand": 41024,
+      "right_operand": 41024,
+      "label": "NSE "
+    },
+    {
+      "id": 54,
+      "left_operand": 41025,
+      "right_operand": 41025,
+      "label": "BD  "
     }
   ],
   "executed": [

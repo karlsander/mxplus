@@ -52,3 +52,15 @@ Generic-host source and all separate candidate binaries/builders were retired;
 their reports remain under `evidence/retired-probes-20261102/`, with original
 source/artifacts in Git history. Shared ARM/patch helpers were extracted from
 the retired tools. Historical snapshots/manifests are not current artifact lists.
+
+## Recovered internal sources (2 November 2026)
+
+The user supplied an earlier mxplus recovery archive containing independently
+written noise, bass drum, clock and pad-editor source and offline tests. The
+[import record](evidence/internal-sources-import-20261102/provenance.json)
+identifies the archive, recovered commit and original file hashes. These files
+were adapted into mainline with the existing source end stops, persistence,
+MPU constraints and combined USB-B implementation. Historical research is
+preserved under that evidence directory; no additional firmware build is kept.
+Existing Roland firmware notices and the absence of a project-wide license
+continue to apply.

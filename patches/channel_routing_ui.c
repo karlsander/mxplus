@@ -1,6 +1,6 @@
 /* MX-1 source selection gesture, independently written 2026-11-01.
- * Uses original panel key state; no new polling task or writable UI state.
- * The original SELECT press/release callbacks are always preserved.
+ * Uses original panel key state and the transient source-edit selection.
+ * The source editor retains the original SELECT actions before its toggle.
  * See research/channel-routing-ui.md for original-instruction evidence.
  */
 #include "channel_routing.h"
@@ -9,6 +9,7 @@ typedef unsigned char ui_u8;
 typedef unsigned short ui_u16;
 typedef unsigned int ui_u32;
 
+extern int mx1_sources_ui_route_target(void);
 extern void mx1_route_ui_display_original(void *context);
 
 /* Startup page 0 transitions to page 5 for ordinary mixing or page 15 for
@@ -33,7 +34,7 @@ static int target(void) {
         if (key < 0x29 || key > 0x33 || selected >= 0) return -1;
         selected = (int)key - 0x29;
     }
-    return selected;
+    return selected >= 0 ? selected : mx1_sources_ui_route_target();
 }
 
 /* Original tempo renderer replacement. Text API draws exactly four bytes,

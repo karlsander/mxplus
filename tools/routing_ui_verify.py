@@ -25,8 +25,6 @@ from unicorn.arm_const import (UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_R2,
     UC_ARM_REG_R8, UC_ARM_REG_R9, UC_ARM_REG_R10, UC_ARM_REG_R11,
     UC_ARM_REG_LR, UC_ARM_REG_PC)
 
-from firmware_patch import inject
-from build_firmware import patch_ui
 from container_tool import (ORIGINAL_SHA256, COMPONENT_BY_NAME,
                             component_unpacked, sha256)
 from arm_machine import Machine
@@ -106,6 +104,8 @@ class UIMachine(Machine):
             self.ret()
         elif address == 0x6001A1CE:
             self.ret({0: 0, 0x5a: 0, 0x5b: 1234}.get(args[1], 0))
+        elif address == 0x6001e65e:
+            self.ret(-1 if args[1] == 0xfb else 0)
         elif address == 0x6001F7C8:
             self.ret(-1)
         elif address == 0x6001A896:
@@ -224,10 +224,10 @@ def verify(original: bytes, patched: bytes, build: dict) -> dict:
 
     # Independent callback-register and renderer-prologue guards.
     assert original[0xf5d8:0xf5dc] == u32(0x60010b49)
-    assert patched[0xf5d8:0xf5dc] == u32(symbols['mx1_route_ui_event'] | 1)
+    assert patched[0xf5d8:0xf5dc] == u32(symbols.get('mx1_sources_ui_event', symbols['mx1_route_ui_event']) | 1)
     assert original[0x13356:0x13360] == bytes.fromhex('feb50446c54804f07cff')
     assert patched[0x13356:0x1335c] == bytes.fromhex('00bfdff800f0')
-    assert patched[0x1335c:0x13360] == u32(symbols['mx1_route_ui_display'] | 1)
+    assert patched[0x1335c:0x13360] == u32(symbols.get('mx1_sources_ui_tempo', symbols['mx1_route_ui_display']) | 1)
     passed('Registered callback and aligned renderer hook bytes match symbols')
 
     # Derive live page state through original startup instructions, rather

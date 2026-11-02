@@ -5,8 +5,11 @@ eleven physical channel strips. It supports the requested 5/6 split onto USB2,
 and extends the same mechanism to analog, digital, AIRA, return and computer
 sources. More than one strip can read the same source.
 
-**Status: built and verified offline; no physical MX-1 audio, panel operation,
-installation or recovery has been tested.** The candidate is
+**Status: initial installation/restart reported by the user; routing and audio
+remain unverified.** Holding 5/6 or USB2 SELECT in Mixer mode left the normal
+tempo visible. This revision fixes an incorrect live-page guard; it has not
+yet been tested on the mixer. The separate display-marker test confirmed
+modified application execution. Failed-application recovery remains unverified. The candidate is
 [`MX1_CHANNEL_ROUTING_UNTESTED.bin`](../build/routing-probe/MX1_CHANNEL_ROUTING_UNTESTED.bin).
 Its [build report](../build/routing-probe/build-report.json) records the exact
 input, output identities, source hashes, patch bytes and memory placement.
@@ -23,6 +26,9 @@ The destination order is 1, 2, 3, 4, 5/6, DIGITAL, USB1, USB2, USB3, USB4 and
 COMPUTER. Only the strip whose physical SELECT is held changes its assignment.
 The existing SELECT press/release actions still run, so an ordinary tap keeps
 its normal channel-selection behavior. VALUE remains unchanged.
+
+The selector accepts the original operational pages 5 and 15, rather than
+temporary startup page 0. The [page-guard investigation](../research/channel-routing-ui.md#2-november-2026-live-page-guard-correction) records the failure and regression.
 
 The selector is inactive while another physical button is held, two SELECTs
 are held, a menu is open, or a modal display is busy. This preserves the
@@ -174,7 +180,7 @@ updater and panel-controller payload remain original.
 | `0x24bae` | `0x60024bae` | DSP event-8 handler entry to the original drain followed by route application |
 | `0xdff30` | `0x0100f6a4` | Inserted extension in the first startup SRAM copy |
 
-The current extension occupies **1,596 bytes**, leaving **800 bytes** before the
+The current extension occupies **1,608 bytes**, leaving **788 bytes** before the
 original initialized SRAM at `0x01010000`. Existing runtime destinations and
 BSS clears are preserved. Startup load-source literals shift with the inserted
 bytes. The builder rejects another original firmware hash, unexpected hook or

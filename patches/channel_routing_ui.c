@@ -11,13 +11,21 @@ typedef unsigned int ui_u32;
 
 extern void mx1_route_ui_display_original(void *context);
 
+/* Startup page 0 transitions to page 5 for ordinary mixing or page 15 for
+ * system mode 1. See original main 0x6005693c and 0x60056a36..0x60056ab4.
+ * Do not admit the startup page or the alternate page 12. */
+static int main_page(void) {
+    unsigned page = *(const volatile ui_u16 *)0x600b4b5eu;
+    return page == 5 || page == 15;
+}
+
 /* Normal panel boot, normal main page, no transient modal display, exactly one
  * SELECT and no other physical button held. This leaves stereo-link and all
  * existing modified gestures to Roland's original code. */
 static int target(void) {
     const volatile ui_u8 *keys = (const volatile ui_u8 *)0x605129a4u;
     if (*(const volatile ui_u32 *)0x600b4b94u != 0 ||
-        *(const volatile ui_u16 *)0x600b4b5eu != 0 ||
+        !main_page() ||
         ((int (*)(const void *))0x60018259u)((const void *)0x605144ccu) != 0) return -1;
     int selected = -1;
     for (unsigned key = 0; key < 0x55; ++key) {
@@ -58,6 +66,6 @@ void mx1_route_ui_event(const ui_u8 *event) {
     ((void (*)(const ui_u8 *))0x60010b49u)(event);
     if (select_key && (before >= 0 || target() >= 0) &&
         *(const volatile ui_u32 *)0x600b4b94u == 0 &&
-        *(const volatile ui_u16 *)0x600b4b5eu == 0)
+        main_page())
         mx1_route_ui_display((void *)0x605141ccu);
 }

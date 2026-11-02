@@ -2,24 +2,24 @@
   "status": "OFFLINE EXPERIMENT; NOT HARDWARE VALIDATED",
   "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "03717a17250aebd42c2412439b218f02acdec5bc0258245f9dbc22740ecdd251",
-  "container_sha256": "1810461b87255931fdce8696dff0c0b1c28758e3a95e28ac02b4e01723526c21",
-  "extension_sha256": "8f85f7611f95a512e797605a058af5ab05964f97a779fbe14f5630b884a92a25",
+  "patched_app_sha256": "a7d8d8223acac718e825497f58e8072abba3b30437f89fa9ee486ad121ef4d90",
+  "container_sha256": "74ebf3cab47631f14fe5fa8a113804ff7d99397a6898a068255cd8542f2d5d57",
+  "extension_sha256": "43052a0001803c810590983713a73424f8f556fa54a718a23292382d8e1220ef",
   "symbols": {
-    "mx1_route_ui_event": 16841223,
+    "mx1_route_ui_event": 16841231,
     "mx1_route_ui_display": 16841049,
     "mx1_route_get": 16840357,
     "mx1_route_adjust": 16840469,
     "mx1_route_label": 16840375,
     "mx1_route_dispatch": 16841013,
     "mx1_route_flush": 16840611,
-    "mx1_route_state": 16841928,
-    "mx1_route_ui_display_original": 16841389
+    "mx1_route_state": 16841940,
+    "mx1_route_ui_display_original": 16841401
   },
   "compiler": "ziglang 0.13.0 Cortex-M3 ReleaseSmall, no LTO",
   "sources": {
     "patches/channel_routing_audio.c": "9084bc47ec5d5b76fba4a90786ff651cfbb9d5f53b51c87dd85cebbcd762c87f",
-    "patches/channel_routing_ui.c": "8d38f1abb6f9b79200f87db65f1fcafcffd787ed64abdbd2d0118c0cb8d5466e",
+    "patches/channel_routing_ui.c": "4f3ddc32467e8fe414c88c61ddf0214b22c492d753534c09dca655ccfa0a2998",
     "patches/channel_routing_ui.S": "a5adb0bd43ba5a0a357f3927a6e372c4df4e3ff7cf2d9281b90022fcee9b3bcf",
     "patches/channel_routing.h": "ee5979ac7b1ce3bdd75e0c75542a18e2abcc21c9437d80fb54ae1f2b9fb54e31",
     "patches/channel_routing.ld": "3d8708438c9976246f02495961ff2e56adc980666b84b99554af45f538fd9cfb",
@@ -29,37 +29,37 @@
   "scatter_extension": {
     "insert_offset": 917296,
     "runtime_address": 16840356,
-    "insert_length": 1596,
+    "insert_length": 1608,
     "startup_updates": [
       {
         "offset": 232,
         "before": 62372,
-        "after": 63968
+        "after": 63980
       },
       {
         "offset": 256,
         "before": 1611530032,
-        "after": 1611531628
+        "after": 1611531640
       },
       {
         "offset": 276,
         "before": 1611530164,
-        "after": 1611531760
+        "after": 1611531772
       },
       {
         "offset": 296,
         "before": 1611530164,
-        "after": 1611531760
+        "after": 1611531772
       },
       {
         "offset": 316,
         "before": 1611531336,
-        "after": 1611532932
+        "after": 1611532944
       },
       {
         "offset": 336,
         "before": 1611531336,
-        "after": 1611532932
+        "after": 1611532944
       }
     ]
   },
@@ -69,7 +69,7 @@
       "file_offset": 62936,
       "runtime_address": 1610675672,
       "original": "490b0160",
-      "replacement": "07fa0001",
+      "replacement": "0ffa0001",
       "component": "app_main"
     },
     {
@@ -306,26 +306,26 @@
   },
   "container": {
     "base_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
-    "output_sha256": "1810461b87255931fdce8696dff0c0b1c28758e3a95e28ac02b4e01723526c21",
+    "output_sha256": "74ebf3cab47631f14fe5fa8a113804ff7d99397a6898a068255cd8542f2d5d57",
     "byte_identical_to_original": false,
     "changes": [
       {
         "name": "app_main",
-        "decoded_bytes_changed": 2832,
+        "decoded_bytes_changed": 2844,
         "old_decoded_size": 918600,
-        "new_decoded_size": 920196,
+        "new_decoded_size": 920208,
         "decoded_size_change_explicitly_allowed": true,
         "old_decoded_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-        "new_decoded_sha256": "03717a17250aebd42c2412439b218f02acdec5bc0258245f9dbc22740ecdd251",
+        "new_decoded_sha256": "a7d8d8223acac718e825497f58e8072abba3b30437f89fa9ee486ad121ef4d90",
         "old_stored_size": 505462,
-        "new_stored_size": 1035221,
+        "new_stored_size": 1035234,
         "encoding": "literal-only LZSS"
       }
     ],
     "boot_images_and_trailer_unchanged": true,
     "all_bytes_outside_update_range_unchanged": true,
     "container_validation": {
-      "sha256": "1810461b87255931fdce8696dff0c0b1c28758e3a95e28ac02b4e01723526c21",
+      "sha256": "74ebf3cab47631f14fe5fa8a113804ff7d99397a6898a068255cd8542f2d5d57",
       "size": 4194320,
       "is_supplied_original": false,
       "format_scope": "Observed Roland MX-1 firmware 1.051132 layout only",
@@ -408,15 +408,15 @@
           "version": "1.051132",
           "entry_address_field": 1610612736,
           "load_address": 1610612736,
-          "stored_size": 1035221,
-          "checksum": 98805978,
+          "stored_size": 1035234,
+          "checksum": 98807272,
           "checksum_algorithm": "sum of stored payload bytes modulo 2^32",
           "checksum_valid": true,
           "compression": "lzss-zero-init-4096-18",
-          "decoded_size": 920196,
-          "stored_sha256": "e9d445134edc4b00982fafa189f3d0955dcc0db1a8a1661053f78033ec9180f6",
+          "decoded_size": 920208,
+          "stored_sha256": "db6910971330e72c26642cbe09d5a475d3ee18a18433d72d0ecc7c0ed4a94a8d",
           "padding_is_ff": true,
-          "decoded_sha256": "03717a17250aebd42c2412439b218f02acdec5bc0258245f9dbc22740ecdd251"
+          "decoded_sha256": "a7d8d8223acac718e825497f58e8072abba3b30437f89fa9ee486ad121ef4d90"
         },
         {
           "name": "app_usb",
@@ -464,7 +464,7 @@
     },
     "hardware_validation": "not performed; research output only"
   },
-  "sram_bytes_remaining": 800,
+  "sram_bytes_remaining": 788,
   "hardware_access": false,
   "limits": [
     "No physical MX-1 flashing, recovery, audio or UI validation",

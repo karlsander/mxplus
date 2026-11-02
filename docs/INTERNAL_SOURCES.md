@@ -2,7 +2,7 @@
 
 `NSE` and `BD` are part of the sole mainline image. Both remain untested on a
 physical MX-1: their first integrated image failed before the panel lit, and
-the current startup-guard correction awaits testing. See the
+the startup-guard correction also failed normal boot. See the
 [boot investigation](BOOT_REGRESSION.md). They were recovered from the user's 2 November archive and
 adapted to the current guarded builder, writable-memory layout, source end
 stops and routing persistence. No old firmware variant is maintained.

@@ -12,11 +12,14 @@ No USB streaming or generator audio result follows from a boot result.
 | First generator/editor mainline, PR #6 | `08b8f2f783718b8039dc66ddfc14aa2ce13f63447df4df73eb10fa098e77fd94` | Completely dark panel on normal power-on; TAP update mode still available |
 | Routing/end-stop predecessor, commit `7bad049115021af47a30b9d91bbc2ec4c92c211e` | `221e5ffb2a858a25d5691a1c818324fafa117bfa48d6a79aac0d666140ff2b95` | Restored via TAP updater; user confirmed normal operation |
 | Exact pre-generator mainline, commit `eb646b6cb3ad7f271097c4ab41f2098ab1399576` | `88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba` | Copied from historical Git blob, readback verified and ejected; user confirmed normal boot after update |
+| Startup guards, commit `689019e32348370c4fcd0686fa1a153c11522d89` | `3c9d769e97366f7b0e7a929b4d47c0ad7f697928306e5d8f7e4a852ddbcc728f` | Copied and readback verified; user reported the panel still completely dark after normal power-on |
 
 The last image includes routing, end stops, stock-storage integration and USB-B
 UAC2. It excludes generators, the SELECT editor and the new code placement.
-This narrows the regression to that later batch; it does not validate the
-earlier image's persistence or USB audio, nor prove recovery from other faults.
+This narrows the regression to that later batch. The user separately reported
+successful iPhone/AUM duplex audio on the pre-generator image: see the
+[hardware record](../evidence/iphone-aum-20261102/README.md). Persistence has
+not been separately confirmed, nor has recovery from other fault types.
 Historical artifacts remain in Git, not as maintained parallel builds.
 
 ## Concrete startup defects corrected
@@ -48,9 +51,10 @@ selected; parameter storage and hardware delivery remain modeled in UI tests.
 
 The startup-guard candidate is
 `3c9d769e97366f7b0e7a929b4d47c0ad7f697928306e5d8f7e4a852ddbcc728f`.
-Its physical boot result is pending. It retains the new code placement at
+It still boots with a completely dark panel. It retains the new code placement at
 `0x01018000`, generator features, clock hooks and SELECT editor so the test
-addresses the startup accesses without reverting those features.
+addresses the startup accesses without reverting those features. Those guards
+are therefore insufficient to resolve the hardware failure.
 
 Original hook instructions and PC-relative literals were rechecked against
 the input bytes. Startup, MPU permissions, allocator separation, register/stack
@@ -63,7 +67,9 @@ component changes. See [build accounting](../build/mainline/build-report.json).
 The emulated SRAM mapping does not establish physical availability of the new
 code interval. The boot harness still stops before the final branch and runs
 application startup separately; it does not model complete RTOS scheduling,
-interrupt stack margin or board initialization. If the correction still boots
-dark, the next isolation should distinguish code placement from callback/UI
-integration. A successful boot would support this correction but would not by
-itself distinguish which of these two guards resolved the failure.
+interrupt stack margin or board initialization. The next isolation uses the
+exact pre-generator feature sources and links their code at `0x01018000`.
+It preserves the historical startup copies, including an unused duplicate of
+the relocated code in the old slot, and repurposes empty copy operation 8 to
+also load the code at the test address. This separates execution at the new
+address from the generator/editor hooks and their startup-copy redesign.

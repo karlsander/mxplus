@@ -8,7 +8,7 @@ Routing assignments use the stock snapshot and delayed system-save paths; see
 
 The first generator/editor image failed normal boot. The exact pre-generator
 mainline boots, and TAP update mode allowed restoration after this failure.
-The current startup guards are a test candidate, not a confirmed boot fix;
+The startup-guard candidate also failed normal boot;
 see the [boot investigation](BOOT_REGRESSION.md).
 
 ## Memory and binary integration
@@ -82,4 +82,5 @@ status. Prior routing success does not establish USB audio behavior.
 Test NSE first at a low fader level, then one BD voice, then multiple voices at
 all rates while monitoring USB playback/capture. The generator exchange-port
 mapping and worst-case IRQ deadline margin require hardware measurement; see
-[internal sources](INTERNAL_SOURCES.md). No physical test of this corrected image is claimed.
+[internal sources](INTERNAL_SOURCES.md). The startup-guard image failed normal
+boot, so none of its generator functions have been tested physically.

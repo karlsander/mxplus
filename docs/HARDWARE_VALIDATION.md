@@ -1,4 +1,4 @@
-> Current scope: one combined routing + generators + USB-B mainline candidate; generic USB-host unlocking is retired. Host-probe sections below are historical research guidance, not an available build. The first generator/editor image failed normal boot; TAP rollback succeeded for that particular failure. See [BOOT_REGRESSION.md](BOOT_REGRESSION.md) for exact identities and [MAINLINE.md](MAINLINE.md) for the current bench sequence.
+> Current scope: one routing + persistence + USB-B mainline image. Generators and host unlocking are retired. The pre-generator image, now restored, boots and passed one iPhone/AUM duplex path. Historical host sections below are research guidance, not an available firmware build. See [MAINLINE.md](MAINLINE.md).
 
 # Staged MX-1 hardware validation
 

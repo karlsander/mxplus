@@ -1,78 +1,97 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "a00393a8534f02b20591d149b8f87cc9e7eac6373eacabe419c4627935e8de39",
-  "candidate_container_sha256": "232a1e87a8c4378ce740c295ed9df7d5659c3645899f4c51747e656c022cfe25",
-  "extension_sha256": "789a1bf8600723b7c8695e7473cc20008bd5148f2e32d4489b67c14d5fa72051",
+  "patched_app_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758",
+  "candidate_container_sha256": "88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba",
+  "extension_sha256": "859b0ffc16473fcefcce41c53029821f1013c206f8b00d32203fbbc0e166be68",
   "groups": [
     {
-      "name": "Every changed byte is guarded; empty copies and the SDRAM heap base reserve extension memory",
+      "name": "Every application change matches recorded guarded patches and scatter insertion",
       "status": "pass",
-      "extension_bytes": 8244,
-      "code_address": "0x60664000",
-      "code_bytes_remaining": 1460
+      "patch_sites": 12,
+      "extension_bytes": 2732,
+      "sram_bytes_remaining": 20
     },
     {
-      "name": "Original startup initializes all sections and preserves every original nonempty region",
+      "name": "Actual original startup installs routing code and preserves existing initialized data and BSS",
       "status": "pass",
-      "sections": [
-        {
-          "name": ".route_state",
-          "address": 16872036,
-          "size": 24,
-          "load_offset": 0,
-          "sha256": "9d908ecfb6b256def8b49a7c504e6c889c4b0e41fe6ce3e01863dd7b61a20aa0",
-          "flags": 3
-        },
-        {
-          "name": ".usb_data",
-          "address": 16872060,
-          "size": 356,
-          "load_offset": 24,
-          "sha256": "aec06110cfbdecf3cc13a0477a7fafa618556294eca691e6675511be31f96d00",
-          "flags": 3
-        },
-        {
-          "name": ".usb_state",
-          "address": 16872416,
-          "size": 20,
-          "load_offset": 380,
-          "sha256": "de47c9b27eb8d300dbb5f2c353e632c393262cf06340c4fa7f1b40c4cbd36f90",
-          "flags": 3
-        },
-        {
-          "name": ".generator_data",
-          "address": 16872436,
-          "size": 1112,
-          "load_offset": 400,
-          "sha256": "71da145ecb4b538abec4faadfe3e390f51b0c1b93fafea2cc50964e64bb5d36d",
-          "flags": 3
-        },
-        {
-          "name": ".text",
-          "address": 1617313792,
-          "size": 6732,
-          "load_offset": 1512,
-          "sha256": "ce9ab03d18a9470ef74c4b7e28ea85f5464148ee18011aca8ff97511c1787685",
-          "flags": 54
-        }
-      ]
-    },
-    {
-      "name": "Original MPU permits executable SDRAM code and writable private state",
-      "status": "pass",
-      "code_protection": "Stock private code is read-only; SDRAM extension is protected against writes only in the test harness",
-      "rejected_private_interval": [
-        "0x01018000",
-        "0x01020000"
+      "runtime_interval": [
+        "0x0100f6a4",
+        "0x100ffec"
       ],
+      "existing_nonempty_destinations_unchanged": true,
+      "repurposed_empty_copy": "USB descriptor at 0x0101727c"
+    },
+    {
+      "name": "Generator callback, transport, extra SELECT UI and SDRAM heap patches are absent",
+      "status": "pass",
+      "component": "app_main",
+      "unchanged_sites": [
+        {
+          "decoded_offset": "0x168c",
+          "runtime_address": "0x6000168c",
+          "length": 4
+        },
+        {
+          "decoded_offset": "0xa7dc",
+          "runtime_address": "0x6000a7dc",
+          "length": 8
+        },
+        {
+          "decoded_offset": "0xa810",
+          "runtime_address": "0x6000a810",
+          "length": 8
+        },
+        {
+          "decoded_offset": "0xa894",
+          "runtime_address": "0x6000a894",
+          "length": 8
+        },
+        {
+          "decoded_offset": "0x14692",
+          "runtime_address": "0x60014692",
+          "length": 10
+        },
+        {
+          "decoded_offset": "0x10516",
+          "runtime_address": "0x60010516",
+          "length": 12
+        },
+        {
+          "decoded_offset": "0x10538",
+          "runtime_address": "0x60010538",
+          "length": 8
+        },
+        {
+          "decoded_offset": "0x140c2",
+          "runtime_address": "0x600140c2",
+          "length": 10
+        },
+        {
+          "decoded_offset": "0x13740",
+          "runtime_address": "0x60013740",
+          "length": 8
+        },
+        {
+          "decoded_offset": "0xd76c",
+          "runtime_address": "0x6000d76c",
+          "length": 4
+        }
+      ],
+      "callback_target": "0x01009841",
+      "stock_heap_start": "0x606634d0"
+    },
+    {
+      "name": "Original MPU makes injected code read-only and new route state read-write",
+      "status": "pass",
+      "code_protection": "0x01001000..0x0100ffff enforced in all UI/audio instruction cases",
       "state_interval": [
         "0x1017264",
-        "0x101784c"
+        "0x10173f4"
       ]
     },
     {
-      "name": "Dirty cold startup initializes state; original RTOS pools cannot allocate its reservation",
+      "name": "Dirty cold startup clears state; original RTOS pools cannot allocate its reservation",
       "status": "pass",
       "general_pool": [
         "0x01013e18",
@@ -82,7 +101,7 @@
         "0x01020000",
         "0x01028000"
       ],
-      "state_reservation_bytes": 1512,
+      "state_reservation_bytes": 400,
       "descriptor_initialized_bytes": 356,
       "patterns": [
         85,
@@ -90,72 +109,9 @@
       ]
     },
     {
-      "name": "Stock SDRAM heap creation and allocation exclude reserved code through exhaustion",
-      "status": "pass",
-      "heap_initializer": "0x6000d6f4",
-      "pool_creator": "0x010033b8",
-      "allocation_primitive": "0x01007604",
-      "heap_base_literal_decoded": "0xd76c",
-      "reserved_bytes": 11056,
-      "cases": [
-        {
-          "image": "stock",
-          "heap_start": "0x606634d0",
-          "heap_bytes": 26856240,
-          "allocations": [
-            {
-              "address": "0x606634d8",
-              "requested_bytes": 16
-            },
-            {
-              "address": "0x606634f0",
-              "requested_bytes": 4096
-            },
-            {
-              "address": "0x606644f8",
-              "requested_bytes": 1048576
-            },
-            {
-              "address": "0x60764500",
-              "requested_bytes": 25803520
-            }
-          ],
-          "exhausted_request_returns_null": true,
-          "lowest_allocator_write": "0x606634d0",
-          "reservation_unchanged": false
-        },
-        {
-          "image": "candidate",
-          "heap_start": "0x60666000",
-          "heap_bytes": 26845184,
-          "allocations": [
-            {
-              "address": "0x60666008",
-              "requested_bytes": 16
-            },
-            {
-              "address": "0x60666020",
-              "requested_bytes": 4096
-            },
-            {
-              "address": "0x60667028",
-              "requested_bytes": 1048576
-            },
-            {
-              "address": "0x60767030",
-              "requested_bytes": 25792464
-            }
-          ],
-          "exhausted_request_returns_null": true,
-          "lowest_allocator_write": "0x60666000",
-          "reservation_unchanged": true
-        }
-      ]
-    },
-    {
       "name": "Actual startup copies extension and preserves existing initialized data",
       "status": "pass",
-      "extension_bytes": 8244
+      "extension_bytes": 2732
     },
     {
       "name": "Patched initializer veneer, original registration, and live rate descriptors",
@@ -423,6 +379,10 @@
     },
     {
       "name": "Legacy, unknown-version, out-of-range and invalid mono records fall back to Auto",
+      "status": "pass"
+    },
+    {
+      "name": "Retired NSE/BD saved IDs become Auto on normal boot and recall; other routes and saved scenes remain intact",
       "status": "pass"
     },
     {
@@ -757,16 +717,15 @@
     {
       "name": "Every permitted source on every destination executes actual compiled menu and original DSP writers",
       "status": "pass",
-      "source_choices": 55,
+      "source_choices": 53,
       "strips": 11,
-      "source_destination_visits": 541,
+      "source_destination_visits": 519,
       "mono_stereo_pairs_skipped": true,
       "four_character_labels": true,
-      "generator_active_masks_checked": true,
       "endpoints_clamp_without_event_posts": true,
       "inward_turn_resumes": true,
       "largest_single_route_drain_commands": 4,
-      "largest_single_route_drain_instructions": 694
+      "largest_single_route_drain_instructions": 581
     },
     {
       "name": "Analog 5/6 split produces independent original-5/6 and USB2 input reads; own PC summand suppressed",
@@ -866,7 +825,6 @@
   "hardware_access": false,
   "scope": "Integrated candidate ARM instructions with explicit DSP and peripheral models",
   "details": {
-    "heap": "heap-verification.json",
     "storage": "storage-verification.json",
     "ui": "ui-verification.json",
     "audio": "audio-verification.json",

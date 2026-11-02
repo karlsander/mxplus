@@ -84,7 +84,7 @@ def verify(original, patched, build):
 
     # All 64 user slots round-trip via original save, copy and recall code.
     m.boot()
-    routes = bytes([1, 6, 7, 9, 5, 8, 11, 20, 26, 53, 54])
+    routes = bytes([1, 6, 7, 9, 5, 8, 11, 20, 26, 50, 52])
     baseline = bytes((i * 17 + 3) & 255 for i in range(MIX_SIZE))
     for slot in range(1, 65):
         m.write(MIX, baseline)
@@ -116,7 +116,7 @@ def verify(original, patched, build):
     # Latest edits reach both system copies; snapshots are not overwritten.
     before = cold.read(MIX + MIX_SIZE, MIX_SIZE*65)
     cold.call(symbols['mx1_route_adjust'], 10, 0xffffffff)
-    assert cold.routes()[10] == 53
+    assert cold.routes()[10] == 51
     assert cold.read(SYSTEM_RECORD, 16) == record(cold.routes())
     assert cold.read(SYSTEM_RECORD + SYSTEM_SIZE, 16) == record(routes), 'Autosave shadow must stay dirty until stock timer observes it'
     assert cold.read(MIX + MIX_SIZE, MIX_SIZE*65) == before
@@ -152,7 +152,7 @@ def verify(original, patched, build):
         cold.write(SCENE_RECORD, raw)
         assert cold.routes() == bytes(11)
     for strip in range(11):
-        for value in range(55, 256):
+        for value in range(53, 256):
             data = bytearray(record(routes)); data[4+strip] = value
             cold.write(SCENE_RECORD, data)
             assert cold.call(symbols["mx1_route_get"], strip)[0] == 0
@@ -160,6 +160,23 @@ def verify(original, patched, build):
         data = bytearray(record(routes)); data[4+strip] = 5
         cold.write(SCENE_RECORD, data)
         assert cold.routes()[strip] == 0
+
+    # Retired source IDs can remain in actual saved settings. Exercise the
+    # normal boot and original scene recall, not just direct cache getters.
+    retired = bytearray(routes)
+    retired[4], retired[7] = 53, 54
+    fallback = bytearray(retired)
+    fallback[4] = fallback[7] = 0
+    migration = StorageMachine(patched, symbols)
+    migration.write(SYSTEM_RECORD + SYSTEM_SIZE, record(retired))
+    migration.boot()
+    assert migration.routes() == bytes(fallback)
+    assert migration.read(SYSTEM_RECORD, 16) == record(fallback)
+    assert migration.read(SYSTEM_RECORD + SYSTEM_SIZE, 16) == record(retired)
+    migration.write(SCENE_RECORD + MIX_SIZE*2, record(retired))
+    migration.call(0x6001e786, 0, 1)
+    assert migration.routes() == bytes(fallback)
+    assert migration.read(SCENE_RECORD + MIX_SIZE*2, 16) == record(retired)
 
     # Original autosave comparison and deadline arithmetic. One registered
     # system block is modeled; bytes/length/mode match original registration.
@@ -194,6 +211,7 @@ def verify(original, patched, build):
         {'name':'Cold restart restores last routes independently of startup scene; edits preserve snapshots', 'status':'pass'},
         {'name':'UI retains its selected source across a modeled DSP cache refresh', 'status':'pass'},
         {'name':'Legacy, unknown-version, out-of-range and invalid mono records fall back to Auto', 'status':'pass'},
+        {'name':'Retired NSE/BD saved IDs become Auto on normal boot and recall; other routes and saved scenes remain intact', 'status':'pass'},
         {'name':'Stock autosave observes route bytes and coalesces edits with unchanged 1500-tick delay', 'status':'pass'}],
         'boundaries': ['Original scene copy/save/recall and autosave comparison/deadline ARM instructions execute',
                        'Storage requests are captured; flash erase/program and power-loss durability are not emulated',

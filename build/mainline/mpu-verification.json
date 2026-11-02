@@ -51,20 +51,16 @@
   },
   "groups": [
     {
-      "name": "Original MPU permits executable SDRAM code and writable private state",
+      "name": "Original MPU makes injected code read-only and new route state read-write",
       "status": "pass",
-      "code_protection": "Stock private code is read-only; SDRAM extension is protected against writes only in the test harness",
-      "rejected_private_interval": [
-        "0x01018000",
-        "0x01020000"
-      ],
+      "code_protection": "0x01001000..0x0100ffff enforced in all UI/audio instruction cases",
       "state_interval": [
         "0x1017264",
-        "0x101784c"
+        "0x10173f4"
       ]
     },
     {
-      "name": "Dirty cold startup initializes state; original RTOS pools cannot allocate its reservation",
+      "name": "Dirty cold startup clears state; original RTOS pools cannot allocate its reservation",
       "status": "pass",
       "general_pool": [
         "0x01013e18",
@@ -74,7 +70,7 @@
         "0x01020000",
         "0x01028000"
       ],
-      "state_reservation_bytes": 1512,
+      "state_reservation_bytes": 400,
       "descriptor_initialized_bytes": 356,
       "patterns": [
         85,

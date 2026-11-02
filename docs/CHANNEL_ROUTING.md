@@ -7,28 +7,31 @@ sources. More than one strip can read the same source.
 
 **Status:** the user reported working routing and encoder end stops in the
 routing predecessor. Routing now shares the sole mainline image with USB-B
-UAC2; that combined image still needs its hardware test. See
+UAC2. The restored combined image boots and passed one user-reported iPhone/AUM
+duplex path; physical persistence and broader USB acceptance remain open. See
 [mainline integration](MAINLINE.md) and the current
 [build report](../build/mainline/build-report.json).
 
 ## Using the source selector
 
-On the normal mixer page, press SELECT to select a channel. Press the same
-SELECT again to enter source/generator editing: SELECT blinks and the tempo
-display shows its source. Turn TEMPO to choose a source. Press SELECT again to
-return to normal channel editing with a steady light. Selecting a different
-channel returns to normal editing. The startup view with no selected channel
-and its pad gradient remain available.
-
-Holding one SELECT and turning TEMPO also retains the existing source gesture.
-Each nonzero encoder event moves one permitted choice. End stops are `Auto`
-and `BD`, with `NSE` immediately before `BD`; there is no wrap. Other held keys,
-multiple SELECTs, menus and modal displays preserve their original gestures.
-The operational pages are 5 and 15; startup page 0 is excluded.
+On the normal main page, hold the **SELECT button of the destination strip**
+and turn **TEMPO**. The four-character tempo display shows that strip's source.
+Each nonzero encoder event advances or reverses one source choice. The selector
+stops at `Auto` and `P9 R` (the last computer playback channel); it does not wrap. Release
+SELECT to return the display and encoder to their normal operation.
 
 The destination order is 1, 2, 3, 4, 5/6, DIGITAL, USB1, USB2, USB3, USB4 and
-COMPUTER. VALUE keeps its normal operation except while editing a held BD step.
-See [internal sources](INTERNAL_SOURCES.md) for the pad editor.
+COMPUTER. Only the strip whose physical SELECT is held changes its assignment.
+The existing SELECT press/release actions still run, so an ordinary tap keeps
+its normal channel-selection behavior. VALUE remains unchanged.
+
+The selector accepts the original operational pages 5 and 15, rather than
+temporary startup page 0. The [page-guard investigation](../research/channel-routing-ui.md#2-november-2026-live-page-guard-correction) records the failure and regression.
+
+The selector is inactive while another physical button is held, two SELECTs
+are held, a menu is open, or a modal display is busy. This preserves the
+original multi-button gestures. A normal display refresh cannot overwrite the
+source label during an active hold.
 
 ### Split inputs 5 and 6 across two faders
 
@@ -46,8 +49,8 @@ permanently hardcoded physical input.
 
 ## Source choices
 
-There are **55 choices including Auto** on a stereo strip. The four mono strips
-offer **39 choices**, skipping stereo-pair entries. Select a pair's left or
+There are **53 choices including Auto** on a stereo strip. The four mono strips
+offer **37 choices**, skipping stereo-pair entries. Select a pair's left or
 right member when assigning it to a mono strip. A mono source assigned to a
 stereo destination is copied to both sides; the patch does not sum a stereo
 pair into mono.
@@ -68,9 +71,6 @@ needed. The table omits trailing padding.
 | `rt L`, `rt R` | Individual return input | All strips |
 | `PC1`–`PC9` | Computer playback stereo pairs, mapped below | Stereo strips |
 | `P1 L` / `P1 R` through `P9 L` / `P9 R` | Individual computer playback lane | All strips |
-
-| `NSE` | Shared internal white noise | All strips |
-| `BD` | Independent bass drum voice and 16-step pattern per strip | All strips |
 
 The PC number identifies a stereo pair, not a single playback lane:
 
@@ -180,12 +180,12 @@ updater and panel-controller payload remain original.
 | `0x0f5d8` | `0x6000f5d8` | Panel callback pointer to the SELECT/TEMPO event wrapper |
 | `0x13356` | `0x60013356` | Tempo-renderer entry to the source-label overlay and original-instruction trampoline |
 | `0x24bae` | `0x60024bae` | DSP event-8 handler entry to the original drain followed by route application |
-| `0x10c..0x114` | `0x6000010c..0x60000114` | Repurpose original empty startup copy for mainline sections |
-| `0xe0448` | `0x01017264` state; `0x60664000` code | Packed load image, two startup copies, explicit SDRAM heap reservation |
+| `0x108` | `0x60000108` | Writable SRAM BSS clear length: `0x71dc` to `0x736c` |
+| `0xdff30` | `0x0100f6a4` | Inserted extension in the first startup SRAM copy |
 
 The combined code/data layout, startup changes and allocator/MPU checks are
 specified in [MAINLINE.md](MAINLINE.md). Routing state occupies the first 24
-bytes of the shared writable reservation. The verifier independently
+bytes of the shared 400-byte writable reservation. The verifier independently
 reconstructs every recorded patch and executes original startup.
 
 ## Verification and its boundaries

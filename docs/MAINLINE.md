@@ -1,62 +1,52 @@
 # Mainline integration
 
-The only maintained custom firmware combines channel routing, USB-B UAC2,
-white noise (`NSE`) and a per-strip bass drum sequencer (`BD`). USB-host unlocking
-remains excluded. The display-marker diagnostic is not part of mainline.
-Routing assignments use the stock snapshot and delayed system-save paths; see
-[storage integration](ROUTING_STORAGE.md). BD patterns currently live in RAM.
+The only maintained custom firmware combines channel routing and USB-B UAC2.
+The USB-host unlock is excluded, with its evidence retained as documentation.
+Generators and their SELECT editor are removed; their findings are in
+[the DSP handoff](GENERATOR_RESEARCH.md).
+The display-marker diagnostic is not part of mainline. Routing now uses scene
+and system reserved fields for snapshots and restart persistence; see
+[storage integration](ROUTING_STORAGE.md).
 
-The first generator/editor image failed normal boot. The exact pre-generator
-mainline boots, and TAP update mode allowed restoration after this failure.
-The startup-guard candidate and a location-only test also failed normal boot.
-The current build moves code into an explicit SDRAM heap reservation and boots
-normally. Selecting NSE still freezes before its label appears; see the
-[investigation](BOOT_REGRESSION.md).
+The restored candidate is byte-identical to pre-generator image
+`88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba`,
+which the user confirmed boots and passes one iPhone/AUM duplex path. Snapshot
+persistence and broader USB operation still require physical acceptance.
 
 ## Memory and binary integration
 
-Only the main application changes. The USB application, boot programs, updater
-and panel-controller payload remain byte-identical to stock. The recovered
-internal-source candidate placed mutable state in read-only SRAM. The first
-integration chose an unusable code location at `0x01018000`. This build keeps
-private writable state and reserves code space from the stock SDRAM heap,
-without changing the original MPU configuration.
+Both features modify only the main application. The USB application, boot
+programs, updater and panel-controller payload remain byte-identical to stock.
+The descriptor, rate and reply buffer in the retired USB-B build occupied
+read-only code SRAM; the combined build fixes that placement before testing.
 
-| Runtime interval (end exclusive) | Contents |
-| --- | --- |
-| `0x01017264..0x0101727c` | Routing desired/applied cache and startup-ready flag, 24 bytes |
-| `0x0101727c..0x010173e0` | Mutable USB descriptor and padding, 356 bytes |
-| `0x010173e0..0x010173f4` | USB rate/reply state, 20 bytes |
-| `0x010173f4..0x0101784c` | Generator patterns, voices, clock and transient UI state |
-| `0x60664000..0x60665a4c` | Mainline code/constants, 6,732 bytes, in reserved SDRAM |
-| `0x60666000..0x62000000` | Remaining stock SDRAM heap, 26,845,184 bytes |
+| Runtime interval (end exclusive) | Contents | Initialization |
+| --- | --- | --- |
+| `0x0100f6a4..0x0100ffec` | 2,376 bytes of code/constants, read-only after MPU setup | Extended original first startup copy |
+| `0x01017264..0x0101727c` | Desired/applied routing cache and startup-ready flag, padded to 24 bytes | Extended original writable BSS clear |
+| `0x0101727c..0x010173e0` | 355-byte mutable USB descriptor plus padding | Repurposed formerly zero-length startup copy |
+| `0x010173e0..0x010173f4` | USB rate and 14-byte reply buffer, padded to 20 bytes | Extended original writable BSS clear |
 
-Writable state stays inside stock MPU region 2 (`0x01010000..0x01018000`).
-Code has 1,460 bytes remaining before its `0x60666000` reservation limit.
-General allocation remains `0x01013e18..0x01014e18`; stacks remain
-`0x01020000..0x01028000`. Neither private pool overlaps the extension. The stock
-SDRAM heap start moves from `0x606634d0` to `0x60666000`, reserving 11,056 bytes
-including alignment. Its initializer automatically reduces capacity while
-retaining the fixed end `0x62000000`. Original MPU region 6 permits execution
-and writes in SDRAM; the code reservation is excluded from heap allocation,
-not made read-only by a new MPU rule. See [allocator evidence](SDRAM_CODE.md).
+The code slot has 20 bytes remaining before `0x01010000`. The 400-byte writable
+reservation begins exactly at the original BSS end, stays inside stock MPU
+region 2 (`0x01010000..0x01018000`), and overlaps neither RTOS pool. General
+allocation remains `0x01013e18..0x01014e18`; stacks remain
+`0x01020000..0x01028000`. No MPU or allocator configuration is changed.
 
-The 8,244-byte load image is appended at main decoded offset
-`0xe0448`, after all original bytes. The originally zero-length
-startup copy described by main decoded literals `0x10c/0x110/0x114` copies its
-1,512 state bytes to `0x01017264`. A second originally empty copy, described by
-`0x134/0x138/0x13c`, copies 6,732 code bytes from `0x600e0a30` to `0x60664000`.
-Both run before the stock MPU setup. Every originally nonempty copy/zero operation,
-including the original BSS clear, is unchanged. Original initialized-data
-source offsets do not move. These descriptor literals reside at runtime
-`0x60000000 + decoded offset`.
+The load-image insertion is 2,732 bytes at main decoded offset `0xdff30`:
+2,376 code bytes followed by 356 descriptor bytes. Only code is copied into the
+executable slot. Main decoded literal `0xe8` extends the first copy accordingly;
+`0x100`, `0x128`, `0x13c`, `0x150` shift existing initialized-data sources.
+`0x108` extends writable BSS clearing from `0x71dc` to `0x736c` bytes.
+The originally zero-length copy described by `0x10c/0x110/0x114` now loads the
+USB descriptor to `0x0101727c`. The following original stack-pool zero is
+unchanged. These startup literals are resident at `0x60000000 + decoded offset`.
+The existing nonempty copy/zero regions retain their destinations and contents.
 
-The builder guards the whole input hash, every overwritten byte, section
-permissions/types/addresses, exported functions, state bounds, original startup
-map and allocator records. `build-report.json` records exact patches, callback
-and branch targets, load sections and component checksums. `mainline.load.bin`
-is startup data, not another flashable firmware. The archive's old builder,
-linker and firmware were not imported.
+The builder guards every overwritten byte and the original whole-file hash,
+section types/sizes/addresses, exported functions, state objects and slot bounds.
+`build-report.json` is authoritative for regenerated hashes and branch targets.
+`mainline.load.bin` is the inserted load data, not a separate flashable firmware.
 
 ## Verification
 
@@ -66,10 +56,7 @@ requests, panel gestures and DSP programming helpers against this exact image.
 An integration case initializes USB and interleaves routing changes with clock
 requests on the same emulated RAM at all three rates. Code pages are protected
 against writes. Dirty-start tests verify the entire initialized descriptor,
-initialized generator defaults, zeroed route/USB state, untouched neighbors and allocator separation.
-The stock SDRAM pool creator and low-level allocator execute through exhaustion
-and preserve the code reservation. The failed private code interval is unmapped
-in main-application instruction harnesses.
+zeroed state, untouched neighbors and allocator separation.
 
 USB hardware/FIFO start, RTOS scheduling boundaries and DSP arithmetic remain
 modeled or unexecuted as specified by each report. Boot tests stop before the
@@ -80,7 +67,7 @@ USB timing or deadline margin.
 ## Bench sequence
 
 1. Identify this exact image and keep monitoring muted for the first boot.
-2. Confirm steady/blinking SELECT toggles, labels, end stops and routing; save/recall differing
+2. Confirm SELECT labels, end stops and routing still work; save/recall differing
    snapshots and restart after allowing several seconds for autosave.
 3. Connect USB-B to a host using its class audio driver; record OS/driver,
    negotiated speed, sample rate and channel configuration. A Roland driver
@@ -89,11 +76,10 @@ USB timing or deadline margin.
 5. Test stereo/18-channel and mixed alternates, then 44.1/48/96 kHz and sustained
    audio. Record levels, channel order and any glitches or failures.
 
-Retain `UNTESTED` until combined-image hardware evidence supports a narrower
-status. Prior routing success does not establish USB audio behavior.
+The filename retains `UNTESTED` because acceptance is incomplete. The
+[hardware record](../evidence/iphone-aum-20261102/README.md) scopes the successful
+iPhone/AUM result; it does not establish every channel, rate or stream mode.
 
-After resolving the selection freeze, test NSE first at a low fader level, then
-one BD voice, then multiple voices at all rates while monitoring USB playback/capture. The generator exchange-port
-mapping and worst-case IRQ deadline margin require hardware measurement; see
-[internal sources](INTERNAL_SOURCES.md). The current SDRAM placement boots
-normally, but NSE activation freezes; generator audio is not validated.
+A separate retirement guard verifies the original sample callback, transport,
+SELECT/pad handlers and SDRAM heap start. Saved retired source IDs 53/54 fall
+back to Auto on normal boot and recall; remaining routes keep their IDs.

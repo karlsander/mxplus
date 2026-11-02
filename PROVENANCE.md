@@ -64,3 +64,8 @@ MPU constraints and combined USB-B implementation. Historical research is
 preserved under that evidence directory; no additional firmware build is kept.
 Existing Roland firmware notices and the absence of a project-wide license
 continue to apply.
+
+The generator integration was subsequently retired at the user's request after
+hardware activation failures. Current mainline contains no generator/editor
+source or alternate build. Findings and source-history pointers remain in
+[GENERATOR_RESEARCH.md](docs/GENERATOR_RESEARCH.md).

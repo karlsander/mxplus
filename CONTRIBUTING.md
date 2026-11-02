@@ -2,13 +2,13 @@
 
 Useful contributions make a firmware change reproducible or resolve a specific unknown about the MX-1's audio behavior. The most valuable next evidence is identified in [ROADMAP.md](ROADMAP.md). Read the [research report](docs/RESEARCH_REPORT.md) and the relevant [host](docs/HOST_PROBE.md), [device](docs/DEVICE_PROBE.md), or [routing](docs/CHANNEL_ROUTING.md) report before expanding a probe.
 
-The sole mainline candidate combines routing and USB-B UAC2. The user reported
-working routing/end stops in its predecessor. The pre-generator mainline boots;
-the first generator/editor integration failed normal boot, and TAP rollback
-worked for that failure. USB-B duplex audio was subsequently reported on the pre-generator image
-with iPhone/AUM. The SDRAM image boots but freezes on NSE selection; recovery
-from other failure classes remains unverified. See [boot investigation](docs/BOOT_REGRESSION.md).
-Retired host-unlock work is documentation only.
+The sole mainline candidate combines routing, stock-storage route persistence
+and USB-B UAC2. The restored pre-generator image boots and passed a user-reported
+iPhone/AUM duplex path. Routing/end stops were tested in its predecessor.
+Physical snapshot/restart acceptance and broad USB validation remain open.
+Generators, extra SELECT editing and USB-host unlocking are documentation only;
+see [generator handoff](docs/GENERATOR_RESEARCH.md). TAP rollback was observed
+for particular application failures, not every possible failure class.
 
 ## Set up and establish a baseline
 
@@ -29,7 +29,7 @@ The input is `inputs/MX1_UPD.original.bin`. Its SHA-256 must be:
 26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e
 ```
 
-The reproduction runner executes 22 offline stages and writes `analysis/reproduction.json` plus `build/reproduction-logs/`. It regenerates the mainline container, their patched applications and extensions, and the relevant instruction-level evidence. It does not access USB hardware or flash a mixer. A successful baseline gives a concrete comparison for your change; retain a failed stage's log when reporting a problem.
+The reproduction runner executes 17 offline stages and writes `analysis/reproduction.json` plus `build/reproduction-logs/`. It regenerates the mainline container, its patched application and extension, and the relevant instruction-level evidence. It does not access USB hardware or flash a mixer. A successful baseline gives a concrete comparison for your change; retain a failed stage's log when reporting a problem.
 
 ## Choose a bounded change
 

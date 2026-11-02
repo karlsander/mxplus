@@ -20,75 +20,93 @@ from arm_machine import Machine, BASE
 from memory_map import recover
 
 
-def verify_layout(original: bytes, patched: bytes, build: dict) -> list:
+def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
+    """Account for every changed byte and execute the complete startup copies."""
     assert sha256(original) == build['original_app_sha256']
     assert sha256(patched) == build['patched_app_sha256']
     scatter = build['scatter_extension']
     cut, size = scatter['insert_offset'], scatter['insert_length']
-    assert cut == len(original) and len(patched) == cut+size
-    assert scatter['runtime_address'] == 0x01017264
-    assert scatter['code_address'] == 0x60664000
-    assert 0 < scatter['code_length'] <= 0x2000 and scatter['code_length'] % 4 == 0
-    assert build['code_bytes_remaining'] == 0x2000 - scatter['code_length']
-    blob = patched[cut:]
-    assert sha256(blob) == build['extension_sha256']
-    assert size == scatter['data_length'] + scatter['code_length']
-    assert scatter['data_length'] == build['writable_state']['size']
-    assert scatter['code_load_offset'] == scatter['data_length']
-    expected = bytearray(original+blob)
-    occupied = set()
+    assert cut == 0xdff30 and scatter['runtime_address'] == 0x0100f6a4
+    code_size = scatter['code_length']
+    assert 0 < code_size <= 0x95c and code_size % 4 == 0
+    assert size == code_size + 356
+    assert len(patched) == len(original) + size
+    extension = patched[cut:cut + size]
+    assert sha256(extension) == build['extension_sha256']
+    assert build['sram_bytes_remaining'] == 0x95c - code_size
+
+    # Independently replay the recorded changes. Unrecorded changes, overlapping
+    # patches, wrong old bytes, or a shifted existing destination must fail.
+    expected = bytearray(original[:cut] + extension + original[cut:])
+    modified = set(range(cut, cut + size))
+    updates = scatter['startup_updates']
+    assert [u['offset'] for u in updates] == [0xe8, 0x100, 0x114, 0x128, 0x13c, 0x150]
+    for update in updates:
+        off = update['offset']
+        assert struct.unpack_from('<I', expected, off)[0] == update['before']
+        expected_after = (update['before'] + code_size if off == 0xe8 else
+                          BASE + cut + code_size if off == 0x114 else update['before'] + size)
+        assert update['after'] == expected_after
+        struct.pack_into('<I', expected, off, update['after'])
+        modified.update(range(off, off + 4))
     for patch in build['patches']:
         assert patch['component'] == 'app_main'
         off = patch['file_offset']
-        old,new = bytes.fromhex(patch['original']),bytes.fromhex(patch['replacement'])
-        positions = set(range(off,off+len(old)))
-        assert old and 0 <= off <= cut-len(old)
-        assert not positions & occupied and len(old)==len(new)
-        assert expected[off:off+len(old)] == old
-        expected[off:off+len(new)] = new
-        occupied.update(positions)
-    assert bytes(expected) == patched
-    old_ops,new_ops = recover(original)['operations'],recover(patched)['operations']
-    assert len(old_ops)==len(new_ops)
-    for i,(old,new) in enumerate(zip(old_ops,new_ops)):
-        if i == 4:
-            assert old == {'call':0x60000032,'kind':'copy','destination':0x01020000,'length':0,'source':0x600dffb4}
-            assert new == dict(old,destination=0x01017264,length=scatter['data_length'],source=BASE+cut)
-        elif i == 8:
-            assert old == {'call':0x60000056,'kind':'copy','destination':0x40008000,'length':0,'source':0x600e0448}
-            assert new == dict(old,destination=0x60664000,length=scatter['code_length'],
-                              source=BASE+cut+scatter['data_length'])
-        else: assert old == new
-    machine=Machine(patched,scatter=False)
-    machine.write(0x01017264,b'\xa5'*0xd9c)
-    machine.write(0x60664000,b'\xa5'*0x2000)
-    machine.uc.reg_write(UC_ARM_REG_SP,0x2001fff0)
-    machine.uc.emu_start(BASE|1,BASE+0x7e,timeout=5_000_000,count=3_000_000)
-    assert machine.uc.reg_read(UC_ARM_REG_PC)==BASE+0x7e
-    for op in new_ops:
-        if not op['length']:continue
-        contents = (patched[op['source']-BASE:op['source']-BASE+op['length']]
-                    if op['kind']=='copy' else bytes(op['length']))
-        assert machine.read(op['destination'],op['length'])==contents
-    assert machine.read(0x01017264,scatter['data_length'])==blob[:scatter['data_length']]
-    assert machine.read(0x60664000,scatter['code_length'])==blob[scatter['data_length']:]
-    sections=scatter['sections']
-    assert [s['name'] for s in sections]==['.route_state','.usb_data','.usb_state','.generator_data','.text']
-    covered=set()
-    for section in sections:
-        off=section['load_offset']
-        assert off == (scatter['data_length'] if section['name']=='.text'
-                       else section['address']-0x01017264)
-        assert sha256(blob[off:off+section['size']])==section['sha256']
-        assert not covered & set(range(off,off+section['size']))
-        covered.update(range(off,off+section['size']))
-        assert section['flags']&7 == (6 if section['name']=='.text' else 3)
-    assert all(byte==0 for i,byte in enumerate(blob) if i not in covered)
-    return [{'name':'Every changed byte is guarded; empty copies and the SDRAM heap base reserve extension memory',
-             'status':'pass','extension_bytes':size,'code_address':hex(scatter['code_address']),
-             'code_bytes_remaining':build['code_bytes_remaining']},
-            {'name':'Original startup initializes all sections and preserves every original nonempty region',
-             'status':'pass','sections':sections}]
+        before, after = bytes.fromhex(patch['original']), bytes.fromhex(patch['replacement'])
+        assert before and len(before) == len(after)
+        assert 0 <= off <= len(expected) - len(before)
+        positions = set(range(off, off + len(before)))
+        assert not positions & modified, 'Overlapping or unreviewed patch'
+        assert expected[off:off + len(before)] == before
+        expected[off:off + len(after)] = after
+        modified.update(positions)
+    assert bytes(expected) == patched, 'Unaccounted application byte changes'
+
+    old_map = recover(original)['operations']
+    new_map = recover(patched)['operations']
+    assert len(old_map) == len(new_map)
+    for index, (old, new) in enumerate(zip(old_map, new_map)):
+        if index == 4:
+            assert old['length'] == 0 and old['destination'] == 0x01020000
+            assert new == dict(old, destination=0x0101727c, length=356, source=BASE + cut + code_size)
+            continue
+        assert old['kind'] == new['kind'] and old['destination'] == new['destination']
+        assert new['length'] == old['length'] + (code_size if index == 0 else 400 if index == 3 else 0)
+        if old['kind'] == 'copy':
+            assert new['source'] == old['source'] + (size if old['source'] >= BASE + cut else 0)
+
+    started = []
+    for image in (original, patched):
+        machine = Machine(image, scatter=False)
+        machine.uc.reg_write(UC_ARM_REG_SP, 0x2001fff0)
+        machine.write(0x0100f6a4, b'\xcc' * size)
+        machine.uc.emu_start(BASE | 1, BASE + 0x7e, timeout=2_000_000, count=2_000_000)
+        assert machine.uc.reg_read(UC_ARM_REG_PC) == BASE + 0x7e
+        for index, operation in enumerate(recover(image)['operations']):
+            length = operation['length']
+            if not length:
+                continue
+            contents = (image[operation['source'] - BASE:operation['source'] - BASE + length]
+                        if operation['kind'] == 'copy' else bytes(length))
+            if image is patched and index == 3:
+                contents = bytes(length - 376) + extension[code_size:] + bytes(20)
+            assert machine.read(operation['destination'], length) == contents
+        started.append(machine)
+    for operation in old_map:
+        if operation['destination'] != 0x01000300 and operation['length']:
+            address, length = operation['destination'], operation['length']
+            assert started[0].read(address, length) == started[1].read(address, length)
+    assert started[1].read(0x0100f6a4, code_size) == extension[:code_size]
+    assert started[1].read(0x0101727c, 356) == extension[code_size:]
+    return [
+        {'name': 'Every application change matches recorded guarded patches and scatter insertion',
+         'status': 'pass', 'patch_sites': len(build['patches']), 'extension_bytes': size,
+         'sram_bytes_remaining': 0x95c - code_size},
+        {'name': 'Actual original startup installs routing code and preserves existing initialized data and BSS',
+         'status': 'pass', 'runtime_interval': ['0x0100f6a4', hex(0x0100f6a4 + code_size)],
+         'existing_nonempty_destinations_unchanged': True,
+         'repurposed_empty_copy': 'USB descriptor at 0x0101727c'},
+    ]
 
 
 def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
@@ -97,12 +115,24 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
     from routing_hardware_audit import verify_image as audit_hardware
 
     groups = verify_layout(original, patched, build)
+    # Guard the retirement independently of source removal. Main-app offsets
+    # below precede insertion; the USB sample callback, transport, SELECT/step
+    # actions, and stock heap literal must be byte-identical to the original.
+    retired_sites = ((0x168c, 4), (0xa7dc, 8), (0xa810, 8), (0xa894, 8),
+        (0x14692, 10), (0x10516, 12), (0x10538, 8), (0x140c2, 10),
+        (0x13740, 8), (0xd76c, 4))
+    for offset, length in retired_sites:
+        assert patched[offset:offset+length] == original[offset:offset+length], hex(offset)
+    assert not any(name.startswith(('mx1_internal_', 'mx1_sources_', 'mx1_bd_',
+        'mxkick_', 'mxnoise_')) for name in build['symbols'])
+    groups.append({'name': 'Generator callback, transport, extra SELECT UI and SDRAM heap patches are absent',
+        'status': 'pass', 'component': 'app_main',
+        'unchanged_sites': [{'decoded_offset': hex(offset), 'runtime_address': hex(BASE+offset),
+                            'length': length} for offset, length in retired_sites],
+        'callback_target': '0x01009841', 'stock_heap_start': '0x606634d0'})
     from routing_mpu_verify import verify as verify_mpu
     mpu = verify_mpu(original, patched, build)
     groups.extend(mpu['groups'])
-    from sdram_code_verify import verify as verify_heap
-    heap = verify_heap(original, patched, build)
-    groups.extend(heap['groups'])
     from usb_audio_verify import verify as verify_usb
     usb = verify_usb(original, patched, build)
     assert usb['status'] == 'pass'
@@ -138,7 +168,7 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
         'extension_sha256': build['extension_sha256'], 'groups': groups,
         'hardware_access': False,
         'scope': 'Integrated candidate ARM instructions with explicit DSP and peripheral models',
-        'details': {'heap': 'heap-verification.json', 'storage': 'storage-verification.json', 'ui': 'ui-verification.json', 'audio': 'audio-verification.json',
+        'details': {'storage': 'storage-verification.json', 'ui': 'ui-verification.json', 'audio': 'audio-verification.json',
                     'hardware_initialization': 'hardware-audit.json'},
         'limits': [
             'This candidate has offline evidence only; prior panel observations do not validate its audio or recovery',
@@ -146,7 +176,7 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
             'Instruction counts do not measure real-time deadline margin or CPU cycles',
         ],
     }
-    return report, {'heap-verification.json': heap, 'usb-verification.json': usb, 'mpu-verification.json': mpu, 'storage-verification.json': storage, 'ui-verification.json': ui, 'audio-verification.json': audio,
+    return report, {'usb-verification.json': usb, 'mpu-verification.json': mpu, 'storage-verification.json': storage, 'ui-verification.json': ui, 'audio-verification.json': audio,
                     'hardware-audit.json': hardware}
 
 

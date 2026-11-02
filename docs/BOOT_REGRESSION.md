@@ -1,3 +1,7 @@
+> Historical boot and activation investigation. Mainline now restores the
+> pre-generator `88457445…` image. Generators/editor and the SDRAM reservation
+> are removed; see [the final handoff](GENERATOR_RESEARCH.md).
+
 # Generator/editor boot investigation
 
 ## Hardware observations, 2 November 2026
@@ -83,7 +87,7 @@ another physical constraint. See the [isolation record](../evidence/boot-locatio
 
 ## SDRAM reservation correction
 
-The current image is
+The historical SDRAM image is
 `232a1e87a8c4378ce740c295ed9df7d5659c3645899f4c51747e656c022cfe25`.
 It restores all generator/editor features and links code at `0x60664000` in
 the stock SDRAM heap address range. An explicit heap-start adjustment reserves
@@ -116,6 +120,13 @@ P9r operand `0xa011`. This separately tests the unverified DSP source change;
 it deliberately does not deliver generator audio. The user reports the same
 freeze with P9r still displayed. Neither the physical sample writes nor the
 generator-specific DSP read operands are necessary to reproduce this failure.
-The next [callback isolation](../evidence/generator-freeze-20261102/callback-isolation/README.md)
+The final [callback isolation](../evidence/generator-freeze-20261102/callback-isolation/README.md)
 retains those two substitutions and bypasses rendering in
 the sample callback, leaving source IDs, display and control paths intact.
+
+The user confirmed that the callback-isolation image `f4f5b93e…` no longer
+freezes when selecting the generator. Rendering was bypassed, so generator
+audio was not tested. Active rendering or its interrupt cost is implicated;
+SDRAM slowness remains a hypothesis, not a measured cause. The user then
+requested removal of generators and extra SELECT editing, restoring the
+pre-generator internal-code mainline.

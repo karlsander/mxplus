@@ -2,265 +2,103 @@
   "status": "OFFLINE EXPERIMENT; NOT HARDWARE VALIDATED",
   "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "a00393a8534f02b20591d149b8f87cc9e7eac6373eacabe419c4627935e8de39",
-  "container_sha256": "232a1e87a8c4378ce740c295ed9df7d5659c3645899f4c51747e656c022cfe25",
-  "extension_sha256": "789a1bf8600723b7c8695e7473cc20008bd5148f2e32d4489b67c14d5fa72051",
+  "patched_app_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758",
+  "container_sha256": "88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba",
+  "extension_sha256": "859b0ffc16473fcefcce41c53029821f1013c206f8b00d32203fbbc0e166be68",
   "symbols": {
-    "mxkick_trigger.sweep_drops": 1617320236,
-    "mxkick_trigger.amplitude_numerators": 1617320224,
     "mx1_uac2_rate": 16872416,
     "mx1_uac2_reply": 16872420,
-    "mx1_route_ui_event": 1617315311,
-    "mx1_route_ui_display": 1617315117,
-    "mx1_route_get": 1617314293,
-    "mx1_route_adjust": 1617314421,
-    "mx1_route_label": 1617314319,
-    "mx1_route_recall": 1617313981,
-    "mx1_uac2_initialize": 1617313793,
-    "mx1_uac2_set_rate": 1617319477,
-    "mx1_uac2_class_request": 1617319489,
-    "mx1_uac2_start": 1617319769,
-    "mx1_sources_ui_event": 1617318647,
-    "mx1_sources_ui_press": 1617317913,
-    "mx1_sources_ui_release": 1617318293,
-    "mx1_sources_ui_steps": 1617318947,
-    "mx1_sources_ui_select_leds": 1617317621,
-    "mx1_sources_ui_value": 1617319093,
-    "mx1_sources_ui_tempo": 1617319221,
-    "mx1_sources_ui_target": 1617317657,
-    "mx1_bd_step_get": 1617315513,
-    "mx1_bd_step_toggle": 1617315547,
-    "mx1_bd_step_adjust": 1617315583,
-    "mx1_bd_current_step": 1617315691,
-    "mx1_internal_routes": 1617315735,
-    "mx1_internal_render": 1617315899,
-    "mx1_internal_audio_frame": 1617317237,
-    "mx1_internal_step": 1617315809,
-    "mx1_internal_transport_reset": 1617315757,
-    "mx1_internal_clock_start": 1617316575,
-    "mx1_internal_clock_stop": 1617316645,
-    "mx1_internal_clock_step": 1617316703,
-    "mx1_route_dispatch": 1617315077,
-    "mx1_route_flush": 1617314561,
+    "mx1_route_ui_event": 16841795,
+    "mx1_route_ui_display": 16841613,
+    "mx1_route_get": 16840857,
+    "mx1_route_adjust": 16840985,
+    "mx1_route_label": 16840883,
+    "mx1_route_recall": 16840545,
+    "mx1_uac2_initialize": 16840357,
+    "mx1_uac2_set_rate": 16841997,
+    "mx1_uac2_class_request": 16842009,
+    "mx1_uac2_start": 16842289,
+    "mx1_route_dispatch": 16841571,
+    "mx1_route_flush": 16841125,
     "mx1_route_state": 16872036,
-    "mx1_route_ui_display_original": 1617315481,
-    "mx1_sources_ui_route_target": 1617317559,
-    "mx1_uac2_configuration": 16872060,
-    "mx1_bd_steps": 16872436,
-    "mx1_bd_clock": 16873140,
-    "mx1_internal_active_mask": 16873144,
-    "mx1_internal_invalidate": 1617315865,
-    "mxnoise_next": 1617317191,
-    "mxkick_reset": 1617316765,
-    "mxkick_trigger": 1617316785,
-    "mxkick_next": 1617317007,
-    "mx1_internal_start_original": 1617317297,
-    "mx1_internal_stop_original": 1617317317,
-    "mx1_internal_step_original": 1617317337,
-    "mx1_sources_ui_edit_target": 1617317357,
-    "mx1_sources_ui_select_leds_original": 1617319449,
-    "mx1_sources_ui_press_original": 1617319365,
-    "mx1_sources_ui_release_original": 1617319389,
-    "mx1_sources_ui_steps_original": 1617319409,
-    "mx1_sources_ui_value_original": 1617319433
+    "mx1_route_ui_display_original": 16841965,
+    "mx1_uac2_configuration": 16872060
   },
   "compiler": "ziglang 0.13.0 Cortex-M3 ReleaseSmall, no LTO",
   "sources": {
-    "patches/channel_routing_audio.c": "43f560cec44fe213f606a1f4d2a8c6a058e24abb7b7b401729aa146d1a3fea36",
-    "patches/channel_routing_ui.c": "460e58a650aae9c0d9b034b12a8fdbca4face1d660725ed7968a156e9d50e1ef",
+    "patches/channel_routing_audio.c": "7d548dd68f8e9f9b176ed74049c28eb56dae58da07fd96ae28d85b6608d38de4",
+    "patches/channel_routing_ui.c": "4f3ddc32467e8fe414c88c61ddf0214b22c492d753534c09dca655ccfa0a2998",
     "patches/channel_routing_ui.S": "a5adb0bd43ba5a0a357f3927a6e372c4df4e3ff7cf2d9281b90022fcee9b3bcf",
     "patches/usb_audio.c": "cd410e071e504ced297c96b74b1fbe33c9fc25bb69f1e17da6168857a86b3db6",
-    "patches/internal_sources.c": "48c6dffc7feab3e2b2a7326f78f63f5cc1ab9917a7c16066b424d59d38b92991",
-    "patches/internal_sources_dsp.c": "b903b242aa7caec31dd88f12fae62f6ef568d323dac3730cc6085154b4ddef83",
-    "patches/internal_sources_audio.c": "86767d5520ab75167328272176bad351b0d83dec96d78f05cb7a5c59bc7a0ef1",
-    "patches/internal_sources_clock.S": "a76646274168f47a5c8bcf87264957c09a79a47eba0384bf987fca1a745d426a",
-    "patches/internal_sources_ui.c": "e3932773c209ffa599fa2d530d4321196284ed21ea0962319e64df6e63adb330",
-    "patches/internal_sources_ui.S": "bcdd5960a851a5a0ebeabd18ed02c44c35d86c6e710583b7bd9fec48eb303fcf",
     "sources/hardware/uac2_adapter.c": "d2cd20af7f08639ad195ed525006124b9cff0d1b0c5ef253809b3bf0478b676d",
-    "patches/channel_routing.h": "2ae20669ea74e6e09edf5146b4c982f9b1da98f9198c2547f93617f27b9fc06c",
-    "patches/mainline.ld": "952d62b0fa7371b18413126454e1c5b0be9b37ec6941d1241ca6bb87ecf29589",
-    "tools/build_firmware.py": "ea62ffe803931658ef55708fe6b52a73efb64537a7b3370a7d68d2f92be2bb20",
+    "patches/channel_routing.h": "ee5979ac7b1ce3bdd75e0c75542a18e2abcc21c9437d80fb54ae1f2b9fb54e31",
+    "patches/mainline.ld": "6d0473c616b4ea435fe142c106005a343f0f12b85dd97d7a162de19cf1f66e20",
+    "tools/build_firmware.py": "a866e5d3dd75dbe42a5e8247108ea75ff90dca0d00b99ce964421bb97f5ebb14",
     "tools/routing_audio_patch.py": "cc993ffb0f272f2f96328e9c26ca06a579847a0f83543dbaf11dff295632cb3e",
-    "tools/firmware_patch.py": "5e61df9b7e86775392227882a6e76ba3e7e678c6d042f5e844753f7b2b886971",
-    "tools/uac2_design.py": "fa02f27556f54ac1a0c06a0ae712a97c62180edb2c33d747050ab728a73fd551",
-    "tools/internal_sources_ui_patch.py": "be2553bef99b64d15af3ebc42d3d965d85b2ef3d806956c96eca792d9b42867d",
-    "patches/internal_sources.h": "084ed1f909bf212ad557835ae6dd86d296bfe933b5550777a52f255f9b2b5869",
-    "patches/internal_sources_dsp.h": "c29db9076daddb7dd7fbe577466a34982a32e94d2b307ceb4e2b12b8f145eec6",
-    "patches/internal_sources_ui.h": "ab846ecac7d41caf8aab26ac067eab3d82e30242435ee5f97f1939c52364e49e"
+    "tools/firmware_patch.py": "5b0980447039dbb4f213b2c41f1635da1966d2972bb04db482f8aa9e2cfac6ed",
+    "tools/uac2_design.py": "fa02f27556f54ac1a0c06a0ae712a97c62180edb2c33d747050ab728a73fd551"
   },
   "scatter_extension": {
-    "insert_offset": 918600,
-    "insert_length": 8244,
-    "runtime_address": 16872036,
-    "data_length": 1512,
-    "code_address": 1617313792,
-    "code_length": 6732,
-    "code_load_offset": 1512,
-    "copy_operation_index": 4,
-    "code_copy_operation_index": 8,
+    "insert_offset": 917296,
+    "runtime_address": 16840356,
+    "insert_length": 2732,
     "startup_updates": [
       {
-        "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
-        "file_offset": 268,
-        "runtime_address": 1610613004,
-        "original": "00000201",
-        "replacement": "64720101",
-        "component": "app_main"
+        "offset": 232,
+        "before": 62372,
+        "after": 64748
       },
       {
-        "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
-        "file_offset": 272,
-        "runtime_address": 1610613008,
-        "original": "00000000",
-        "replacement": "e8050000",
-        "component": "app_main"
+        "offset": 256,
+        "before": 1611530032,
+        "after": 1611532764
       },
       {
-        "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
-        "file_offset": 276,
-        "runtime_address": 1610613012,
-        "original": "b4ff0d60",
-        "replacement": "48040e60",
-        "component": "app_main"
+        "offset": 276,
+        "before": 1611530164,
+        "after": 1611532408
       },
       {
-        "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
-        "file_offset": 308,
-        "runtime_address": 1610613044,
-        "original": "00800040",
-        "replacement": "00406660",
-        "component": "app_main"
+        "offset": 296,
+        "before": 1611530164,
+        "after": 1611532896
       },
       {
-        "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
-        "file_offset": 312,
-        "runtime_address": 1610613048,
-        "original": "00000000",
-        "replacement": "4c1a0000",
-        "component": "app_main"
+        "offset": 316,
+        "before": 1611531336,
+        "after": 1611534068
       },
       {
-        "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
-        "file_offset": 316,
-        "runtime_address": 1610613052,
-        "original": "48040e60",
-        "replacement": "300a0e60",
-        "component": "app_main"
+        "offset": 336,
+        "before": 1611531336,
+        "after": 1611534068
       }
     ],
-    "heap_update": {
-      "label": "Reserve mainline code before stock SDRAM heap; initializer derives reduced capacity",
-      "file_offset": 55148,
-      "runtime_address": 1610667884,
-      "original": "d0346660",
-      "replacement": "00606660",
-      "component": "app_main"
-    },
-    "heap_reservation": {
-      "original_start": 1617310928,
-      "start": 1617321984,
-      "end_exclusive": 1644167168,
-      "reserved_bytes": 11056,
-      "remaining_bytes": 26845184
-    },
-    "sections": [
-      {
-        "name": ".route_state",
-        "address": 16872036,
-        "size": 24,
-        "load_offset": 0,
-        "sha256": "9d908ecfb6b256def8b49a7c504e6c889c4b0e41fe6ce3e01863dd7b61a20aa0",
-        "flags": 3
-      },
-      {
-        "name": ".usb_data",
-        "address": 16872060,
-        "size": 356,
-        "load_offset": 24,
-        "sha256": "aec06110cfbdecf3cc13a0477a7fafa618556294eca691e6675511be31f96d00",
-        "flags": 3
-      },
-      {
-        "name": ".usb_state",
-        "address": 16872416,
-        "size": 20,
-        "load_offset": 380,
-        "sha256": "de47c9b27eb8d300dbb5f2c353e632c393262cf06340c4fa7f1b40c4cbd36f90",
-        "flags": 3
-      },
-      {
-        "name": ".generator_data",
-        "address": 16872436,
-        "size": 1112,
-        "load_offset": 400,
-        "sha256": "71da145ecb4b538abec4faadfe3e390f51b0c1b93fafea2cc50964e64bb5d36d",
-        "flags": 3
-      },
-      {
-        "name": ".text",
-        "address": 1617313792,
-        "size": 6732,
-        "load_offset": 1512,
-        "sha256": "ce9ab03d18a9470ef74c4b7e28ea85f5464148ee18011aca8ff97511c1787685",
-        "flags": 54
-      }
-    ]
+    "code_length": 2376
   },
   "patches": [
     {
-      "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
+      "label": "Zero 400-byte mainline writable state reservation after original writable SRAM BSS",
+      "file_offset": 264,
+      "runtime_address": 1610613000,
+      "original": "dc710000",
+      "replacement": "6c730000",
+      "component": "app_main"
+    },
+    {
+      "label": "Repurpose zero-length startup copy for writable USB descriptor",
       "file_offset": 268,
       "runtime_address": 1610613004,
       "original": "00000201",
-      "replacement": "64720101",
+      "replacement": "7c720101",
       "component": "app_main"
     },
     {
-      "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
+      "label": "Initialize 356-byte USB descriptor storage after writable BSS clear",
       "file_offset": 272,
       "runtime_address": 1610613008,
       "original": "00000000",
-      "replacement": "e8050000",
-      "component": "app_main"
-    },
-    {
-      "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
-      "file_offset": 276,
-      "runtime_address": 1610613012,
-      "original": "b4ff0d60",
-      "replacement": "48040e60",
-      "component": "app_main"
-    },
-    {
-      "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
-      "file_offset": 308,
-      "runtime_address": 1610613044,
-      "original": "00800040",
-      "replacement": "00406660",
-      "component": "app_main"
-    },
-    {
-      "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
-      "file_offset": 312,
-      "runtime_address": 1610613048,
-      "original": "00000000",
-      "replacement": "4c1a0000",
-      "component": "app_main"
-    },
-    {
-      "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
-      "file_offset": 316,
-      "runtime_address": 1610613052,
-      "original": "48040e60",
-      "replacement": "300a0e60",
-      "component": "app_main"
-    },
-    {
-      "label": "Reserve mainline code before stock SDRAM heap; initializer derives reduced capacity",
-      "file_offset": 55148,
-      "runtime_address": 1610667884,
-      "original": "d0346660",
-      "replacement": "00606660",
+      "replacement": "64010000",
       "component": "app_main"
     },
     {
@@ -268,7 +106,7 @@
       "file_offset": 55680,
       "runtime_address": 1610668416,
       "original": "10b500f01ff80d48",
-      "replacement": "dff800f001406660",
+      "replacement": "dff800f0a5f60001",
       "component": "app_main"
     },
     {
@@ -308,95 +146,23 @@
       "file_offset": 124806,
       "runtime_address": 1610737542,
       "original": "3eb50c46002202216846",
-      "replacement": "00bfdff800f0bd406660",
+      "replacement": "00bfdff800f061f70001",
       "component": "app_main"
     },
     {
-      "label": "Panel event callback: source picker and held BD step encoders",
+      "label": "Panel event callback: hold SELECT and turn TEMPO",
       "file_offset": 62936,
       "runtime_address": 1610675672,
       "original": "490b0160",
-      "replacement": "f7526660",
+      "replacement": "43fc0001",
       "component": "app_main"
     },
     {
-      "label": "Stock SELECT LEDs plus blinking source-edit selection",
-      "file_offset": 83602,
-      "runtime_address": 1610696338,
-      "original": "2de9f041844803f0defd",
-      "replacement": "00bfdff800f0f54e6660",
-      "component": "app_main"
-    },
-    {
-      "label": "BD step press after original queue/held-key update",
-      "file_offset": 66838,
-      "runtime_address": 1610679574,
-      "original": "114910b5083148806ff06300",
-      "replacement": "00bfdff800f01950666000bf",
-      "component": "app_main"
-    },
-    {
-      "label": "BD tap release or held-note edit completion",
-      "file_offset": 66872,
-      "runtime_address": 1610679608,
-      "original": "084910b514314880",
-      "replacement": "dff800f095516660",
-      "component": "app_main"
-    },
-    {
-      "label": "BD sixteen-step LED view; stock BFX/MFX views preserved",
-      "file_offset": 82114,
-      "runtime_address": 1610694850,
-      "original": "2de9f04100221146e548",
-      "replacement": "00bfdff800f023546660",
-      "component": "app_main"
-    },
-    {
-      "label": "Held BD note pitch overlay on three-character VALUE display",
-      "file_offset": 79680,
-      "runtime_address": 1610692416,
-      "original": "2de9fc4180460022",
-      "replacement": "dff800f0b5546660",
-      "component": "app_main"
-    },
-    {
-      "label": "Held BD decay or SELECT source overlay on TEMPO display",
+      "label": "Tempo display overlay with relocated original prologue",
       "file_offset": 78678,
       "runtime_address": 1610691414,
       "original": "feb50446c54804f07cff",
-      "replacement": "00bfdff800f035556660",
-      "component": "app_main"
-    },
-    {
-      "label": "Original transport/step callback plus internal-source clock",
-      "file_offset": 42972,
-      "runtime_address": 1610655708,
-      "original": "00b5ba48cdb00178",
-      "replacement": "dff800f0df4a6660",
-      "component": "app_main"
-    },
-    {
-      "label": "Original transport/step callback plus internal-source clock",
-      "file_offset": 43024,
-      "runtime_address": 1610655760,
-      "original": "10b5ad4cccb02178",
-      "replacement": "dff800f0254b6660",
-      "component": "app_main"
-    },
-    {
-      "label": "Original transport/step callback plus internal-source clock",
-      "file_offset": 43156,
-      "runtime_address": 1610655892,
-      "original": "f0b5934cadf5197d",
-      "replacement": "dff800f05f4b6660",
-      "component": "app_main"
-    },
-    {
-      "label": "Original computer-audio sample pump followed by internal sources",
-      "file_offset": 5772,
-      "runtime_address": 1610618508,
-      "original": "41980001",
-      "replacement": "754d6660",
+      "replacement": "00bfdff800f08dfb0001",
       "component": "app_main"
     },
     {
@@ -404,15 +170,15 @@
       "file_offset": 150446,
       "runtime_address": 1610763182,
       "original": "2de9f04387b0eaf702fb",
-      "replacement": "00bfdff800f005456660",
+      "replacement": "00bfdff800f063fb0001",
       "component": "app_main"
     }
   ],
   "writable_state": {
     "start": 16872036,
-    "size": 1512,
-    "end_exclusive": 16873548,
-    "startup_copy_operation": 4
+    "size": 400,
+    "end_exclusive": 16872436,
+    "startup_zero_length_offset": 264
   },
   "audio_routing": {
     "destination_strips": 11,
@@ -631,26 +397,26 @@
   },
   "container": {
     "base_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
-    "output_sha256": "232a1e87a8c4378ce740c295ed9df7d5659c3645899f4c51747e656c022cfe25",
+    "output_sha256": "88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba",
     "byte_identical_to_original": false,
     "changes": [
       {
         "name": "app_main",
-        "decoded_bytes_changed": 8385,
+        "decoded_bytes_changed": 4002,
         "old_decoded_size": 918600,
-        "new_decoded_size": 926844,
+        "new_decoded_size": 921332,
         "decoded_size_change_explicitly_allowed": true,
         "old_decoded_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-        "new_decoded_sha256": "a00393a8534f02b20591d149b8f87cc9e7eac6373eacabe419c4627935e8de39",
+        "new_decoded_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758",
         "old_stored_size": 505462,
-        "new_stored_size": 1042700,
+        "new_stored_size": 1036499,
         "encoding": "literal-only LZSS"
       }
     ],
     "boot_images_and_trailer_unchanged": true,
     "all_bytes_outside_update_range_unchanged": true,
     "container_validation": {
-      "sha256": "232a1e87a8c4378ce740c295ed9df7d5659c3645899f4c51747e656c022cfe25",
+      "sha256": "88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba",
       "size": 4194320,
       "is_supplied_original": false,
       "format_scope": "Observed Roland MX-1 firmware 1.051132 layout only",
@@ -733,15 +499,15 @@
           "version": "1.051132",
           "entry_address_field": 1610612736,
           "load_address": 1610612736,
-          "stored_size": 1042700,
-          "checksum": 99587692,
+          "stored_size": 1036499,
+          "checksum": 98934600,
           "checksum_algorithm": "sum of stored payload bytes modulo 2^32",
           "checksum_valid": true,
           "compression": "lzss-zero-init-4096-18",
-          "decoded_size": 926844,
-          "stored_sha256": "44f5150ee852dd712248553fcab640fda4cf45b89e0e7ddcd03f5c12c2f57901",
+          "decoded_size": 921332,
+          "stored_sha256": "3b9ee8c822e741e84e29b2b4fa60f4aa282977b0e209ff921c8070d1af10c3c3",
           "padding_is_ff": true,
-          "decoded_sha256": "a00393a8534f02b20591d149b8f87cc9e7eac6373eacabe419c4627935e8de39"
+          "decoded_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758"
         },
         {
           "name": "app_usb",
@@ -789,11 +555,11 @@
     },
     "hardware_validation": "not performed; research output only"
   },
-  "code_bytes_remaining": 1460,
+  "sram_bytes_remaining": 20,
   "hardware_access": false,
   "limits": [
-    "Pre-generator mainline boots and passed an iPhone/AUM duplex path; SDRAM code relocation awaits hardware testing",
-    "Routing, NSE/BD generators and USB-B audio combined; USB-host application remains stock",
+    "Restores the pre-generator image with user-reported normal boot and iPhone/AUM duplex audio; see hardware record",
+    "Routing and USB-B audio combined; USB-host application remains stock",
     "Real-time deadline margin and electrical/DMA behavior require hardware measurement"
   ]
 }

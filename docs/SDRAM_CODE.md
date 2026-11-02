@@ -1,12 +1,18 @@
+> Historical experiment, retired 2 November 2026. Current mainline restores
+> internal code and the stock heap. This document describes commit
+> `cb0124c49333ce0f54b091a0d7a60908fef26537`; referenced tools/reports belong to
+> that historical tree. See [the final DSP handoff](GENERATOR_RESEARCH.md) for
+> the later callback-bypass result and unresolved timing hypothesis.
+
 # SDRAM code reservation
 
 The location-only hardware test fails with previously working feature code
-linked at `0x01018000`; see [boot investigation](BOOT_REGRESSION.md). Code now
-lives at `0x60664000` in the address range of the stock SDRAM heap. This is an
+linked at `0x01018000`; see [boot investigation](BOOT_REGRESSION.md). That experimental code
+lived at `0x60664000` in the address range of the stock SDRAM heap. This is an
 explicit reservation, not memory borrowed while leaving it allocatable.
-The user confirmed normal boot of this placement. NSE activation still freezes;
-that observation does not yet establish whether the cause is the generator
-exchange write, DSP route operand or execution timing.
+The user confirmed normal boot of this placement. NSE activation froze. Subsequent isolation removed sample writes and new DSP
+operands without resolving it; bypassing rendering stopped the freeze. No
+physical timing measurement established why.
 
 All runtime addresses below refer to the main application. Resident SDRAM
 instruction offsets equal runtime minus `0x60000000`; relocated private RTOS

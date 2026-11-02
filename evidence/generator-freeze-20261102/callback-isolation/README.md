@@ -45,5 +45,6 @@ DSP-source substitutions. This is not another maintained firmware build.
 All 22 offline stages and the committed-artifact gate passed. The diagnostic
 sources, artifacts and reports are recorded in local commit
 `116a59994ac23e4e4d7099f2129b8f0ce2867283`. The image was copied to the MX-1 update drive,
-fully readback-verified and successfully ejected. Hardware selection result
-is pending.
+fully readback-verified and successfully ejected. The user confirmed that advancing to the generator selection no longer freezes.
+Generator sound was disabled and was not tested. This implicates active
+rendering or its IRQ cost; no timing measurement established a precise cause.

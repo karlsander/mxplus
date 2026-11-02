@@ -44,4 +44,7 @@ The exact diagnostic sources, artifacts and reports were committed locally as
 `c64d77632d613b563634f4a39b296a0057e28a90`. The compiled function inventory is unchanged;
 only `mx1_route_flush` changes size (516 to 532 bytes). The image was copied to
 the MX-1 update drive, fully readback-verified and successfully ejected. Physical
-flashing and selection results are pending.
+test result: the user reports the same freeze when advancing beyond P9r;
+the display remains P9r. Removing both inferred sample-bank accesses and
+generator DSP-source operands was insufficient. This result does not validate
+either original hardware mapping.

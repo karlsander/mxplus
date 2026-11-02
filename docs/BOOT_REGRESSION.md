@@ -110,7 +110,12 @@ unresolved. This result does not validate the original physical exchange bank.
 The exact diagnostic identity, source delta and offline reports are recorded in
 [generator-freeze evidence](../evidence/generator-freeze-20261102/README.md).
 
-The next [DSP-source isolation](../evidence/generator-freeze-20261102/route-isolation/README.md)
+A subsequent [DSP-source isolation](../evidence/generator-freeze-20261102/route-isolation/README.md)
 retains RAM publication and active rendering but makes NSE/BD read the existing
 P9r operand `0xa011`. This separately tests the unverified DSP source change;
-it deliberately does not deliver generator audio.
+it deliberately does not deliver generator audio. The user reports the same
+freeze with P9r still displayed. Neither the physical sample writes nor the
+generator-specific DSP read operands are necessary to reproduce this failure.
+The next [callback isolation](../evidence/generator-freeze-20261102/callback-isolation/README.md)
+retains those two substitutions and bypasses rendering in
+the sample callback, leaving source IDs, display and control paths intact.

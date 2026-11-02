@@ -9,5 +9,6 @@ prompts in the archive were not treated as new instructions.
 
 Only source, tests and research were adapted. The old builder, linker, Git
 repository, firmware variants and storage-audit tool are not maintained here.
-Current implementation and evidence: `docs/INTERNAL_SOURCES.md`,
-`docs/MAINLINE.md`, `build/mainline/`. No separate generator firmware is built.
+The integration was later retired following hardware activation failures.
+Final findings and source-history pointers: `docs/GENERATOR_RESEARCH.md`.
+No generator implementation or alternate firmware is maintained.

@@ -1,0 +1,292 @@
+{
+  "status": "pass",
+  "hardware_access": false,
+  "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
+  "patched_app_sha256": "7e4560f7b5974534fdf21f75ab0f0308f4c6fc245511e7f1a277a67a806086b4",
+  "candidate_container_sha256": "b294ea0dc9ee252ba3c0e03ed52b5a8c5d64c42b8e8ecf962d41116577b6a69e",
+  "extension_sha256": "b40a659071d87f70d6497bff9b5d93f00aec266060d22f07198ce244d5e3421d",
+  "groups": [
+    {
+      "name": "All 176 per-step words publish atomically and retain step/channel isolation",
+      "status": "pass",
+      "editable_steps": 176,
+      "observed_publication_width": 4,
+      "parameters": [
+        "semitones",
+        "decay"
+      ],
+      "limits": {
+        "pitch": [
+          -24,
+          24
+        ],
+        "decay": [
+          0,
+          100
+        ]
+      },
+      "invalid_inputs_unchanged": true
+    },
+    {
+      "name": "Independent sixteen-step counter survives seven native loop lengths",
+      "status": "pass",
+      "cases": [
+        {
+          "native_length": 1,
+          "callbacks": 48,
+          "bd_cycles": 3
+        },
+        {
+          "native_length": 2,
+          "callbacks": 48,
+          "bd_cycles": 3
+        },
+        {
+          "native_length": 3,
+          "callbacks": 48,
+          "bd_cycles": 3
+        },
+        {
+          "native_length": 4,
+          "callbacks": 48,
+          "bd_cycles": 3
+        },
+        {
+          "native_length": 7,
+          "callbacks": 48,
+          "bd_cycles": 3
+        },
+        {
+          "native_length": 8,
+          "callbacks": 48,
+          "bd_cycles": 3
+        },
+        {
+          "native_length": 16,
+          "callbacks": 48,
+          "bd_cycles": 3
+        }
+      ],
+      "original_step_body_executes": true,
+      "native_stubs": {
+        "0x6000c754": "native transaction constructor",
+        "0x6000c7a0": "native parameter append",
+        "0x6000c7c8": "native repeated parameter append",
+        "0x6000c794": "native transaction completion",
+        "0x6000a366": "native transport notification helper",
+        "0x6005a198": "native stop/clock helper",
+        "0x6005b3d8": "native parameter bank selector",
+        "0x6005a172": "native step-mask reader",
+        "0x60033238": "native beat-effect trigger"
+      }
+    },
+    {
+      "name": "Per-strip trigger snapshots preserve ringing notes through later step edits",
+      "status": "pass",
+      "distinct_strips": [
+        0,
+        10
+      ],
+      "comparison_frames": 256,
+      "same_step_next_cycle_retriggers": true,
+      "repeated_frame_does_not_retrigger": true
+    },
+    {
+      "name": "Stop/restart clears voices even when both occur between sample callbacks",
+      "status": "pass",
+      "compiled_stock_start_stop_bodies": true,
+      "independent_reset_generation": true,
+      "installed_candidate_entries": {
+        "mx1_internal_clock_start": "0x6000a7dc",
+        "mx1_internal_clock_stop": "0x6000a810",
+        "mx1_internal_clock_step": "0x6000a894"
+      },
+      "disabled_first_step_silent": true,
+      "noise_continues_when_stopped": true
+    },
+    {
+      "name": "Rate and routing transitions reset owned voices and clear all twelve ports",
+      "status": "pass",
+      "rates": [
+        44100,
+        48000,
+        96000
+      ],
+      "invalid_rate": 12345,
+      "removed_sources_silent": true,
+      "no_stale_trigger_on_route_enable": true
+    },
+    {
+      "name": "Actual compiled Q15 conversion is exact at signs, normalization boundaries and dense samples",
+      "status": "pass",
+      "actual_compiled_samples": 598,
+      "signed_range": [
+        -32768,
+        32767
+      ],
+      "expected": "IEEE binary32 of signed sample / 32768",
+      "numerical_converter_stub": false
+    },
+    {
+      "name": "Original transport/step trampolines preserve native calls, state, stack and callee-saved registers",
+      "status": "pass",
+      "cases": [
+        {
+          "routine": "start",
+          "running": 0,
+          "native_step": 0,
+          "mask": 0,
+          "chain": 0,
+          "native_calls": 4
+        },
+        {
+          "routine": "start",
+          "running": 1,
+          "native_step": 0,
+          "mask": 0,
+          "chain": 0,
+          "native_calls": 0
+        },
+        {
+          "routine": "stop",
+          "running": 0,
+          "native_step": 0,
+          "mask": 0,
+          "chain": 0,
+          "native_calls": 0
+        },
+        {
+          "routine": "stop",
+          "running": 1,
+          "native_step": 0,
+          "mask": 0,
+          "chain": 0,
+          "native_calls": 5
+        },
+        {
+          "routine": "step",
+          "running": 1,
+          "native_step": 0,
+          "mask": 0,
+          "chain": 0,
+          "native_calls": 25
+        },
+        {
+          "routine": "step",
+          "running": 1,
+          "native_step": 0,
+          "mask": 0,
+          "chain": 1,
+          "native_calls": 26
+        },
+        {
+          "routine": "step",
+          "running": 1,
+          "native_step": 0,
+          "mask": 65535,
+          "chain": 0,
+          "native_calls": 36
+        },
+        {
+          "routine": "step",
+          "running": 1,
+          "native_step": 0,
+          "mask": 65535,
+          "chain": 1,
+          "native_calls": 37
+        },
+        {
+          "routine": "step",
+          "running": 1,
+          "native_step": 7,
+          "mask": 0,
+          "chain": 0,
+          "native_calls": 25
+        },
+        {
+          "routine": "step",
+          "running": 1,
+          "native_step": 7,
+          "mask": 0,
+          "chain": 1,
+          "native_calls": 37
+        },
+        {
+          "routine": "step",
+          "running": 1,
+          "native_step": 7,
+          "mask": 65535,
+          "chain": 0,
+          "native_calls": 36
+        },
+        {
+          "routine": "step",
+          "running": 1,
+          "native_step": 7,
+          "mask": 65535,
+          "chain": 1,
+          "native_calls": 48
+        },
+        {
+          "routine": "step",
+          "running": 1,
+          "native_step": 15,
+          "mask": 0,
+          "chain": 0,
+          "native_calls": 25
+        },
+        {
+          "routine": "step",
+          "running": 1,
+          "native_step": 15,
+          "mask": 0,
+          "chain": 1,
+          "native_calls": 37
+        },
+        {
+          "routine": "step",
+          "running": 1,
+          "native_step": 15,
+          "mask": 65535,
+          "chain": 0,
+          "native_calls": 36
+        },
+        {
+          "routine": "step",
+          "running": 1,
+          "native_step": 15,
+          "mask": 65535,
+          "chain": 1,
+          "native_calls": 48
+        }
+      ],
+      "original_component": "app_main",
+      "original_offsets": [
+        "0xa7dc",
+        "0xa810",
+        "0xa894"
+      ],
+      "original_runtime": [
+        "0x6000a7dc",
+        "0x6000a810",
+        "0x6000a894"
+      ],
+      "explicit_stubs": {
+        "0x6000c754": "native transaction constructor",
+        "0x6000c7a0": "native parameter append",
+        "0x6000c7c8": "native repeated parameter append",
+        "0x6000c794": "native transaction completion",
+        "0x6000a366": "native transport notification helper",
+        "0x6005a198": "native stop/clock helper",
+        "0x6005b3d8": "native parameter bank selector",
+        "0x6005a172": "native step-mask reader",
+        "0x60033238": "native beat-effect trigger"
+      }
+    }
+  ],
+  "limits": [
+    "Actual ARM instructions with explicit native transaction/BFX/timer-helper stubs in clock tests",
+    "Control-word publication is aligned; hardware scheduling and interrupt priority are not validated",
+    "No physical clock, DSP exchange arithmetic, audio, real-time cycle margin, installation or recovery validation"
+  ]
+}

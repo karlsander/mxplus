@@ -3,7 +3,12 @@
 ## Status
 
 USB-B UAC2 is part of the sole [mainline build](MAINLINE.md), not a separate
-candidate. Combined-image USB hardware behavior remains untested. The retired
+candidate. The restored mainline (`88457445…`) passed a user-reported
+iPhone/AUM audio round trip over a direct USB-B–to–USB-C cable: analog input,
+AUM effect, then return to another mixer channel. See the
+[hardware record](../evidence/iphone-aum-20261102/README.md) for scope and unknowns.
+Generators and their SELECT editor have been removed from the active build.
+Their failures are documented in [the DSP handoff](GENERATOR_RESEARCH.md). The retired
 standalone candidate's mutable SRAM placement was invalid under the stock MPU;
 mainline uses separate writable descriptor/rate/reply storage. Historical build
 identities are in `evidence/retired-probes-20261102/`.

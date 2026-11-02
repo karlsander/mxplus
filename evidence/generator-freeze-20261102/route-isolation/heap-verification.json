@@ -1,0 +1,75 @@
+{
+  "status": "pass",
+  "candidate_container_sha256": "4010c85b98b67837138ba97efecf18beac64cf2ee296c33953686abe0b530395",
+  "patched_app_sha256": "660b92bc7275e78f2e8fcf899ae30219724ef3029bd7726e499019b2e2f47da3",
+  "groups": [
+    {
+      "name": "Stock SDRAM heap creation and allocation exclude reserved code through exhaustion",
+      "status": "pass",
+      "heap_initializer": "0x6000d6f4",
+      "pool_creator": "0x010033b8",
+      "allocation_primitive": "0x01007604",
+      "heap_base_literal_decoded": "0xd76c",
+      "reserved_bytes": 11056,
+      "cases": [
+        {
+          "image": "stock",
+          "heap_start": "0x606634d0",
+          "heap_bytes": 26856240,
+          "allocations": [
+            {
+              "address": "0x606634d8",
+              "requested_bytes": 16
+            },
+            {
+              "address": "0x606634f0",
+              "requested_bytes": 4096
+            },
+            {
+              "address": "0x606644f8",
+              "requested_bytes": 1048576
+            },
+            {
+              "address": "0x60764500",
+              "requested_bytes": 25803520
+            }
+          ],
+          "exhausted_request_returns_null": true,
+          "lowest_allocator_write": "0x606634d0",
+          "reservation_unchanged": false
+        },
+        {
+          "image": "candidate",
+          "heap_start": "0x60666000",
+          "heap_bytes": 26845184,
+          "allocations": [
+            {
+              "address": "0x60666008",
+              "requested_bytes": 16
+            },
+            {
+              "address": "0x60666020",
+              "requested_bytes": 4096
+            },
+            {
+              "address": "0x60667028",
+              "requested_bytes": 1048576
+            },
+            {
+              "address": "0x60767030",
+              "requested_bytes": 25792464
+            }
+          ],
+          "exhausted_request_returns_null": true,
+          "lowest_allocator_write": "0x60666000",
+          "reservation_unchanged": true
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "SCB reads thread mode; scheduling decision 0x01008e02 is stubbed to return 1.",
+    "Allocations enter the original low-level primitive; task wait/free wrappers are not exercised.",
+    "Does not establish peak heap usage, memory-bus timing, or IRQ deadline margin."
+  ]
+}

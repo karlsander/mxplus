@@ -1,0 +1,284 @@
+{
+  "status": "pass",
+  "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
+  "patched_app_sha256": "695aa7a3425da83f9ed74ab2c50976cd7438661867e40a08fc7b9c815808f099",
+  "candidate_container_sha256": "f4f5b93ed7b92ee0bb27a2a594b351a04bd10913100f8038ceb302e0a274f497",
+  "purpose": "One-off renderer-bypass isolation; no generator audio",
+  "groups": [
+    {
+      "name": "Original IRQ calls retained pump only with every generator marked active",
+      "status": "pass",
+      "callback_pointer": "0x60664d85",
+      "pointer_decoded_offset": "0x168c",
+      "active_mask": "0x107ff",
+      "modes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        11,
+        4294967295
+      ],
+      "renderer_entry": "Trapped, not stubbed",
+      "unchanged_ram_sink": "0x101783c",
+      "physical_generator_bank_forbidden": [
+        "0x40101100",
+        "0x40101130"
+      ]
+    },
+    {
+      "name": "Stock USB pump regression across disconnected, capture, duplex and restart fixtures",
+      "status": "pass",
+      "cases": [
+        {
+          "sample_rate": 44100,
+          "scenario": "disconnected",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 1368,
+          "original_fifo_reads_compared": 0,
+          "maximum_irq_instructions": 136
+        },
+        {
+          "sample_rate": 44100,
+          "scenario": "capture_only",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3611,
+          "original_fifo_reads_compared": 0,
+          "maximum_irq_instructions": 303
+        },
+        {
+          "sample_rate": 44100,
+          "scenario": "duplex",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 4853,
+          "original_fifo_reads_compared": 1260,
+          "maximum_irq_instructions": 600
+        },
+        {
+          "sample_rate": 44100,
+          "scenario": "duplex",
+          "out_channels": 2,
+          "in_channels": 2,
+          "ticks": 72,
+          "original_mmio_writes_compared": 1765,
+          "original_fifo_reads_compared": 138,
+          "maximum_irq_instructions": 251
+        },
+        {
+          "sample_rate": 44100,
+          "scenario": "duplex",
+          "out_channels": 18,
+          "in_channels": 2,
+          "ticks": 72,
+          "original_mmio_writes_compared": 2869,
+          "original_fifo_reads_compared": 1260,
+          "maximum_irq_instructions": 463
+        },
+        {
+          "sample_rate": 44100,
+          "scenario": "duplex",
+          "out_channels": 2,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3749,
+          "original_fifo_reads_compared": 138,
+          "maximum_irq_instructions": 388
+        },
+        {
+          "sample_rate": 44100,
+          "scenario": "stop_restart",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 2599,
+          "original_fifo_reads_compared": 0,
+          "maximum_irq_instructions": 303
+        },
+        {
+          "sample_rate": 44100,
+          "scenario": "playback_then_silent",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3989,
+          "original_fifo_reads_compared": 378,
+          "maximum_irq_instructions": 596
+        },
+        {
+          "sample_rate": 48000,
+          "scenario": "disconnected",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 1368,
+          "original_fifo_reads_compared": 0,
+          "maximum_irq_instructions": 136
+        },
+        {
+          "sample_rate": 48000,
+          "scenario": "capture_only",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3611,
+          "original_fifo_reads_compared": 0,
+          "maximum_irq_instructions": 303
+        },
+        {
+          "sample_rate": 48000,
+          "scenario": "duplex",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 4853,
+          "original_fifo_reads_compared": 1260,
+          "maximum_irq_instructions": 600
+        },
+        {
+          "sample_rate": 48000,
+          "scenario": "duplex",
+          "out_channels": 2,
+          "in_channels": 2,
+          "ticks": 72,
+          "original_mmio_writes_compared": 1765,
+          "original_fifo_reads_compared": 138,
+          "maximum_irq_instructions": 251
+        },
+        {
+          "sample_rate": 48000,
+          "scenario": "duplex",
+          "out_channels": 18,
+          "in_channels": 2,
+          "ticks": 72,
+          "original_mmio_writes_compared": 2869,
+          "original_fifo_reads_compared": 1260,
+          "maximum_irq_instructions": 463
+        },
+        {
+          "sample_rate": 48000,
+          "scenario": "duplex",
+          "out_channels": 2,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3749,
+          "original_fifo_reads_compared": 138,
+          "maximum_irq_instructions": 388
+        },
+        {
+          "sample_rate": 48000,
+          "scenario": "stop_restart",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 2599,
+          "original_fifo_reads_compared": 0,
+          "maximum_irq_instructions": 303
+        },
+        {
+          "sample_rate": 48000,
+          "scenario": "playback_then_silent",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3989,
+          "original_fifo_reads_compared": 378,
+          "maximum_irq_instructions": 596
+        },
+        {
+          "sample_rate": 96000,
+          "scenario": "disconnected",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 1368,
+          "original_fifo_reads_compared": 0,
+          "maximum_irq_instructions": 136
+        },
+        {
+          "sample_rate": 96000,
+          "scenario": "capture_only",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3281,
+          "original_fifo_reads_compared": 0,
+          "maximum_irq_instructions": 303
+        },
+        {
+          "sample_rate": 96000,
+          "scenario": "duplex",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 4469,
+          "original_fifo_reads_compared": 1188,
+          "maximum_irq_instructions": 596
+        },
+        {
+          "sample_rate": 96000,
+          "scenario": "duplex",
+          "out_channels": 2,
+          "in_channels": 2,
+          "ticks": 72,
+          "original_mmio_writes_compared": 1717,
+          "original_fifo_reads_compared": 132,
+          "maximum_irq_instructions": 251
+        },
+        {
+          "sample_rate": 96000,
+          "scenario": "duplex",
+          "out_channels": 18,
+          "in_channels": 2,
+          "ticks": 72,
+          "original_mmio_writes_compared": 2773,
+          "original_fifo_reads_compared": 1188,
+          "maximum_irq_instructions": 459
+        },
+        {
+          "sample_rate": 96000,
+          "scenario": "duplex",
+          "out_channels": 2,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3413,
+          "original_fifo_reads_compared": 132,
+          "maximum_irq_instructions": 388
+        },
+        {
+          "sample_rate": 96000,
+          "scenario": "stop_restart",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 2181,
+          "original_fifo_reads_compared": 0,
+          "maximum_irq_instructions": 301
+        },
+        {
+          "sample_rate": 96000,
+          "scenario": "playback_then_silent",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3605,
+          "original_fifo_reads_compared": 324,
+          "maximum_irq_instructions": 519
+        }
+      ],
+      "callee_saved_registers_and_stack_checked": true
+    }
+  ],
+  "limits": [
+    "Original USB pump executes unchanged except established capture-first edit",
+    "FIFO readiness, converter and clock-phase fixtures remain modeled",
+    "No DSP arithmetic, real interrupt arrival or physical timing measurement",
+    "Standalone generator-core tests still execute the linked renderer; IRQ must not"
+  ]
+}

@@ -16,6 +16,9 @@ class Machine:
         for address,size in [(BASE,0x800000),(0x01000000,0x30000),(0x20000000,0x20000),
                              (0x40000000,0x50000),(RETURN,0x1000)]:
             self.uc.mem_map(address,size)
+        # The location-only hardware experiment fails here. Do not model this
+        # unproven private address interval as usable RAM in main-app tests.
+        self.uc.mem_unmap(0x01018000,0x8000)
         self.uc.mem_write(BASE,image)
         if scatter:
             for op in recover(image)['operations']:

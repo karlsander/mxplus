@@ -10,10 +10,10 @@ enum mx1_route_strip {
     MX1_STRIP_USB3, MX1_STRIP_USB4, MX1_STRIP_COMPUTER, MX1_STRIP_COUNT
 };
 
-enum { MX1_ROUTE_AUTO = 0, MX1_ROUTE_NSE = 53, MX1_ROUTE_BD = 54, MX1_ROUTE_SOURCE_COUNT = 55 };
+enum { MX1_ROUTE_AUTO = 0, MX1_ROUTE_SOURCE_COUNT = 53 };
 
-/* AUTO restores the current Roland source/connection policy. Routes save with scenes and stock system autosave.
- * Mono strips skip stereo-pair choices. Labels always
+/* AUTO restores the current Roland source/connection policy. Routes are RAM
+ * state, reset on boot. Mono strips skip stereo-pair choices. Labels always
  * contain four initialized display characters; they need not end in NUL. */
 uint32_t mx1_route_get(uint32_t strip);
 void mx1_route_adjust(uint32_t strip, int32_t delta);

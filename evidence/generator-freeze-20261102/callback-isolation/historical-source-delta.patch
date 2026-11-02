@@ -1,0 +1,369 @@
+diff --git a/patches/channel_routing_audio.c b/patches/channel_routing_audio.c
+index 020011a..c406654 100644
+--- a/patches/channel_routing_audio.c
++++ b/patches/channel_routing_audio.c
+@@ -181,7 +181,10 @@ void mx1_route_flush(void)
+             for (uint32_t side = 0; side < count; ++side) {
+                 uint32_t read = value ? ((sources[value].operand & 0xefff) + (side && (sources[value].operand & 0x1000)))
+                                       : stock_operands[lane + side];
+-                if (value == MX1_ROUTE_BD) read = MX1_INTERNAL_BD_OPERAND + strip;
++                /* One-off isolation: generator samples still render into owned RAM.
++                 * Keep both generator labels on the established P9R operand;
++                 * this deliberately does not deliver generator audio. */
++                if (value == MX1_ROUTE_NSE || value == MX1_ROUTE_BD) read = 0xa011;
+                 operand(input_sites[lane + side], read);
+             }
+             applied[strip] = (uint8_t)value;
+diff --git a/patches/internal_sources_audio.c b/patches/internal_sources_audio.c
+index 5d592e9..980beef 100644
+--- a/patches/internal_sources_audio.c
++++ b/patches/internal_sources_audio.c
+@@ -8,13 +8,16 @@
+  */
+ #include "internal_sources.h"
+ 
++/* One-off freeze isolation: retain computation and DSP routing, but publish
++ * to owned RAM instead of the unverified physical generator exchange ports.
++ * This is not a generator-audio implementation. */
++volatile uint32_t mx1_internal_probe_samples[MX1_INTERNAL_PORT_COUNT]
++    __attribute__((section(".patch_data"))) = {0};
++
++/* One-off callback isolation: keep the renderer linked for standalone checks,
++ * but never invoke it from the real sample interrupt. Labels and active-mask
++ * publications remain intact; generator DSP routes still use P9R. */
+ void mx1_internal_audio_frame(void)
+ {
+     ((void (*)(void))0x01009841u)();
+-    /* Diagnostic programs use different shared-port layouts. */
+-    if (*(const volatile uint32_t *)0x6051deb8u <= 3u)
+-        mx1_internal_render(*(const volatile uint32_t *)0x20000b24u,
+-                            (volatile uint32_t *)0x40101100u);
+-    else
+-        mx1_internal_invalidate();
+ }
+diff --git a/tools/internal_sources_audio_verify.py b/tools/internal_sources_audio_verify.py
+index d99583a..3c844c7 100644
+--- a/tools/internal_sources_audio_verify.py
++++ b/tools/internal_sources_audio_verify.py
+@@ -66,6 +66,7 @@ class AudioMachine(Machine):
+                 uc.reg_write(UC_ARM_REG_PC, uc.reg_read(UC_ARM_REG_LR))
+ 
+     def _read(self, uc, access, address, size, value, user):
++        assert not 0x40101100 <= address < 0x40101130, 'Probe read physical generator bank'
+         if address == USBF + 0x1f4:
+             # Distinct positive words exercise actual copying and packet-tail
+             # bookkeeping. Their identity conversion is not an audio model.
+@@ -75,6 +76,7 @@ class AudioMachine(Machine):
+             self.out_reads.append((self.tick, fixture))
+ 
+     def _write(self, uc, access, address, size, value, user):
++        assert not 0x40101100 <= address < 0x40101130, 'Probe wrote physical generator bank'
+         if PORTS <= address < PORTS + GENERATOR_COUNT * 4:
+             self.generator_writes.append((self.tick, address, size, value))
+         elif 0x40000000 <= address < 0x40200000:
+@@ -115,89 +117,55 @@ class AudioMachine(Machine):
+ 
+ 
+ def verify(original, patched, build):
++    global PORTS
+     symbols = build['symbols']
++    PORTS = symbols['mx1_internal_probe_samples']
++    assert build['writable_state']['start'] <= PORTS
++    assert PORTS + 48 <= build['writable_state']['end_exclusive']
+     assert sha256(patched) == build['patched_app_sha256']
+     wrapper = symbols['mx1_internal_audio_frame'] | 1
+     assert original[0x168c:0x1690] == u32(0x01009841)
+     assert patched[0x168c:0x1690] == u32(wrapper)
+-    # Compare generator effects against the established mainline USB pump.
+-    # Capture-first is an intentional, separately verified mainline change.
+     assert original[0xda292:0xda296] == bytes.fromhex('4ff0000c')
+     assert patched[0xda292:0xda296] == bytes.fromhex('4ff0010c')
+     baseline = bytearray(original)
+     baseline[0xda292:0xda296] = bytes.fromhex('4ff0010c')
+     baseline = bytes(baseline)
+     groups = []
+-
+     def passed(name, **details):
+         groups.append({'name': name, 'status': 'pass', **details})
+ 
+-    machine = AudioMachine(patched, symbols, stub_render=True)
+-    machine.register()
+-    assert machine.read(CALLBACK_SLOT, 4) == u32(wrapper)
+-    passed('Exact candidate callback literal registers the compiled wrapper through original code',
+-           decoded_offset='0x168c', callback_pointer=hex(wrapper),
+-           slot_address=hex(CALLBACK_SLOT))
+-
+-    # The bank is inferred, not established hardware. A cold all-Auto boot
+-    # must never access it, including a diagnostic/normal transition. Trap
+-    # the exact port range: the stock pump uses other words on the same page.
+-    # Even zero writes must fail; zero-filled emulated MMIO is not evidence
+-    # of safe startup.
+-    for rate in (0, 44100, 48000, 96000):
+-        machine = AudioMachine(patched, symbols)
+-        def forbidden_port(uc, access, address, size, value, user):
+-            raise AssertionError(f'Idle callback accessed generator port {address:#x}')
+-        machine.uc.hook_add(UC_HOOK_MEM_READ | UC_HOOK_MEM_WRITE, forbidden_port,
+-                            begin=PORTS, end=PORTS + GENERATOR_COUNT * 4 - 1)
+-        machine.write(CONTEXT, u32(rate))
+-        machine.register()
+-        for mode in (0, 0, 4, 4, 0, 0):
+-            machine.write(MODE, u32(mode))
+-            machine.frame()
+-        assert not machine.generator_writes
+-    passed('Cold all-Auto callback never accesses the guarded generator bank',
+-           rates=[0, 44100, 48000, 96000], modes=[0, 0, 4, 4, 0, 0],
+-           guarded_interval=['0x40101100', '0x40101130'])
+-
+-    abi_cases = []
+-    for rate in (44100, 48000, 96000):
+-        for mode in (0, 1, 2, 3, 4, 11, 0xffffffff):
+-            machine = AudioMachine(patched, symbols, stub_render=True)
+-            machine.write(CONTEXT, u32(rate))
+-            machine.write(MODE, u32(mode))
+-            machine.register()
+-            _, count = machine.frame()
+-            assert machine.pump_visits == 1
+-            expected = [(rate, PORTS)] if mode <= 3 else []
+-            assert machine.render_calls == expected
+-            assert machine.call_order == (['original_pump', 'compiled_renderer']
+-                                          if expected else ['original_pump'])
+-            assert machine.read(EXCHANGE, 72) == bytes(72)
+-            abi_cases.append({'sample_rate': rate, 'program_mode': mode,
+-                              'render_called': bool(expected),
+-                              'irq_wrapper_instructions_with_render_stub': count})
+-    passed('Actual IRQ calls retained pump first and supplies rate/ports only in normal programs',
+-           cases=abi_cases, renderer='Isolated only in ABI cases; subsequent regression cases execute it')
++    # Do not stub the renderer: trap entry, so a compiler-generated jump or an
++    # accidental residual invocation fails even with all generators selected.
++    def forbid_renderer(uc, address, size, user):
++        raise AssertionError('Isolation callback entered generator renderer')
+ 
+     comparisons = []
+-    cases = [('disconnected', False, False), ('capture_only', False, False),
+-             ('duplex', False, False), ('duplex', True, True),
+-             ('duplex', False, True), ('duplex', True, False),
+-             ('stop_restart', False, False), ('playback_then_silent', False, False)]
++    scenarios = [('disconnected', False, False), ('capture_only', False, False),
++        ('duplex', False, False), ('duplex', True, True),
++        ('duplex', False, True), ('duplex', True, False),
++        ('stop_restart', False, False), ('playback_then_silent', False, False)]
+     for rate in (44100, 48000, 96000):
+-        for scenario, out_stereo, in_stereo in cases:
++        for scenario, out_stereo, in_stereo in scenarios:
+             old = AudioMachine(baseline)
+             new = AudioMachine(patched, symbols)
++            entry = symbols['mx1_internal_render'] & ~1
++            new.uc.hook_add(UC_HOOK_CODE, forbid_renderer, begin=entry, end=entry)
++            sentinel = bytes.fromhex('a5c35a3c') * GENERATOR_COUNT
++            new.write(PORTS, sentinel)
++            new.write(symbols['mx1_internal_active_mask'], u32(0x107ff))
+             for machine in (old, new):
+                 machine.write(CONTEXT, u32(rate))
+-                machine.write(MODE, u32(0))
+                 for lane in range(18):
+                     machine.write(EXCHANGE + 0x48 + 4 * lane, u32(0x22000000 + lane))
+                 machine.register()
+                 machine.trace.clear()
++            assert new.read(CALLBACK_SLOT, 4) == u32(wrapper)
+             counts = []
+             for tick in range(72):
++                mode = (0, 1, 2, 3, 4, 11, 0xffffffff)[tick % 7]
++                for machine in (old, new):
++                    machine.write(MODE, u32(mode))
+                 period = 12 if rate == 96000 else 6
+                 old.frame(scenario=scenario, out_stereo=out_stereo,
+                           in_stereo=in_stereo, phase_period=period)
+@@ -210,145 +178,31 @@ def verify(original, patched, build):
+             assert new.read(0x01010044, 16) == old.read(0x01010044, 16)
+             assert new.read(0x2000041c, 8) == old.read(0x2000041c, 8)
+             assert old.pump_visits == new.pump_visits == 72
+-            assert len(new.render_calls) == 72
+-            # Unassigned freshly initialized sources must remain silent.
+-            assert new.read(PORTS, GENERATOR_COUNT * 4) == bytes(GENERATOR_COUNT * 4)
++            assert not new.render_calls and not new.generator_writes
++            assert new.read(PORTS, len(sentinel)) == sentinel
++            assert new.read(symbols['mx1_internal_active_mask'], 4) == u32(0x107ff)
+             comparisons.append({'sample_rate': rate, 'scenario': scenario,
+                 'out_channels': 2 if out_stereo else 18,
+-                'in_channels': 2 if in_stereo else 18,
+-                'ticks': 72, 'original_mmio_writes_compared': len(old.trace),
+-                'original_fifo_reads_compared': len(old.out_reads),
+-                'candidate_irq_instructions': {'min': min(counts), 'max': max(counts)}})
+-    passed('Compiled idle renderer preserves mainline capture-first USB pump traces in 24 differential scenarios',
+-           cases=comparisons, render_stub=False,
+-           converter='Identity fixture for retained USB pump only',
+-           clock_phase='Explicit per-tick stimulus; 44.1 kHz physical scheduling is not modeled')
+-
+-    active_cases = []
+-    for rate in (44100, 48000, 96000):
+-        for label, mask in (('noise_only', 0x10000), ('one_bd', 1),
+-                            ('eleven_bd', 0x7ff), ('noise_and_eleven_bd', 0x107ff)):
+-            old = AudioMachine(baseline)
+-            new = AudioMachine(patched, symbols)
+-            for machine in (old, new):
+-                machine.write(CONTEXT, u32(rate))
+-                machine.write(0x600b4834, b'\x01')
+-                machine.write(MODE, u32(0))
+-                for lane in range(18):
+-                    machine.write(EXCHANGE + 0x48 + 4 * lane, u32(0x33000000 + lane))
+-                machine.register()
+-            new.checked(symbols['mx1_internal_routes'], mask)
+-            for strip in range(11):
+-                if mask & (1 << strip):
+-                    new.checked(symbols['mx1_bd_step_toggle'], strip, 0)
+-            new.checked(symbols['mx1_internal_transport_reset'])
+-            new.checked(symbols['mx1_internal_step'])
+-            old.trace.clear()
+-            new.trace.clear()
+-            words = []
+-            counts = []
+-            old_counts = []
+-            for tick in range(64):
+-                kwargs = {'scenario': 'duplex', 'phase_period': 12 if rate == 96000 else 6}
+-                _, before = old.frame(**kwargs)
+-                _, after = new.frame(**kwargs)
+-                old_counts.append(before)
+-                counts.append(after)
+-                words.append(struct.unpack('<12I', new.read(PORTS, 48)))
+-            assert old.trace == new.trace, (rate, label, 'stock MMIO changed')
+-            assert old.out_reads == new.out_reads
+-            assert old.read(EXCHANGE, 0x90) == new.read(EXCHANGE, 0x90)
+-            for port in range(12):
+-                selected = bool(mask & (0x10000 if port == 0 else 1 << (port - 1)))
+-                values = [frame[port] for frame in words]
+-                if selected:
+-                    assert any(values), (rate, label, port)
+-                    assert len(set(values)) > 4
+-                    floats = [struct.unpack('<f', u32(value))[0] for value in values]
+-                    assert all(math.isfinite(value) and abs(value) <= 1 for value in floats)
+-                else:
+-                    assert set(values) == {0}, (rate, label, port)
+-            overhead = [after - before for before, after in zip(old_counts, counts)]
+-            active_cases.append({'sample_rate': rate, 'sources': label,
+-                'source_mask': hex(mask), 'ticks': 64,
++                'in_channels': 2 if in_stereo else 18, 'ticks': 72,
+                 'original_mmio_writes_compared': len(old.trace),
+-                'full_irq_instructions': {'first_trigger': counts[0],
+-                    'minimum': min(counts), 'maximum': max(counts),
+-                    'post_crossfade_minimum': min(counts[33:]),
+-                    'post_crossfade_maximum': max(counts[33:])},
+-                'extra_instructions_over_identical_stock_irq': {
+-                    'first_trigger': overhead[0], 'minimum': min(overhead),
+-                    'maximum': max(overhead),
+-                    'post_crossfade_minimum': min(overhead[33:]),
+-                    'post_crossfade_maximum': max(overhead[33:])}})
+-    passed('Active compiled generators change only their twelve reserved exchange words',
+-           cases=active_cases, original_pump='Unchanged actual instructions in each case',
+-           external_numeric_model='Identity conversion applies only to original USB pump',
+-           performance='Instruction counts only; eleven-voice deadline margin is unmeasured')
+-
+-    # Noise stays constant in operation while stopped; BD transport resets to
+-    # silence at the next sample boundary. Explicit source removal also clears
+-    # its sample rather than leaving a held nonzero DC word in the bank.
+-    machine = AudioMachine(patched, symbols)
+-    machine.write(CONTEXT, u32(48000))
+-    machine.write(0x600b4834, b'\x01')
+-    machine.register()
+-    machine.checked(symbols['mx1_internal_routes'], 0x10001)
+-    machine.checked(symbols['mx1_bd_step_toggle'], 0, 0)
+-    machine.checked(symbols['mx1_internal_transport_reset'])
+-    machine.checked(symbols['mx1_internal_step'])
+-    for _ in range(20):
+-        machine.frame()
+-    assert machine.read(PORTS + 4, 4) != bytes(4)
+-    machine.write(0x600b4834, b'\x00')
+-    noise = []
+-    for _ in range(12):
+-        machine.frame()
+-        noise.append(machine.read(PORTS, 4))
+-        assert machine.read(PORTS + 4, 44) == bytes(44)
+-    assert len(set(noise)) > 4
+-    machine.checked(symbols['mx1_internal_routes'], 0)
+-    machine.frame()
+-    assert machine.read(PORTS, 48) == bytes(48)
+-    machine.generator_writes.clear()
+-    for _ in range(4):
+-        machine.frame()
+-    assert not machine.generator_writes
+-    passed('Transport stop silences BD, noise continues, removal clears ports once then idle skips writes')
+-
+-    # Diagnostics own a different graph, so the extension must neither write
+-    # their bank nor assume its old silent word survived on returning. The
+-    # foreign word is an explicit ownership-change fixture, not an emulated
+-    # diagnostic-program output.
+-    machine = AudioMachine(patched, symbols)
+-    machine.write(CONTEXT, u32(48000))
+-    machine.write(0x600b4834, b'\x00')
+-    machine.register()
+-    machine.checked(symbols['mx1_internal_routes'], 1)
+-    machine.frame()
+-    assert machine.read(PORTS + 4, 4) == bytes(4)
+-    machine.write(MODE, u32(4))
+-    machine.write(PORTS + 4, u32(0x3e800000))
+-    machine.generator_writes.clear()
+-    machine.frame()
+-    machine.frame()
+-    assert not machine.generator_writes
+-    assert machine.read(PORTS + 4, 4) == u32(0x3e800000)
+-    machine.write(MODE, u32(0))
+-    machine.frame()
+-    assert machine.read(PORTS + 4, 4) == bytes(4), \
+-        'Stopped BD retained a foreign diagnostic exchange value after normal-mode resume'
+-    passed('Diagnostic ownership is respected and normal-mode resume restores stopped BD silence',
+-           foreign_word='Explicit 0x3e800000 fixture; diagnostic DSP arithmetic is not emulated')
+-
++                'original_fifo_reads_compared': len(old.out_reads),
++                'maximum_irq_instructions': max(counts)})
++    passed('Original IRQ calls retained pump only with every generator marked active',
++        callback_pointer=hex(wrapper), pointer_decoded_offset='0x168c',
++        active_mask='0x107ff', modes=[0, 1, 2, 3, 4, 11, 0xffffffff],
++        renderer_entry='Trapped, not stubbed', unchanged_ram_sink=hex(PORTS),
++        physical_generator_bank_forbidden=['0x40101100', '0x40101130'])
++    passed('Stock USB pump regression across disconnected, capture, duplex and restart fixtures',
++        cases=comparisons, callee_saved_registers_and_stack_checked=True)
+     return {'status': 'pass', 'original_app_sha256': sha256(original),
+         'patched_app_sha256': sha256(patched),
+         'candidate_container_sha256': build['container_sha256'],
++        'purpose': 'One-off renderer-bypass isolation; no generator audio',
+         'groups': groups,
+-        'limits': ['Interrupts are invoked, not generated by a numerical DSP emulator',
+-                   'No hardware audio, converter scaling, FIFO capacities or deadline margin are tested',
+-                   'Instruction counts are not cycles',
+-                   'Active generator arithmetic and per-step sequencing have separate tests']}
++        'limits': ['Original USB pump executes unchanged except established capture-first edit',
++            'FIFO readiness, converter and clock-phase fixtures remain modeled',
++            'No DSP arithmetic, real interrupt arrival or physical timing measurement',
++            'Standalone generator-core tests still execute the linked renderer; IRQ must not']}
+ 
+ 
+ def main():
+diff --git a/tools/routing_audio_verify.py b/tools/routing_audio_verify.py
+index 310ae25..83cc2ed 100644
+--- a/tools/routing_audio_verify.py
++++ b/tools/routing_audio_verify.py
+@@ -48,7 +48,7 @@ def choices():
+         left = 0xa000 + 2 * (pair - 1)
+         result.extend([(left, left+1, f'PC{pair} '), (left, left, f'P{pair} L'),
+                        (left+1, left+1, f'P{pair} R')])
+-    result.extend([(0xa040, 0xa040, 'NSE '), (0xa041, 0xa041, 'BD  ')])
++    result.extend([(0xa011, 0xa011, 'NSE '), (0xa011, 0xa011, 'BD  ')])
+     assert len(result) == 55
+     return result
+ 
+@@ -132,6 +132,7 @@ class AudioMachine(Machine):
+             else:
+                 assert offset in SITES and not value & 0xffff
+                 operand = value >> 16
++                assert not 0xa040 <= operand <= 0xa04b, 'Probe used generator DSP operand'
+                 cpu_halfword = 0x40150000 + (offset ^ 2)
+                 self.write(cpu_halfword, struct.pack('<H', operand))
+         else:
+@@ -184,7 +185,7 @@ class AudioMachine(Machine):
+                 if source:
+                     lane = strip if strip < 4 else strip * 2 - 4
+                     count = 1 if strip < 4 else 2
+-                    result[lane:lane + count] = (tuple([0xa041 + strip] * count) if source == 54 else CHOICES[source][:count])
++                    result[lane:lane + count] = CHOICES[source][:count]
+         return tuple(result)
+ 
+ 

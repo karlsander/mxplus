@@ -1,10 +1,11 @@
 {
   "status": "pass",
   "groups": [
-    "Every changed byte is guarded; only the original empty startup copy is repurposed",
-    "Original startup initializes all sections and preserves every original nonempty region",
+    "Every application change matches recorded guarded patches and scatter insertion",
+    "Actual original startup installs routing code and preserves existing initialized data and BSS",
+    "Generator callback, transport, extra SELECT UI and SDRAM heap patches are absent",
     "Original MPU makes injected code read-only and new route state read-write",
-    "Dirty cold startup initializes state; original RTOS pools cannot allocate its reservation",
+    "Dirty cold startup clears state; original RTOS pools cannot allocate its reservation",
     "Actual startup copies extension and preserves existing initialized data",
     "Patched initializer veneer, original registration, and live rate descriptors",
     "Original request dispatch reaches compiled UAC2 handler with correct replies",
@@ -19,6 +20,7 @@
     "Cold restart restores last routes independently of startup scene; edits preserve snapshots",
     "UI retains its selected source across a modeled DSP cache refresh",
     "Legacy, unknown-version, out-of-range and invalid mono records fall back to Auto",
+    "Retired NSE/BD saved IDs become Auto on normal boot and recall; other routes and saved scenes remain intact",
     "Stock autosave observes route bytes and coalesces edits with unchanged 1500-tick delay",
     "Original physical decoder, queue and logical key/encoder dispatch",
     "Original encoder1 reaches tempo parameter 0x1a; encoder0 does not",
@@ -53,5 +55,5 @@
     "Independent factory graph audit matches all 18 raw PC and 18 serial read bindings",
     "Original native input gates and connection callbacks distinguish native and PC paths"
   ],
-  "patched_app_sha256": "d6cda6d3344a63f62008cea4eabfdb5b3aa6092344359f5c527ffba847f0985f"
+  "patched_app_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758"
 }

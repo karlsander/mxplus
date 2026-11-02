@@ -1,0 +1,590 @@
+{
+  "status": "OFFLINE EXPERIMENT; NOT HARDWARE VALIDATED",
+  "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+  "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
+  "patched_app_sha256": "78681036ab3873e62c4cf471e603f0dec4de08db25653434ca299cdef18347a9",
+  "container_sha256": "dac455b5634088e9d8f235d9af397821d2dedd46175fc51caca55ad406fa2c12",
+  "extension_sha256": "e90924bfb592e692833185e71872bd734056e5e44acf2aef6a0976042a0700a2",
+  "symbols": {
+    "mx1_uac2_rate": 16872416,
+    "mx1_uac2_reply": 16872420,
+    "mx1_route_ui_event": 16876959,
+    "mx1_route_ui_display": 16876777,
+    "mx1_route_get": 16876021,
+    "mx1_route_adjust": 16876149,
+    "mx1_route_label": 16876047,
+    "mx1_route_recall": 16875709,
+    "mx1_uac2_initialize": 16875521,
+    "mx1_uac2_set_rate": 16877161,
+    "mx1_uac2_class_request": 16877173,
+    "mx1_uac2_start": 16877453,
+    "mx1_route_dispatch": 16876735,
+    "mx1_route_flush": 16876289,
+    "mx1_route_state": 16872036,
+    "mx1_route_ui_display_original": 16877129,
+    "mx1_uac2_configuration": 16872060
+  },
+  "compiler": "ziglang 0.13.0 Cortex-M3 ReleaseSmall, no LTO",
+  "sources": {
+    "patches/channel_routing_audio.c": "7d548dd68f8e9f9b176ed74049c28eb56dae58da07fd96ae28d85b6608d38de4",
+    "patches/channel_routing_ui.c": "4f3ddc32467e8fe414c88c61ddf0214b22c492d753534c09dca655ccfa0a2998",
+    "patches/channel_routing_ui.S": "a5adb0bd43ba5a0a357f3927a6e372c4df4e3ff7cf2d9281b90022fcee9b3bcf",
+    "patches/usb_audio.c": "cd410e071e504ced297c96b74b1fbe33c9fc25bb69f1e17da6168857a86b3db6",
+    "sources/hardware/uac2_adapter.c": "d2cd20af7f08639ad195ed525006124b9cff0d1b0c5ef253809b3bf0478b676d",
+    "patches/channel_routing.h": "ee5979ac7b1ce3bdd75e0c75542a18e2abcc21c9437d80fb54ae1f2b9fb54e31",
+    "patches/mainline.ld": "d63d37ed734176d3017dcddaf41ec84b2d7908c89edaf0d428e8693e40eb46bc",
+    "tools/build_firmware.py": "c860cbbf3f0e92c661be6a48509e68e765e505211ad419990ba4ee91b00f428f",
+    "tools/routing_audio_patch.py": "cc993ffb0f272f2f96328e9c26ca06a579847a0f83543dbaf11dff295632cb3e",
+    "tools/firmware_patch.py": "5b0980447039dbb4f213b2c41f1635da1966d2972bb04db482f8aa9e2cfac6ed",
+    "tools/uac2_design.py": "fa02f27556f54ac1a0c06a0ae712a97c62180edb2c33d747050ab728a73fd551"
+  },
+  "scatter_extension": {
+    "insert_offset": 917296,
+    "runtime_address": 16840356,
+    "insert_length": 2732,
+    "startup_updates": [
+      {
+        "offset": 232,
+        "before": 62372,
+        "after": 64748
+      },
+      {
+        "offset": 256,
+        "before": 1611530032,
+        "after": 1611532764
+      },
+      {
+        "offset": 276,
+        "before": 1611530164,
+        "after": 1611532408
+      },
+      {
+        "offset": 296,
+        "before": 1611530164,
+        "after": 1611532896
+      },
+      {
+        "offset": 316,
+        "before": 1611531336,
+        "after": 1611534068
+      },
+      {
+        "offset": 336,
+        "before": 1611531336,
+        "after": 1611534068
+      }
+    ],
+    "code_length": 2376,
+    "linked_code_address": 16875520
+  },
+  "patches": [
+    {
+      "label": "Isolation: copy code to test address",
+      "file_offset": 308,
+      "runtime_address": 1610613044,
+      "original": "00800040",
+      "replacement": "00800101",
+      "component": "app_main"
+    },
+    {
+      "label": "Isolation: copy historical code length",
+      "file_offset": 312,
+      "runtime_address": 1610613048,
+      "original": "00000000",
+      "replacement": "48090000",
+      "component": "app_main"
+    },
+    {
+      "label": "Isolation: source the same inserted text as the original first copy",
+      "file_offset": 316,
+      "runtime_address": 1610613052,
+      "original": "f40e0e60",
+      "replacement": "30ff0d60",
+      "component": "app_main"
+    },
+    {
+      "label": "Zero 400-byte mainline writable state reservation after original writable SRAM BSS",
+      "file_offset": 264,
+      "runtime_address": 1610613000,
+      "original": "dc710000",
+      "replacement": "6c730000",
+      "component": "app_main"
+    },
+    {
+      "label": "Repurpose zero-length startup copy for writable USB descriptor",
+      "file_offset": 268,
+      "runtime_address": 1610613004,
+      "original": "00000201",
+      "replacement": "7c720101",
+      "component": "app_main"
+    },
+    {
+      "label": "Initialize 356-byte USB descriptor storage after writable BSS clear",
+      "file_offset": 272,
+      "runtime_address": 1610613008,
+      "original": "00000000",
+      "replacement": "64010000",
+      "component": "app_main"
+    },
+    {
+      "label": "USB-B UAC2 initializer",
+      "file_offset": 55680,
+      "runtime_address": 1610668416,
+      "original": "10b500f01ff80d48",
+      "replacement": "dff800f001800101",
+      "component": "app_main"
+    },
+    {
+      "label": "UAC2 configuration pointer",
+      "file_offset": 740092,
+      "runtime_address": 1611352828,
+      "original": "9c490b60",
+      "replacement": "7c720101",
+      "component": "app_main"
+    },
+    {
+      "label": "UAC2 device association",
+      "file_offset": 739716,
+      "runtime_address": 1611352452,
+      "original": "ff00ff",
+      "replacement": "ef0201",
+      "component": "app_main"
+    },
+    {
+      "label": "UAC2 device association",
+      "file_offset": 739734,
+      "runtime_address": 1611352470,
+      "original": "ff00ff",
+      "replacement": "ef0201",
+      "component": "app_main"
+    },
+    {
+      "label": "Capture-first priming",
+      "file_offset": 893586,
+      "runtime_address": 16816646,
+      "original": "4ff0000c",
+      "replacement": "4ff0010c",
+      "component": "app_main"
+    },
+    {
+      "label": "Scene recall routes and normal-boot latest-route restoration",
+      "file_offset": 124806,
+      "runtime_address": 1610737542,
+      "original": "3eb50c46002202216846",
+      "replacement": "00bfdff800f0bd800101",
+      "component": "app_main"
+    },
+    {
+      "label": "Panel event callback: hold SELECT and turn TEMPO",
+      "file_offset": 62936,
+      "runtime_address": 1610675672,
+      "original": "490b0160",
+      "replacement": "9f850101",
+      "component": "app_main"
+    },
+    {
+      "label": "Tempo display overlay with relocated original prologue",
+      "file_offset": 78678,
+      "runtime_address": 1610691414,
+      "original": "feb50446c54804f07cff",
+      "replacement": "00bfdff800f0e9840101",
+      "component": "app_main"
+    },
+    {
+      "label": "DSP parameter-event-8 drain, then queued routing update",
+      "file_offset": 150446,
+      "runtime_address": 1610763182,
+      "original": "2de9f04387b0eaf702fb",
+      "replacement": "00bfdff800f0bf840101",
+      "component": "app_main"
+    }
+  ],
+  "writable_state": {
+    "start": 16872036,
+    "size": 400,
+    "end_exclusive": 16872436,
+    "startup_zero_length_offset": 264
+  },
+  "audio_routing": {
+    "destination_strips": 11,
+    "source_choices_with_auto": 53,
+    "mono_strips_skip_stereo_pair_choices": true,
+    "dsp_operand_guards": [
+      {
+        "component": "app_main",
+        "decoded_offset": 755962,
+        "rom_runtime": 1611368698,
+        "dsp_core": 0,
+        "dsp_logical_offset": 808,
+        "original_operand": 24576,
+        "expected_bytes": "0060"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 755976,
+        "rom_runtime": 1611368712,
+        "dsp_core": 0,
+        "dsp_logical_offset": 826,
+        "original_operand": 24577,
+        "expected_bytes": "0160"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 755998,
+        "rom_runtime": 1611368734,
+        "dsp_core": 0,
+        "dsp_logical_offset": 844,
+        "original_operand": 24578,
+        "expected_bytes": "0260"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 756018,
+        "rom_runtime": 1611368754,
+        "dsp_core": 0,
+        "dsp_logical_offset": 864,
+        "original_operand": 24579,
+        "expected_bytes": "0360"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 756036,
+        "rom_runtime": 1611368772,
+        "dsp_core": 0,
+        "dsp_logical_offset": 886,
+        "original_operand": 24580,
+        "expected_bytes": "0460"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 756056,
+        "rom_runtime": 1611368792,
+        "dsp_core": 0,
+        "dsp_logical_offset": 906,
+        "original_operand": 24581,
+        "expected_bytes": "0560"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 756094,
+        "rom_runtime": 1611368830,
+        "dsp_core": 0,
+        "dsp_logical_offset": 940,
+        "original_operand": 24584,
+        "expected_bytes": "0860"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 756112,
+        "rom_runtime": 1611368848,
+        "dsp_core": 0,
+        "dsp_logical_offset": 962,
+        "original_operand": 24585,
+        "expected_bytes": "0960"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 756144,
+        "rom_runtime": 1611368880,
+        "dsp_core": 0,
+        "dsp_logical_offset": 994,
+        "original_operand": 24586,
+        "expected_bytes": "0a60"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 756170,
+        "rom_runtime": 1611368906,
+        "dsp_core": 0,
+        "dsp_logical_offset": 1016,
+        "original_operand": 24587,
+        "expected_bytes": "0b60"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 756202,
+        "rom_runtime": 1611368938,
+        "dsp_core": 0,
+        "dsp_logical_offset": 1048,
+        "original_operand": 24588,
+        "expected_bytes": "0c60"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 756220,
+        "rom_runtime": 1611368956,
+        "dsp_core": 0,
+        "dsp_logical_offset": 1070,
+        "original_operand": 24589,
+        "expected_bytes": "0d60"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 756252,
+        "rom_runtime": 1611368988,
+        "dsp_core": 0,
+        "dsp_logical_offset": 1102,
+        "original_operand": 24590,
+        "expected_bytes": "0e60"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 756278,
+        "rom_runtime": 1611369014,
+        "dsp_core": 0,
+        "dsp_logical_offset": 1124,
+        "original_operand": 24591,
+        "expected_bytes": "0f60"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 756310,
+        "rom_runtime": 1611369046,
+        "dsp_core": 0,
+        "dsp_logical_offset": 1156,
+        "original_operand": 24592,
+        "expected_bytes": "1060"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 756328,
+        "rom_runtime": 1611369064,
+        "dsp_core": 0,
+        "dsp_logical_offset": 1178,
+        "original_operand": 24593,
+        "expected_bytes": "1160"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 756350,
+        "rom_runtime": 1611369086,
+        "dsp_core": 0,
+        "dsp_logical_offset": 1196,
+        "original_operand": 8208,
+        "expected_bytes": "1020"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 756366,
+        "rom_runtime": 1611369102,
+        "dsp_core": 0,
+        "dsp_logical_offset": 1212,
+        "original_operand": 8209,
+        "expected_bytes": "1120"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 756380,
+        "rom_runtime": 1611369116,
+        "dsp_core": 0,
+        "dsp_logical_offset": 1230,
+        "original_operand": 24582,
+        "expected_bytes": "0660"
+      },
+      {
+        "component": "app_main",
+        "decoded_offset": 756402,
+        "rom_runtime": 1611369138,
+        "dsp_core": 0,
+        "dsp_logical_offset": 1248,
+        "original_operand": 24583,
+        "expected_bytes": "0760"
+      }
+    ],
+    "dsp_computer_selector_offsets": [
+      478,
+      504,
+      530,
+      556,
+      582,
+      608,
+      634,
+      660,
+      686,
+      712
+    ],
+    "audio_sample_cpu_copy": false,
+    "task_event": {
+      "task": 1615978152,
+      "event": 8,
+      "original_handler": 1610763182,
+      "post": 16835174
+    },
+    "mode_policy": "Mixer/Control Surface only; External Mixer restores stock; diagnostics excluded",
+    "persistence": "Scene reserved fields; latest routes through stock system autosave; see docs/ROUTING_STORAGE.md",
+    "return_policy": "Copies raw Return; original Return bus and AUX controls remain unchanged",
+    "limits": [
+      "DSP execution and physical audio not emulated",
+      "Stereo pair writes are sequential, not frame-atomic; no click-free guarantee",
+      "Original DSP programming-port handshake/timing retained, not hardware measured",
+      "Routed analog inputs retain their physical ADC gain before destination DSP gain"
+    ]
+  },
+  "container": {
+    "base_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+    "output_sha256": "dac455b5634088e9d8f235d9af397821d2dedd46175fc51caca55ad406fa2c12",
+    "byte_identical_to_original": false,
+    "changes": [
+      {
+        "name": "app_main",
+        "decoded_bytes_changed": 4014,
+        "old_decoded_size": 918600,
+        "new_decoded_size": 921332,
+        "decoded_size_change_explicitly_allowed": true,
+        "old_decoded_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
+        "new_decoded_sha256": "78681036ab3873e62c4cf471e603f0dec4de08db25653434ca299cdef18347a9",
+        "old_stored_size": 505462,
+        "new_stored_size": 1036499,
+        "encoding": "literal-only LZSS"
+      }
+    ],
+    "boot_images_and_trailer_unchanged": true,
+    "all_bytes_outside_update_range_unchanged": true,
+    "container_validation": {
+      "sha256": "dac455b5634088e9d8f235d9af397821d2dedd46175fc51caca55ad406fa2c12",
+      "size": 4194320,
+      "is_supplied_original": false,
+      "format_scope": "Observed Roland MX-1 firmware 1.051132 layout only",
+      "boot_base": 16777216,
+      "boot_images": [
+        {
+          "name": "boot_main",
+          "header_offset": 0,
+          "payload_offset": 48,
+          "payload_size": 10732,
+          "load_address": 16777216,
+          "initial_sp": 16848040,
+          "reset_vector": 16778465,
+          "sha256": "ee79e341796e3911d219ad85179a4e11b23e72ac2e662ce33790b14a36a16677",
+          "header_hex": "45534339312e303030000000ec290000000040000868aa0a000000001043223401230000b004000051116301ffffffff"
+        },
+        {
+          "name": "boot_usb",
+          "header_offset": 32768,
+          "payload_offset": 32816,
+          "payload_size": 4160,
+          "load_address": 16777216,
+          "initial_sp": 16847432,
+          "reset_vector": 16778385,
+          "sha256": "4697f22e67b52683b71b2610d93c08d640d794d9d1ac77b5d92560035eec6eeb",
+          "header_hex": "45534339312e30303000000040100000000040000868aa0a000000001043223401230000b004000051116301ffffffff"
+        }
+      ],
+      "components": [
+        {
+          "name": "updater",
+          "header_offset": 65536,
+          "payload_offset": 65600,
+          "slot_end": 262144,
+          "slot_capacity": 196544,
+          "label": "PX-11:Updater",
+          "build_timestamp": "14-1217_14:20:05",
+          "version": "1.000954",
+          "entry_address_field": 1610612736,
+          "load_address": 1610612736,
+          "stored_size": 142898,
+          "checksum": 17557094,
+          "checksum_algorithm": "sum of stored payload bytes modulo 2^32",
+          "checksum_valid": true,
+          "compression": "lzss-zero-init-4096-18",
+          "decoded_size": 182828,
+          "stored_sha256": "f362f3ddca51d1ab74957f741676b0b7c5886e38e6f0ac5e9b0b3ec13d6b35eb",
+          "padding_is_ff": true,
+          "decoded_sha256": "8984a4e0c668dcf6fce981f2c2e9223dfe93bb0f115bc43c8bb9ba95b3f1d3ec"
+        },
+        {
+          "name": "subcpu",
+          "header_offset": 262144,
+          "payload_offset": 262208,
+          "slot_end": 524288,
+          "slot_capacity": 262080,
+          "label": "PX-11:SUB-CPU",
+          "build_timestamp": "15-0108_09:10:28",
+          "version": "1.011052",
+          "entry_address_field": 134217728,
+          "load_address": 134217728,
+          "stored_size": 16404,
+          "checksum": 1474955,
+          "checksum_algorithm": "sum of stored payload bytes modulo 2^32",
+          "checksum_valid": true,
+          "compression": "none",
+          "decoded_size": 16404,
+          "stored_sha256": "43812718e448b386ccfa0d578ff0700d27c2e9e734dbbb80c08af5b880d4a16d",
+          "padding_is_ff": true,
+          "decoded_sha256": "43812718e448b386ccfa0d578ff0700d27c2e9e734dbbb80c08af5b880d4a16d"
+        },
+        {
+          "name": "app_main",
+          "header_offset": 524288,
+          "payload_offset": 524352,
+          "slot_end": 2097152,
+          "slot_capacity": 1572800,
+          "label": "PX-11:Appli",
+          "build_timestamp": "16-0906_11:04:55",
+          "version": "1.051132",
+          "entry_address_field": 1610612736,
+          "load_address": 1610612736,
+          "stored_size": 1036499,
+          "checksum": 98934672,
+          "checksum_algorithm": "sum of stored payload bytes modulo 2^32",
+          "checksum_valid": true,
+          "compression": "lzss-zero-init-4096-18",
+          "decoded_size": 921332,
+          "stored_sha256": "dc6b15322616123b9c6e40580eec296cc1a1b19ecb951ac9bd9ff3def496f39f",
+          "padding_is_ff": true,
+          "decoded_sha256": "78681036ab3873e62c4cf471e603f0dec4de08db25653434ca299cdef18347a9"
+        },
+        {
+          "name": "app_usb",
+          "header_offset": 2097152,
+          "payload_offset": 2097216,
+          "slot_end": 3145728,
+          "slot_capacity": 1048512,
+          "label": "PX-11:Appli",
+          "build_timestamp": "16-0906_11:04:55",
+          "version": "1.051132",
+          "entry_address_field": 1610612736,
+          "load_address": 1610612736,
+          "stored_size": 137970,
+          "checksum": 16870974,
+          "checksum_algorithm": "sum of stored payload bytes modulo 2^32",
+          "checksum_valid": true,
+          "compression": "lzss-zero-init-4096-18",
+          "decoded_size": 224868,
+          "stored_sha256": "b1fd9584040f4bf59690a6ee1d3ab9b88f12bdebacf4d906459dcfafce07b8e9",
+          "padding_is_ff": true,
+          "decoded_sha256": "fe52cf6c9e8ec8677963b1c4b876ddeaefae5136b7a5f1f49010e3cda9203a6e"
+        }
+      ],
+      "trailer_offset": 4194304,
+      "trailer_hex": "40000000ff0200000010000000004000",
+      "trailer_words_le": [
+        64,
+        767,
+        4096,
+        4194304
+      ],
+      "update_plan": {
+        "start_block": 64,
+        "end_block_inclusive": 767,
+        "block_size": 4096,
+        "payload_size": 4194304,
+        "flash_start": 262144,
+        "flash_end_exclusive": 3145728,
+        "evidence": "Original updater 0x600056d0 reads trailer; 0x60005584 writes inclusive block range"
+      },
+      "unproven_fields": [
+        "ESC91 boot header fields other than signature and payload length",
+        "Boot-ROM behavior and acceptance checks outside traced updater path"
+      ]
+    },
+    "hardware_validation": "not performed; research output only"
+  },
+  "sram_bytes_remaining": 20,
+  "hardware_access": false,
+  "limits": [
+    "Routing predecessor passed user bench tests; combined USB-B mainline awaits hardware testing",
+    "Routing and USB-B audio combined; USB-host application remains stock",
+    "Real-time deadline margin and electrical/DMA behavior require hardware measurement"
+  ]
+}

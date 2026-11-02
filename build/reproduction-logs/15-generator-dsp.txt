@@ -1,2 +1,0 @@
-Internal source engine passed: 147 pitches, 75 envelopes, 256 retriggers, 1M noise samples, 13 actual-Thumb PCM vectors.
-Executed instructions (not cycles): {"silent": 10, "onset": 58, "onset_low_pitch": 58, "onset_high_pitch": 58, "active_pitch_sweep": 51, "active_settled_pitch": 46, "reset": 6, "noise": 12, "noise_zero_seed_recovery": 14}

@@ -1,0 +1,316 @@
+{
+  "status": "passed",
+  "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+  "started_utc": "2026-11-02T20:56:00.725281+00:00",
+  "python": "3.12.13",
+  "dependencies": {
+    "capstone": "5.0.6",
+    "unicorn": "2.1.4",
+    "pyelftools": "0.33",
+    "ziglang": "0.13.0"
+  },
+  "checks": [
+    {
+      "name": "map-main",
+      "passed": true,
+      "elapsed_seconds": 0.083,
+      "log": "build/reproduction-logs/01-map-main.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "tools/memory_map.py",
+        "analysis/container_app_main.bin",
+        "--output",
+        "analysis/map-main.json"
+      ]
+    },
+    {
+      "name": "map-usb",
+      "passed": true,
+      "elapsed_seconds": 0.07,
+      "log": "build/reproduction-logs/02-map-usb.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "tools/memory_map.py",
+        "analysis/container_app_usb.bin",
+        "--output",
+        "analysis/map-usb.json"
+      ]
+    },
+    {
+      "name": "map-updater",
+      "passed": true,
+      "elapsed_seconds": 0.064,
+      "log": "build/reproduction-logs/03-map-updater.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "tools/memory_map.py",
+        "analysis/container_updater.bin",
+        "--output",
+        "analysis/container_map-updater.json"
+      ]
+    },
+    {
+      "name": "container_verify",
+      "passed": true,
+      "elapsed_seconds": 7.639,
+      "log": "build/reproduction-logs/04-container_verify.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "tools/container_verify.py",
+        "<diagnostic-checkout>/inputs/MX1_UPD.original.bin",
+        "--output",
+        "analysis/container_verification.json"
+      ]
+    },
+    {
+      "name": "container_updater_verify",
+      "passed": true,
+      "elapsed_seconds": 2.763,
+      "log": "build/reproduction-logs/05-container_updater_verify.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "tools/container_updater_verify.py",
+        "<diagnostic-checkout>/inputs/MX1_UPD.original.bin",
+        "--output",
+        "analysis/container_updater_verification.json"
+      ]
+    },
+    {
+      "name": "container_binding_verify",
+      "passed": true,
+      "elapsed_seconds": 0.146,
+      "log": "build/reproduction-logs/06-container_binding_verify.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "tools/container_binding_verify.py",
+        "<diagnostic-checkout>/inputs/MX1_UPD.original.bin",
+        "--output",
+        "analysis/container_binding_verification.json"
+      ]
+    },
+    {
+      "name": "usb-descriptor-scan",
+      "passed": true,
+      "elapsed_seconds": 0.49,
+      "log": "build/reproduction-logs/07-usb-descriptor-scan.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "tools/usb_descriptors.py",
+        "analysis/container_app_main.bin",
+        "--output",
+        "analysis/usb_descriptors.json"
+      ]
+    },
+    {
+      "name": "descriptor-tests",
+      "passed": true,
+      "elapsed_seconds": 1.094,
+      "log": "build/reproduction-logs/08-descriptor-tests.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ]
+    },
+    {
+      "name": "bridge-plan-tests",
+      "passed": true,
+      "elapsed_seconds": 0.071,
+      "log": "build/reproduction-logs/09-bridge-plan-tests.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "tools/linux_bridge_test.py",
+        "-v"
+      ]
+    },
+    {
+      "name": "build-mainline",
+      "passed": true,
+      "elapsed_seconds": 3.398,
+      "log": "build/reproduction-logs/10-build-mainline.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "tools/build_firmware.py",
+        "<diagnostic-checkout>/inputs/MX1_UPD.original.bin",
+        "--output",
+        "build/mainline"
+      ]
+    },
+    {
+      "name": "arm-mainline",
+      "passed": true,
+      "elapsed_seconds": 30.471,
+      "log": "build/reproduction-logs/11-arm-mainline.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "tools/mainline_verify.py",
+        "<diagnostic-checkout>/inputs/MX1_UPD.original.bin",
+        "--build",
+        "build/mainline",
+        "--output",
+        "build/mainline/arm-verification.json"
+      ]
+    },
+    {
+      "name": "generator-core",
+      "passed": true,
+      "elapsed_seconds": 1.206,
+      "log": "build/reproduction-logs/12-generator-core.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "tools/internal_sources_core_verify.py",
+        "<diagnostic-checkout>/inputs/MX1_UPD.original.bin",
+        "--build",
+        "build/mainline",
+        "--output",
+        "build/mainline/generator-core-verification.json"
+      ]
+    },
+    {
+      "name": "generator-audio",
+      "passed": true,
+      "elapsed_seconds": 5.723,
+      "log": "build/reproduction-logs/13-generator-audio.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "tools/internal_sources_audio_verify.py",
+        "<diagnostic-checkout>/inputs/MX1_UPD.original.bin",
+        "--build",
+        "build/mainline",
+        "--output",
+        "build/mainline/generator-audio-verification.json"
+      ]
+    },
+    {
+      "name": "generator-ui",
+      "passed": true,
+      "elapsed_seconds": 87.701,
+      "log": "build/reproduction-logs/14-generator-ui.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "tools/internal_sources_ui_verify.py",
+        "<diagnostic-checkout>/inputs/MX1_UPD.original.bin",
+        "--build",
+        "build/mainline",
+        "--output",
+        "build/mainline/generator-ui-verification.json"
+      ]
+    },
+    {
+      "name": "generator-dsp",
+      "passed": true,
+      "elapsed_seconds": 2.039,
+      "log": "build/reproduction-logs/15-generator-dsp.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "tools/internal_sources_dsp_verify.py",
+        "--output",
+        "build/mainline/generator-dsp-verification.json"
+      ]
+    },
+    {
+      "name": "generator-exchange-audit",
+      "passed": true,
+      "elapsed_seconds": 0.373,
+      "log": "build/reproduction-logs/16-generator-exchange-audit.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "tools/internal_sources_audio_audit.py",
+        "<diagnostic-checkout>/inputs/MX1_UPD.original.bin",
+        "--output",
+        "build/mainline/generator-exchange-audit.json"
+      ]
+    },
+    {
+      "name": "container-mainline-candidate",
+      "passed": true,
+      "elapsed_seconds": 3.608,
+      "log": "build/reproduction-logs/17-container-mainline-candidate.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "tools/container_candidate_verify.py",
+        "<diagnostic-checkout>/inputs/MX1_UPD.original.bin",
+        "build/mainline/MXPLUS_MAINLINE_UNTESTED.bin",
+        "--output",
+        "analysis/container_mainline_candidate_verification.json"
+      ]
+    },
+    {
+      "name": "boot-mainline",
+      "passed": true,
+      "elapsed_seconds": 8.197,
+      "log": "build/reproduction-logs/18-boot-mainline.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "tools/boot_path_verify.py",
+        "--firmware",
+        "<diagnostic-checkout>/inputs/MX1_UPD.original.bin",
+        "--build",
+        "build/mainline",
+        "--output",
+        "build/mainline/boot-verification.json"
+      ]
+    },
+    {
+      "name": "original-audio-pump",
+      "passed": true,
+      "elapsed_seconds": 0.217,
+      "log": "build/reproduction-logs/19-original-audio-pump.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "sources/hardware/uac2_pump_harness.py"
+      ]
+    },
+    {
+      "name": "compile-native-controls",
+      "passed": true,
+      "elapsed_seconds": 0.348,
+      "log": "build/reproduction-logs/20-compile-native-controls.txt",
+      "command": [
+        "/usr/bin/gcc",
+        "-std=c11",
+        "-Wall",
+        "-Wextra",
+        "-Werror",
+        "-O2",
+        "-DMX1_UAC2_NATIVE_TEST",
+        "sources/hardware/uac2_adapter.c",
+        "sources/hardware/uac2_adapter_native_test.c",
+        "-o",
+        "<diagnostic-checkout>/build/mainline/uac2_adapter_native_test"
+      ]
+    },
+    {
+      "name": "native-controls",
+      "passed": true,
+      "elapsed_seconds": 0.189,
+      "log": "build/reproduction-logs/21-native-controls.txt",
+      "command": [
+        "<diagnostic-checkout>/build/mainline/uac2_adapter_native_test"
+      ]
+    },
+    {
+      "name": "subcpu-evidence",
+      "passed": true,
+      "elapsed_seconds": 0.088,
+      "log": "build/reproduction-logs/22-subcpu-evidence.txt",
+      "command": [
+        "<diagnostic-checkout>/.venv/bin/python",
+        "sources/hardware/inspect_subcpu.py",
+        "<diagnostic-checkout>/inputs/MX1_UPD.original.bin",
+        "sources/hardware",
+        "--disassemble"
+      ]
+    }
+  ],
+  "hardware_access": false,
+  "limits": "CPU instruction tests use explicit I/O stubs; no physical USB, flash or audio validation.",
+  "finished_utc": "2026-11-02T20:58:37.400755+00:00",
+  "candidate_sha256": {
+    "mainline": "4010c85b98b67837138ba97efecf18beac64cf2ee296c33953686abe0b530395"
+  }
+}

@@ -48,8 +48,7 @@ def choices():
         left = 0xa000 + 2 * (pair - 1)
         result.extend([(left, left+1, f'PC{pair} '), (left, left, f'P{pair} L'),
                        (left+1, left+1, f'P{pair} R')])
-    result.extend([(0xa040, 0xa040, 'NSE '), (0xa041, 0xa041, 'BD  ')])
-    assert len(result) == 55
+    assert len(result) == 53
     return result
 
 
@@ -147,7 +146,7 @@ class AudioMachine(Machine):
         return result
 
     def route(self, strip, source):
-        for _ in range(56):
+        for _ in range(54):
             current, _ = self.checked(self.symbols['mx1_route_get'], strip)
             if current == source:
                 return
@@ -163,14 +162,6 @@ class AudioMachine(Machine):
         queued = len(self.queue_messages)
         result = self.checked(0x60024bae)
         assert self.queue_polls == polls + queued + 1
-        if int.from_bytes(self.read(0x6051deb8, 4), 'little') <= 3:
-            routes = self.read(self.symbols['mx1_route_state'], 11)
-            mask = 0
-            if self.parameters[0x19] != 2:
-                for strip, source in enumerate(routes):
-                    if source == 53: mask |= 1 << 16
-                    if source == 54: mask |= 1 << strip
-            assert int.from_bytes(self.read(self.symbols['mx1_internal_active_mask'], 4), 'little') == mask
         return len(self.commands) - before, result[1]
 
     def operands(self):
@@ -184,7 +175,7 @@ class AudioMachine(Machine):
                 if source:
                     lane = strip if strip < 4 else strip * 2 - 4
                     count = 1 if strip < 4 else 2
-                    result[lane:lane + count] = (tuple([0xa041 + strip] * count) if source == 54 else CHOICES[source][:count])
+                    result[lane:lane + count] = CHOICES[source][:count]
         return tuple(result)
 
 
@@ -259,7 +250,7 @@ def verify(original: bytes, patched: bytes, build: dict) -> dict:
             maximum_instructions = max(maximum_instructions, instructions)
             visits += 1
         # Repeated outward turns clamp at both ends without a redundant post.
-        for endpoint, delta in ((0, 0xffffffff), (54, 1)):
+        for endpoint, delta in ((0, 0xffffffff), (52, 1)):
             machine.route(strip, endpoint)
             posts = len(machine.posts)
             for _ in range(3):
@@ -269,12 +260,12 @@ def verify(original: bytes, patched: bytes, build: dict) -> dict:
             # Turning inward immediately leaves the endpoint, including mono skips.
             machine.checked(build['symbols']['mx1_route_adjust'], strip,
                             1 if endpoint == 0 else 0xffffffff)
-            assert machine.checked(build['symbols']['mx1_route_get'], strip)[0] == (1 if endpoint == 0 else 53)
+            assert machine.checked(build['symbols']['mx1_route_get'], strip)[0] == (1 if endpoint == 0 else 51)
         machine.route(strip, 0)
         machine.drain()
     passed('Every permitted source on every destination executes actual compiled menu and original DSP writers',
-           source_choices=55, strips=11, source_destination_visits=visits,
-           mono_stereo_pairs_skipped=True, four_character_labels=True, generator_active_masks_checked=True,
+           source_choices=53, strips=11, source_destination_visits=visits,
+           mono_stereo_pairs_skipped=True, four_character_labels=True,
            endpoints_clamp_without_event_posts=True, inward_turn_resumes=True,
            largest_single_route_drain_commands=maximum_commands,
            largest_single_route_drain_instructions=maximum_instructions)

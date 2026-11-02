@@ -34,7 +34,7 @@ establishes their allocation; the patch does not enlarge them.
 | Scene record | runtime `0x604f41e0`, current mixer offset `0x1cc` | Four reserved words, copied unchanged by stock scene operations |
 | Latest record | runtime `0x604f39e4`, current system offset `0x40` | Four reserved words; stock autosave copies them to `0x604f3c18` with the other system settings |
 
-Each record is 16 bytes: ASCII `MXR1`, eleven stable source IDs (0..54 in
+Each record is 16 bytes: ASCII `MXR1`, eleven stable source IDs (0..52 in
 physical-strip order), and one zero padding byte. Unknown magic/version gives
 all Auto; out-of-range IDs and stereo-pair IDs on mono strips individually
 fall back to Auto. The fifth reserved mixer word is untouched. The original
@@ -61,8 +61,8 @@ block sizes, wear-leveling, erase/program routines or MPU configuration.
   scene's record. Ordinary recalls use the selected scene's routes. An event-8
   post after restoration ensures the DSP gets the final routes even if its
   higher-priority task already processed the original scene notification.
-- `route_ready` occupies the former padding byte at `0x0101727a`; the mainline
-  startup copy initializes it to zero. Before normal recall completes, route refreshes cannot
+- `route_ready` occupies the former padding byte at `0x0101727a`; original
+  startup clears it. Before normal recall completes, route refreshes cannot
   overwrite the system record. Desired/applied arrays retain their addresses.
 - UI edits commit the locally calculated source after serializing the route
   cache. A DSP refresh that preempts the UI cannot discard that local edit.
@@ -78,8 +78,8 @@ block sizes, wear-leveling, erase/program routines or MPU configuration.
 Source descriptors now encode the stereo-pair flag in the otherwise unused
 `0x1000` operand bit and use six bytes per entry instead of eight. Generated
 operands mask that bit; the full original audio-routing regression suite
-checks the resulting operands. These compact descriptors remain in mainline; its expanded generator code
-uses the separately reviewed layout documented in [MAINLINE.md](MAINLINE.md).
+checks the resulting operands. This keeps the extension inside the same
+reviewed executable SRAM slot; it does not expand executable memory.
 
 ## Evidence and limits
 
@@ -103,6 +103,6 @@ the last edited routes return while the saved snapshots remain distinct.
 Confirm ordinary scene settings, reset behavior, end stops and audio routing.
 Do not use abrupt power cuts as the initial persistence test.
 
-NSE (53) and BD (54) assignments use the same record without renumbering any
-existing source. BD notes, pitch and decay are RAM-only and are not part of
-this routing record. The transient steady/blinking edit view is not persisted.
+Retired generator source IDs 53 (NSE) and 54 (BD) are now invalid and restore
+to Auto. Tests cover both normal boot and scene recall, preserving other routes
+and the stored scene. The source IDs 0..52 are unchanged.

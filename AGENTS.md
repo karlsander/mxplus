@@ -5,15 +5,17 @@ mxplus maintains one Roland MX-1 mainline build combining channel routing and US
 ## Scope and current boundary
 
 The routing predecessor passed user bench tests, including encoder end stops.
-The combined mainline image still needs USB-B hardware validation. Do not claim
+The restored pre-generator image boots and passed one user-reported iPhone/AUM
+duplex path; full USB validation and physical snapshot/restart acceptance remain open. Do not claim
 safe upgrades, broad interoperability or verified failed-application recovery.
 A hardware experiment requires user authorization.
 
 Maintain only `tools/build_firmware.py`, `patches/mainline.ld` and
 `build/mainline/MXPLUS_MAINLINE_UNTESTED.bin` as the active firmware build.
-USB-host unlocking must remain documentation only; no parallel builder or code
+Generators, extra SELECT editing and USB-host unlocking must remain documentation only; no parallel builder or code
 variant. The original USB application, boot programs, updater and panel payload
-remain unchanged. Read `docs/MAINLINE.md` for the combined memory layout.
+remain unchanged. Read `docs/MAINLINE.md` for the combined memory layout and
+`docs/GENERATOR_RESEARCH.md` before proposing future DSP work.
 
 ## Binary identity and patch discipline
 

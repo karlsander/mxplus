@@ -1,0 +1,122 @@
+diff --git a/patches/channel_routing_audio.c b/patches/channel_routing_audio.c
+index 020011a..c406654 100644
+--- a/patches/channel_routing_audio.c
++++ b/patches/channel_routing_audio.c
+@@ -181,7 +181,10 @@ void mx1_route_flush(void)
+             for (uint32_t side = 0; side < count; ++side) {
+                 uint32_t read = value ? ((sources[value].operand & 0xefff) + (side && (sources[value].operand & 0x1000)))
+                                       : stock_operands[lane + side];
+-                if (value == MX1_ROUTE_BD) read = MX1_INTERNAL_BD_OPERAND + strip;
++                /* One-off isolation: generator samples still render into owned RAM.
++                 * Keep both generator labels on the established P9R operand;
++                 * this deliberately does not deliver generator audio. */
++                if (value == MX1_ROUTE_NSE || value == MX1_ROUTE_BD) read = 0xa011;
+                 operand(input_sites[lane + side], read);
+             }
+             applied[strip] = (uint8_t)value;
+diff --git a/patches/internal_sources_audio.c b/patches/internal_sources_audio.c
+index 5d592e9..ed32d47 100644
+--- a/patches/internal_sources_audio.c
++++ b/patches/internal_sources_audio.c
+@@ -8,13 +8,19 @@
+  */
+ #include "internal_sources.h"
+ 
++/* One-off freeze isolation: retain computation and DSP routing, but publish
++ * to owned RAM instead of the unverified physical generator exchange ports.
++ * This is not a generator-audio implementation. */
++volatile uint32_t mx1_internal_probe_samples[MX1_INTERNAL_PORT_COUNT]
++    __attribute__((section(".patch_data"))) = {0};
++
+ void mx1_internal_audio_frame(void)
+ {
+     ((void (*)(void))0x01009841u)();
+     /* Diagnostic programs use different shared-port layouts. */
+     if (*(const volatile uint32_t *)0x6051deb8u <= 3u)
+         mx1_internal_render(*(const volatile uint32_t *)0x20000b24u,
+-                            (volatile uint32_t *)0x40101100u);
++                            mx1_internal_probe_samples);
+     else
+         mx1_internal_invalidate();
+ }
+diff --git a/tools/internal_sources_audio_verify.py b/tools/internal_sources_audio_verify.py
+index d99583a..64c1720 100644
+--- a/tools/internal_sources_audio_verify.py
++++ b/tools/internal_sources_audio_verify.py
+@@ -66,6 +66,7 @@ class AudioMachine(Machine):
+                 uc.reg_write(UC_ARM_REG_PC, uc.reg_read(UC_ARM_REG_LR))
+ 
+     def _read(self, uc, access, address, size, value, user):
++        assert not 0x40101100 <= address < 0x40101130, 'Probe read physical generator bank'
+         if address == USBF + 0x1f4:
+             # Distinct positive words exercise actual copying and packet-tail
+             # bookkeeping. Their identity conversion is not an audio model.
+@@ -75,6 +76,7 @@ class AudioMachine(Machine):
+             self.out_reads.append((self.tick, fixture))
+ 
+     def _write(self, uc, access, address, size, value, user):
++        assert not 0x40101100 <= address < 0x40101130, 'Probe wrote physical generator bank'
+         if PORTS <= address < PORTS + GENERATOR_COUNT * 4:
+             self.generator_writes.append((self.tick, address, size, value))
+         elif 0x40000000 <= address < 0x40200000:
+@@ -115,7 +117,11 @@ class AudioMachine(Machine):
+ 
+ 
+ def verify(original, patched, build):
++    global PORTS
+     symbols = build['symbols']
++    PORTS = symbols['mx1_internal_probe_samples']
++    assert build['writable_state']['start'] <= PORTS
++    assert PORTS + 48 <= build['writable_state']['end_exclusive']
+     assert sha256(patched) == build['patched_app_sha256']
+     wrapper = symbols['mx1_internal_audio_frame'] | 1
+     assert original[0x168c:0x1690] == u32(0x01009841)
+@@ -158,7 +164,8 @@ def verify(original, patched, build):
+         assert not machine.generator_writes
+     passed('Cold all-Auto callback never accesses the guarded generator bank',
+            rates=[0, 44100, 48000, 96000], modes=[0, 0, 4, 4, 0, 0],
+-           guarded_interval=['0x40101100', '0x40101130'])
++           guarded_interval=[hex(PORTS), hex(PORTS + 48)],
++           physical_generator_bank_forbidden_in_all_cases=['0x40101100', '0x40101130'])
+ 
+     abi_cases = []
+     for rate in (44100, 48000, 96000):
+@@ -342,6 +349,8 @@ def verify(original, patched, build):
+            foreign_word='Explicit 0x3e800000 fixture; diagnostic DSP arithmetic is not emulated')
+ 
+     return {'status': 'pass', 'original_app_sha256': sha256(original),
++        'purpose': 'One-off RAM-publication isolation; not physical generator audio',
++        'sample_destination': hex(PORTS),
+         'patched_app_sha256': sha256(patched),
+         'candidate_container_sha256': build['container_sha256'],
+         'groups': groups,
+diff --git a/tools/routing_audio_verify.py b/tools/routing_audio_verify.py
+index 310ae25..83cc2ed 100644
+--- a/tools/routing_audio_verify.py
++++ b/tools/routing_audio_verify.py
+@@ -48,7 +48,7 @@ def choices():
+         left = 0xa000 + 2 * (pair - 1)
+         result.extend([(left, left+1, f'PC{pair} '), (left, left, f'P{pair} L'),
+                        (left+1, left+1, f'P{pair} R')])
+-    result.extend([(0xa040, 0xa040, 'NSE '), (0xa041, 0xa041, 'BD  ')])
++    result.extend([(0xa011, 0xa011, 'NSE '), (0xa011, 0xa011, 'BD  ')])
+     assert len(result) == 55
+     return result
+ 
+@@ -132,6 +132,7 @@ class AudioMachine(Machine):
+             else:
+                 assert offset in SITES and not value & 0xffff
+                 operand = value >> 16
++                assert not 0xa040 <= operand <= 0xa04b, 'Probe used generator DSP operand'
+                 cpu_halfword = 0x40150000 + (offset ^ 2)
+                 self.write(cpu_halfword, struct.pack('<H', operand))
+         else:
+@@ -184,7 +185,7 @@ class AudioMachine(Machine):
+                 if source:
+                     lane = strip if strip < 4 else strip * 2 - 4
+                     count = 1 if strip < 4 else 2
+-                    result[lane:lane + count] = (tuple([0xa041 + strip] * count) if source == 54 else CHOICES[source][:count])
++                    result[lane:lane + count] = CHOICES[source][:count]
+         return tuple(result)
+ 
+ 

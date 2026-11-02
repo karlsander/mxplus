@@ -1,0 +1,151 @@
+diff --git a/patches/mainline.ld b/patches/mainline.ld
+index b249099..c1cbc09 100644
+--- a/patches/mainline.ld
++++ b/patches/mainline.ld
+@@ -1,6 +1,6 @@
+ ENTRY(mx1_route_ui_event)
+ SECTIONS {
+-    . = 0x0100f6a4;
++    . = 0x01018000;
+     .text : {
+         KEEP(*(.text.hook))
+         *(.text*)
+@@ -13,7 +13,7 @@ SECTIONS {
+         . = ALIGN(4);
+     }
+     ASSERT(SIZEOF(.route_state) == 24, "Unexpected routing state size")
+-    ASSERT(ADDR(.text) + SIZEOF(.text) <= 0x01010000, "Routing code overflow")
++    ASSERT(ADDR(.text) + SIZEOF(.text) <= 0x0101895c, "Isolation code exceeds historical size bound")
+     ASSERT(ADDR(.route_state) + SIZEOF(.route_state) <= 0x01018000, "Routing state overflow")
+     .usb_data 0x0101727c : { KEEP(*(.usb_data)) . = ALIGN(4); }
+     .usb_state 0x010173e0 (NOLOAD) : { KEEP(*(.usb_state)) . = ALIGN(4); }
+diff --git a/tests/test_routing_build_guards.py b/tests/test_routing_build_guards.py
+index 2bd1d1e..10127b4 100644
+--- a/tests/test_routing_build_guards.py
++++ b/tests/test_routing_build_guards.py
+@@ -64,7 +64,10 @@ class RoutingGuardTests(unittest.TestCase):
+         original = (ROOT / "analysis/container_app_main.bin").read_bytes()
+         maximum = LIMIT - ENTRY
+         image, record = inject(original, bytes(maximum))
+-        self.assertEqual(record["runtime_address"] + record["insert_length"], LIMIT)
++        # The historical first copy retains its original capacity; the new
++        # execution copy uses an equally bounded slot at the isolation address.
++        self.assertEqual((ENTRY, LIMIT), (0x01018000, 0x0101895c))
++        self.assertEqual(record["runtime_address"] + record["insert_length"], 0x01010000)
+         self.assertEqual(len(image), len(original) + maximum)
+         for size in (maximum + 4, 1, maximum - 1):
+             with self.subTest(size=size), self.assertRaises(FormatError):
+diff --git a/tools/build_firmware.py b/tools/build_firmware.py
+index 5be78ac..b327309 100644
+--- a/tools/build_firmware.py
++++ b/tools/build_firmware.py
+@@ -22,8 +22,8 @@ from container_tool import (COMPONENT_BY_NAME, ORIGINAL_SHA256, FormatError,
+                             component_unpacked, repack_image, sha256)
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+-ENTRY = 0x0100F6A4
+-LIMIT = 0x01010000
++ENTRY = 0x01018000
++LIMIT = 0x0101895c
+ 
+ 
+ def absolute_jump(address: int, target: int) -> bytes:
+@@ -161,6 +161,22 @@ def build(firmware: Path, out: Path) -> dict:
+     scatter['insert_length'] += len(descriptor_blob)
+     blob += descriptor_blob
+     changes: list[dict] = []
++    # One-off location isolation. Preserve the historical code/data copies,
++    # including the now-unused duplicate text at 0x0100f6a4. A previously empty
++    # copy also installs the linked text at 0x01018000. No feature code changes.
++    scatter['linked_code_address'] = ENTRY
++    from memory_map import recover
++    if recover(original)['operations'][8] != {
++            'call': 0x60000056, 'kind': 'copy', 'destination': 0x40008000,
++            'length': 0, 'source': 0x600e0448}:
++        raise FormatError('Unexpected original empty location-test copy')
++    exact_patch(modified, 0x134, struct.pack('<I', 0x40008000),
++                struct.pack('<I', ENTRY), changes, 'Isolation: copy code to test address')
++    exact_patch(modified, 0x138, bytes(4), struct.pack('<I', scatter['code_length']),
++                changes, 'Isolation: copy historical code length')
++    exact_patch(modified, 0x13c, struct.pack('<I', 0x600e0448 + len(blob)),
++                struct.pack('<I', 0x600dff30), changes,
++                'Isolation: source the same inserted text as the original first copy')
+     # Original BSS ends exactly at the reserved state start. Extend only its
+     # zero count, preserving every existing destination and allocator record.
+     from memory_map import recover
+diff --git a/tools/mainline_verify.py b/tools/mainline_verify.py
+index b0c1888..7bfc33b 100644
+--- a/tools/mainline_verify.py
++++ b/tools/mainline_verify.py
+@@ -27,6 +27,7 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
+     scatter = build['scatter_extension']
+     cut, size = scatter['insert_offset'], scatter['insert_length']
+     assert cut == 0xdff30 and scatter['runtime_address'] == 0x0100f6a4
++    assert scatter['linked_code_address'] == 0x01018000
+     code_size = scatter['code_length']
+     assert 0 < code_size <= 0x95c and code_size % 4 == 0
+     assert size == code_size + 356
+@@ -56,7 +57,10 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
+         assert before and len(before) == len(after)
+         assert 0 <= off <= len(expected) - len(before)
+         positions = set(range(off, off + len(before)))
+-        assert not positions & modified, 'Overlapping or unreviewed patch'
++        # 0x13c first receives the historical source relocation, then becomes
++        # the explicitly guarded source of the new location-test copy.
++        assert not positions & modified or (off == 0x13c and len(before) == 4), \
++            'Overlapping or unreviewed patch'
+         assert expected[off:off + len(before)] == before
+         expected[off:off + len(after)] = after
+         modified.update(positions)
+@@ -66,6 +70,11 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
+     new_map = recover(patched)['operations']
+     assert len(old_map) == len(new_map)
+     for index, (old, new) in enumerate(zip(old_map, new_map)):
++        if index == 8:
++            assert old == {'call': BASE + 0x56, 'kind': 'copy',
++                           'destination': 0x40008000, 'length': 0, 'source': BASE + 0xe0448}
++            assert new == dict(old, destination=0x01018000, length=code_size, source=BASE+cut)
++            continue
+         if index == 4:
+             assert old['length'] == 0 and old['destination'] == 0x01020000
+             assert new == dict(old, destination=0x0101727c, length=356, source=BASE + cut + code_size)
+@@ -97,13 +106,18 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
+             address, length = operation['destination'], operation['length']
+             assert started[0].read(address, length) == started[1].read(address, length)
+     assert started[1].read(0x0100f6a4, code_size) == extension[:code_size]
++    assert started[1].read(0x01018000, code_size) == extension[:code_size]
++    assert all(0x01018000 <= (value & ~1) < 0x01018000+code_size
++               for name,value in build['symbols'].items()
++               if name not in ('mx1_route_state', 'mx1_uac2_configuration',
++                               'mx1_uac2_rate', 'mx1_uac2_reply'))
+     assert started[1].read(0x0101727c, 356) == extension[code_size:]
+     return [
+         {'name': 'Every application change matches recorded guarded patches and scatter insertion',
+          'status': 'pass', 'patch_sites': len(build['patches']), 'extension_bytes': size,
+          'sram_bytes_remaining': 0x95c - code_size},
+         {'name': 'Actual original startup installs routing code and preserves existing initialized data and BSS',
+-         'status': 'pass', 'runtime_interval': ['0x0100f6a4', hex(0x0100f6a4 + code_size)],
++         'status': 'pass', 'runtime_interval': ['0x01018000', hex(0x01018000 + code_size)],
+          'existing_nonempty_destinations_unchanged': True,
+          'repurposed_empty_copy': 'USB descriptor at 0x0101727c'},
+     ]
+diff --git a/tools/routing_mpu_verify.py b/tools/routing_mpu_verify.py
+index 026ce86..6341e90 100644
+--- a/tools/routing_mpu_verify.py
++++ b/tools/routing_mpu_verify.py
+@@ -17,6 +17,7 @@ def protect_code(machine):
+     # Region 1 is read-only throughout this interval; higher-priority RW
+     # regions 3/4 affect only 0x01000000..0x010002ff, outside these pages.
+     machine.uc.mem_protect(0x01001000, 0xf000, UC_PROT_READ | UC_PROT_EXEC)
++    machine.uc.mem_protect(0x01018000, 0x8000, UC_PROT_READ | UC_PROT_EXEC)
+ 
+ 
+ def original_mpu(image):
+@@ -70,6 +71,7 @@ def verify(original, patched, build):
+     assert regions[2] == {'base': 0x01010000, 'attributes': 0x1300001d,
+                           'size': 0x8000, 'access_permission': 3}
+     assert all(permission(regions, a) == 6 for a in range(0x01001000, 0x01010000))
++    assert all(permission(regions, a) == 6 for a in range(0x01018000, 0x0101895c))
+     state, end = 0x01017264, 0x010173f4
+     assert build['writable_state']['start'] == state and build['writable_state']['end_exclusive'] == end
+     assert build['symbols']['mx1_route_state'] == state

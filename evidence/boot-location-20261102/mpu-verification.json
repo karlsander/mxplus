@@ -1,0 +1,85 @@
+{
+  "status": "pass",
+  "mpu_setup": {
+    "decoded_offset": "0xd824",
+    "runtime": "0x6000d824",
+    "regions": {
+      "0": {
+        "base": 0,
+        "attributes": 318767167,
+        "size": 4294967296,
+        "access_permission": 3
+      },
+      "1": {
+        "base": 16777216,
+        "attributes": 100663329,
+        "size": 131072,
+        "access_permission": 6
+      },
+      "2": {
+        "base": 16842752,
+        "attributes": 318767133,
+        "size": 32768,
+        "access_permission": 3
+      },
+      "3": {
+        "base": 16777216,
+        "attributes": 318767121,
+        "size": 512,
+        "access_permission": 3
+      },
+      "4": {
+        "base": 16777728,
+        "attributes": 318767119,
+        "size": 256,
+        "access_permission": 3
+      },
+      "5": {
+        "base": 33554432,
+        "attributes": 100663323,
+        "size": 16384,
+        "access_permission": 6
+      },
+      "6": {
+        "base": 1610612736,
+        "attributes": 50331701,
+        "size": 134217728,
+        "access_permission": 3
+      }
+    },
+    "exception_registration": "stubbed at 0x60054ef8"
+  },
+  "groups": [
+    {
+      "name": "Original MPU makes injected code read-only and new route state read-write",
+      "status": "pass",
+      "code_protection": "0x01001000..0x0100ffff enforced in all UI/audio instruction cases",
+      "state_interval": [
+        "0x1017264",
+        "0x10173f4"
+      ]
+    },
+    {
+      "name": "Dirty cold startup clears state; original RTOS pools cannot allocate its reservation",
+      "status": "pass",
+      "general_pool": [
+        "0x01013e18",
+        "0x01014e18"
+      ],
+      "stack_pool": [
+        "0x01020000",
+        "0x01028000"
+      ],
+      "state_reservation_bytes": 400,
+      "descriptor_initialized_bytes": 356,
+      "patterns": [
+        85,
+        170
+      ]
+    }
+  ],
+  "limits": [
+    "Permission rejection is modeled with Unicorn page protection; no real MemManage exception delivery.",
+    "RTOS initializer ICSR reads use thread-mode zero; no hardware or numerical DSP execution."
+  ]
+}

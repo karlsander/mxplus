@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "d6cda6d3344a63f62008cea4eabfdb5b3aa6092344359f5c527ffba847f0985f",
+  "patched_app_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758",
   "groups": [
     {
       "name": "Original storage registration remains identical; existing reserved fields only",
@@ -20,6 +20,10 @@
     },
     {
       "name": "Legacy, unknown-version, out-of-range and invalid mono records fall back to Auto",
+      "status": "pass"
+    },
+    {
+      "name": "Retired NSE/BD saved IDs become Auto on normal boot and recall; other routes and saved scenes remain intact",
       "status": "pass"
     },
     {

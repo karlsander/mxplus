@@ -16,8 +16,7 @@ from unicorn.arm_const import (UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_R2,
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 from firmware_patch import inject
-from build_firmware import absolute_jump, build, ENTRY, LIMIT, DATA_START
-from internal_sources_ui_patch import patch_ui, UI_HOOKS
+from build_firmware import absolute_jump, build, patch_ui, ENTRY, LIMIT
 from container_tool import FormatError
 
 
@@ -45,9 +44,8 @@ class RoutingGuardTests(unittest.TestCase):
 
     def test_ui_hook_rejects_wrong_original_sites_and_double_application(self):
         original = bytearray((ROOT / "analysis/container_app_main.bin").read_bytes())
-        symbols = {name: ENTRY + 0x80 | 1 for _, _, name, _ in UI_HOOKS}
-        symbols["mx1_sources_ui_event"] = ENTRY | 1
-        for offset in (0xF5D8, *(h[0] for h in UI_HOOKS)):
+        symbols = {"mx1_route_ui_event": ENTRY | 1, "mx1_route_ui_display": ENTRY + 0x80 | 1}
+        for offset in (0xF5D8, 0x13356):
             with self.subTest(offset=hex(offset)):
                 damaged = original.copy()
                 damaged[offset] ^= 1
@@ -56,7 +54,7 @@ class RoutingGuardTests(unittest.TestCase):
         image = original.copy()
         changes = []
         patch_ui(image, symbols, changes)
-        self.assertEqual(len(changes), 1 + len(UI_HOOKS))
+        self.assertEqual(len(changes), 2)
         self.assertEqual(image[0xF5D8:0xF5DC], struct.pack("<I", ENTRY | 1))
         self.assertEqual(image[0x13356:0x13360], absolute_jump(0x60013356, ENTRY + 0x80))
         with self.assertRaisesRegex(FormatError, "original bytes"):
@@ -65,19 +63,12 @@ class RoutingGuardTests(unittest.TestCase):
     def test_extension_respects_exact_reviewed_sram_boundary(self):
         original = (ROOT / "analysis/container_app_main.bin").read_bytes()
         maximum = LIMIT - ENTRY
-        image, record = inject(original, bytes(LIMIT - DATA_START), maximum)
+        image, record = inject(original, bytes(maximum))
         self.assertEqual(record["runtime_address"] + record["insert_length"], LIMIT)
-        self.assertEqual(len(image), len(original) + LIMIT - DATA_START)
-        for size in (maximum + 4, 1, maximum - 1, 0):
+        self.assertEqual(len(image), len(original) + maximum)
+        for size in (maximum + 4, 1, maximum - 1):
             with self.subTest(size=size), self.assertRaises(FormatError):
-                inject(original, bytes(ENTRY - DATA_START + size), size)
-        with self.assertRaises(FormatError):
-            inject(original, bytes(LIMIT - DATA_START - 4), maximum)
-        for offset in (0x10c, 0x110, 0x114, 0xdfac0, 0xdfad0):
-            damaged = bytearray(original)
-            damaged[offset] ^= 4
-            with self.subTest(offset=hex(offset)), self.assertRaises(FormatError):
-                inject(damaged, bytes(LIMIT - DATA_START), maximum)
+                inject(original, bytes(size))
 
     def test_wrong_firmware_is_rejected_before_compilation_or_output_creation(self):
         with tempfile.TemporaryDirectory() as directory:

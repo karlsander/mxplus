@@ -1,25 +1,28 @@
 # Mainline roadmap
 
-One maintained firmware contains routing, internal NSE/BD sources and USB-B UAC2. The routing predecessor
-passed user bench tests including encoder end stops. The combined image has
-offline evidence but still needs its own physical test.
+Maintain one mixer-focused firmware: channel routing with end stops, stock
+snapshot/restart route storage and USB-B UAC2. The restored pre-generator image
+boots and passed a user-reported iPhone/AUM duplex audio path. The routing
+predecessor passed routing/end-stop tests. These are bounded observations,
+not sustained or comprehensive validation.
 
-1. Verify combined-image boot, routing, snapshot save/recall, delayed restart
-   persistence, SELECT editing toggles and unchanged ordinary controls. Test
-   generator levels, clock behavior, exchange mapping and IRQ margin with one
-   and eleven BD voices. BD pattern persistence is not yet implemented.
-2. Establish class-driver USB-B enumeration, playback, capture-only and duplex.
-3. Cover stop/restart, reconnect, stereo/18-channel and mixed alternates, all
-   three rates, channel order/levels and sustained audio.
-4. Record a reproducible host/cable/driver/setup and candidate hash. Establish
-   device-specific failed-application recovery before claiming a safe upgrade.
-5. Promote validation status only as supported by the measured results.
+1. Physically verify snapshot save/recall, delayed restart persistence, ordinary
+   SELECT behavior, reset behavior and existing routing across mixer modes.
+2. Extend USB evidence with device/OS/app versions, rates, channel maps and
+   duration. Verify capture-only, stereo/18-channel and mixed alternates,
+   stop/restart, reconnect and sustained audio at all three rates.
+3. Consider small control/routing improvements individually. The internal code
+   slot has only 20 bytes free; measure compiled size before claiming capacity.
+   An explicitly reserved SDRAM design is possible research, not enabled in
+   this stable baseline. [Memory and DSP findings](docs/GENERATOR_RESEARCH.md).
+4. Keep exact image identities and scoped hardware results. TAP rollback worked
+   for the observed application failures; other recovery classes are unverified.
 
-Generic AIRA-host support is excluded. Its narrow former implementation is
-[documented](docs/HOST_PROBE.md); no separate research build is maintained.
-Future reconsideration requires suitable devices and an explicit scope change.
+Generators, extra SELECT editing and generic USB-host unlocking are excluded.
+Future DSP work needs a separate explicit experiment and evidence about real
+interrupt timing, memory placement and sample transport before reintegration.
+No alternate generator or host-unlock firmware is maintained.
 
-The immutable stock input and historical evidence remain. Source/build history
-is in Git, not parallel maintained firmware trees. There is no claim of class-
-compliant MIDI, host-selected sample-rate changes, full-speed audio, measured
-PLL lock, click-free switching, or universal USB-device compatibility.
+Known USB limits remain: fixed read-only rate, validity based on configuration
+rather than PLL lock, implicit feedback, proprietary MIDI, high-speed audio
+only, and incomplete physical stereo/mixed-alternate and sustained testing.

@@ -44,3 +44,11 @@ An embedded Roland version string does not distinguish a patched image from the 
 Roland, MX-1 and AIRA identify the product and compatibility target. mxplus is not presented as an official Roland release, and no endorsement or affiliation is claimed.
 
 At the initial research baseline, neither candidate had been flashed to an MX-1 or tested for physical USB audio. Instruction-level verification establishes specific software behavior under documented assumptions. It does not establish reliable flash recovery, universal USB Audio Class compliance or working iOS audio. The candidate reports and hardware validation plan retain those limits.
+
+## Mainline consolidation, 2 November 2026
+
+The maintained firmware now combines routing and USB-B audio in one build.
+Generic-host source and all separate candidate binaries/builders were retired;
+their reports remain under `evidence/retired-probes-20261102/`, with original
+source/artifacts in Git history. Shared ARM/patch helpers were extracted from
+the retired tools. Historical snapshots/manifests are not current artifact lists.

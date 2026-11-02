@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import struct
 
-from build_host_probe import exact_patch
+from firmware_patch import exact_patch
 from container_tool import FormatError
 
 REQUIRED_SYMBOLS = ("mx1_route_dispatch", "mx1_route_flush")

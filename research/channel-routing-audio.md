@@ -1,3 +1,5 @@
+> Historical investigation: standalone build paths refer to Git history. The only active firmware is [mainline](../docs/MAINLINE.md). Historical evidence has not been rewritten as combined-image evidence.
+
 # Channel routing: audio path and patch evidence
 
 This is a new, independent main-application experiment for the repository's

@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "checks": [
+    "Only the main application slot differs; boot/updater/panel/USB/trailer preserved",
+    "Reset selects and decodes updater with both application regions unmapped",
+    "Normal-branch negative control faults on missing USB application header",
+    "Original main-boot loader decodes complete stock and routing applications",
+    "Actual cold startup installs initialized route state without relying on zero SRAM",
+    "Actual original RTOS pool initialization preserves extension and excludes its SRAM",
+    "First and repeated Auto drains produce no routing DSP writes or event posts",
+    "Original and routing empty-handler stack depth measured under stated stubs"
+  ],
+  "candidate_sha256": "fe1d72af8cc76785c7acb6add6058a091a820b9a0e6bb2f606eceb334414a2fa",
+  "hardware_recovery_verified": false
+}

@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   verify:
-    name: Rebuild and verify all 22 offline stages
+    name: Rebuild and verify the mainline firmware
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     defaults:

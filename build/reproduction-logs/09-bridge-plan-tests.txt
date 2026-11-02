@@ -5,6 +5,6 @@ test_channel_count_and_direction (__main__.BridgeTests.test_channel_count_and_di
 test_setup_apply_requires_truthful_power_selection (__main__.BridgeTests.test_setup_apply_requires_truthful_power_selection) ... ok
 
 ----------------------------------------------------------------------
-Ran 5 tests in 0.004s
+Ran 5 tests in 0.003s
 
 OK

@@ -1,3 +1,5 @@
+> Historical investigation: standalone build paths refer to Git history. The only active firmware is [mainline](../docs/MAINLINE.md). Historical evidence has not been rewritten as combined-image evidence.
+
 # MX-1 USB compatibility: evidence and implementation boundaries
 
 Research date: 2026-11-01. This report combines primary documentation, original

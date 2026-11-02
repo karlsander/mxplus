@@ -14,7 +14,7 @@ from unicorn.arm_const import UC_ARM_REG_R0, UC_ARM_REG_LR, UC_ARM_REG_PC
 from capstone import Cs, CS_ARCH_ARM, CS_MODE_THUMB, CS_MODE_MCLASS
 
 from container_tool import ORIGINAL_SHA256, COMPONENT_BY_NAME, component_unpacked, sha256
-from host_probe_verify import Machine
+from arm_machine import Machine
 
 
 def binding_case(image, device_class, interface_class, *, control_mask=None):

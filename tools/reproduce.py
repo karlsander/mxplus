@@ -99,36 +99,26 @@ def main() -> None:
                                 "--output", "analysis/usb_descriptors.json"])
     run("descriptor-tests", [py, "-m", "unittest", "discover", "-s", "tests", "-v"])
     run("bridge-plan-tests", [py, "tools/linux_bridge_test.py", "-v"])
-    def candidate(kind: str) -> None:
-        builddir = "build/" + kind + "-probe"
-        run("build-" + kind, [py, "tools/build_" + kind + "_probe.py", source,
-                             "--output", builddir])
-        verification = ("analysis/host_probe_verification.json" if kind == "host"
-                        else builddir + "/arm-verification.json")
-        run("arm-" + kind, [py, "tools/" + kind + "_probe_verify.py", source,
-                           "--build", builddir, "--output", verification])
-        name = {"host": "MX1_UAC1_HOST_PROBE_UNTESTED.bin",
-                "device": "MX1_UAC2_DEVICE_PROBE_UNTESTED.bin",
-                "routing": "MX1_CHANNEL_ROUTING_UNTESTED.bin"}[kind]
-        run("container-" + kind + "-candidate", [py, "tools/container_candidate_verify.py",
-             source, builddir + "/" + name,
-             "--output", "analysis/container_" + kind + "_candidate_verification.json"])
-    for kind in ("host", "device"):
-        candidate(kind)
+    run("build-mainline", [py, "tools/build_firmware.py", source, "--output", "build/mainline"])
+    run("arm-mainline", [py, "tools/mainline_verify.py", source,
+                        "--build", "build/mainline", "--output", "build/mainline/arm-verification.json"])
+    run("container-mainline-candidate", [py, "tools/container_candidate_verify.py", source,
+        "build/mainline/MXPLUS_MAINLINE_UNTESTED.bin", "--output", "analysis/container_mainline_candidate_verification.json"])
+    run("boot-mainline", [py, "tools/boot_path_verify.py", "--firmware", source,
+        "--build", "build/mainline", "--output", "build/mainline/boot-verification.json"])
     run("original-audio-pump", [py, "sources/hardware/uac2_pump_harness.py"])
-    native = ROOT / "build/device-probe/uac2_adapter_native_test"
+    native = ROOT / "build/mainline/uac2_adapter_native_test"
     run("compile-native-controls", [compiler, "-std=c11", "-Wall", "-Wextra", "-Werror", "-O2",
         "-DMX1_UAC2_NATIVE_TEST", "sources/hardware/uac2_adapter.c",
         "sources/hardware/uac2_adapter_native_test.c", "-o", native])
     run("native-controls", [native])
     run("subcpu-evidence", [py, "sources/hardware/inspect_subcpu.py", source,
                             "sources/hardware", "--disassemble"])
-    candidate("routing")
     report["status"] = "passed"
     report["finished_utc"] = datetime.now(timezone.utc).isoformat()
     report["candidate_sha256"] = {
-        kind: json.loads((ROOT / "build" / (kind + "-probe") / "build-report.json").read_text())["container_sha256"]
-        for kind in ("host", "device", "routing")}
+        kind: json.loads((ROOT / "build" / kind / "build-report.json").read_text())["container_sha256"]
+        for kind in ("mainline",)}
     save()
     print(f"All {len(report['checks'])} offline stages passed. Report: {output}")
     print("No hardware was accessed. These results do not establish safe flashing or working USB audio.")

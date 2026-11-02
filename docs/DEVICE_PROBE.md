@@ -2,30 +2,11 @@
 
 ## Status
 
-`build/device-probe/MX1_UAC2_DEVICE_PROBE_UNTESTED.bin` is a rebuilt research
-candidate for the MX-1 computer Type-B port. It contains compiled new code,
-new audio descriptors, and a narrowly targeted capture-startup change.
-The original initializer, control-dispatch, descriptor-programming, and
-startup-copy code have been executed with the extension in a CPU emulator.
-The candidate has **not been flashed to an MX-1 or tested with an iPhone,
-iPad, Mac, or other physical USB host**.
-
-This is a concrete implementation experiment, not a completed compatible
-firmware release. It should remain clearly separated from the original
-firmware and from the independent USB1–4 host-port experiment.
-
-| Item | Identity |
-| --- | --- |
-| Original updater SHA256 | `26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e` |
-| Candidate updater SHA256 | `b17f9005dd2b32b9fd89ccdd07c3a2ef0dda0854fb67ad5732a76390cc005d57` |
-| Candidate decoded main-app SHA256 | `59bf5d2e7d206315cbc6ae59e8072bff410ea3c2ff850062da5f405148642a9e` |
-| New compiled extension | 900 bytes, Cortex-M3 Thumb, code and writable data |
-| Extension placement | `0x0100f6a4` through `0x0100fa27` |
-| New configuration descriptor | 355 bytes |
-
-The build report is the authoritative source for a regenerated candidate's
-hashes and symbol addresses. An image produced by a different build must be
-checked against its own report.
+USB-B UAC2 is part of the sole [mainline build](MAINLINE.md), not a separate
+candidate. Combined-image USB hardware behavior remains untested. The retired
+standalone candidate's mutable SRAM placement was invalid under the stock MPU;
+mainline uses separate writable descriptor/rate/reply storage. Historical build
+identities are in `evidence/retired-probes-20261102/`.
 
 ## What the candidate changes
 
@@ -99,7 +80,7 @@ pointer, length, flags, and bytes are inspected. The original register-level
 stall routine actually executes in mapped memory. These checks establish
 code integration and control flow, not physical enumeration.
 
-Detailed results: `build/device-probe/arm-verification.json`.
+Detailed results: `build/mainline/usb-verification.json`.
 
 ### Original audio pump execution
 
@@ -137,49 +118,11 @@ compiled ARM integration test.
 
 ## Rebuild and reproduce
 
-The scripts require the original supplied firmware. The build is restricted
-by its exact SHA256 and checks the expected bytes at every patch point.
-
-From the project directory, using its local virtual environment and the
-unchanged packaged input:
-
-```bash
-.venv/bin/python tools/build_device_probe.py inputs/MX1_UPD.original.bin \
-  --output build/device-probe
-
-.venv/bin/python tools/device_probe_verify.py inputs/MX1_UPD.original.bin \
-  --build build/device-probe \
-  --output build/device-probe/arm-verification.json
-
-.venv/bin/python sources/hardware/uac2_pump_harness.py
-```
-
-The native logic test uses the system C compiler:
-
-```bash
-gcc -std=c11 -Wall -Wextra -Werror -O2 -DMX1_UAC2_NATIVE_TEST \
-  sources/hardware/uac2_adapter.c \
-  sources/hardware/uac2_adapter_native_test.c \
-  -o sources/hardware/uac2_adapter_native_test
-sources/hardware/uac2_adapter_native_test
-```
-
-The compiler used for this candidate is `ziglang` 0.13.0 targeting Cortex-M3
-Thumb with ReleaseSmall optimization and no LTO. The linker bounds the
-extension below the original initialized SRAM at `0x01010000`. The builder
-extends the existing startup copy and adjusts subsequent initialized-data
-source addresses. It repackages only the main application; the host-port
-application, boot blocks, updater, and sub-CPU component remain original.
-
-The first build uses a simple lossless literal-only encoder, so compressed
-main-application storage grows even though the compiled extension is only
-900 bytes. The resulting component still fits its original container slot.
-Container-format checks and execution of the old loader/updater are separate
-from the USB checks documented here.
-
-`research/device-reproducibility.md` lists every Python dependency, the
-original-image extraction/map prerequisites for the pump test, and the
-observed result of a fresh build in a separate compiler-cache directory.
+Run `tools/reproduce.py` followed by `tools/check_reproduction.py --check-committed`
+with the pinned project Python environment. The only builder is
+`tools/build_firmware.py`; USB instruction evidence is
+`build/mainline/usb-verification.json`. The compiled initializer and controls
+run with code SRAM write protection enforced. See [mainline integration](MAINLINE.md).
 
 ## What remains to be established on hardware
 
@@ -207,13 +150,9 @@ demonstrated.
 
 ## Source map
 
-| File | Purpose |
-| --- | --- |
-| `patches/uac2_device_probe.c` | New normal-mode initializer and live packet-size setup |
-| `patches/uac2_device.ld` | Bounded SRAM placement |
-| `sources/hardware/uac2_adapter.c` | Fixed-clock class-control implementation and stock-call bindings |
-| `tools/uac2_design.py` | UAC2 descriptor graph generation |
-| `tools/build_device_probe.py` | Version-guarded compilation, patching, relocation, and container rebuild |
-| `tools/device_probe_verify.py` | Actual ARM integration and descriptor-table comparison |
-| `research/device-control.md` | Original functions, ABIs, registers, and instruction-level evidence |
-| `research/usb-compatibility.md` | USB standards, Apple behavior, and Linux/Roland context |
+- `patches/usb_audio.c`: initializer and mutable descriptor packet-size setup.
+- `patches/mainline.ld`: shared code and writable-data reservations.
+- `sources/hardware/uac2_adapter.c`: clock controls and original-call bindings.
+- `tools/uac2_design.py`: descriptor generation.
+- `tools/build_firmware.py`: sole firmware builder.
+- `tools/usb_audio_verify.py`: USB instruction tests within mainline verification.

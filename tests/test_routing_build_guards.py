@@ -15,8 +15,8 @@ from unicorn.arm_const import (UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_R2,
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
-from build_device_probe import inject
-from build_routing_probe import absolute_jump, build, patch_ui, ENTRY, LIMIT
+from firmware_patch import inject
+from build_firmware import absolute_jump, build, patch_ui, ENTRY, LIMIT
 from container_tool import FormatError
 
 

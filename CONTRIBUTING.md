@@ -2,7 +2,9 @@
 
 Useful contributions make a firmware change reproducible or resolve a specific unknown about the MX-1's audio behavior. The most valuable next evidence is identified in [ROADMAP.md](ROADMAP.md). Read the [research report](docs/RESEARCH_REPORT.md) and the relevant [host](docs/HOST_PROBE.md), [device](docs/DEVICE_PROBE.md), or [routing](docs/CHANNEL_ROUTING.md) report before expanding a probe.
 
-The current images are offline research candidates. The user has reported stock/routing update completion and visible custom-code execution with a separate display marker. The user subsequently reported successful channel rerouting with the writable-state fix. Exhaustive routing coverage, failed-application recovery and USB class-driver interoperability remain unverified. Keep that distinction in issues, pull requests and filenames.
+The sole mainline candidate combines routing and USB-B UAC2. The user reported
+working routing/end stops in its predecessor; combined USB audio and recovery
+remain unverified. Retired host-unlock work is documentation only.
 
 ## Set up and establish a baseline
 
@@ -23,11 +25,13 @@ The input is `inputs/MX1_UPD.original.bin`. Its SHA-256 must be:
 26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e
 ```
 
-The reproduction runner executes 22 offline stages and writes `analysis/reproduction.json` plus `build/reproduction-logs/`. It regenerates all three candidate containers, their patched applications and extensions, and the relevant instruction-level evidence. It does not access USB hardware or flash a mixer. A successful baseline gives a concrete comparison for your change; retain a failed stage's log when reporting a problem.
+The reproduction runner executes 17 offline stages and writes `analysis/reproduction.json` plus `build/reproduction-logs/`. It regenerates the mainline container, their patched applications and extensions, and the relevant instruction-level evidence. It does not access USB hardware or flash a mixer. A successful baseline gives a concrete comparison for your change; retain a failed stage's log when reporting a problem.
 
 ## Choose a bounded change
 
-Keep the three firmware experiments independent. The host probe extends the USB application used by AIRA USB1–4; the device probe extends the main application's USB-B behavior; the routing probe changes channel source selection in the main application. A combined image would be a new experiment requiring its own evidence. The Linux bridge can be developed separately using stock MX-1 firmware.
+Maintain one builder (`tools/build_firmware.py`), linker layout and artifact
+(`build/mainline/MXPLUS_MAINLINE_UNTESTED.bin`). Do not reintroduce separate
+host/device/routing build targets. The USB-host application stays stock.
 
 Describe the observed problem, the original path that produces it, and the intended new behavior. For a parser change, supply the descriptor bytes that trigger it. For a control change, supply the setup request and expected response or stall. For a pump change, describe the start/stop sequence, stream states and required hardware inputs. Prefer one resolved behavior over an unsupported compatibility claim.
 
@@ -73,7 +77,8 @@ A useful report includes:
 
 For USB-B, an interface name appearing in an app is insufficient evidence of audio. A capture-first result needs actual IN packets before OUT traffic; some compatibility paths can open playback behind a recording application's back. Test stereo, 18-channel and both mixed combinations with the selected alternates recorded. The current clock-validity reply does not measure PLL lock.
 
-For USB1–4, first compare the real device's descriptors with the exact profile in [docs/HOST_PROBE.md](docs/HOST_PROBE.md). A full-speed or UAC2 device is not a positive test of the current high-speed UAC1 implementation. Successful parser selection and stable audio transfer are separate results.
+USB1–4 retain stock behavior. The retired generic-host experiment is documented
+in `docs/HOST_PROBE.md`; it is not an available test image or maintained source target.
 
 Publish only relevant trace data. Remove unrelated device serial numbers, personal file paths, account data or audio that should not be shared, and document any redaction that affects reproduction.
 

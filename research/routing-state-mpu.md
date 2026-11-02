@@ -1,3 +1,5 @@
+> Historical investigation: standalone build paths refer to Git history. The only active firmware is [mainline](../docs/MAINLINE.md). Historical evidence has not been rewritten as combined-image evidence.
+
 # Routing state write-protection fault
 
 On 2 November 2026 the user reported that the page-guard revision displayed

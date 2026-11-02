@@ -1,3 +1,5 @@
+> Current scope: one combined routing + USB-B mainline candidate; generic USB-host unlocking is retired. Host-probe sections below are historical research guidance, not an available build. See [MAINLINE.md](MAINLINE.md) for the current bench sequence.
+
 # Staged MX-1 hardware validation
 
 ## Purpose and present boundary

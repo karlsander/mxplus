@@ -1,3 +1,5 @@
+> Historical investigation: standalone build paths refer to Git history. The only active firmware is [mainline](../docs/MAINLINE.md). Historical evidence has not been rewritten as combined-image evidence.
+
 # Roland MX-1: firmware reconstruction and USB expansion research
 
 **Investigation date: 1 November 2026.** This report concerns the exact original firmware supplied for this investigation. It records working offline tools and two compiled firmware experiments, alongside the evidence needed to assess their limits.

@@ -1,18 +1,15 @@
 # Channel source routing
 
-This independent firmware experiment assigns a source to any of the MX-1's
+The mainline routing feature assigns a source to any of the MX-1's
 eleven physical channel strips. It supports the requested 5/6 split onto USB2,
 and extends the same mechanism to analog, digital, AIRA, return and computer
 sources. More than one strip can read the same source.
 
-**Status: the user reports successful channel rerouting with the state-memory
-fix on their MX-1.** This revision changes only source-menu endpoints and awaits
-its hardware test. The reported result does not establish every source/rate/mode
-combination, timing or failed-application recovery. The candidate is
-[`MX1_CHANNEL_ROUTING_UNTESTED.bin`](../build/routing-probe/MX1_CHANNEL_ROUTING_UNTESTED.bin).
-Its [build report](../build/routing-probe/build-report.json) records the exact
-input, output identities, source hashes, patch bytes and memory placement.
-It is a separate main-application experiment, with the original USB transport.
+**Status:** the user reported working routing and encoder end stops in the
+routing predecessor. Routing now shares the sole mainline image with USB-B
+UAC2; that combined image still needs its hardware test. See
+[mainline integration](MAINLINE.md) and the current
+[build report](../build/mainline/build-report.json).
 
 ## Using the source selector
 
@@ -178,30 +175,21 @@ updater and panel-controller payload remain original.
 | `0x0f5d8` | `0x6000f5d8` | Panel callback pointer to the SELECT/TEMPO event wrapper |
 | `0x13356` | `0x60013356` | Tempo-renderer entry to the source-label overlay and original-instruction trampoline |
 | `0x24bae` | `0x60024bae` | DSP event-8 handler entry to the original drain followed by route application |
-| `0x108` | `0x60000108` | Writable SRAM BSS clear length: `0x71dc` to `0x71f4` |
+| `0x108` | `0x60000108` | Writable SRAM BSS clear length: `0x71dc` to `0x736c` |
 | `0xdff30` | `0x0100f6a4` | Inserted extension in the first startup SRAM copy |
 
-The current extension occupies **1,584 bytes**, leaving **812 bytes** before the
-original initialized SRAM at `0x01010000`. Existing runtime destinations and
-existing BSS contents are preserved. A separate 24-byte state reservation at
-`0x01017264..0x0101727b` extends the original writable SRAM BSS clear by 24 bytes.
-The original MPU and allocator configuration remain unchanged. The original
-code SRAM is read-only after boot; routing state must not live there. Startup load-source literals shift with the inserted
-bytes. The builder rejects another original firmware hash, unexpected hook or
-DSP source bytes, unresolved relocations, orphan allocated ELF sections,
-function exports outside the injected interval, or an SRAM overflow.
-
-The verifier independently reconstructs every recorded application change and
-executes both original and patched startup copies. An unrecorded change fails
-even if its application hash is updated.
+The combined code/data layout, startup changes and allocator/MPU checks are
+specified in [MAINLINE.md](MAINLINE.md). Routing state occupies the first 24
+bytes of the shared 400-byte writable reservation. The verifier independently
+reconstructs every recorded patch and executes original startup.
 
 ## Verification and its boundaries
 
-The integrated [ARM report](../build/routing-probe/arm-verification.json) links
-the [panel](../build/routing-probe/ui-verification.json),
-[audio control](../build/routing-probe/audio-verification.json), and
-[independent hardware-initialization](../build/routing-probe/hardware-audit.json)
-reports. The [container report](../analysis/container_routing_candidate_verification.json)
+The integrated [ARM report](../build/mainline/arm-verification.json) links
+the [panel](../build/mainline/ui-verification.json),
+[audio control](../build/mainline/audio-verification.json), and
+[independent hardware-initialization](../build/mainline/hardware-audit.json)
+reports. The [container report](../analysis/container_mainline_candidate_verification.json)
 checks the rebuilt image with original decoder/updater instructions.
 
 The tests exercise all permitted source/destination combinations, source-menu
@@ -229,37 +217,14 @@ margin cannot be inferred from emulator instruction counts.
 
 ## Reproduce
 
-Run the complete repository pipeline and verify the committed bytes:
+Use the sole mainline pipeline:
 
-```bash
+```sh
 .venv/bin/python tools/reproduce.py
 .venv/bin/python tools/check_reproduction.py --check-committed
 ```
 
-The pipeline has 22 stages and builds all three independent candidates. For
-focused development of this candidate:
-
-```bash
-.venv/bin/python tools/build_routing_probe.py inputs/MX1_UPD.original.bin \
-  --output build/routing-probe
-.venv/bin/python tools/routing_probe_verify.py inputs/MX1_UPD.original.bin \
-  --build build/routing-probe --output build/routing-probe/arm-verification.json
-.venv/bin/python tools/container_candidate_verify.py inputs/MX1_UPD.original.bin \
-  build/routing-probe/MX1_CHANNEL_ROUTING_UNTESTED.bin \
-  --output analysis/container_routing_candidate_verification.json
-```
-
-Detailed evidence is in [the UI trace](../research/channel-routing-ui.md),
-[the audio-routing analysis](../research/channel-routing-audio.md), and
-[the independent validation note](../research/channel-routing-validation.md).
-Physical work follows the repository's
-[hardware validation plan](HARDWARE_VALIDATION.md); successful offline checks
-do not change the candidate's `UNTESTED` status.
-
-### Encoder-freeze regression
-
-See [the MPU investigation](../research/routing-state-mpu.md) and
-[`mpu-verification.json`](../build/routing-probe/mpu-verification.json).
-All UI and audio instruction cases now reject CPU writes to the injected code
-pages. The MPU check runs the original setup instructions and validates the
-new writable reservation, dirty startup clearing and RTOS pool separation.
+Feature evidence remains in [the UI trace](../research/channel-routing-ui.md),
+[the DSP analysis](../research/channel-routing-audio.md), and
+[the state-memory investigation](../research/routing-state-mpu.md). Historical
+standalone build paths in those investigations refer to Git history.

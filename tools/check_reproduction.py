@@ -21,26 +21,14 @@ EXPECTED_STAGES = (
     "map-main", "map-usb", "map-updater", "container_verify",
     "container_updater_verify", "container_binding_verify",
     "usb-descriptor-scan", "descriptor-tests", "bridge-plan-tests",
-    "build-host", "arm-host", "container-host-candidate", "build-device",
-    "arm-device", "container-device-candidate", "original-audio-pump",
+    "build-mainline", "arm-mainline", "container-mainline-candidate", "boot-mainline", "original-audio-pump",
     "compile-native-controls", "native-controls", "subcpu-evidence",
-    "build-routing", "arm-routing", "container-routing-candidate",
 )
 ARTIFACTS = {
-    "host": {
-        "container_sha256": "MX1_UAC1_HOST_PROBE_UNTESTED.bin",
-        "patched_app_sha256": "app_usb.uac1_probe.bin",
-        "extension_sha256": "uac1_host_probe.code.bin",
-    },
-    "device": {
-        "container_sha256": "MX1_UAC2_DEVICE_PROBE_UNTESTED.bin",
-        "patched_app_sha256": "app_main.uac2_probe.bin",
-        "extension_sha256": "uac2_device_probe.code.bin",
-    },
-    "routing": {
-        "container_sha256": "MX1_CHANNEL_ROUTING_UNTESTED.bin",
-        "patched_app_sha256": "app_main.routing.bin",
-        "extension_sha256": "channel_routing.code.bin",
+    "mainline": {
+        "container_sha256": "MXPLUS_MAINLINE_UNTESTED.bin",
+        "patched_app_sha256": "app_main.mainline.bin",
+        "extension_sha256": "mainline.load.bin",
     },
 }
 
@@ -68,6 +56,12 @@ def audit(check_committed: bool = False) -> dict:
     if check_committed:
         require(hashlib.sha256(committed_bytes("inputs/MX1_UPD.original.bin")).hexdigest()
                 == ORIGINAL_SHA256, "Committed original firmware identity changed")
+    for retired in ("build/host-probe/MX1_UAC1_HOST_PROBE_UNTESTED.bin",
+                    "build/device-probe/MX1_UAC2_DEVICE_PROBE_UNTESTED.bin",
+                    "build/routing-probe/MX1_CHANNEL_ROUTING_UNTESTED.bin",
+                    "build/display-marker/MX1_DISPLAY_MARKER_UNTESTED.bin",
+                    "tools/build_host_probe.py", "tools/build_device_probe.py", "tools/build_routing_probe.py"):
+        require(not (ROOT / retired).exists(), "Retired parallel build remains: " + retired)
     reproduction = read("analysis/reproduction.json")
     require(reproduction.get("status") == "passed", "Reproduction did not pass")
     require(reproduction.get("hardware_access") is False, "Unexpected hardware-access claim")
@@ -86,7 +80,7 @@ def audit(check_committed: bool = False) -> dict:
 
     hashes = {}
     for kind, names in ARTIFACTS.items():
-        prefix = "build/" + kind + "-probe/"
+        prefix = "build/" + kind + "/"
         report_path = prefix + "build-report.json"
         report = read(report_path)
         require(report.get("input_sha256") == ORIGINAL_SHA256, kind + " build input mismatch")
@@ -107,7 +101,7 @@ def audit(check_committed: bool = False) -> dict:
                 kind + " updater report has an unexpected hardware claim")
         decoded = candidate.get("changed_decoded_components", [])
         require(len(decoded) == 1 and
-                decoded[0].get("component") == ("app_usb" if kind == "host" else "app_main"),
+                decoded[0].get("component") == "app_main",
                 kind + " updater report must identify only the intended changed application")
         require(decoded[0].get("candidate_decoded_sha256") == actual["patched_app_sha256"] and
                 decoded[0].get("original_decoder_matches") is True,
@@ -121,11 +115,13 @@ def audit(check_committed: bool = False) -> dict:
                 kind + " extension placement metadata is invalid")
         require(application[offset:offset + len(extension)] == extension,
                 kind + " extension artifact is not embedded at the recorded application offset")
-        arm = read("analysis/host_probe_verification.json" if kind == "host"
-                   else prefix + "arm-verification.json")
+        arm = read(prefix + "arm-verification.json")
         require(arm.get("status") == "pass", kind + " ARM integration check failed")
         require(arm.get("patched_app_sha256") == actual["patched_app_sha256"],
                 kind + " ARM report belongs to another application")
+        boot = read(prefix + "boot-verification.json")
+        require(boot.get("status") == "pass" and boot.get("candidate_sha256") == actual["container_sha256"],
+                "Mainline boot evidence missing or belongs to another candidate")
         if check_committed:
             committed = json.loads(committed_bytes(report_path))
             for key, value in actual.items():

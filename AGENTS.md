@@ -1,12 +1,19 @@
 # Working on mxplus
 
-mxplus investigates the Roland MX-1 firmware and contains separate USB-host, USB-device and channel-routing experiments. Read [README.md](README.md), the relevant candidate report, and [CONTRIBUTING.md](CONTRIBUTING.md) before changing a build or interpreting its evidence. Use [ROADMAP.md](ROADMAP.md) to distinguish the present result from future work.
+mxplus maintains one Roland MX-1 mainline build combining channel routing and USB-B UAC2. The USB-host unlock is documented only. Read [README.md](README.md), the relevant candidate report, and [CONTRIBUTING.md](CONTRIBUTING.md) before changing a build or interpreting its evidence. Use [ROADMAP.md](ROADMAP.md) to distinguish the present result from future work.
 
 ## Scope and current boundary
 
-The current candidates have passed offline checks but have not run on physical MX-1 hardware. Do not describe them as working audio interfaces, safe upgrades, broadly compatible USB implementations, or verified recovery images. The user may authorize a particular hardware experiment; do not infer that authorization solely from a request to analyze, edit or rebuild files.
+The routing predecessor passed user bench tests, including encoder end stops.
+The combined mainline image still needs USB-B hardware validation. Do not claim
+safe upgrades, broad interoperability or verified failed-application recovery.
+A hardware experiment requires user authorization.
 
-The host-port candidate modifies the USB-host application. The USB-B and channel-routing candidates independently modify the main application. Keep them separate unless a task explicitly defines a combined experiment with its own builder, guards, reports and validation. The external Linux bridge uses stock mixer firmware and has its own scope.
+Maintain only `tools/build_firmware.py`, `patches/mainline.ld` and
+`build/mainline/MXPLUS_MAINLINE_UNTESTED.bin` as the active firmware build.
+USB-host unlocking must remain documentation only; no parallel builder or code
+variant. The original USB application, boot programs, updater and panel payload
+remain unchanged. Read `docs/MAINLINE.md` for the combined memory layout.
 
 ## Binary identity and patch discipline
 
@@ -18,7 +25,7 @@ The host-port candidate modifies the USB-host application. The USB-B and channel
 - Preserve unrelated components, boot programs, updater, panel-controller payload and container boundaries. Changes to those areas require their own explicit rationale and verification; existing application-patch evidence does not cover them.
 - Keep experimental filenames and `UNTESTED` status until physical evidence justifies a narrowly stated change in status. The embedded Roland version alone cannot identify a modified candidate.
 
-The existing builders and `build/*-probe/build-report.json` show the required patch accounting. A second firmware revision needs a separately established map and guards; changing the accepted hash is not sufficient.
+The builder and `build/mainline/build-report.json` show the required patch accounting. A second firmware revision needs a separately established map and guards; changing the accepted hash is not sufficient.
 
 ## Evidence and analysis
 

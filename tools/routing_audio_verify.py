@@ -19,7 +19,7 @@ from unicorn.arm_const import (UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_R2,
     UC_ARM_REG_LR, UC_ARM_REG_PC)
 
 from container_tool import ORIGINAL_SHA256, COMPONENT_BY_NAME, component_unpacked, sha256
-from host_probe_verify import Machine
+from arm_machine import Machine
 from routing_audio_extract import reconstruct
 from routing_audio_patch import SITES, STOCK, SELECTORS, source_offset
 
@@ -418,7 +418,7 @@ def main():
     assert sha256(raw) == ORIGINAL_SHA256, 'Original firmware identity mismatch'
     original = component_unpacked(raw, COMPONENT_BY_NAME['app_main'])
     build = json.loads((args.build / 'build-report.json').read_text())
-    patched = (args.build / 'app_main.routing.bin').read_bytes()
+    patched = (args.build / 'app_main.mainline.bin').read_bytes()
     report = verify(original, patched, build)
     args.output.write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps({'status': report['status'], 'groups': len(report['groups'])}))

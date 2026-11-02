@@ -1,3 +1,5 @@
+> Historical investigation: standalone build paths refer to Git history. The only active firmware is [mainline](../docs/MAINLINE.md). Historical evidence has not been rewritten as combined-image evidence.
+
 # Audit of the 355-byte MX-1 UAC2 descriptor candidate
 
 ## Decision

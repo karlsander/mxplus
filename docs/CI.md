@@ -35,7 +35,20 @@ The job runs:
 python -m pip install --requirement requirements.txt
 python tools/reproduce.py
 python tools/check_reproduction.py --check-committed
+python tools/build_display_marker.py
+python tools/display_marker_verify.py --check-committed
 ```
+
+The two additional commands independently rebuild and verify the stock-based
+[display diagnostic](DISPLAY_MARKER.md). This does not change the 22-stage
+pipeline or combine the display marker with routing or either USB probe. Its
+verifier checks all decoded changes, executes startup, font and display loops,
+and runs the existing original-instruction decoder/updater verification against
+the actual diagnostic container. With `--check-committed`, both candidate and
+decoded application must match their actual blobs in Git `HEAD`, and the build
+report must match the committed report. The report is
+`build/display-marker/verification.json`. Physical panel delivery is stubbed;
+a pass does not establish visible hardware output or recovery.
 
 `tools/reproduce.py` checks the exact original firmware, extracts its programs,
 then runs these 22 named stages in order:

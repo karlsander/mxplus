@@ -48,3 +48,9 @@ jobs:
 
       - name: Check evidence and committed candidate hashes
         run: python tools/check_reproduction.py --check-committed
+
+      - name: Build the independent display diagnostic
+        run: python tools/build_display_marker.py
+
+      - name: Verify display instructions and committed diagnostic bytes
+        run: python tools/display_marker_verify.py --check-committed

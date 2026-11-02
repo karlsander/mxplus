@@ -2,9 +2,9 @@
 
 Firmware research, channel routing and experimental USB audio extensions for the **Roland MX-1**.
 
-The project investigates channel source reassignment, compatible USB audio devices on the four AIRA host ports, and a standard audio driver for the computer USB-B port, including on iPhone and iPad. It contains the original firmware, reverse-engineering evidence, reproducible build tools, and three separately compiled firmware experiments.
+The project investigates channel source reassignment, compatible USB audio devices on the four AIRA host ports, and a standard audio driver for the computer USB-B port, including on iPhone and iPad. It contains the original firmware, reverse-engineering evidence, reproducible build tools, and separate firmware experiments.
 
-**None of the experimental images has been flashed to a mixer or demonstrated to carry audio on physical hardware.** The current results establish selected code paths and binary integration through offline tests. They do not establish working iOS audio, general USB-device compatibility, audible channel routing, or a verified recovery procedure.
+**No experimental audio feature has been demonstrated on physical hardware.** On 2 November 2026 the user reported that the routing update completed and the mixer restarted, but holding SELECT did not show the expected source label. Execution of the modified main application remains unconfirmed. The separate [display diagnostic](docs/DISPLAY_MARKER.md) provides a visible marker for the next test. Offline tests do not establish working iOS audio, general USB-device compatibility, audible channel routing, or a verified recovery procedure.
 
 ## Current status
 
@@ -51,8 +51,9 @@ Both application headers identify `1.051132`, dated `16-0906_11:04:55`, matching
 | `build/host-probe/MX1_UAC1_HOST_PROBE_UNTESTED.bin` | USB-host application only | [UAC1 host probe](docs/HOST_PROBE.md): restricted stereo enumeration and selection; the transport remains unverified |
 | `build/device-probe/MX1_UAC2_DEVICE_PROBE_UNTESTED.bin` | Main application only | [UAC2 device probe](docs/DEVICE_PROBE.md): high-speed audio presentation, read-only clock and capture-first startup |
 | `build/routing-probe/MX1_CHANNEL_ROUTING_UNTESTED.bin` | Main application only | [Channel-routing probe](docs/CHANNEL_ROUTING.md): select a strip's source by holding SELECT and turning TEMPO |
+| `build/display-marker/MX1_DISPLAY_MARKER_UNTESTED.bin` | Main application only | [Display diagnostic](docs/DISPLAY_MARKER.md): stock-based two-byte patch; normal display characters become `8`; no routing extension |
 
-Each image is an independent experiment. All three preserve the original boot programs, updater and panel-controller payload. Their adjacent `build-report.json` files record patch sites, relocation changes, extension placement and exact hashes. Preserving boot bytes does not prove that a failed update can be recovered.
+Each image is an independent experiment. All preserve the original boot programs, updater and panel-controller payload. Their adjacent `build-report.json` files record patch sites, relocation changes, extension placement where applicable and exact hashes. Preserving boot bytes does not prove that a failed update can be recovered.
 
 The USB-B probe retains proprietary MIDI and implicit feedback; its clock-validity response describes the configured rate, not measured PLL lock. The original full-speed configuration has no audio endpoints. It is not a universal class-compliance claim. The [device report](docs/DEVICE_PROBE.md) and [compatibility analysis](research/usb-compatibility.md) explain these boundaries.
 

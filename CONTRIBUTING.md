@@ -2,7 +2,7 @@
 
 Useful contributions make a firmware change reproducible or resolve a specific unknown about the MX-1's audio behavior. The most valuable next evidence is identified in [ROADMAP.md](ROADMAP.md). Read the [research report](docs/RESEARCH_REPORT.md) and the relevant [host](docs/HOST_PROBE.md), [device](docs/DEVICE_PROBE.md), or [routing](docs/CHANNEL_ROUTING.md) report before expanding a probe.
 
-The current images are offline research candidates. No physical flashing, recovery, class-driver enumeration or audio interoperability has been demonstrated. Keep that distinction in issues, pull requests and filenames.
+The current images are research candidates. The routing update was reported to finish and restart on 2 November 2026, but its SELECT overlay did not appear; execution of the patched main application remains unconfirmed. Recovery, class-driver enumeration and experimental audio interoperability have not been demonstrated. Keep that distinction in issues, pull requests and filenames. The independent [display diagnostic](docs/DISPLAY_MARKER.md) has its own builder and committed-artifact gate in addition to the three feature probes' reproduction below.
 
 ## Set up and establish a baseline
 

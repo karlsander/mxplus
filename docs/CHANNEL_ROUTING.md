@@ -5,8 +5,12 @@ eleven physical channel strips. It supports the requested 5/6 split onto USB2,
 and extends the same mechanism to analog, digital, AIRA, return and computer
 sources. More than one strip can read the same source.
 
-**Status: built and verified offline; no physical MX-1 audio, panel operation,
-installation or recovery has been tested.** The candidate is
+**Status: built and verified offline.** On 2 November 2026 the user reported
+that the update completed and the mixer restarted, but holding SELECT did not
+show the source label. There is no flash readback or physical routing/audio
+result; execution of the modified main application is still unconfirmed. The
+[independent display diagnostic](DISPLAY_MARKER.md) is the next identity test.
+Recovery remains unverified. The routing candidate is
 [`MX1_CHANNEL_ROUTING_UNTESTED.bin`](../build/routing-probe/MX1_CHANNEL_ROUTING_UNTESTED.bin).
 Its [build report](../build/routing-probe/build-report.json) records the exact
 input, output identities, source hashes, patch bytes and memory placement.

@@ -1,0 +1,222 @@
+{
+  "status": "pass",
+  "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+  "candidate_sha256": "f65983ecad6850bc88968a01ff5f008dea62e4e06410d451144a72514cd98e9c",
+  "patched_app_sha256": "08bca4c4c03e93f48c7bb44e84705365289185e039869a774c5c820514b09e57",
+  "checked_against_git_head": false,
+  "hardware_access": false,
+  "checks": [
+    {
+      "name": "Exactly two decoded main bytes changed; startup and all other components preserved",
+      "status": "pass"
+    },
+    {
+      "name": "Actual original startup copies the two-byte marker into its SRAM instruction site",
+      "status": "pass"
+    },
+    {
+      "name": "All 256 character bytes map to the original 8 glyph at all seven display positions",
+      "status": "pass",
+      "cases": 3584,
+      "segment_bits": "0x7f",
+      "callee_saved_registers_and_stack_preserved": true,
+      "delivery_flags_preserved": [
+        0,
+        64
+      ],
+      "invalid_display_positive_cases": 3
+    },
+    {
+      "name": "Original text, integer and decimal-format loops reach marker without SELECT",
+      "status": "pass",
+      "cases": [
+        {
+          "api": "text",
+          "display": 0,
+          "characters": 3
+        },
+        {
+          "api": "0x100282e",
+          "display": 0,
+          "number": -1234
+        },
+        {
+          "api": "0x100282e",
+          "display": 0,
+          "number": 0
+        },
+        {
+          "api": "0x100282e",
+          "display": 0,
+          "number": 1234
+        },
+        {
+          "api": "0x100297a",
+          "display": 0,
+          "number": -1234
+        },
+        {
+          "api": "0x100297a",
+          "display": 0,
+          "number": 0
+        },
+        {
+          "api": "0x100297a",
+          "display": 0,
+          "number": 1234
+        },
+        {
+          "api": "text",
+          "display": 1,
+          "characters": 4
+        },
+        {
+          "api": "0x100282e",
+          "display": 1,
+          "number": -1234
+        },
+        {
+          "api": "0x100282e",
+          "display": 1,
+          "number": 0
+        },
+        {
+          "api": "0x100282e",
+          "display": 1,
+          "number": 1234
+        },
+        {
+          "api": "0x100297a",
+          "display": 1,
+          "number": -1234
+        },
+        {
+          "api": "0x100297a",
+          "display": 1,
+          "number": 0
+        },
+        {
+          "api": "0x100297a",
+          "display": 1,
+          "number": 1234
+        }
+      ]
+    },
+    {
+      "name": "Original normal tempo renderer produces four 8 glyphs without held keys",
+      "status": "pass",
+      "stock_outputs": [
+        [
+          1,
+          3,
+          102,
+          0
+        ],
+        [
+          1,
+          2,
+          207,
+          0
+        ],
+        [
+          1,
+          1,
+          91,
+          0
+        ],
+        [
+          1,
+          0,
+          6,
+          0
+        ]
+      ],
+      "marker_outputs": [
+        [
+          1,
+          3,
+          127,
+          0
+        ],
+        [
+          1,
+          2,
+          127,
+          0
+        ],
+        [
+          1,
+          1,
+          127,
+          0
+        ],
+        [
+          1,
+          0,
+          127,
+          0
+        ]
+      ],
+      "modeled": "Existing UIMachine parameter/modal boundaries; real character lookup now executes"
+    },
+    {
+      "name": "Original decoder, updater write plan and post-write checksums accept exact candidate",
+      "status": "pass"
+    }
+  ],
+  "container_verification": {
+    "status": "passed",
+    "original_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+    "candidate_sha256": "f65983ecad6850bc88968a01ff5f008dea62e4e06410d451144a72514cd98e9c",
+    "candidate_bytes": 4194320,
+    "changed_decoded_components": [
+      {
+        "component": "app_main",
+        "original_decoded_bytes": 918600,
+        "candidate_decoded_bytes": 918600,
+        "candidate_decoded_sha256": "08bca4c4c03e93f48c7bb44e84705365289185e039869a774c5c820514b09e57",
+        "original_decoder_matches": true
+      }
+    ],
+    "original_trailer_parser_accepts": true,
+    "original_component_label_gate_result": 2,
+    "original_sector_write_and_readback_loop_accepts": true,
+    "blocks_written_in_memory": 704,
+    "write_start": 262144,
+    "write_end_exclusive": 3145728,
+    "all_bytes_outside_update_range_preserved": true,
+    "original_post_write_checksum_results": [
+      {
+        "component": "updater",
+        "checksum": 17557094,
+        "passed": true
+      },
+      {
+        "component": "subcpu",
+        "checksum": 1474955,
+        "passed": true
+      },
+      {
+        "component": "app_main",
+        "checksum": 98608852,
+        "passed": true
+      },
+      {
+        "component": "app_usb",
+        "checksum": 16870974,
+        "passed": true
+      }
+    ],
+    "scope": "Original ARM routines executed; file/flash I/O and UI notifications explicitly stubbed",
+    "hardware_flash_or_audio_functionality_verified": false
+  },
+  "replacement_instruction": [
+    "movs r4, #0x38"
+  ],
+  "limits": [
+    "Final segment delivery to the physical panel is stubbed at main runtime 0x0100d134",
+    "Normal-renderer parameter/modal/RTOS boundaries are explicitly modeled",
+    "No physical flashing, display, boot, audio or recovery result for this marker image",
+    "Normal menus/values are masked; raw segment writes can bypass this character routine"
+  ]
+}

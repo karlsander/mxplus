@@ -5,9 +5,11 @@ channel's SELECT button and turn TEMPO to change its input source. The source
 label occupies the four-character TEMPO display during the hold. Releasing the
 button restores the original display and normal encoder behavior.
 
-The UI extension has original-instruction and compiled-code tests. These are
-offline results; no physical panel, audible routing, or flashing result is
-claimed by this report. The audio-routing implementation and its evidence are
+The UI extension has original-instruction and compiled-code tests. The first
+routing image was installed and restarted according to the user, but holding
+5/6 or USB2 SELECT in Mixer mode left the tempo visible. The page guard correction subsequently showed `Auto` on hardware. The first
+encoder step then froze the panel; see [the state-memory correction](routing-state-mpu.md).
+Physical audio routing remains unverified. The audio-routing implementation and its evidence are
 separate.
 
 ## Original firmware evidence
@@ -27,7 +29,7 @@ startup relocation, as noted below.
 | Live logical held-key bits | `0x60010636` and its dispatch branches | Press sets and release clears the bit for the unchanged key ID at `0x605129a4 + id/8`. |
 | SELECT IDs | `0x60016532` | Subtracts `0x29` from key IDs `0x29..0x33`, operates on the 11 channel-selected parameters and current-channel parameter `0xfb`, and honors existing links for channels 1/2 and 3/4. |
 | TEMPO encoder ID | `0x600109d8`, `0x6001782e` | Encoder 1 reaches the tempo adjustment path. In normal internal-clock mode it adjusts system parameter `0x1a`; encoder 0 follows the VALUE path. |
-| Normal main page | `0x6000fd34`, `0x6000fc4e` | Initializes the current-page short at `0x600b4b5e` to zero. Other pages use the original event handling. |
+| Normal main page | `0x6000fd34`, `0x6000fc4e` | Initializes `0x600b4b5e` to startup page zero; this is not the live mixer page. Original startup selection at `0x6005693c` requests page 5 (ordinary mixer) or 15 (system mode 1), then `0x6000fd98` writes the live page. Other pages use the original event handling. |
 | Normal boot mode | `0x60010a4e`, literal `0x60010bf8` | Original panel setup stores the boot mode at `0x600b4b94`; the extension is enabled only for mode zero. |
 | Modal display busy query | `0x60018258` | Loads a global pointer from literal `0x600182ac`, reads `0x600b53a4`, and returns whether it is nonzero. Its incoming r0 is ignored; the extension nevertheless passes the original renderer's `0x605144cc` context. |
 | TEMPO display renderer | `0x60013356` | Original normal-tempo branch uses display index 1. VALUE is rendered separately by `0x60013740` using index 0. |
@@ -181,3 +183,54 @@ recorded explicitly. These tests therefore establish binary integration and UI
 control flow under those assumptions. They
 do not establish physical button wiring, LED appearance, real-time deadline
 margin, source routing, or audio quality.
+
+## 2 November 2026: live-page guard correction
+
+The first candidate incorrectly accepted only page 0. This is the temporary
+startup page initialized at main decoded `0xfd34`, runtime `0x6000fd34`.
+The original startup dispatcher at decoded `0x5693c`, runtime `0x6005693c`,
+selects the operational page. Its instructions at `0x60056a36..0x60056ab4`
+read system parameters `0x74` and `0x19`: ordinary modes 0 and 2 request page 5;
+mode 1 requests page 15; parameter `0x74=1` selects alternate page 12 unless
+mode 1 takes precedence. The `movs r0,#5` is at decoded `0x56a54`, runtime
+`0x60056a54`. The original request routine at `0x6001033e` writes the pending
+page; `0x6000fd98` updates the current page at `0x600b4b5e`.
+All of these locations are resident main-application addresses (decoded offset
+plus `0x60000000`), not USB or updater addresses.
+
+The production UI now admits pages 5 and 15, retaining the existing boot-mode,
+modal, single-SELECT and other-button guards. The boot-mode-zero guard remains:
+the fact that some stock handlers also accept boot modes 1–3 was investigated
+but is not the cause of this ordinary Mixer-mode failure. No DSP routing logic
+or USB behavior changes. The extension grows from 1,596 to 1,608 bytes, leaving
+788 bytes before initialized SRAM at `0x01010000`.
+
+The previous UI harness explicitly cleared the page field and stubbed the
+higher-level page lifecycle. It therefore tested a synthetic startup-page
+state and missed the transition. `StartupPageMachine` now runs the original
+startup selector, page-request write and page-state transition, with parameter
+storage, preset/audio/USB initialization, page lifecycle and redraw effects
+stubbed as enumerated in the UI report. Mode 0 selects page 5 and the old
+candidate fails with `Startup-selected page rejected`. The corrected image
+passes for modes 0, 1 and 2. Additional tests cover all page IDs 0–32 and the
+original alternate-page-12 branch. Existing final-candidate tests execute the
+real routing API and confirm that mode 2 still shows `modE` without changing
+routes. These are instruction tests, not physical panel or audio results.
+
+The user also confirmed the independent display-marker image produced its
+visible marker after flashing (PR #3, candidate SHA-256
+`f65983ecad6850bc88968a01ff5f008dea62e4e06410d451144a72514cd98e9c`).
+This establishes modified application execution on the user's MX-1; it does
+not establish the earlier routing hooks or audio paths. There was no flash
+readback or instrumented timing/recovery measurement. The corrected routing
+candidate remains `UNTESTED` pending its own bench result.
+
+## Bounded source selection
+
+The user reported successful channel rerouting with candidate SHA-256
+`19567a92b3eb4e2eee5683601438eba77a4f4865300f8275774c59f0ee95b605`.
+No detailed source/rate matrix or instrumented audio trace was supplied.
+The subsequent requested change clamps encoder movement at Auto (index 0)
+and P9 R (index 52) instead of wrapping. Outward turns at an endpoint neither
+change state nor post a DSP event. Inward turns resume immediately. Existing
+mono-strip stereo-pair skipping and one-choice-per-event behavior remain.

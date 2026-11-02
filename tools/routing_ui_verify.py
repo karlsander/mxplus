@@ -56,6 +56,8 @@ class UIMachine(Machine):
     def __init__(self, image, symbols=None, execute_tempo=False, *,
                  stub_routes=True, mixer_mode=0, dsp_mode=0):
         super().__init__(image)
+        from routing_mpu_verify import protect_code
+        protect_code(self)
         self.symbols = {k: v & ~1 for k, v in (symbols or {}).items()}
         self.execute_tempo = execute_tempo
         self.stub_routes = stub_routes
@@ -73,6 +75,7 @@ class UIMachine(Machine):
         self.event_posts = []
         self.write(KEYS, bytes(16))
         self.write(0x600B4B30, bytes(0x70))
+        self.write(PAGE, struct.pack('<H', 15 if mixer_mode == 1 else 5))
         self.write(0x600B4B40, b'\xff\xff\xff\xff')
         self.write(0x60512E34, b'\xff' * 0x100)
         self.write(MODAL, u32(0))
@@ -147,6 +150,36 @@ class UIMachine(Machine):
         for key in keys:
             state[key >> 3] |= 1 << (key & 7)
         self.write(KEYS, state)
+
+
+class StartupPageMachine(UIMachine):
+    """Original startup page decision/request and page-state transition.
+
+    Parameter storage, preset loading, audio/USB start, page object lifecycle,
+    redraw scheduling and final startup cleanup are stubbed. Boot-mode lookup,
+    held-key queries, branch decisions, request write and page-state stores run.
+    """
+    STUBS = (0x600164a8, 0x6001ab54, 0x6001e786, 0x6001fb4c,
+             0x60018040, 0x6001a204, 0x6001a2fc, 0x600099e0,
+             0x6000f3e0, 0x6000a3f8, 0x60017e60, 0x6000fb86,
+             0x6000fb5c, 0x600104a8, 0x6000fcd4, 0x6000fc4e)
+
+    def instruction(self, uc, address, size, user):
+        if address in self.STUBS:
+            self.ret()
+        elif address == 0x6001e65e:
+            self.ret(-1)  # No selected channel restored from a preset.
+        else:
+            super().instruction(uc, address, size, user)
+
+    def startup_page(self):
+        self.write(PAGE, bytes(2))  # Initial splash/startup page, not main UI.
+        self.checked(0x6005693c)
+        requested = struct.unpack('<h', self.read(PAGE - 2, 2))[0]
+        self.checked(0x6000fd98, requested)
+        assert struct.unpack('<h', self.read(PAGE, 2))[0] == requested
+        self.parameters.clear()
+        return requested
 
 
 def fixture(original, out):
@@ -251,6 +284,38 @@ def verify(original: bytes, patched: bytes, build: dict) -> dict:
     assert patched[0x1335c:0x13360] == u32(symbols['mx1_route_ui_display'] | 1)
     passed('Registered callback and aligned renderer hook bytes match symbols')
 
+    # Derive live page state through original startup instructions, rather
+    # than assuming the zero written by early panel initialization is permanent.
+    startup_cases = []
+    for mode, expected_page in ((0, 5), (1, 15), (2, 5)):
+        machine = StartupPageMachine(patched, symbols, mixer_mode=mode)
+        assert machine.startup_page() == expected_page
+        machine.packet(2, 0x2d, patched=True)
+        assert machine.labels == [4], ('Startup-selected page rejected', mode, expected_page)
+        machine.packet(4, 1, 1, patched=True)
+        assert machine.adjustments == [(4, 1)]
+        startup_cases.append({'system_mode': mode, 'page': expected_page})
+    passed('Original startup page selection reaches routing gesture',
+           cases=startup_cases, original_entry='0x6005693c',
+           original_page_transition='0x6000fd98',
+           stubbed=[hex(a) for a in StartupPageMachine.STUBS],
+           parameters='Supplied system values; no selected preset channel')
+
+    for page in range(33):
+        machine = UIMachine(patched, symbols)
+        machine.write(PAGE, struct.pack('<H', page))
+        machine.held(0x2d)
+        machine.packet(4, 1, 1, patched=True)
+        assert bool(machine.adjustments) == (page in (5, 15)), page
+    alternate = StartupPageMachine(patched, symbols)
+    alternate.system_values[0x74] = 1
+    assert alternate.startup_page() == 12
+    alternate.packet(2, 0x2d, patched=True)
+    alternate.packet(4, 1, 1, patched=True)
+    assert not alternate.labels and not alternate.adjustments
+    passed('Only pages 5 and 15 admit routing; original alternate-page startup stays excluded',
+           pages_tested=list(range(33)), alternate_parameter='0x74=1 selects page 12')
+
     comparisons = []
     for state in ('idle', 'other_page', 'other_boot', 'modal'):
         old, new = UIMachine(original), UIMachine(patched, symbols)
@@ -324,12 +389,14 @@ def verify(original: bytes, patched: bytes, build: dict) -> dict:
 
     blocked = []
     for name, keys, page, boot, modal in (
-        ('no_select', [], 0, 0, 0),
-        ('two_selects', [0x29, 0x2a], 0, 0, 0),
-        ('modifier', [0x30, 0x11], 0, 0, 0),
+        ('no_select', [], 5, 0, 0),
+        ('two_selects', [0x29, 0x2a], 5, 0, 0),
+        ('modifier', [0x30, 0x11], 5, 0, 0),
         ('other_page', [0x30], 1, 0, 0),
-        ('other_boot', [0x30], 0, 1, 0),
-        ('modal', [0x30], 0, 0, 1),
+        ('startup_page', [0x30], 0, 0, 0),
+        ('alternate_page', [0x30], 12, 0, 0),
+        ('other_boot', [0x30], 5, 1, 0),
+        ('modal', [0x30], 5, 0, 1),
     ):
         machine = UIMachine(patched, symbols)
         machine.held(*keys)

@@ -3,9 +3,13 @@
   "groups": [
     "Every application change matches recorded guarded patches and scatter insertion",
     "Actual original startup installs routing code and preserves existing initialized data and BSS",
+    "Original MPU makes injected code read-only and new route state read-write",
+    "Dirty cold startup clears state; original RTOS pools cannot allocate its reservation",
     "Original physical decoder, queue and logical key/encoder dispatch",
     "Original encoder1 reaches tempo parameter 0x1a; encoder0 does not",
     "Registered callback and aligned renderer hook bytes match symbols",
+    "Original startup page selection reaches routing gesture",
+    "Only pages 5 and 15 admit routing; original alternate-page startup stays excluded",
     "Inactive original display is preserved through displaced-instruction trampoline",
     "All 11 strips: press, +/-/zero route rotation, release restores display/tempo",
     "Plain SELECT taps preserve original press/release and never adjust a route",
@@ -34,5 +38,5 @@
     "Independent factory graph audit matches all 18 raw PC and 18 serial read bindings",
     "Original native input gates and connection callbacks distinguish native and PC paths"
   ],
-  "patched_app_sha256": "03717a17250aebd42c2412439b218f02acdec5bc0258245f9dbc22740ecdd251"
+  "patched_app_sha256": "3e08c5e3258e071bb976c822d55dd73725b833e742645e05ead2433458517117"
 }

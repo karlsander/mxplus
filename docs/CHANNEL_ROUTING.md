@@ -5,8 +5,10 @@ eleven physical channel strips. It supports the requested 5/6 split onto USB2,
 and extends the same mechanism to analog, digital, AIRA, return and computer
 sources. More than one strip can read the same source.
 
-**Status: built and verified offline; no physical MX-1 audio, panel operation,
-installation or recovery has been tested.** The candidate is
+**Status: the user reports successful channel rerouting with the state-memory
+fix on their MX-1.** This revision changes only source-menu endpoints and awaits
+its hardware test. The reported result does not establish every source/rate/mode
+combination, timing or failed-application recovery. The candidate is
 [`MX1_CHANNEL_ROUTING_UNTESTED.bin`](../build/routing-probe/MX1_CHANNEL_ROUTING_UNTESTED.bin).
 Its [build report](../build/routing-probe/build-report.json) records the exact
 input, output identities, source hashes, patch bytes and memory placement.
@@ -16,13 +18,17 @@ It is a separate main-application experiment, with the original USB transport.
 
 On the normal main page, hold the **SELECT button of the destination strip**
 and turn **TEMPO**. The four-character tempo display shows that strip's source.
-Each nonzero encoder event advances or reverses one source choice. Release
+Each nonzero encoder event advances or reverses one source choice. The selector
+stops at `Auto` and `P9 R` (the last computer playback channel); it does not wrap. Release
 SELECT to return the display and encoder to their normal operation.
 
 The destination order is 1, 2, 3, 4, 5/6, DIGITAL, USB1, USB2, USB3, USB4 and
 COMPUTER. Only the strip whose physical SELECT is held changes its assignment.
 The existing SELECT press/release actions still run, so an ordinary tap keeps
 its normal channel-selection behavior. VALUE remains unchanged.
+
+The selector accepts the original operational pages 5 and 15, rather than
+temporary startup page 0. The [page-guard investigation](../research/channel-routing-ui.md#2-november-2026-live-page-guard-correction) records the failure and regression.
 
 The selector is inactive while another physical button is held, two SELECTs
 are held, a menu is open, or a modal display is busy. This preserves the
@@ -172,11 +178,15 @@ updater and panel-controller payload remain original.
 | `0x0f5d8` | `0x6000f5d8` | Panel callback pointer to the SELECT/TEMPO event wrapper |
 | `0x13356` | `0x60013356` | Tempo-renderer entry to the source-label overlay and original-instruction trampoline |
 | `0x24bae` | `0x60024bae` | DSP event-8 handler entry to the original drain followed by route application |
+| `0x108` | `0x60000108` | Writable SRAM BSS clear length: `0x71dc` to `0x71f4` |
 | `0xdff30` | `0x0100f6a4` | Inserted extension in the first startup SRAM copy |
 
-The current extension occupies **1,596 bytes**, leaving **800 bytes** before the
+The current extension occupies **1,584 bytes**, leaving **812 bytes** before the
 original initialized SRAM at `0x01010000`. Existing runtime destinations and
-BSS clears are preserved. Startup load-source literals shift with the inserted
+existing BSS contents are preserved. A separate 24-byte state reservation at
+`0x01017264..0x0101727b` extends the original writable SRAM BSS clear by 24 bytes.
+The original MPU and allocator configuration remain unchanged. The original
+code SRAM is read-only after boot; routing state must not live there. Startup load-source literals shift with the inserted
 bytes. The builder rejects another original firmware hash, unexpected hook or
 DSP source bytes, unresolved relocations, orphan allocated ELF sections,
 function exports outside the injected interval, or an SRAM overflow.
@@ -195,7 +205,7 @@ reports. The [container report](../analysis/container_routing_candidate_verifica
 checks the rebuilt image with original decoder/updater instructions.
 
 The tests exercise all permitted source/destination combinations, source-menu
-wraparound, four-character labels, the explicit 5/6-to-USB2 split, simultaneous
+endpoint clamping, four-character labels, the explicit 5/6-to-USB2 split, simultaneous
 duplicates, original Return preservation, Auto restoration, mode transitions,
 DSP reloads, invalid strip IDs and excluded diagnostic modes. They execute the
 compiled extension and original ARM programming helpers. The UI tests also
@@ -245,3 +255,11 @@ Detailed evidence is in [the UI trace](../research/channel-routing-ui.md),
 Physical work follows the repository's
 [hardware validation plan](HARDWARE_VALIDATION.md); successful offline checks
 do not change the candidate's `UNTESTED` status.
+
+### Encoder-freeze regression
+
+See [the MPU investigation](../research/routing-state-mpu.md) and
+[`mpu-verification.json`](../build/routing-probe/mpu-verification.json).
+All UI and audio instruction cases now reject CPU writes to the injected code
+pages. The MPU check runs the original setup instructions and validates the
+new writable reservation, dirty startup clearing and RTOS pool separation.

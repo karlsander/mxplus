@@ -58,6 +58,8 @@ CHOICES = choices()
 class AudioMachine(Machine):
     def __init__(self, image, symbols, program):
         super().__init__(image)
+        from routing_mpu_verify import protect_code
+        protect_code(self)
         self.symbols = symbols
         self.uc.mem_map(0x40100000, 0x80000)
         self.write(0x40150000, program)
@@ -149,7 +151,8 @@ class AudioMachine(Machine):
             if current == source:
                 return
             count = len(self.commands)
-            self.checked(self.symbols['mx1_route_adjust'], strip, 1)
+            self.checked(self.symbols['mx1_route_adjust'], strip,
+                         1 if current < source else 0xffffffff)
             assert len(self.commands) == count, 'UI path wrote DSP MMIO'
         raise AssertionError('Desired choice not reachable')
 
@@ -246,14 +249,24 @@ def verify(original: bytes, patched: bytes, build: dict) -> dict:
             maximum_commands = max(maximum_commands, writes)
             maximum_instructions = max(maximum_instructions, instructions)
             visits += 1
-        # Reverse wrap must select the last available single-right choice.
-        machine.checked(build['symbols']['mx1_route_adjust'], strip, 0xffffffff)
-        assert machine.checked(build['symbols']['mx1_route_get'], strip)[0] == 52
+        # Repeated outward turns clamp at both ends without a redundant post.
+        for endpoint, delta in ((0, 0xffffffff), (52, 1)):
+            machine.route(strip, endpoint)
+            posts = len(machine.posts)
+            for _ in range(3):
+                machine.checked(build['symbols']['mx1_route_adjust'], strip, delta)
+                assert machine.checked(build['symbols']['mx1_route_get'], strip)[0] == endpoint
+            assert len(machine.posts) == posts
+            # Turning inward immediately leaves the endpoint, including mono skips.
+            machine.checked(build['symbols']['mx1_route_adjust'], strip,
+                            1 if endpoint == 0 else 0xffffffff)
+            assert machine.checked(build['symbols']['mx1_route_get'], strip)[0] == (1 if endpoint == 0 else 51)
         machine.route(strip, 0)
         machine.drain()
     passed('Every permitted source on every destination executes actual compiled menu and original DSP writers',
            source_choices=53, strips=11, source_destination_visits=visits,
            mono_stereo_pairs_skipped=True, four_character_labels=True,
+           endpoints_clamp_without_event_posts=True, inward_turn_resumes=True,
            largest_single_route_drain_commands=maximum_commands,
            largest_single_route_drain_instructions=maximum_instructions)
 

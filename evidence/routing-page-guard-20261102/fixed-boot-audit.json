@@ -1,0 +1,500 @@
+{
+  "status": "pass",
+  "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+  "candidate_sha256": "74ebf3cab47631f14fe5fa8a113804ff7d99397a6898a068255cd8542f2d5d57",
+  "hardware_access": false,
+  "hardware_recovery_verified": false,
+  "checks": [
+    {
+      "name": "Only the main application slot differs; boot/updater/panel/USB/trailer preserved",
+      "status": "pass"
+    },
+    {
+      "name": "Reset selects and decodes updater with both application regions unmapped",
+      "status": "pass",
+      "cases": [
+        {
+          "image": "stock",
+          "application_flash": "unmapped",
+          "loads": [
+            "0x3010000"
+          ],
+          "transfers": [
+            {
+              "source": "0x3008030",
+              "destination": "0x1000000",
+              "length": 4160,
+              "sha256": "4697f22e67b52683b71b2610d93c08d640d794d9d1ac77b5d92560035eec6eeb"
+            },
+            {
+              "source": "0x1002944",
+              "destination": "0x8000000",
+              "length": 4,
+              "sha256": "433ebf5bc03dffa38536673207a21281612cef5faa9bc7a4d5b9be2fdb12cf1a"
+            }
+          ],
+          "normal_peer_setup_calls": 0,
+          "usb_application_handoff": null,
+          "stub_calls": [
+            "0x1000540",
+            "0x100037e",
+            "0x1001346",
+            "0x100095e",
+            "0x1000970",
+            "0x100095e",
+            "0x1000970",
+            "0x100095e",
+            "0xfff0100"
+          ],
+          "handoff_instruction": "0x010002d8: bx r0",
+          "selected_entry": "0x60000001"
+        },
+        {
+          "image": "routing",
+          "application_flash": "unmapped",
+          "loads": [
+            "0x3010000"
+          ],
+          "transfers": [
+            {
+              "source": "0x3008030",
+              "destination": "0x1000000",
+              "length": 4160,
+              "sha256": "4697f22e67b52683b71b2610d93c08d640d794d9d1ac77b5d92560035eec6eeb"
+            },
+            {
+              "source": "0x1002944",
+              "destination": "0x8000000",
+              "length": 4,
+              "sha256": "433ebf5bc03dffa38536673207a21281612cef5faa9bc7a4d5b9be2fdb12cf1a"
+            }
+          ],
+          "normal_peer_setup_calls": 0,
+          "usb_application_handoff": null,
+          "stub_calls": [
+            "0x1000540",
+            "0x100037e",
+            "0x1001346",
+            "0x100095e",
+            "0x1000970",
+            "0x100095e",
+            "0x1000970",
+            "0x100095e",
+            "0xfff0100"
+          ],
+          "handoff_instruction": "0x010002d8: bx r0",
+          "selected_entry": "0x60000001"
+        }
+      ],
+      "decoded_updater_sha256": "8984a4e0c668dcf6fce981f2c2e9223dfe93bb0f115bc43c8bb9ba95b3f1d3ec"
+    },
+    {
+      "name": "Normal-branch negative control faults on missing USB application header",
+      "status": "pass",
+      "faults": [
+        {
+          "address": "0x320003c",
+          "size": 4
+        }
+      ]
+    },
+    {
+      "name": "Original main-boot loader decodes complete stock and routing applications",
+      "status": "pass",
+      "cases": [
+        {
+          "image": "stock",
+          "decoded_main_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
+          "loads": [
+            "0x3200000",
+            "0x3080000"
+          ],
+          "transfers": [
+            {
+              "source": "0x3008030",
+              "destination": "0x1000000",
+              "length": 4160,
+              "sha256": "4697f22e67b52683b71b2610d93c08d640d794d9d1ac77b5d92560035eec6eeb"
+            },
+            {
+              "source": "0x1002944",
+              "destination": "0x8000000",
+              "length": 4,
+              "sha256": "433ebf5bc03dffa38536673207a21281612cef5faa9bc7a4d5b9be2fdb12cf1a"
+            }
+          ],
+          "normal_peer_setup_calls": 1,
+          "usb_application_handoff": {
+            "header": "0x3200000",
+            "decoded_bytes": 224868,
+            "sha256": "fe52cf6c9e8ec8677963b1c4b876ddeaefae5136b7a5f1f49010e3cda9203a6e"
+          },
+          "stub_calls": [
+            "0x1000540",
+            "0x100037e",
+            "0x1001abc",
+            "0x1001346",
+            "0x100095e",
+            "0x1000970",
+            "0x100095e",
+            "0x1000970",
+            "0x100095e",
+            "0x1001aea",
+            "0xfff0100"
+          ],
+          "handoff_instruction": "0x010002d8: bx r0",
+          "selected_entry": "0x60000001"
+        },
+        {
+          "image": "routing",
+          "decoded_main_sha256": "a7d8d8223acac718e825497f58e8072abba3b30437f89fa9ee486ad121ef4d90",
+          "loads": [
+            "0x3200000",
+            "0x3080000"
+          ],
+          "transfers": [
+            {
+              "source": "0x3008030",
+              "destination": "0x1000000",
+              "length": 4160,
+              "sha256": "4697f22e67b52683b71b2610d93c08d640d794d9d1ac77b5d92560035eec6eeb"
+            },
+            {
+              "source": "0x1002944",
+              "destination": "0x8000000",
+              "length": 4,
+              "sha256": "433ebf5bc03dffa38536673207a21281612cef5faa9bc7a4d5b9be2fdb12cf1a"
+            }
+          ],
+          "normal_peer_setup_calls": 1,
+          "usb_application_handoff": {
+            "header": "0x3200000",
+            "decoded_bytes": 224868,
+            "sha256": "fe52cf6c9e8ec8677963b1c4b876ddeaefae5136b7a5f1f49010e3cda9203a6e"
+          },
+          "stub_calls": [
+            "0x1000540",
+            "0x100037e",
+            "0x1001abc",
+            "0x1001346",
+            "0x100095e",
+            "0x1000970",
+            "0x100095e",
+            "0x1000970",
+            "0x100095e",
+            "0x1001aea",
+            "0xfff0100"
+          ],
+          "handoff_instruction": "0x010002d8: bx r0",
+          "selected_entry": "0x60000001"
+        }
+      ]
+    },
+    {
+      "name": "Actual cold startup installs initialized route state without relying on zero SRAM",
+      "status": "pass",
+      "cases": [
+        {
+          "dirty_byte": "0x55",
+          "routes": "all Auto",
+          "desired_and_applied_state_zero": true,
+          "extension_end": "0x100fcec",
+          "untouched_gap_bytes": 788
+        },
+        {
+          "dirty_byte": "0xaa",
+          "routes": "all Auto",
+          "desired_and_applied_state_zero": true,
+          "extension_end": "0x100fcec",
+          "untouched_gap_bytes": 788
+        }
+      ]
+    },
+    {
+      "name": "Actual original RTOS pool initialization preserves extension and excludes its SRAM",
+      "status": "pass",
+      "initializer_runtime": "0x01006338",
+      "initializer_decoded_offset": "0xd6bc4",
+      "configuration_runtime": "0x0100f234",
+      "configuration_decoded_offset": "0xdfac0",
+      "cases": [
+        {
+          "image": "stock",
+          "pools": [
+            {
+              "control": "0x1014e18",
+              "base": "0x1020000",
+              "length": 32768,
+              "end_exclusive": "0x1028000"
+            },
+            {
+              "control": "0x1014e5c",
+              "base": "0x1013e18",
+              "length": 4096,
+              "end_exclusive": "0x1014e18"
+            }
+          ],
+          "extension_unchanged": true
+        },
+        {
+          "image": "routing",
+          "pools": [
+            {
+              "control": "0x1014e18",
+              "base": "0x1020000",
+              "length": 32768,
+              "end_exclusive": "0x1028000"
+            },
+            {
+              "control": "0x1014e5c",
+              "base": "0x1013e18",
+              "length": 4096,
+              "end_exclusive": "0x1014e18"
+            }
+          ],
+          "extension_unchanged": true
+        }
+      ],
+      "modeled": "SCB ICSR reads zero (thread mode); no RTOS initializer function stubbed"
+    },
+    {
+      "name": "First and repeated Auto drains produce no routing DSP writes or event posts",
+      "status": "pass",
+      "cases": [
+        {
+          "dsp_mode": "0x0",
+          "mixer_mode": 0,
+          "drains": 3,
+          "programming_writes": 0
+        },
+        {
+          "dsp_mode": "0x0",
+          "mixer_mode": 1,
+          "drains": 3,
+          "programming_writes": 0
+        },
+        {
+          "dsp_mode": "0x0",
+          "mixer_mode": 2,
+          "drains": 3,
+          "programming_writes": 0
+        },
+        {
+          "dsp_mode": "0x1",
+          "mixer_mode": 0,
+          "drains": 3,
+          "programming_writes": 0
+        },
+        {
+          "dsp_mode": "0x1",
+          "mixer_mode": 1,
+          "drains": 3,
+          "programming_writes": 0
+        },
+        {
+          "dsp_mode": "0x1",
+          "mixer_mode": 2,
+          "drains": 3,
+          "programming_writes": 0
+        },
+        {
+          "dsp_mode": "0x2",
+          "mixer_mode": 0,
+          "drains": 3,
+          "programming_writes": 0
+        },
+        {
+          "dsp_mode": "0x2",
+          "mixer_mode": 1,
+          "drains": 3,
+          "programming_writes": 0
+        },
+        {
+          "dsp_mode": "0x2",
+          "mixer_mode": 2,
+          "drains": 3,
+          "programming_writes": 0
+        },
+        {
+          "dsp_mode": "0x3",
+          "mixer_mode": 0,
+          "drains": 3,
+          "programming_writes": 0
+        },
+        {
+          "dsp_mode": "0x3",
+          "mixer_mode": 1,
+          "drains": 3,
+          "programming_writes": 0
+        },
+        {
+          "dsp_mode": "0x3",
+          "mixer_mode": 2,
+          "drains": 3,
+          "programming_writes": 0
+        },
+        {
+          "dsp_mode": "0x4",
+          "mixer_mode": 0,
+          "drains": 3,
+          "programming_writes": 0
+        },
+        {
+          "dsp_mode": "0x4",
+          "mixer_mode": 1,
+          "drains": 3,
+          "programming_writes": 0
+        },
+        {
+          "dsp_mode": "0x4",
+          "mixer_mode": 2,
+          "drains": 3,
+          "programming_writes": 0
+        },
+        {
+          "dsp_mode": "0xffffffff",
+          "mixer_mode": 0,
+          "drains": 3,
+          "programming_writes": 0
+        },
+        {
+          "dsp_mode": "0xffffffff",
+          "mixer_mode": 1,
+          "drains": 3,
+          "programming_writes": 0
+        },
+        {
+          "dsp_mode": "0xffffffff",
+          "mixer_mode": 2,
+          "drains": 3,
+          "programming_writes": 0
+        }
+      ]
+    },
+    {
+      "name": "Original and routing empty-handler stack depth measured under stated stubs",
+      "status": "pass",
+      "cases": [
+        {
+          "image": "stock",
+          "observed_stack_bytes": 56
+        },
+        {
+          "image": "routing",
+          "observed_stack_bytes": 64
+        }
+      ],
+      "limit": "Does not include task ancestors, interrupts or stack use inside stubbed calls; not a full stack-margin proof"
+    }
+  ],
+  "boot_main_selector": {
+    "decoded_offset": "0x2dc",
+    "runtime": "0x010002dc",
+    "input_word": "0x425a0080",
+    "input_zero": "updater at flash offset 0x10000",
+    "input_nonzero": "normal application at flash offset 0x80000",
+    "electrical_TAP_mapping": "Not measured; updater branch correlated with documented TAP entry"
+  },
+  "boot_main_disassembly": {
+    "0x2c0": [
+      "0x010002c0: dff80cd0 ldr.w sp, [pc, #0xc]",
+      "0x010002c4: 02f06cf8 bl #0x10023a0",
+      "0x010002c8: 0048 ldr r0, [pc, #0]",
+      "0x010002ca: 0047 bx r0",
+      "0x010002cc: 8704 lsls r7, r0, #0x12",
+      "0x010002ce: 0001 lsls r0, r0, #4",
+      "0x010002d0: 0080 strh r0, [r0]",
+      "0x010002d2: 0201 lsls r2, r0, #4",
+      "0x010002d4: 40f00100 orr r0, r0, #1",
+      "0x010002d8: 0047 bx r0",
+      "0x010002da: 0000 movs r0, r0",
+      "0x010002dc: 10b5 push {r4, lr}",
+      "0x010002de: 0749 ldr r1, [pc, #0x1c]",
+      "0x010002e0: 0020 movs r0, #0",
+      "0x010002e2: 4ff08444 mov.w r4, #0x42000000",
+      "0x010002e6: 04eb4113 add.w r3, r4, r1, lsl #5",
+      "0x010002ea: 03eb8002 add.w r2, r3, r0, lsl #2",
+      "0x010002ee: 1368 ldr r3, [r2]",
+      "0x010002f0: 13b1 cbz r3, #0x10002f8",
+      "0x010002f2: 4ff04270 mov.w r0, #0x3080000",
+      "0x010002f6: 10bd pop {r4, pc}",
+      "0x010002f8: 0148 ldr r0, [pc, #4]",
+      "0x010002fa: fce7 b #0x10002f6"
+    ],
+    "0x448": [
+      "0x01000448: 2de9f041 push.w {r4, r5, r6, r7, r8, lr}",
+      "0x0100044c: 0446 mov r4, r0",
+      "0x0100044e: e06b ldr r0, [r4, #0x3c]",
+      "0x01000450: 50b1 cbz r0, #0x1000468",
+      "0x01000452: e06a ldr r0, [r4, #0x2c]",
+      "0x01000454: 0619 adds r6, r0, r4",
+      "0x01000456: a76b ldr r7, [r4, #0x38]",
+      "0x01000458: d4f83c80 ldr.w r8, [r4, #0x3c]",
+      "0x0100045c: 4246 mov r2, r8",
+      "0x0100045e: 3946 mov r1, r7",
+      "0x01000460: 3046 mov r0, r6",
+      "0x01000462: 00f08cf8 bl #0x100057e",
+      "0x01000466: 0ce0 b #0x1000482",
+      "0x01000468: e36a ldr r3, [r4, #0x2c]",
+      "0x0100046a: 1819 adds r0, r3, r4",
+      "0x0100046c: a16b ldr r1, [r4, #0x38]",
+      "0x0100046e: 226b ldr r2, [r4, #0x30]",
+      "0x01000470: 0025 movs r5, #0",
+      "0x01000472: 02e0 b #0x100047a",
+      "0x01000474: 08c8 ldm r0!, {r3}",
+      "0x01000476: 08c1 stm r1!, {r3}",
+      "0x01000478: 6d1c adds r5, r5, #1",
+      "0x0100047a: b5eb920f cmp.w r5, r2, lsr #2",
+      "0x0100047e: f9d3 blo #0x1000474",
+      "0x01000480: 00bf nop ",
+      "0x01000482: bde8f081 pop.w {r4, r5, r6, r7, r8, pc}",
+      "0x01000486: 70b5 push {r4, r5, r6, lr}",
+      "0x01000488: 00f05af8 bl #0x1000540",
+      "0x0100048c: fff777ff bl #0x100037e",
+      "0x01000490: fff724ff bl #0x10002dc",
+      "0x01000494: 0446 mov r4, r0",
+      "0x01000496: b4f1427f cmp.w r4, #0x3080000",
+      "0x0100049a: 01d1 bne #0x10004a0",
+      "0x0100049c: 01f00efb bl #0x1001abc",
+      "0x010004a0: 0d4d ldr r5, [pc, #0x34]",
+      "0x010004a2: 2846 mov r0, r5",
+      "0x010004a4: 01f0b4f9 bl #0x1001810",
+      "0x010004a8: b4f1427f cmp.w r4, #0x3080000",
+      "0x010004ac: 08d1 bne #0x10004c0",
+      "0x010004ae: 4ff04875 mov.w r5, #0x3200000",
+      "0x010004b2: 2846 mov r0, r5",
+      "0x010004b4: fff7c8ff bl #0x1000448",
+      "0x010004b8: 2846 mov r0, r5",
+      "0x010004ba: 01f016fb bl #0x1001aea",
+      "0x010004be: 00bf nop ",
+      "0x010004c0: 2046 mov r0, r4",
+      "0x010004c2: fff7c1ff bl #0x1000448",
+      "0x010004c6: 0549 ldr r1, [pc, #0x14]",
+      "0x010004c8: 8869 ldr r0, [r1, #0x18]",
+      "0x010004ca: 8047 blx r0",
+      "0x010004cc: a06a ldr r0, [r4, #0x28]",
+      "0x010004ce: fff701ff bl #0x10002d4",
+      "0x010004d2: 0120 movs r0, #1",
+      "0x010004d4: 70bd pop {r4, r5, r6, pc}"
+    ]
+  },
+  "stubs": {
+    "0x01000540": "Board/ROM-service initialization; install modeled cleanup callback",
+    "0x0100037e": "Board memory-interface setup and delay",
+    "0x01001346": "Peer transport reset/setup",
+    "0x0100095e": "Peer transport ready, returns zero",
+    "0x01000970": "Record transfer descriptor/source bytes; model completion",
+    "0x01001abc": "Normal-branch peer setup, count only",
+    "0x01001aea": "Normal USB-application peer handoff, hash loaded bytes",
+    "0xfff0100": "Modeled ROM cleanup callback",
+    "Auto drain": "Existing AudioMachine parameter/queue/RTOS boundaries; actual routing and original drain execute"
+  },
+  "limits": [
+    "No immutable-ROM execution before the supplied reset vector",
+    "No electrical TAP mapping, power, clock, SDRAM, flash or peer-processor behavior measured",
+    "Stops immediately before final BX; stock reset-context SDRAM handoff raises a Unicorn CPU exception",
+    "Application startup is executed separately, not a continuous boot or updater USB-enumeration test",
+    "Does not prove recovery after arbitrary corruption or interrupted programming",
+    "No complete application/RTOS/DSP/audio emulation or real-time stack/deadline measurement"
+  ]
+}

@@ -37,9 +37,10 @@ static const uint16_t stock_operands[18] = {
     0x600e, 0x600f, 0x6010, 0x6011, 0x2010, 0x2011
 };
 
-/* Explicit initialized bytes are included in the extension startup copy. */
-volatile uint8_t mx1_route_state[MX1_STRIP_COUNT] __attribute__((section(".patch_data"))) = {0};
-static uint8_t applied[MX1_STRIP_COUNT] __attribute__((section(".patch_data"))) = {0};
+/* Writable state follows original SRAM BSS; the builder extends its startup
+ * clear. The code SRAM at 0x0100f6a4 is read-only after MPU setup. */
+volatile uint8_t mx1_route_state[MX1_STRIP_COUNT] __attribute__((section(".route_state"))) = {0};
+static uint8_t applied[MX1_STRIP_COUNT] __attribute__((section(".route_state"))) = {0};
 
 static uint32_t parameter(uint32_t id)
 {
@@ -70,8 +71,13 @@ void mx1_route_adjust(uint32_t strip, int32_t delta)
     if (strip >= MX1_STRIP_COUNT || !delta || blocked()) return;
     uint32_t value = mx1_route_state[strip];
     do {
-        if (delta > 0) value = value + 1 == MX1_ROUTE_SOURCE_COUNT ? 0 : value + 1;
-        else value = value ? value - 1 : MX1_ROUTE_SOURCE_COUNT - 1;
+        if (delta > 0) {
+            if (value == MX1_ROUTE_SOURCE_COUNT - 1) return;
+            ++value;
+        } else {
+            if (value == 0) return;
+            --value;
+        }
     } while (strip < 4 && sources[value].left != sources[value].right);
     /* A byte store is atomic. The higher-priority DSP task may process it
      * before or after this post; either order leaves the newest route queued. */

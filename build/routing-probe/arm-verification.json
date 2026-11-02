@@ -1,25 +1,51 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "03717a17250aebd42c2412439b218f02acdec5bc0258245f9dbc22740ecdd251",
-  "candidate_container_sha256": "1810461b87255931fdce8696dff0c0b1c28758e3a95e28ac02b4e01723526c21",
-  "extension_sha256": "8f85f7611f95a512e797605a058af5ab05964f97a779fbe14f5630b884a92a25",
+  "patched_app_sha256": "3e08c5e3258e071bb976c822d55dd73725b833e742645e05ead2433458517117",
+  "candidate_container_sha256": "221e5ffb2a858a25d5691a1c818324fafa117bfa48d6a79aac0d666140ff2b95",
+  "extension_sha256": "32c4e3488c2e228cf5209a2b1a8c0a01895d0b6b3e3aad05f5cf49104b2726d5",
   "groups": [
     {
       "name": "Every application change matches recorded guarded patches and scatter insertion",
       "status": "pass",
-      "patch_sites": 3,
-      "extension_bytes": 1596,
-      "sram_bytes_remaining": 800
+      "patch_sites": 4,
+      "extension_bytes": 1584,
+      "sram_bytes_remaining": 812
     },
     {
       "name": "Actual original startup installs routing code and preserves existing initialized data and BSS",
       "status": "pass",
       "runtime_interval": [
         "0x0100f6a4",
-        "0x100fce0"
+        "0x100fcd4"
       ],
       "original_destinations_unchanged": true
+    },
+    {
+      "name": "Original MPU makes injected code read-only and new route state read-write",
+      "status": "pass",
+      "code_protection": "0x01001000..0x0100ffff enforced in all UI/audio instruction cases",
+      "state_interval": [
+        "0x1017264",
+        "0x101727c"
+      ]
+    },
+    {
+      "name": "Dirty cold startup clears state; original RTOS pools cannot allocate its reservation",
+      "status": "pass",
+      "general_pool": [
+        "0x01013e18",
+        "0x01014e18"
+      ],
+      "stack_pool": [
+        "0x01020000",
+        "0x01028000"
+      ],
+      "state_zero_bytes": 24,
+      "patterns": [
+        85,
+        170
+      ]
     },
     {
       "name": "Original physical decoder, queue and logical key/encoder dispatch",
@@ -51,6 +77,85 @@
     {
       "name": "Registered callback and aligned renderer hook bytes match symbols",
       "status": "pass"
+    },
+    {
+      "name": "Original startup page selection reaches routing gesture",
+      "status": "pass",
+      "cases": [
+        {
+          "system_mode": 0,
+          "page": 5
+        },
+        {
+          "system_mode": 1,
+          "page": 15
+        },
+        {
+          "system_mode": 2,
+          "page": 5
+        }
+      ],
+      "original_entry": "0x6005693c",
+      "original_page_transition": "0x6000fd98",
+      "stubbed": [
+        "0x600164a8",
+        "0x6001ab54",
+        "0x6001e786",
+        "0x6001fb4c",
+        "0x60018040",
+        "0x6001a204",
+        "0x6001a2fc",
+        "0x600099e0",
+        "0x6000f3e0",
+        "0x6000a3f8",
+        "0x60017e60",
+        "0x6000fb86",
+        "0x6000fb5c",
+        "0x600104a8",
+        "0x6000fcd4",
+        "0x6000fc4e"
+      ],
+      "parameters": "Supplied system values; no selected preset channel"
+    },
+    {
+      "name": "Only pages 5 and 15 admit routing; original alternate-page startup stays excluded",
+      "status": "pass",
+      "pages_tested": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32
+      ],
+      "alternate_parameter": "0x74=1 selects page 12"
     },
     {
       "name": "Inactive original display is preserved through displaced-instruction trampoline",
@@ -163,6 +268,8 @@
         "two_selects",
         "modifier",
         "other_page",
+        "startup_page",
+        "alternate_page",
         "other_boot",
         "modal"
       ]
@@ -273,8 +380,10 @@
       "source_destination_visits": 519,
       "mono_stereo_pairs_skipped": true,
       "four_character_labels": true,
+      "endpoints_clamp_without_event_posts": true,
+      "inward_turn_resumes": true,
       "largest_single_route_drain_commands": 4,
-      "largest_single_route_drain_instructions": 400
+      "largest_single_route_drain_instructions": 401
     },
     {
       "name": "Analog 5/6 split produces independent original-5/6 and USB2 input reads; own PC summand suppressed",
@@ -379,7 +488,7 @@
     "hardware_initialization": "hardware-audit.json"
   },
   "limits": [
-    "No physical flashing, recovery, panel operation, audio or USB transport has been validated",
+    "This candidate has offline evidence only; prior panel observations do not validate its audio or recovery",
     "DSP execution and MMIO assumptions are stated in the separate audio report",
     "Instruction counts do not measure real-time deadline margin or CPU cycles"
   ]

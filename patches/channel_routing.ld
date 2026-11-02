@@ -6,12 +6,13 @@ SECTIONS {
         *(.text*)
         *(.rodata*)
         . = ALIGN(4);
-        KEEP(*(.patch_data))
-        *(.data*)
-        *(.bss*)
-        *(COMMON)
+    }
+    .route_state 0x01017264 (NOLOAD) : {
+        KEEP(*(.route_state))
         . = ALIGN(4);
     }
+    ASSERT(SIZEOF(.route_state) == 24, "Unexpected routing state size")
+    ASSERT(ADDR(.text) + SIZEOF(.text) <= 0x01010000, "Routing code overflow")
+    ASSERT(ADDR(.route_state) + SIZEOF(.route_state) <= 0x01018000, "Routing state overflow")
     /DISCARD/ : { *(.comment*) *(.ARM.exidx*) *(.ARM.extab*) *(.eh_frame*) }
-    ASSERT(. <= 0x01010000, "Routing extension overlaps original initialized SRAM")
 }

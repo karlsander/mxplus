@@ -84,8 +84,12 @@ def build(firmware: Path, out: Path) -> dict:
             raise FormatError("Unresolved extension relocation")
         allocated = [s.name for s in ef.iter_sections()
                      if s["sh_flags"] & 2 and s["sh_size"]]
-        if allocated != [".text"] or text["sh_type"] != "SHT_PROGBITS":
+        if allocated != [".text", ".route_state"] or text["sh_type"] != "SHT_PROGBITS":
             raise FormatError("ELF contains allocated bytes outside the injected section")
+        state = ef.get_section_by_name(".route_state")
+        if (state["sh_type"] != "SHT_NOBITS" or state["sh_addr"] != 0x01017264
+                or state["sh_size"] != 24 or state["sh_flags"] & 7 != 3):
+            raise FormatError("Unexpected writable routing state reservation")
         table = ef.get_section_by_name(".symtab")
         for name in required:
             matches = table.get_symbol_by_name(name) or []
@@ -97,6 +101,12 @@ def build(firmware: Path, out: Path) -> dict:
                 ef.get_section(symbol["st_shndx"]).name != ".text" or
                 not ENTRY <= (symbol["st_value"] & ~1) < ENTRY + len(blob)):
                 raise FormatError("Routing function lies outside injected section: " + name)
+        for name, address in (("mx1_route_state", 0x01017264), ("applied", 0x0101726f)):
+            objects = table.get_symbol_by_name(name) or []
+            if (len(objects) != 1 or objects[0]["st_value"] != address
+                    or objects[0]["st_size"] != 11
+                    or ef.get_section(objects[0]["st_shndx"]).name != ".route_state"):
+                raise FormatError("Unexpected routing state object: " + name)
         symbols = {s.name: s.entry["st_value"]
                    for s in table.iter_symbols()
                    if s.name.startswith("mx1_")}
@@ -104,6 +114,16 @@ def build(firmware: Path, out: Path) -> dict:
         raise FormatError("Compiler omitted required routing exports")
     modified, scatter = inject(original, blob)
     changes: list[dict] = []
+    # Original BSS ends exactly at the reserved state start. Extend only its
+    # zero count, preserving every existing destination and allocator record.
+    from memory_map import recover
+    bss = recover(original)["operations"][3]
+    if bss != {"call": 0x60000028, "kind": "zero", "destination": 0x01010088,
+               "length": 0x71dc}:
+        raise FormatError("Unexpected original writable SRAM BSS")
+    exact_patch(modified, 0x108, struct.pack("<I", 0x71dc),
+                struct.pack("<I", 0x71f4), changes,
+                "Zero 24-byte routing state reservation after original writable SRAM BSS")
     patch_ui(modified, symbols, changes)
     audio = patch_audio(modified, symbols, changes)
     for change in changes:
@@ -122,11 +142,12 @@ def build(firmware: Path, out: Path) -> dict:
             *sources, ROOT / "patches/channel_routing.h", ROOT / "patches/channel_routing.ld",
             Path(__file__).resolve(), ROOT / "tools/routing_audio_patch.py"]},
         "scatter_extension": scatter, "patches": changes,
+        "writable_state": {"start": 0x01017264, "size": 24, "end_exclusive": 0x0101727c, "startup_zero_length_offset": 0x108},
         "audio_routing": audio, "container": container,
         "sram_bytes_remaining": LIMIT - ENTRY - len(blob),
         "hardware_access": False,
         "limits": [
-            "No physical MX-1 flashing, recovery, audio or UI validation",
+            "Previous candidate showed Auto but froze on encoder movement; this revision awaits hardware testing",
             "Standalone main-application experiment; no UAC1-host or UAC2-device changes",
             "Real-time deadline margin and electrical/DMA behavior require hardware measurement",
         ],

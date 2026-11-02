@@ -51,8 +51,10 @@
       "source_destination_visits": 519,
       "mono_stereo_pairs_skipped": true,
       "four_character_labels": true,
+      "endpoints_clamp_without_event_posts": true,
+      "inward_turn_resumes": true,
       "largest_single_route_drain_commands": 4,
-      "largest_single_route_drain_instructions": 400
+      "largest_single_route_drain_instructions": 401
     },
     {
       "name": "Analog 5/6 split produces independent original-5/6 and USB2 input reads; own PC summand suppressed",
@@ -122,7 +124,7 @@
       ]
     }
   ],
-  "patched_app_sha256": "03717a17250aebd42c2412439b218f02acdec5bc0258245f9dbc22740ecdd251",
+  "patched_app_sha256": "3e08c5e3258e071bb976c822d55dd73725b833e742645e05ead2433458517117",
   "source_choices": [
     {
       "id": 0,

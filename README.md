@@ -4,7 +4,7 @@ Firmware research, channel routing and experimental USB audio extensions for the
 
 The project investigates channel source reassignment, compatible USB audio devices on the four AIRA host ports, and a standard audio driver for the computer USB-B port, including on iPhone and iPad. It contains the original firmware, reverse-engineering evidence, reproducible build tools, and three separately compiled firmware experiments.
 
-**None of the experimental images has been flashed to a mixer or demonstrated to carry audio on physical hardware.** The current results establish selected code paths and binary integration through offline tests. They do not establish working iOS audio, general USB-device compatibility, audible channel routing, or a verified recovery procedure.
+**The user reports successful channel rerouting on their MX-1 after the page-guard and writable-state fixes.** This revision makes the source selector stop at its endpoints and awaits a new bench test. The report does not establish every source/rate/mode combination or recovery behavior. The current results establish selected code paths and binary integration through offline tests. They do not establish working iOS audio, general USB-device compatibility, audible channel routing, or a verified recovery procedure.
 
 ## Current status
 

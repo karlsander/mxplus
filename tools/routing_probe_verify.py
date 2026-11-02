@@ -63,7 +63,7 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
     assert len(old_map) == len(new_map)
     for index, (old, new) in enumerate(zip(old_map, new_map)):
         assert old['kind'] == new['kind'] and old['destination'] == new['destination']
-        assert new['length'] == old['length'] + (size if index == 0 else 0)
+        assert new['length'] == old['length'] + (size if index == 0 else 24 if index == 3 else 0)
         if old['kind'] == 'copy':
             assert new['source'] == old['source'] + (size if old['source'] >= BASE + cut else 0)
 
@@ -103,6 +103,9 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
     from routing_hardware_audit import verify_image as audit_hardware
 
     groups = verify_layout(original, patched, build)
+    from routing_mpu_verify import verify as verify_mpu
+    mpu = verify_mpu(original, patched, build)
+    groups.extend(mpu['groups'])
     ui = verify_ui(original, patched, build)
     assert ui['ui_only_fixture'] is False
     assert all(group['status'] == 'pass' for group in ui['groups'])
@@ -133,12 +136,12 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
         'details': {'ui': 'ui-verification.json', 'audio': 'audio-verification.json',
                     'hardware_initialization': 'hardware-audit.json'},
         'limits': [
-            'No physical flashing, recovery, panel operation, audio or USB transport has been validated',
+            'This candidate has offline evidence only; prior panel observations do not validate its audio or recovery',
             'DSP execution and MMIO assumptions are stated in the separate audio report',
             'Instruction counts do not measure real-time deadline margin or CPU cycles',
         ],
     }
-    return report, {'ui-verification.json': ui, 'audio-verification.json': audio,
+    return report, {'mpu-verification.json': mpu, 'ui-verification.json': ui, 'audio-verification.json': audio,
                     'hardware-audit.json': hardware}
 
 

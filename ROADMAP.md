@@ -8,8 +8,8 @@ not sustained or comprehensive validation.
 
 1. Physically verify snapshot save/recall, delayed restart persistence, ordinary
    SELECT behavior, reset behavior and existing routing across mixer modes.
-2. Resolve the [stereo playback packet-accounting defect](docs/ADVERSARIAL_REVIEW.md)
-   before broader USB acceptance. Extend evidence with device/OS/app versions,
+2. Physically validate the [stereo playback packet fix](docs/USB_PACKET_FIX.md).
+   Extend evidence with device/OS/app versions,
    rates, channel maps and duration. Verify capture-only, stereo/18-channel
    and mixed alternates, stop/restart, reconnect and sustained audio at all
    three rates.

@@ -1,5 +1,11 @@
 # Adversarial review of mixer-only mainline — 2 November 2026
 
+Follow-up: the current mainline contains the [stereo packet fix](USB_PACKET_FIX.md)
+and its regression tests. The record below describes the original finding on
+`88457445…`; its hash-pinned reproducer requires that historical image (Git
+commit `fde26fd`). Current acceptance uses `tools/usb_packet_verify.py` and the
+normal reproduction pipeline. Physical acceptance of the fix remains open.
+
 One high-priority USB defect was reproduced. No additional routing, SELECT,
 end-stop or storage defect was established within the checks below. This is a
 review of `36d93d1`, container SHA-256

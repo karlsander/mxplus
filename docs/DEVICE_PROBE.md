@@ -3,7 +3,7 @@
 ## Status
 
 USB-B UAC2 is part of the sole [mainline build](MAINLINE.md), not a separate
-candidate. The restored mainline (`88457445…`) passed a user-reported
+candidate. The preceding mainline (`88457445…`) passed a user-reported
 iPhone/AUM audio round trip over a direct USB-B–to–USB-C cable: analog input,
 AUM effect, then return to another mixer channel. See the
 [hardware record](../evidence/iphone-aum-20261102/README.md) for scope and unknowns.
@@ -14,10 +14,9 @@ mainline uses separate writable descriptor/rate/reply storage. Historical build
 identities are in `evidence/retired-probes-20261102/`.
 
 The [adversarial review](ADVERSARIAL_REVIEW.md) reproduced a stereo playback
-accounting defect: the original pump consumes two words but subtracts an
-18-channel frame and retains an 18-channel tail. The existing mixed-alternate
-branch tests do not validate packet boundaries. The defect is unresolved in
-this image; stereo OUT needs correction or removal before wider validation.
+accounting defect in that image. The current `dacb12ae…` candidate contains
+the [packet fix](USB_PACKET_FIX.md), with finite-packet and alternate-transition
+instruction tests. This changed image has not been tested on hardware.
 
 ## What the candidate changes
 
@@ -51,12 +50,16 @@ malformed requests with an EP0 stall. The validity response reflects a valid
 configured rate; it is not a measured hardware PLL-lock indication.
 
 The original capture pump required playback availability before advancing
-two capture startup states. At runtime `0x01009a06`, the candidate changes
-`mov.w r12,#0` to `mov.w r12,#1`. The pump still writes playback silence when
-OUT data is absent, and retains its IN-readiness, priming, phase, and commit
-checks. This change addresses the identified software startup dependency.
-It does not prove that the physical USB peripheral will produce all needed
-clock and FIFO conditions before playback starts.
+two capture startup states. The corrected playback block preserves `r12=1`
+from the original prologue, retaining capture-first priming while supplying
+playback silence when OUT data is absent. Capture's original IN-readiness,
+phase and commit checks remain unchanged. Physical capture-first clock/FIFO
+conditions still require a bus trace.
+
+Playback accounting now follows the selected frame size, and buffered tails
+are discarded when OUT changes alternate. The patch remains inside the
+original callback's playback window; it adds no executable memory reservation.
+See [placement, ABI and packet evidence](USB_PACKET_FIX.md).
 
 ## What the offline checks establish
 
@@ -93,11 +96,12 @@ code integration and control flow, not physical enumeration.
 
 Detailed results: `build/mainline/usb-verification.json`.
 
-### Original audio pump execution
+### Historical capture-first control-flow experiment
 
 `sources/hardware/uac2_pump_harness.py` executes the original 732-byte Thumb
 audio pump with an explicit model of the relevant readiness/phase inputs.
-Under that model:
+It tests the original and one-instruction capture-first fixture, not the current
+complete playback fix. Under that model:
 
 - The original capture-only path writes no IN data and remains in startup
   state 1.
@@ -119,6 +123,17 @@ tests therefore establish independent code branches, not validated physical
 packet-boundary handling.
 
 Detailed results: `sources/hardware/uac2_pump_harness_results.json`.
+
+### Current candidate packet execution
+
+`tools/usb_packet_verify.py` executes the current callback with finite packets,
+sample-order assertions and packet-boundary failures. Seven groups cover
+stereo/18-channel and mixed alternates at all three rates, short/malformed
+packets, conversion edge cases, capture-first, restart and changes during
+buffered playback. The 18-channel traces match the predecessor. This verifier
+runs within mainline reproduction; its report is
+`build/mainline/packet-verification.json`. Peripheral readiness, conversion and
+alternate-change flushing remain explicit model boundaries.
 
 ### New control logic
 
@@ -157,7 +172,7 @@ be drawn from the CPU tests.
 The iPhone/AUM observation establishes one useful duplex path. It does not
 establish every advertised alternate or universal class compliance. TAP
 rollback has worked after the observed application failures; other recovery
-classes remain unverified. The stereo accounting finding above remains open.
+classes remain unverified. The packet fix still needs physical acceptance.
 
 ## Source map
 
@@ -167,3 +182,5 @@ classes remain unverified. The stereo accounting finding above remains open.
 - `tools/uac2_design.py`: descriptor generation.
 - `tools/build_firmware.py`: sole firmware builder.
 - `tools/usb_audio_verify.py`: USB instruction tests within mainline verification.
+- `patches/usb_playback.S`: bounded playback replacement; capture stays original.
+- `tools/usb_packet_verify.py`: finite-packet and transition instruction tests.

@@ -74,7 +74,7 @@ def verify(original, patched, build):
     assert build['writable_state']['start'] == state and build['writable_state']['end_exclusive'] == end
     assert build['symbols']['mx1_route_state'] == state
     assert all(permission(regions, a) == 3 for a in range(state, end))
-    for name in ('mx1_uac2_rate', 'mx1_uac2_reply', 'mx1_uac2_configuration'):
+    for name in ('mx1_uac2_rate', 'mx1_uac2_reply', 'mx1_uac2_configuration', 'mx1_usb_playback_alt'):
         assert state <= build['symbols'][name] < end
         assert permission(regions, build['symbols'][name]) == 3
     old_bss, new_bss = recover(original)['operations'][3], recover(patched)['operations'][3]

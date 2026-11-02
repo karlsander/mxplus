@@ -9,6 +9,8 @@ The restored pre-generator image boots and passed one user-reported iPhone/AUM
 duplex path; full USB validation and physical snapshot/restart acceptance remain open. Do not claim
 safe upgrades, broad interoperability or verified failed-application recovery.
 A hardware experiment requires user authorization.
+The current stereo USB packet fix has offline evidence only; do not transfer
+the preceding image's hardware result to this changed playback routine.
 
 Maintain only `tools/build_firmware.py`, `patches/mainline.ld` and
 `build/mainline/MXPLUS_MAINLINE_UNTESTED.bin` as the active firmware build.

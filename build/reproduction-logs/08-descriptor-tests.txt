@@ -12,6 +12,7 @@ test_current_report_mismatch_is_rejected (test_repository_integrity.Reproduction
 test_extension_hash_alone_does_not_establish_embedding (test_repository_integrity.ReproductionIdentityTests.test_extension_hash_alone_does_not_establish_embedding) ... ok
 test_incomplete_reproduction_is_rejected (test_repository_integrity.ReproductionIdentityTests.test_incomplete_reproduction_is_rejected) ... ok
 test_matching_working_artifacts_and_committed_bytes_pass (test_repository_integrity.ReproductionIdentityTests.test_matching_working_artifacts_and_committed_bytes_pass) ... ok
+test_packet_report_must_match_candidate (test_repository_integrity.ReproductionIdentityTests.test_packet_report_must_match_candidate) ... ok
 test_retired_parallel_build_is_rejected (test_repository_integrity.ReproductionIdentityTests.test_retired_parallel_build_is_rejected) ... ok
 test_stale_committed_binary_is_rejected_even_when_reports_match_rebuild (test_repository_integrity.ReproductionIdentityTests.test_stale_committed_binary_is_rejected_even_when_reports_match_rebuild) ... ok
 test_storage_report_must_match_candidate (test_repository_integrity.ReproductionIdentityTests.test_storage_report_must_match_candidate) ... ok
@@ -32,6 +33,6 @@ test_reject_configuration_lengths (test_usb_descriptors.USBDescriptorTests.test_
 test_reject_truncated_rate_list (test_usb_descriptors.USBDescriptorTests.test_reject_truncated_rate_list) ... ok
 
 ----------------------------------------------------------------------
-Ran 32 tests in 0.533s
+Ran 33 tests in 0.841s
 
 OK

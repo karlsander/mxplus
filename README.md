@@ -3,9 +3,11 @@
 One Roland MX-1 firmware build: channel source routing, routing snapshots and
 restart persistence, and experimental USB-B UAC2 audio. USB1–4 stay stock.
 
-The maintained image restores the pre-generator firmware (`88457445…`). The
-user confirmed normal boot and an analog-input → iPhone/AUM effect → another
-MX-1 channel audio round trip with a direct USB-B–USB-C cable. Routing and
+The maintained image (`dacb12ae…`) adds the [stereo USB packet fix](docs/USB_PACKET_FIX.md)
+to the pre-generator baseline and awaits hardware acceptance. On the preceding
+image (`88457445…`), the user confirmed normal boot and an analog-input →
+iPhone/AUM effect → another MX-1 channel audio round trip with a direct
+USB-B–USB-C cable. Routing and
 encoder end stops were also tested in its predecessor. See the
 [hardware record](evidence/iphone-aum-20261102/README.md) for limitations.
 This is experimental firmware, not a certified safe or universally compatible
@@ -21,8 +23,8 @@ routine is added. [Routing instructions](docs/CHANNEL_ROUTING.md) include the
 analog 5/6 split and [storage details](docs/ROUTING_STORAGE.md) explain persistence.
 
 USB-B advertises stereo and 18-channel UAC2 alternates at the mixer-selected
-sample rate. A [known stereo playback accounting defect](docs/ADVERSARIAL_REVIEW.md)
-remains open; stereo playback is not validated. MIDI remains proprietary.
+sample rate. The stereo playback accounting fix passes finite-packet instruction
+tests; physical stereo acceptance remains open. MIDI remains proprietary.
 See [USB audio](docs/DEVICE_PROBE.md).
 
 Generators, the blinking SELECT edit mode and generic USB-host unlocking are

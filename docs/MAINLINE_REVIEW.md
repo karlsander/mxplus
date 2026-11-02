@@ -11,7 +11,8 @@ This is a bounded source/binary review, not proof that the firmware has no bugs.
 
 The subsequent [adversarial review](ADVERSARIAL_REVIEW.md) found a stereo USB
 packet-accounting defect using finite packets, outside this earlier review's
-coverage. That finding remains open on the same firmware image.
+coverage. The current [packet fix](USB_PACKET_FIX.md) corrects it offline;
+the reviewed `88457445…` image and its historical evidence remain unchanged.
 
 ## Failure-oriented checks
 

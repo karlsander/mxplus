@@ -1,7 +1,7 @@
 {
   "status": "OFFLINE UI INSTRUCTION TESTS; NO PHYSICAL PANEL OR AUDIO CLAIM",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758",
+  "patched_app_sha256": "8f771499a3ce93ab6f2f26242b75f80e46ca6b273b538900b04a68bb207a4890",
   "ui_only_fixture": false,
   "symbols": {
     "mx1_uac2_rate": 16872416,
@@ -20,7 +20,9 @@
     "mx1_route_flush": 16841125,
     "mx1_route_state": 16872036,
     "mx1_route_ui_display_original": 16841965,
-    "mx1_uac2_configuration": 16872060
+    "mx1_uac2_configuration": 16872060,
+    "mx1_usb_playback_patch": 16816225,
+    "mx1_usb_playback_alt": 16872434
   },
   "sources": {
     "patches/channel_routing_ui.c": "4f3ddc32467e8fe414c88c61ddf0214b22c492d753534c09dca655ccfa0a2998",

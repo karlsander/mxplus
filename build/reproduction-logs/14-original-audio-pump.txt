@@ -12,4 +12,4 @@ duplex               patched=False OUT_channels=18 IN_channels=2 IN_words=166 OU
 duplex               patched=True OUT_channels=18 IN_channels=2 IN_words=166 OUT_reads=1566 max_state=4
 duplex               patched=False OUT_channels=2 IN_channels=18 IN_words=1494 OUT_reads=174 max_state=4
 duplex               patched=True OUT_channels=2 IN_channels=18 IN_words=1494 OUT_reads=174 max_state=4
-/Users/kall/.codex/worktrees/mxplus-boot-startup/mxplus/sources/hardware/uac2_pump_harness_results.json
+/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/sources/hardware/uac2_pump_harness_results.json

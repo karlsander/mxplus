@@ -6,6 +6,8 @@ The sole mainline candidate combines routing, stock-storage route persistence
 and USB-B UAC2. The restored pre-generator image boots and passed a user-reported
 iPhone/AUM duplex path. Routing/end stops were tested in its predecessor.
 Physical snapshot/restart acceptance and broad USB validation remain open.
+The current stereo packet fix has offline evidence only; the preceding image's
+hardware result does not validate the changed playback routine.
 Generators, extra SELECT editing and USB-host unlocking are documentation only;
 see [generator handoff](docs/GENERATOR_RESEARCH.md). TAP rollback was observed
 for particular application failures, not every possible failure class.

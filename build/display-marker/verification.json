@@ -3,7 +3,7 @@
   "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
   "candidate_sha256": "f65983ecad6850bc88968a01ff5f008dea62e4e06410d451144a72514cd98e9c",
   "patched_app_sha256": "08bca4c4c03e93f48c7bb44e84705365289185e039869a774c5c820514b09e57",
-  "checked_against_git_head": false,
+  "checked_against_git_head": true,
   "hardware_access": false,
   "checks": [
     {

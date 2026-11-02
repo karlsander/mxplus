@@ -1,25 +1,51 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "a7d8d8223acac718e825497f58e8072abba3b30437f89fa9ee486ad121ef4d90",
-  "candidate_container_sha256": "74ebf3cab47631f14fe5fa8a113804ff7d99397a6898a068255cd8542f2d5d57",
-  "extension_sha256": "43052a0001803c810590983713a73424f8f556fa54a718a23292382d8e1220ef",
+  "patched_app_sha256": "5861514122801e486b78775548af91794c3f79330f2b615785d54f35fe87f884",
+  "candidate_container_sha256": "19567a92b3eb4e2eee5683601438eba77a4f4865300f8275774c59f0ee95b605",
+  "extension_sha256": "0732ca34a22d3dc50561e7124c4d8ba2f6494bec2c00645e2bf4ece7b90073ef",
   "groups": [
     {
       "name": "Every application change matches recorded guarded patches and scatter insertion",
       "status": "pass",
-      "patch_sites": 3,
-      "extension_bytes": 1608,
-      "sram_bytes_remaining": 788
+      "patch_sites": 4,
+      "extension_bytes": 1584,
+      "sram_bytes_remaining": 812
     },
     {
       "name": "Actual original startup installs routing code and preserves existing initialized data and BSS",
       "status": "pass",
       "runtime_interval": [
         "0x0100f6a4",
-        "0x100fcec"
+        "0x100fcd4"
       ],
       "original_destinations_unchanged": true
+    },
+    {
+      "name": "Original MPU makes injected code read-only and new route state read-write",
+      "status": "pass",
+      "code_protection": "0x01001000..0x0100ffff enforced in all UI/audio instruction cases",
+      "state_interval": [
+        "0x1017264",
+        "0x101727c"
+      ]
+    },
+    {
+      "name": "Dirty cold startup clears state; original RTOS pools cannot allocate its reservation",
+      "status": "pass",
+      "general_pool": [
+        "0x01013e18",
+        "0x01014e18"
+      ],
+      "stack_pool": [
+        "0x01020000",
+        "0x01028000"
+      ],
+      "state_zero_bytes": 24,
+      "patterns": [
+        85,
+        170
+      ]
     },
     {
       "name": "Original physical decoder, queue and logical key/encoder dispatch",
@@ -460,7 +486,7 @@
     "hardware_initialization": "hardware-audit.json"
   },
   "limits": [
-    "No physical flashing, recovery, panel operation, audio or USB transport has been validated",
+    "This candidate has offline evidence only; prior panel observations do not validate its audio or recovery",
     "DSP execution and MMIO assumptions are stated in the separate audio report",
     "Instruction counts do not measure real-time deadline margin or CPU cycles"
   ]

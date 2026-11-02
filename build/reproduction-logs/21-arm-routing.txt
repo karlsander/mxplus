@@ -3,6 +3,8 @@
   "groups": [
     "Every application change matches recorded guarded patches and scatter insertion",
     "Actual original startup installs routing code and preserves existing initialized data and BSS",
+    "Original MPU makes injected code read-only and new route state read-write",
+    "Dirty cold startup clears state; original RTOS pools cannot allocate its reservation",
     "Original physical decoder, queue and logical key/encoder dispatch",
     "Original encoder1 reaches tempo parameter 0x1a; encoder0 does not",
     "Registered callback and aligned renderer hook bytes match symbols",
@@ -36,5 +38,5 @@
     "Independent factory graph audit matches all 18 raw PC and 18 serial read bindings",
     "Original native input gates and connection callbacks distinguish native and PC paths"
   ],
-  "patched_app_sha256": "a7d8d8223acac718e825497f58e8072abba3b30437f89fa9ee486ad121ef4d90"
+  "patched_app_sha256": "5861514122801e486b78775548af91794c3f79330f2b615785d54f35fe87f884"
 }

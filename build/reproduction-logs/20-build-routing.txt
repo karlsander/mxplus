@@ -1,6 +1,6 @@
 {
   "status": "OFFLINE EXPERIMENT; NOT HARDWARE VALIDATED",
-  "container_sha256": "74ebf3cab47631f14fe5fa8a113804ff7d99397a6898a068255cd8542f2d5d57",
+  "container_sha256": "19567a92b3eb4e2eee5683601438eba77a4f4865300f8275774c59f0ee95b605",
   "symbols": {
     "mx1_route_ui_event": 16841231,
     "mx1_route_ui_display": 16841049,
@@ -9,47 +9,55 @@
     "mx1_route_label": 16840375,
     "mx1_route_dispatch": 16841013,
     "mx1_route_flush": 16840611,
-    "mx1_route_state": 16841940,
+    "mx1_route_state": 16872036,
     "mx1_route_ui_display_original": 16841401
   },
   "scatter_extension": {
     "insert_offset": 917296,
     "runtime_address": 16840356,
-    "insert_length": 1608,
+    "insert_length": 1584,
     "startup_updates": [
       {
         "offset": 232,
         "before": 62372,
-        "after": 63980
+        "after": 63956
       },
       {
         "offset": 256,
         "before": 1611530032,
-        "after": 1611531640
+        "after": 1611531616
       },
       {
         "offset": 276,
         "before": 1611530164,
-        "after": 1611531772
+        "after": 1611531748
       },
       {
         "offset": 296,
         "before": 1611530164,
-        "after": 1611531772
+        "after": 1611531748
       },
       {
         "offset": 316,
         "before": 1611531336,
-        "after": 1611532944
+        "after": 1611532920
       },
       {
         "offset": 336,
         "before": 1611531336,
-        "after": 1611532944
+        "after": 1611532920
       }
     ]
   },
   "patches": [
+    {
+      "label": "Zero 24-byte routing state reservation after original writable SRAM BSS",
+      "file_offset": 264,
+      "runtime_address": 1610613000,
+      "original": "dc710000",
+      "replacement": "f4710000",
+      "component": "app_main"
+    },
     {
       "label": "Panel event callback: hold SELECT and turn TEMPO",
       "file_offset": 62936,
@@ -75,5 +83,5 @@
       "component": "app_main"
     }
   ],
-  "sram_bytes_remaining": 788
+  "sram_bytes_remaining": 812
 }

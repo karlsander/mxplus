@@ -58,6 +58,8 @@ CHOICES = choices()
 class AudioMachine(Machine):
     def __init__(self, image, symbols, program):
         super().__init__(image)
+        from routing_mpu_verify import protect_code
+        protect_code(self)
         self.symbols = symbols
         self.uc.mem_map(0x40100000, 0x80000)
         self.write(0x40150000, program)

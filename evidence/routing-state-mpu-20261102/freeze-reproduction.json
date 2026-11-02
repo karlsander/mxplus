@@ -1,0 +1,14 @@
+{
+  "status": "reproduced",
+  "candidate_sha256": "74ebf3cab47631f14fe5fa8a113804ff7d99397a6898a068255cd8542f2d5d57",
+  "patched_app_sha256": "a7d8d8223acac718e825497f58e8072abba3b30437f89fa9ee486ad121ef4d90",
+  "held_key": "0x2d (5/6)",
+  "encoder_delta": 1,
+  "fault_pc": "0x100f798",
+  "route_state": "0x100fcd4",
+  "fault": "UC_ERR_WRITE_PROT",
+  "mpu_access_permission": 6,
+  "display": "Auto",
+  "event_posts": [],
+  "model": "Original MPU register writes decoded; Unicorn page protection enforces code SRAM read-only. Real MemManage exception delivery not emulated."
+}

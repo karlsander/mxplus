@@ -5,11 +5,12 @@ eleven physical channel strips. It supports the requested 5/6 split onto USB2,
 and extends the same mechanism to analog, digital, AIRA, return and computer
 sources. More than one strip can read the same source.
 
-**Status: initial installation/restart reported by the user; routing and audio
-remain unverified.** Holding 5/6 or USB2 SELECT in Mixer mode left the normal
-tempo visible. This revision fixes an incorrect live-page guard; it has not
-yet been tested on the mixer. The separate display-marker test confirmed
-modified application execution. Failed-application recovery remains unverified. The candidate is
+**Status: SELECT now shows `Auto` on the user's MX-1, but the previous image
+froze on the first encoder step, leaving `Auto` visible.** This revision moves
+writable routing state out of MPU-protected code SRAM. The old image reproduces
+a write-protection fault offline before posting a DSP event; the new image
+passes protected-memory tests and awaits a bench test. Audio routing and
+failed-application recovery remain unverified. The candidate is
 [`MX1_CHANNEL_ROUTING_UNTESTED.bin`](../build/routing-probe/MX1_CHANNEL_ROUTING_UNTESTED.bin).
 Its [build report](../build/routing-probe/build-report.json) records the exact
 input, output identities, source hashes, patch bytes and memory placement.
@@ -178,11 +179,15 @@ updater and panel-controller payload remain original.
 | `0x0f5d8` | `0x6000f5d8` | Panel callback pointer to the SELECT/TEMPO event wrapper |
 | `0x13356` | `0x60013356` | Tempo-renderer entry to the source-label overlay and original-instruction trampoline |
 | `0x24bae` | `0x60024bae` | DSP event-8 handler entry to the original drain followed by route application |
+| `0x108` | `0x60000108` | Writable SRAM BSS clear length: `0x71dc` to `0x71f4` |
 | `0xdff30` | `0x0100f6a4` | Inserted extension in the first startup SRAM copy |
 
-The current extension occupies **1,608 bytes**, leaving **788 bytes** before the
+The current extension occupies **1,584 bytes**, leaving **812 bytes** before the
 original initialized SRAM at `0x01010000`. Existing runtime destinations and
-BSS clears are preserved. Startup load-source literals shift with the inserted
+existing BSS contents are preserved. A separate 24-byte state reservation at
+`0x01017264..0x0101727b` extends the original writable SRAM BSS clear by 24 bytes.
+The original MPU and allocator configuration remain unchanged. The original
+code SRAM is read-only after boot; routing state must not live there. Startup load-source literals shift with the inserted
 bytes. The builder rejects another original firmware hash, unexpected hook or
 DSP source bytes, unresolved relocations, orphan allocated ELF sections,
 function exports outside the injected interval, or an SRAM overflow.
@@ -251,3 +256,11 @@ Detailed evidence is in [the UI trace](../research/channel-routing-ui.md),
 Physical work follows the repository's
 [hardware validation plan](HARDWARE_VALIDATION.md); successful offline checks
 do not change the candidate's `UNTESTED` status.
+
+### Encoder-freeze regression
+
+See [the MPU investigation](../research/routing-state-mpu.md) and
+[`mpu-verification.json`](../build/routing-probe/mpu-verification.json).
+All UI and audio instruction cases now reject CPU writes to the injected code
+pages. The MPU check runs the original setup instructions and validates the
+new writable reservation, dirty startup clearing and RTOS pool separation.

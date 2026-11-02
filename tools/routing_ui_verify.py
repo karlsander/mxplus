@@ -56,6 +56,8 @@ class UIMachine(Machine):
     def __init__(self, image, symbols=None, execute_tempo=False, *,
                  stub_routes=True, mixer_mode=0, dsp_mode=0):
         super().__init__(image)
+        from routing_mpu_verify import protect_code
+        protect_code(self)
         self.symbols = {k: v & ~1 for k, v in (symbols or {}).items()}
         self.execute_tempo = execute_tempo
         self.stub_routes = stub_routes

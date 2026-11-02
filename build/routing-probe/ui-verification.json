@@ -1,7 +1,7 @@
 {
   "status": "OFFLINE UI INSTRUCTION TESTS; NO PHYSICAL PANEL OR AUDIO CLAIM",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "a7d8d8223acac718e825497f58e8072abba3b30437f89fa9ee486ad121ef4d90",
+  "patched_app_sha256": "5861514122801e486b78775548af91794c3f79330f2b615785d54f35fe87f884",
   "ui_only_fixture": false,
   "symbols": {
     "mx1_route_ui_event": 16841231,
@@ -11,13 +11,13 @@
     "mx1_route_label": 16840375,
     "mx1_route_dispatch": 16841013,
     "mx1_route_flush": 16840611,
-    "mx1_route_state": 16841940,
+    "mx1_route_state": 16872036,
     "mx1_route_ui_display_original": 16841401
   },
   "sources": {
     "patches/channel_routing_ui.c": "4f3ddc32467e8fe414c88c61ddf0214b22c492d753534c09dca655ccfa0a2998",
     "patches/channel_routing_ui.S": "a5adb0bd43ba5a0a357f3927a6e372c4df4e3ff7cf2d9281b90022fcee9b3bcf",
-    "tools/routing_ui_verify.py": "b129520c384634608450369e4a4caf21b74ae41c6ac3c3b0c458d981fe3c9d40"
+    "tools/routing_ui_verify.py": "14ec4a521c9d3a41a2e7353bfcc03ea3678c62c9c3f8d5a6fae3631e9a4b8c22"
   },
   "groups": [
     {

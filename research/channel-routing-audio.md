@@ -260,3 +260,12 @@ must be read from the matching build report. The experiment retains the
 physical front-end gain and input availability of each selected source; it
 cannot create an absent external clock, connected AIRA device, or computer
 playback stream.
+
+## Encoder freeze and writable state, 2 November 2026
+
+The earlier state-placement assumption was wrong: main SRAM code becomes
+read-only when the original MPU setup runs. The first route-byte store faults
+before the event post. Desired and applied route bytes now occupy a guarded
+24-byte reservation immediately after original writable BSS, initialized by
+an extended startup clear. See [the MPU investigation](routing-state-mpu.md).
+All audio-control instruction cases now enforce read-only code pages.

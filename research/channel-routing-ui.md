@@ -7,8 +7,9 @@ button restores the original display and normal encoder behavior.
 
 The UI extension has original-instruction and compiled-code tests. The first
 routing image was installed and restarted according to the user, but holding
-5/6 or USB2 SELECT in Mixer mode left the tempo visible. The page guard is now
-corrected; physical routing remains unverified. The audio-routing implementation and its evidence are
+5/6 or USB2 SELECT in Mixer mode left the tempo visible. The page guard correction subsequently showed `Auto` on hardware. The first
+encoder step then froze the panel; see [the state-memory correction](routing-state-mpu.md).
+Physical audio routing remains unverified. The audio-routing implementation and its evidence are
 separate.
 
 ## Original firmware evidence

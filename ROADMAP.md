@@ -8,9 +8,11 @@ not sustained or comprehensive validation.
 
 1. Physically verify snapshot save/recall, delayed restart persistence, ordinary
    SELECT behavior, reset behavior and existing routing across mixer modes.
-2. Extend USB evidence with device/OS/app versions, rates, channel maps and
-   duration. Verify capture-only, stereo/18-channel and mixed alternates,
-   stop/restart, reconnect and sustained audio at all three rates.
+2. Physically validate the [stereo playback packet fix](docs/USB_PACKET_FIX.md).
+   Extend evidence with device/OS/app versions,
+   rates, channel maps and duration. Verify capture-only, stereo/18-channel
+   and mixed alternates, stop/restart, reconnect and sustained audio at all
+   three rates.
 3. Consider small control/routing improvements individually. The internal code
    slot has only 20 bytes free; measure compiled size before claiming capacity.
    An explicitly reserved SDRAM design is possible research, not enabled in

@@ -137,6 +137,10 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
     usb = verify_usb(original, patched, build)
     assert usb['status'] == 'pass'
     groups.extend(usb['groups'])
+    from usb_packet_verify import verify as verify_packets
+    packets = verify_packets(original, patched, build)
+    assert packets['status'] == 'pass'
+    groups.extend(packets['groups'])
     groups.extend(verify_shared_state(patched, build))
     from routing_storage_verify import verify as verify_storage
     storage = verify_storage(original, patched, build)
@@ -169,14 +173,15 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
         'hardware_access': False,
         'scope': 'Integrated candidate ARM instructions with explicit DSP and peripheral models',
         'details': {'storage': 'storage-verification.json', 'ui': 'ui-verification.json', 'audio': 'audio-verification.json',
+                    'usb_packets': 'packet-verification.json',
                     'hardware_initialization': 'hardware-audit.json'},
         'limits': [
-            'This candidate has offline evidence only; prior panel observations do not validate its audio or recovery',
+            'The playback fix has offline evidence only; prior baseline hardware observations do not validate the changed image',
             'DSP execution and MMIO assumptions are stated in the separate audio report',
             'Instruction counts do not measure real-time deadline margin or CPU cycles',
         ],
     }
-    return report, {'usb-verification.json': usb, 'mpu-verification.json': mpu, 'storage-verification.json': storage, 'ui-verification.json': ui, 'audio-verification.json': audio,
+    return report, {'usb-verification.json': usb, 'packet-verification.json': packets, 'mpu-verification.json': mpu, 'storage-verification.json': storage, 'ui-verification.json': ui, 'audio-verification.json': audio,
                     'hardware-audit.json': hardware}
 
 
@@ -191,6 +196,7 @@ def verify_shared_state(patched, build):
         machine = CombinedMachine(patched, symbols, stub_routes=False)
         assert machine.call(0x6000d980, rate)[0] == 0
         descriptor = machine.read(symbols['mx1_uac2_configuration'], 355)
+        machine.write(symbols['mx1_usb_playback_alt'], b'\x02')
         for strip in range(11):
             machine.packet(2, strip + 0x29, patched=True)
             machine.packet(4, 1, 1, patched=True)
@@ -199,6 +205,7 @@ def verify_shared_state(patched, build):
                 1 if i <= strip else 0 for i in range(11))
             machine.setup(request(0xa1, 1, 0x100, 0x1000, 4))
             expect_reply(machine, struct.pack('<I', rate))
+            assert machine.read(symbols['mx1_usb_playback_alt'], 1) == b'\x02'
             assert machine.read(symbols['mx1_uac2_configuration'], 355) == descriptor
             assert machine.read(symbols['mx1_route_state'], 11) == bytes(
                 1 if i <= strip else 0 for i in range(11))

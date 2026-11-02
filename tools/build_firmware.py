@@ -69,7 +69,7 @@ def build(firmware: Path, out: Path) -> dict:
     env = dict(os.environ, ZIG_GLOBAL_CACHE_DIR=str(cache.resolve()),
                ZIG_LOCAL_CACHE_DIR=str(cache.resolve()))
     sources = [ROOT / "patches" / p for p in (
-        "channel_routing_audio.c", "channel_routing_ui.c", "channel_routing_ui.S", "usb_audio.c")]
+        "channel_routing_audio.c", "channel_routing_ui.c", "channel_routing_ui.S", "usb_audio.c", "usb_playback.S")]
     from uac2_design import prototype_configuration
     config = prototype_configuration(preserve_modes=True)
     (out / "uac2_configuration.h").write_text("#define MX1_UAC2_CONFIGURATION_BYTES {" +
@@ -102,8 +102,13 @@ def build(firmware: Path, out: Path) -> dict:
             raise FormatError("Unresolved extension relocation")
         allocated = [s.name for s in ef.iter_sections()
                      if s["sh_flags"] & 2 and s["sh_size"]]
-        if allocated != [".text", ".route_state", ".usb_data", ".usb_state"] or text["sh_type"] != "SHT_PROGBITS":
+        if allocated != [".usb_playback_patch", ".text", ".route_state", ".usb_data", ".usb_state"] or text["sh_type"] != "SHT_PROGBITS":
             raise FormatError("ELF contains allocated bytes outside the injected section")
+        playback = ef.get_section_by_name(".usb_playback_patch")
+        if (playback["sh_addr"] != 0x01009860 or playback["sh_size"] != 438 or
+            playback["sh_type"] != "SHT_PROGBITS" or playback["sh_flags"] & 7 != 6):
+            raise FormatError("Unexpected USB playback patch section")
+        playback_blob = playback.data()
         state = ef.get_section_by_name(".route_state")
         if (state["sh_type"] != "SHT_NOBITS" or state["sh_addr"] != 0x01017264
                 or state["sh_size"] != 24 or state["sh_flags"] & 7 != 3):
@@ -117,6 +122,12 @@ def build(firmware: Path, out: Path) -> dict:
             raise FormatError("Unexpected USB writable sections")
         descriptor_blob = usb_data.data()
         table = ef.get_section_by_name(".symtab")
+        playback_symbols = table.get_symbol_by_name("mx1_usb_playback_patch") or []
+        if (len(playback_symbols) != 1 or playback_symbols[0]["st_value"] != 0x01009861 or
+            playback_symbols[0]["st_info"]["type"] != "STT_FUNC" or
+            not 0 < playback_symbols[0]["st_size"] <= 438 or
+            ef.get_section(playback_symbols[0]["st_shndx"]).name != ".usb_playback_patch"):
+            raise FormatError("Unexpected USB playback entry or extent")
         for name in required:
             matches = table.get_symbol_by_name(name) or []
             if len(matches) != 1:
@@ -137,6 +148,7 @@ def build(firmware: Path, out: Path) -> dict:
             ("route_ready", 0x0101727a, 1, ".route_state"),
             ("mx1_uac2_rate", 0x010173e0, 4, ".usb_state"),
             ("mx1_uac2_reply", 0x010173e4, 14, ".usb_state"),
+            ("mx1_usb_playback_alt", 0x010173f2, 1, ".usb_state"),
             ("mx1_uac2_configuration", 0x0101727c, 355, ".usb_data")):
             objects = table.get_symbol_by_name(name) or []
             if (len(objects) != 1 or objects[0]["st_value"] != address or
@@ -181,8 +193,8 @@ def build(firmware: Path, out: Path) -> dict:
                 struct.pack('<I', symbols['mx1_uac2_configuration']), changes, "UAC2 configuration pointer")
     for offset in (0xb4984, 0xb4996):
         exact_patch(modified, offset, bytes.fromhex('ff00ff'), bytes.fromhex('ef0201'), changes, "UAC2 device association")
-    exact_patch(modified, 0xda292, bytes.fromhex('4ff0000c'), bytes.fromhex('4ff0010c'), changes, "Capture-first priming")
-    changes[-1]['runtime_address'] = 0x01009a06
+    from usb_playback_patch import patch_playback
+    playback_evidence = patch_playback(modified, playback_blob, changes)
     exact_patch(modified, 0x1e786, bytes.fromhex("3eb50c46002202216846"),
                 absolute_jump(0x6001e786, symbols["mx1_route_recall"]), changes,
                 "Scene recall routes and normal-boot latest-route restoration")
@@ -203,14 +215,14 @@ def build(firmware: Path, out: Path) -> dict:
         "sources": {str(p.relative_to(ROOT)): sha256(p.read_bytes()) for p in [
             *sources, ROOT / "patches/channel_routing.h", ROOT / "patches/mainline.ld",
             Path(__file__).resolve(), ROOT / "tools/routing_audio_patch.py",
-            ROOT / "tools/firmware_patch.py", ROOT / "tools/uac2_design.py"]},
+            ROOT / "tools/firmware_patch.py", ROOT / "tools/uac2_design.py", ROOT / "tools/usb_playback_patch.py"]},
         "scatter_extension": scatter, "patches": changes,
         "writable_state": {"start": 0x01017264, "size": 400, "end_exclusive": 0x010173f4, "startup_zero_length_offset": 0x108},
-        "audio_routing": audio, "container": container,
+        "audio_routing": audio, "usb_playback": playback_evidence, "container": container,
         "sram_bytes_remaining": LIMIT - ENTRY - scatter['code_length'],
         "hardware_access": False,
         "limits": [
-            "Restores the pre-generator image with user-reported normal boot and iPhone/AUM duplex audio; see hardware record",
+            "Stereo packet fix builds on the pre-generator baseline; this changed image has no hardware acceptance yet",
             "Routing and USB-B audio combined; USB-host application remains stock",
             "Real-time deadline margin and electrical/DMA behavior require hardware measurement",
         ],

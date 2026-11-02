@@ -1,5 +1,7 @@
 ENTRY(mx1_route_ui_event)
 SECTIONS {
+    .usb_playback_patch 0x01009860 : { KEEP(*(.usb_playback_patch)) }
+    ASSERT(SIZEOF(.usb_playback_patch) == 438, "USB playback patch overflow")
     . = 0x0100f6a4;
     .text : {
         KEEP(*(.text.hook))
@@ -16,7 +18,7 @@ SECTIONS {
     ASSERT(ADDR(.text) + SIZEOF(.text) <= 0x01010000, "Routing code overflow")
     ASSERT(ADDR(.route_state) + SIZEOF(.route_state) <= 0x01018000, "Routing state overflow")
     .usb_data 0x0101727c : { KEEP(*(.usb_data)) . = ALIGN(4); }
-    .usb_state 0x010173e0 (NOLOAD) : { KEEP(*(.usb_state)) . = ALIGN(4); }
+    .usb_state 0x010173e0 (NOLOAD) : { KEEP(*(.usb_state)) KEEP(*(.usb_stream_state)) . = ALIGN(4); }
     ASSERT(SIZEOF(.usb_data) == 356, "Unexpected USB descriptor storage")
     ASSERT(SIZEOF(.usb_state) == 20, "Unexpected USB control state")
     ASSERT(ADDR(.usb_state) + SIZEOF(.usb_state) <= 0x01018000, "Writable state overflow")

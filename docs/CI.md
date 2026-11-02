@@ -58,6 +58,10 @@ then runs these 17 stages in order:
 16. `native-controls`
 17. `subcpu-evidence`
 
+The `arm-mainline` stage includes finite-packet playback/capture and alternate
+transition tests. The final gate also requires `packet-verification.json` to
+pass and identify the actual current application hash.
+
 The final gate requires the complete ordered pipeline and compares the one
 mainline container, decoded application and load-image blob against both current
 reports and actual committed artifact bytes. It also checks the unchanged

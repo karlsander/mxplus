@@ -1,8 +1,8 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758",
-  "candidate_container_sha256": "88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba",
+  "patched_app_sha256": "8f771499a3ce93ab6f2f26242b75f80e46ca6b273b538900b04a68bb207a4890",
+  "candidate_container_sha256": "dacb12ae966da96176a4c40c8fb736a021ff0a5091d06c800192bcb547474211",
   "extension_sha256": "859b0ffc16473fcefcce41c53029821f1013c206f8b00d32203fbbc0e166be68",
   "groups": [
     {
@@ -349,6 +349,428 @@
     {
       "name": "Original backup initializer retains descriptor and callback tables",
       "status": "pass"
+    },
+    {
+      "name": "Finite stereo/18-channel packets of 1..14 complete frames preserve samples and re-arm",
+      "status": "pass",
+      "cases": [
+        {
+          "channels": 2,
+          "frames": 1,
+          "largest_fifo_read_burst": 2
+        },
+        {
+          "channels": 2,
+          "frames": 2,
+          "largest_fifo_read_burst": 4
+        },
+        {
+          "channels": 2,
+          "frames": 3,
+          "largest_fifo_read_burst": 6
+        },
+        {
+          "channels": 2,
+          "frames": 4,
+          "largest_fifo_read_burst": 6
+        },
+        {
+          "channels": 2,
+          "frames": 5,
+          "largest_fifo_read_burst": 6
+        },
+        {
+          "channels": 2,
+          "frames": 6,
+          "largest_fifo_read_burst": 6
+        },
+        {
+          "channels": 2,
+          "frames": 7,
+          "largest_fifo_read_burst": 6
+        },
+        {
+          "channels": 2,
+          "frames": 8,
+          "largest_fifo_read_burst": 6
+        },
+        {
+          "channels": 2,
+          "frames": 9,
+          "largest_fifo_read_burst": 6
+        },
+        {
+          "channels": 2,
+          "frames": 10,
+          "largest_fifo_read_burst": 6
+        },
+        {
+          "channels": 2,
+          "frames": 11,
+          "largest_fifo_read_burst": 6
+        },
+        {
+          "channels": 2,
+          "frames": 12,
+          "largest_fifo_read_burst": 6
+        },
+        {
+          "channels": 2,
+          "frames": 13,
+          "largest_fifo_read_burst": 6
+        },
+        {
+          "channels": 2,
+          "frames": 14,
+          "largest_fifo_read_burst": 6
+        },
+        {
+          "channels": 18,
+          "frames": 1,
+          "largest_fifo_read_burst": 18
+        },
+        {
+          "channels": 18,
+          "frames": 2,
+          "largest_fifo_read_burst": 36
+        },
+        {
+          "channels": 18,
+          "frames": 3,
+          "largest_fifo_read_burst": 54
+        },
+        {
+          "channels": 18,
+          "frames": 4,
+          "largest_fifo_read_burst": 54
+        },
+        {
+          "channels": 18,
+          "frames": 5,
+          "largest_fifo_read_burst": 54
+        },
+        {
+          "channels": 18,
+          "frames": 6,
+          "largest_fifo_read_burst": 54
+        },
+        {
+          "channels": 18,
+          "frames": 7,
+          "largest_fifo_read_burst": 54
+        },
+        {
+          "channels": 18,
+          "frames": 8,
+          "largest_fifo_read_burst": 54
+        },
+        {
+          "channels": 18,
+          "frames": 9,
+          "largest_fifo_read_burst": 54
+        },
+        {
+          "channels": 18,
+          "frames": 10,
+          "largest_fifo_read_burst": 54
+        },
+        {
+          "channels": 18,
+          "frames": 11,
+          "largest_fifo_read_burst": 54
+        },
+        {
+          "channels": 18,
+          "frames": 12,
+          "largest_fifo_read_burst": 54
+        },
+        {
+          "channels": 18,
+          "frames": 13,
+          "largest_fifo_read_burst": 54
+        },
+        {
+          "channels": 18,
+          "frames": 14,
+          "largest_fifo_read_burst": 54
+        }
+      ]
+    },
+    {
+      "name": "Unfixed predecessor reproduces the 48-byte stereo counter underflow",
+      "status": "pass"
+    },
+    {
+      "name": "Direct and buffered silence/full-scale/negative samples retain original conversion handling",
+      "status": "pass"
+    },
+    {
+      "name": "All rate/alternate combinations stream finite varying packets; 18-channel traces match predecessor",
+      "status": "pass",
+      "cases": [
+        {
+          "rate": 44100,
+          "out_channels": 2,
+          "in_channels": 2,
+          "sample_frames": 132,
+          "stock_18_channel_trace_equal": false
+        },
+        {
+          "rate": 44100,
+          "out_channels": 2,
+          "in_channels": 18,
+          "sample_frames": 132,
+          "stock_18_channel_trace_equal": false
+        },
+        {
+          "rate": 44100,
+          "out_channels": 18,
+          "in_channels": 2,
+          "sample_frames": 132,
+          "stock_18_channel_trace_equal": true
+        },
+        {
+          "rate": 44100,
+          "out_channels": 18,
+          "in_channels": 18,
+          "sample_frames": 132,
+          "stock_18_channel_trace_equal": true
+        },
+        {
+          "rate": 48000,
+          "out_channels": 2,
+          "in_channels": 2,
+          "sample_frames": 216,
+          "stock_18_channel_trace_equal": false
+        },
+        {
+          "rate": 48000,
+          "out_channels": 2,
+          "in_channels": 18,
+          "sample_frames": 216,
+          "stock_18_channel_trace_equal": false
+        },
+        {
+          "rate": 48000,
+          "out_channels": 18,
+          "in_channels": 2,
+          "sample_frames": 216,
+          "stock_18_channel_trace_equal": true
+        },
+        {
+          "rate": 48000,
+          "out_channels": 18,
+          "in_channels": 18,
+          "sample_frames": 216,
+          "stock_18_channel_trace_equal": true
+        },
+        {
+          "rate": 96000,
+          "out_channels": 2,
+          "in_channels": 2,
+          "sample_frames": 432,
+          "stock_18_channel_trace_equal": false
+        },
+        {
+          "rate": 96000,
+          "out_channels": 2,
+          "in_channels": 18,
+          "sample_frames": 432,
+          "stock_18_channel_trace_equal": false
+        },
+        {
+          "rate": 96000,
+          "out_channels": 18,
+          "in_channels": 2,
+          "sample_frames": 432,
+          "stock_18_channel_trace_equal": true
+        },
+        {
+          "rate": 96000,
+          "out_channels": 18,
+          "in_channels": 18,
+          "sample_frames": 432,
+          "stock_18_channel_trace_equal": true
+        }
+      ],
+      "maximum_observed_instructions": 579,
+      "timing_measurement": false
+    },
+    {
+      "name": "Cold startup, capture without OUT, and playback restart preserve priming and sample order",
+      "status": "pass",
+      "cases": [
+        {
+          "channels": 2,
+          "capture_first": true,
+          "readiness_restart": true
+        },
+        {
+          "channels": 18,
+          "capture_first": true,
+          "readiness_restart": true
+        }
+      ]
+    },
+    {
+      "name": "Stop/restart and 2/18-channel switches discard old FIFO/tail format without overreading",
+      "status": "pass",
+      "cases": [
+        {
+          "from": 2,
+          "to": 2,
+          "after_frames": 1,
+          "via_alt0": true
+        },
+        {
+          "from": 2,
+          "to": 2,
+          "after_frames": 4,
+          "via_alt0": true
+        },
+        {
+          "from": 2,
+          "to": 2,
+          "after_frames": 5,
+          "via_alt0": true
+        },
+        {
+          "from": 2,
+          "to": 18,
+          "after_frames": 1,
+          "via_alt0": true
+        },
+        {
+          "from": 2,
+          "to": 18,
+          "after_frames": 1,
+          "via_alt0": false
+        },
+        {
+          "from": 2,
+          "to": 18,
+          "after_frames": 4,
+          "via_alt0": true
+        },
+        {
+          "from": 2,
+          "to": 18,
+          "after_frames": 4,
+          "via_alt0": false
+        },
+        {
+          "from": 2,
+          "to": 18,
+          "after_frames": 5,
+          "via_alt0": true
+        },
+        {
+          "from": 2,
+          "to": 18,
+          "after_frames": 5,
+          "via_alt0": false
+        },
+        {
+          "from": 18,
+          "to": 2,
+          "after_frames": 1,
+          "via_alt0": true
+        },
+        {
+          "from": 18,
+          "to": 2,
+          "after_frames": 1,
+          "via_alt0": false
+        },
+        {
+          "from": 18,
+          "to": 2,
+          "after_frames": 4,
+          "via_alt0": true
+        },
+        {
+          "from": 18,
+          "to": 2,
+          "after_frames": 4,
+          "via_alt0": false
+        },
+        {
+          "from": 18,
+          "to": 2,
+          "after_frames": 5,
+          "via_alt0": true
+        },
+        {
+          "from": 18,
+          "to": 2,
+          "after_frames": 5,
+          "via_alt0": false
+        },
+        {
+          "from": 18,
+          "to": 18,
+          "after_frames": 1,
+          "via_alt0": true
+        },
+        {
+          "from": 18,
+          "to": 18,
+          "after_frames": 4,
+          "via_alt0": true
+        },
+        {
+          "from": 18,
+          "to": 18,
+          "after_frames": 5,
+          "via_alt0": true
+        }
+      ]
+    },
+    {
+      "name": "Zero/partial-frame packet lengths fail silent before FIFO access",
+      "status": "pass",
+      "cases": [
+        {
+          "channels": 2,
+          "bytes": 0
+        },
+        {
+          "channels": 2,
+          "bytes": 1
+        },
+        {
+          "channels": 2,
+          "bytes": 3
+        },
+        {
+          "channels": 2,
+          "bytes": 7
+        },
+        {
+          "channels": 2,
+          "bytes": 9
+        },
+        {
+          "channels": 18,
+          "bytes": 0
+        },
+        {
+          "channels": 18,
+          "bytes": 1
+        },
+        {
+          "channels": 18,
+          "bytes": 3
+        },
+        {
+          "channels": 18,
+          "bytes": 71
+        },
+        {
+          "channels": 18,
+          "bytes": 73
+        }
+      ]
     },
     {
       "name": "USB clock requests and routing edits coexist in the same protected-memory machine",
@@ -828,10 +1250,11 @@
     "storage": "storage-verification.json",
     "ui": "ui-verification.json",
     "audio": "audio-verification.json",
+    "usb_packets": "packet-verification.json",
     "hardware_initialization": "hardware-audit.json"
   },
   "limits": [
-    "This candidate has offline evidence only; prior panel observations do not validate its audio or recovery",
+    "The playback fix has offline evidence only; prior baseline hardware observations do not validate the changed image",
     "DSP execution and MMIO assumptions are stated in the separate audio report",
     "Instruction counts do not measure real-time deadline margin or CPU cycles"
   ]

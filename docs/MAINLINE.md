@@ -8,10 +8,12 @@ The display-marker diagnostic is not part of mainline. Routing now uses scene
 and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
-The restored candidate is byte-identical to pre-generator image
-`88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba`,
-which the user confirmed boots and passes one iPhone/AUM duplex path. Snapshot
-persistence and broader USB operation still require physical acceptance.
+The current candidate is
+`dacb12ae966da96176a4c40c8fb736a021ff0a5091d06c800192bcb547474211`.
+It adds the [stereo packet fix](USB_PACKET_FIX.md) to the pre-generator image
+`88457445…`, which the user confirmed boots and passes one iPhone/AUM duplex
+path. The changed image, snapshot persistence and broader USB operation still
+require physical acceptance.
 
 ## Memory and binary integration
 
@@ -22,10 +24,11 @@ read-only code SRAM; the combined build fixes that placement before testing.
 
 | Runtime interval (end exclusive) | Contents | Initialization |
 | --- | --- | --- |
+| `0x01009860..0x01009a16` | Replacement playback instructions within the original callback | Existing first startup copy, no growth |
 | `0x0100f6a4..0x0100ffec` | 2,376 bytes of code/constants, read-only after MPU setup | Extended original first startup copy |
 | `0x01017264..0x0101727c` | Desired/applied routing cache and startup-ready flag, padded to 24 bytes | Extended original writable BSS clear |
 | `0x0101727c..0x010173e0` | 355-byte mutable USB descriptor plus padding | Repurposed formerly zero-length startup copy |
-| `0x010173e0..0x010173f4` | USB rate and 14-byte reply buffer, padded to 20 bytes | Extended original writable BSS clear |
+| `0x010173e0..0x010173f4` | USB rate, 14-byte reply buffer and one-byte OUT alternate at `0x010173f2`, padded to 20 bytes | Extended original writable BSS clear |
 
 The code slot has 20 bytes remaining before `0x01010000`. The 400-byte writable
 reservation begins exactly at the original BSS end, stays inside stock MPU
@@ -41,7 +44,9 @@ executable slot. Main decoded literal `0xe8` extends the first copy accordingly;
 The originally zero-length copy described by `0x10c/0x110/0x114` now loads the
 USB descriptor to `0x0101727c`. The following original stack-pool zero is
 unchanged. These startup literals are resident at `0x60000000 + decoded offset`.
-The existing nonempty copy/zero regions retain their destinations and contents.
+Existing nonempty copy/zero regions retain their destinations. The playback
+patch replaces instructions within the original first copy; other original
+initialized data remains unchanged.
 
 The builder guards every overwritten byte and the original whole-file hash,
 section types/sizes/addresses, exported functions, state objects and slot bounds.
@@ -53,6 +58,8 @@ section types/sizes/addresses, exported functions, state objects and slot bounds
 The sole reproduction pipeline executes original startup, MPU setup, RTOS pool
 initialization, boot selection/decoding, updater checks, USB descriptors/control
 requests, panel gestures and DSP programming helpers against this exact image.
+Finite-packet tests execute playback/capture, malformed lengths and alternate
+changes; 18-channel traces are compared against the predecessor.
 An integration case initializes USB and interleaves routing changes with clock
 requests on the same emulated RAM at all three rates. Code pages are protected
 against writes. Dirty-start tests verify the entire initialized descriptor,
@@ -80,6 +87,6 @@ The filename retains `UNTESTED` because acceptance is incomplete. The
 [hardware record](../evidence/iphone-aum-20261102/README.md) scopes the successful
 iPhone/AUM result; it does not establish every channel, rate or stream mode.
 
-A separate retirement guard verifies the original sample callback, transport,
+A separate retirement guard verifies the original sample callback pointer, transport,
 SELECT/pad handlers and SDRAM heap start. Saved retired source IDs 53/54 fall
 back to Auto on normal boot and recall; remaining routes keep their IDs.

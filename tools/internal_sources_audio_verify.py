@@ -139,6 +139,27 @@ def verify(original, patched, build):
            decoded_offset='0x168c', callback_pointer=hex(wrapper),
            slot_address=hex(CALLBACK_SLOT))
 
+    # The bank is inferred, not established hardware. A cold all-Auto boot
+    # must never access it, including a diagnostic/normal transition. Trap
+    # the exact port range: the stock pump uses other words on the same page.
+    # Even zero writes must fail; zero-filled emulated MMIO is not evidence
+    # of safe startup.
+    for rate in (0, 44100, 48000, 96000):
+        machine = AudioMachine(patched, symbols)
+        def forbidden_port(uc, access, address, size, value, user):
+            raise AssertionError(f'Idle callback accessed generator port {address:#x}')
+        machine.uc.hook_add(UC_HOOK_MEM_READ | UC_HOOK_MEM_WRITE, forbidden_port,
+                            begin=PORTS, end=PORTS + GENERATOR_COUNT * 4 - 1)
+        machine.write(CONTEXT, u32(rate))
+        machine.register()
+        for mode in (0, 0, 4, 4, 0, 0):
+            machine.write(MODE, u32(mode))
+            machine.frame()
+        assert not machine.generator_writes
+    passed('Cold all-Auto callback never accesses the guarded generator bank',
+           rates=[0, 44100, 48000, 96000], modes=[0, 0, 4, 4, 0, 0],
+           guarded_interval=['0x40101100', '0x40101130'])
+
     abi_cases = []
     for rate in (44100, 48000, 96000):
         for mode in (0, 1, 2, 3, 4, 11, 0xffffffff):

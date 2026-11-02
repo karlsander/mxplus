@@ -1,10 +1,10 @@
-> Current scope: one combined routing + USB-B mainline candidate; generic USB-host unlocking is retired. Host-probe sections below are historical research guidance, not an available build. See [MAINLINE.md](MAINLINE.md) for the current bench sequence.
+> Current scope: one combined routing + generators + USB-B mainline candidate; generic USB-host unlocking is retired. Host-probe sections below are historical research guidance, not an available build. The first generator/editor image failed normal boot; TAP rollback succeeded for that particular failure. See [BOOT_REGRESSION.md](BOOT_REGRESSION.md) for exact identities and [MAINLINE.md](MAINLINE.md) for the current bench sequence.
 
 # Staged MX-1 hardware validation
 
 ## Purpose and present boundary
 
-The package contains two **separate, untested firmware candidates** and an
+The package maintains one experimental firmware candidate and an
 external Linux bridge prototype. Offline checks establish the container
 format, selected original ARM execution paths, and the new code's behavior
 under explicit models. They do not establish safe flashing, physical recovery,
@@ -13,7 +13,7 @@ and separates those questions so a failure produces useful evidence.
 
 Stages 1–3 can be performed without changing MX-1 firmware. Stages 5–6 apply
 only after a device-specific recovery route has been established. No step in
-this document is an instruction to treat either candidate as a safe release.
+this document is an instruction to treat the candidate as a safe release.
 
 ## 1. Label the connections and establish power
 

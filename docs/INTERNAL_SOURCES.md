@@ -1,7 +1,9 @@
 # Internal sources
 
 `NSE` and `BD` are part of the sole mainline image. Both remain untested on a
-physical MX-1. They were recovered from the user's 2 November archive and
+physical MX-1: their first integrated image failed before the panel lit, and
+the current startup-guard correction awaits testing. See the
+[boot investigation](BOOT_REGRESSION.md). They were recovered from the user's 2 November archive and
 adapted to the current guarded builder, writable-memory layout, source end
 stops and routing persistence. No old firmware variant is maintained.
 
@@ -43,6 +45,13 @@ words at DSP0 exchange indices `0x40..0x4b` (CPU `0x40101100..0x4010112c`).
 Routing uses operand `0xa040` for noise and `0xa041 + strip` for BD, duplicated
 on stereo destinations. Diagnostics skip generator publication. External Mixer
 clears the active generator mask when routing drains.
+
+Cold startup owns no generator ports. An all-Auto callback leaves the inferred
+bank untouched, including after returning from diagnostics. Selecting a source
+establishes ownership; removing it clears only its previously owned output.
+Diagnostic return resets active voices without treating all twelve ports as
+previously owned. The inactive SELECT overlay returns before parameter lookup;
+startup/view guards also precede the SELECT press overlay's mixer query.
 
 Clock hooks at decoded `0xa7dc`, `0xa810` and `0xa894` (runtime base `0x60000000`)
 retain the original start/stop/step bodies and publish a separate modulo-16

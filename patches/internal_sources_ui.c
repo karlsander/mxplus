@@ -81,9 +81,9 @@ static int only_key(uint32_t wanted)
 
 int mx1_sources_ui_edit_target(void)
 {
+    if (!capture.edit || !ordinary_view()) return -1;
     uint32_t strip = mixer_parameter(0xfb);
-    return capture.edit && strip == capture.previous && strip < MX1_STRIP_COUNT &&
-        ordinary_view() ? (int)strip : -1;
+    return strip == capture.previous && strip < MX1_STRIP_COUNT ? (int)strip : -1;
 }
 
 int mx1_sources_ui_route_target(void)
@@ -133,8 +133,9 @@ int mx1_sources_ui_press(uint32_t key)
 {
     capture.armed = 0;
     if (key >= 0x29 && key <= 0x33) {
-        uint32_t previous = mixer_parameter(0xfb);
-        if (ordinary_view() && only_key(key) && previous == key - 0x29) {
+        uint32_t previous = ordinary_view() && only_key(key) ?
+            mixer_parameter(0xfb) : 0xffffffffu;
+        if (previous == key - 0x29) {
             capture.armed = 1;
             capture.previous = (uint8_t)previous;
             capture.selected = 0;

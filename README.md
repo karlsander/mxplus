@@ -2,9 +2,11 @@
 
 One MX-1 firmware build: channel routing, internal noise/bass drum sources and experimental USB-B UAC2 audio.
 
-**The routing predecessor, including encoder end stops, passed the user's bench
-test. The combined mainline image has not yet been tested on hardware.** USB-B
-class-driver enumeration/audio and failed-application recovery remain unverified.
+**The first generator/editor mainline failed normal boot with a dark panel.
+TAP update mode still worked; the routing predecessor and then the exact
+pre-generator mainline booted after restoration.** The current startup-guard
+correction awaits a hardware test. USB-B class-driver enumeration/audio remain
+unverified. See the [boot investigation](docs/BOOT_REGRESSION.md).
 The word mainline identifies the maintained build, not a certification of safety.
 
 ## Build and verify

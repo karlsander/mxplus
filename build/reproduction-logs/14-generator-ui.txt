@@ -1,5 +1,5 @@
 {
   "status": "pass",
-  "groups_passed": 21,
+  "groups_passed": 22,
   "ui_only_fixture": false
 }

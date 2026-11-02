@@ -6,6 +6,11 @@ remains excluded. The display-marker diagnostic is not part of mainline.
 Routing assignments use the stock snapshot and delayed system-save paths; see
 [storage integration](ROUTING_STORAGE.md). BD patterns currently live in RAM.
 
+The first generator/editor image failed normal boot. The exact pre-generator
+mainline boots, and TAP update mode allowed restoration after this failure.
+The current startup guards are a test candidate, not a confirmed boot fix;
+see the [boot investigation](BOOT_REGRESSION.md).
+
 ## Memory and binary integration
 
 Only the main application changes. The USB application, boot programs, updater
@@ -19,15 +24,15 @@ separates state and code without changing the original MPU configuration.
 | `0x0101727c..0x010173e0` | Mutable USB descriptor and padding, 356 bytes |
 | `0x010173e0..0x010173f4` | USB rate/reply state, 20 bytes |
 | `0x010173f4..0x0101784c` | Generator patterns, voices, clock and transient UI state |
-| `0x01018000..0x01019a54` | Mainline code/constants, 6,740 bytes, read-only after MPU setup |
+| `0x01018000..0x01019a4c` | Mainline code/constants, 6,732 bytes, read-only after MPU setup |
 
 Writable state stays inside stock MPU region 2 (`0x01010000..0x01018000`).
-Code has 9,644 bytes remaining before its reviewed `0x0101c000` limit.
+Code has 9,652 bytes remaining before its reviewed `0x0101c000` limit.
 General allocation remains `0x01013e18..0x01014e18`; stacks remain
 `0x01020000..0x01028000`. Neither pool overlaps the extension. No MPU or
 allocator configuration is changed.
 
-The 10,224-byte load image is appended at main decoded offset
+The 10,216-byte load image is appended at main decoded offset
 `0xe0448`, after all original bytes. The originally zero-length
 startup copy described by main decoded literals `0x10c/0x110/0x114` copies this
 blob to `0x01017264`. It initializes writable sections, zero padding and code
@@ -77,4 +82,4 @@ status. Prior routing success does not establish USB audio behavior.
 Test NSE first at a low fader level, then one BD voice, then multiple voices at
 all rates while monitoring USB playback/capture. The generator exchange-port
 mapping and worst-case IRQ deadline margin require hardware measurement; see
-[internal sources](INTERNAL_SOURCES.md). No physical test of this image is claimed.
+[internal sources](INTERNAL_SOURCES.md). No physical test of this corrected image is claimed.

@@ -19,7 +19,9 @@ volatile uint32_t mx1_bd_clock DATA = 0;
 volatile uint32_t mx1_internal_active_mask DATA = 0;
 static uint32_t next_step DATA = 0;
 static uint32_t last_clock DATA = 0;
-static uint32_t previous_mask DATA = 0xffffffffu;
+/* No exchange ports belong to us until a generator is selected. In particular
+ * a cold all-Auto boot must not probe the inferred generator bank at all. */
+static uint32_t previous_mask DATA = 0;
 static uint32_t previous_rate DATA = 0;
 static uint32_t previous_running DATA = 0;
 static volatile uint32_t transport_generation DATA = 0;
@@ -105,9 +107,9 @@ static uint32_t sample_word(int32_t sample)
 
 void mx1_internal_invalidate(void)
 {
-    /* Diagnostics own the exchange bank. On normal-program return, clear any
-     * foreign words and reset active voices even if transport stayed stopped. */
-    previous_mask = 0xffffffffu;
+    /* Diagnostics own the exchange bank. Force active voices to reset on
+     * return, retaining the actual ownership mask so never-selected ports
+     * remain untouched. Removed owned ports still receive their final zero. */
     previous_rate = 0;
     last_clock = mx1_bd_clock;
 }

@@ -1,1 +1,1 @@
-{"status": "pass", "groups_passed": 6}
+{"status": "pass", "groups_passed": 7}

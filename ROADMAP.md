@@ -1,8 +1,10 @@
 # Mainline roadmap
 
 One maintained firmware contains routing, internal NSE/BD sources and USB-B UAC2. The routing predecessor
-passed user bench tests including encoder end stops. The combined image has
-offline evidence but still needs its own physical test.
+passed user bench tests including encoder end stops. The pre-generator mainline
+boots, but the first generator/editor image left the panel dark. TAP-mode
+rollback worked for this failure. The current startup guards need a physical
+test; [root-cause investigation remains open](docs/BOOT_REGRESSION.md).
 
 1. Verify combined-image boot, routing, snapshot save/recall, delayed restart
    persistence, SELECT editing toggles and unchanged ordinary controls. Test

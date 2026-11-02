@@ -191,6 +191,22 @@ def verify(original: bytes, patched: bytes, build: dict, extension=None) -> dict
     assert patched[0xf5d8:0xf5dc] == expected[0xf5d8:0xf5dc]
     passed('Exact original hook bytes and all final veneer targets match')
 
+    for editing, boot in ((False, 0), (False, 1), (True, 1)):
+        m = machine(editing=editing)
+        m.write(BOOT, u32(boot))
+        m.mix_reads.clear()
+        m.ui_reads.clear()
+        assert signed(m.checked(symbols['mx1_sources_ui_edit_target'])[0]) == -1
+        assert not m.mix_reads and not m.ui_reads, \
+            'Inactive/startup overlay accessed parameter banks'
+    m = machine(editing=False)
+    m.write(BOOT, u32(1))
+    m.mix_reads.clear()
+    m.checked(symbols['mx1_sources_ui_press'], 0x29)
+    assert not m.mix_reads, 'Startup SELECT queried mixer before the view guard'
+    passed('Inactive editor and boot guards precede extension parameter queries',
+           parameter_access='Observed calls; original page dispatch remains modeled')
+
     # Run the original selection body, its actual held-key queries and the
     # compiled toggle; model only parameter storage and the page dispatch edge.
     for page in (5, 15):

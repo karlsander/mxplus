@@ -1,15 +1,37 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "d6cda6d3344a63f62008cea4eabfdb5b3aa6092344359f5c527ffba847f0985f",
-  "candidate_container_sha256": "08b8f2f783718b8039dc66ddfc14aa2ce13f63447df4df73eb10fa098e77fd94",
+  "patched_app_sha256": "6908150871a345c689886a0c0f79d058f3c0294af8659cc084f657870834b0e4",
+  "candidate_container_sha256": "3c9d769e97366f7b0e7a929b4d47c0ad7f697928306e5d8f7e4a852ddbcc728f",
   "groups": [
     {
       "name": "Exact candidate callback literal registers the compiled wrapper through original code",
       "status": "pass",
       "decoded_offset": "0x168c",
-      "callback_pointer": "0x1018d81",
+      "callback_pointer": "0x1018d75",
       "slot_address": "0x20001330"
+    },
+    {
+      "name": "Cold all-Auto callback never accesses the guarded generator bank",
+      "status": "pass",
+      "rates": [
+        0,
+        44100,
+        48000,
+        96000
+      ],
+      "modes": [
+        0,
+        0,
+        4,
+        4,
+        0,
+        0
+      ],
+      "guarded_interval": [
+        "0x40101100",
+        "0x40101130"
+      ]
     },
     {
       "name": "Actual IRQ calls retained pump first and supplies rate/ports only in normal programs",
@@ -43,19 +65,19 @@
           "sample_rate": 44100,
           "program_mode": 4,
           "render_called": false,
-          "irq_wrapper_instructions_with_render_stub": 159
+          "irq_wrapper_instructions_with_render_stub": 155
         },
         {
           "sample_rate": 44100,
           "program_mode": 11,
           "render_called": false,
-          "irq_wrapper_instructions_with_render_stub": 159
+          "irq_wrapper_instructions_with_render_stub": 155
         },
         {
           "sample_rate": 44100,
           "program_mode": 4294967295,
           "render_called": false,
-          "irq_wrapper_instructions_with_render_stub": 159
+          "irq_wrapper_instructions_with_render_stub": 155
         },
         {
           "sample_rate": 48000,
@@ -85,19 +107,19 @@
           "sample_rate": 48000,
           "program_mode": 4,
           "render_called": false,
-          "irq_wrapper_instructions_with_render_stub": 159
+          "irq_wrapper_instructions_with_render_stub": 155
         },
         {
           "sample_rate": 48000,
           "program_mode": 11,
           "render_called": false,
-          "irq_wrapper_instructions_with_render_stub": 159
+          "irq_wrapper_instructions_with_render_stub": 155
         },
         {
           "sample_rate": 48000,
           "program_mode": 4294967295,
           "render_called": false,
-          "irq_wrapper_instructions_with_render_stub": 159
+          "irq_wrapper_instructions_with_render_stub": 155
         },
         {
           "sample_rate": 96000,
@@ -127,19 +149,19 @@
           "sample_rate": 96000,
           "program_mode": 4,
           "render_called": false,
-          "irq_wrapper_instructions_with_render_stub": 159
+          "irq_wrapper_instructions_with_render_stub": 155
         },
         {
           "sample_rate": 96000,
           "program_mode": 11,
           "render_called": false,
-          "irq_wrapper_instructions_with_render_stub": 159
+          "irq_wrapper_instructions_with_render_stub": 155
         },
         {
           "sample_rate": 96000,
           "program_mode": 4294967295,
           "render_called": false,
-          "irq_wrapper_instructions_with_render_stub": 159
+          "irq_wrapper_instructions_with_render_stub": 155
         }
       ],
       "renderer": "Isolated only in ABI cases; subsequent regression cases execute it"
@@ -158,7 +180,7 @@
           "original_fifo_reads_compared": 0,
           "candidate_irq_instructions": {
             "min": 188,
-            "max": 403
+            "max": 188
           }
         },
         {
@@ -170,8 +192,8 @@
           "original_mmio_writes_compared": 3611,
           "original_fifo_reads_compared": 0,
           "candidate_irq_instructions": {
-            "min": 195,
-            "max": 409
+            "min": 194,
+            "max": 355
           }
         },
         {
@@ -183,7 +205,7 @@
           "original_mmio_writes_compared": 4853,
           "original_fifo_reads_compared": 1260,
           "candidate_irq_instructions": {
-            "min": 209,
+            "min": 198,
             "max": 652
           }
         },
@@ -196,8 +218,8 @@
           "original_mmio_writes_compared": 1765,
           "original_fifo_reads_compared": 138,
           "candidate_irq_instructions": {
-            "min": 209,
-            "max": 413
+            "min": 198,
+            "max": 303
           }
         },
         {
@@ -209,7 +231,7 @@
           "original_mmio_writes_compared": 2869,
           "original_fifo_reads_compared": 1260,
           "candidate_irq_instructions": {
-            "min": 209,
+            "min": 198,
             "max": 515
           }
         },
@@ -222,7 +244,7 @@
           "original_mmio_writes_compared": 3749,
           "original_fifo_reads_compared": 138,
           "candidate_irq_instructions": {
-            "min": 209,
+            "min": 198,
             "max": 440
           }
         },
@@ -236,7 +258,7 @@
           "original_fifo_reads_compared": 0,
           "candidate_irq_instructions": {
             "min": 188,
-            "max": 409
+            "max": 355
           }
         },
         {
@@ -248,7 +270,7 @@
           "original_mmio_writes_compared": 3989,
           "original_fifo_reads_compared": 378,
           "candidate_irq_instructions": {
-            "min": 209,
+            "min": 198,
             "max": 648
           }
         },
@@ -262,7 +284,7 @@
           "original_fifo_reads_compared": 0,
           "candidate_irq_instructions": {
             "min": 191,
-            "max": 406
+            "max": 191
           }
         },
         {
@@ -274,8 +296,8 @@
           "original_mmio_writes_compared": 3611,
           "original_fifo_reads_compared": 0,
           "candidate_irq_instructions": {
-            "min": 198,
-            "max": 412
+            "min": 197,
+            "max": 358
           }
         },
         {
@@ -287,7 +309,7 @@
           "original_mmio_writes_compared": 4853,
           "original_fifo_reads_compared": 1260,
           "candidate_irq_instructions": {
-            "min": 212,
+            "min": 201,
             "max": 655
           }
         },
@@ -300,8 +322,8 @@
           "original_mmio_writes_compared": 1765,
           "original_fifo_reads_compared": 138,
           "candidate_irq_instructions": {
-            "min": 212,
-            "max": 416
+            "min": 201,
+            "max": 306
           }
         },
         {
@@ -313,7 +335,7 @@
           "original_mmio_writes_compared": 2869,
           "original_fifo_reads_compared": 1260,
           "candidate_irq_instructions": {
-            "min": 212,
+            "min": 201,
             "max": 518
           }
         },
@@ -326,7 +348,7 @@
           "original_mmio_writes_compared": 3749,
           "original_fifo_reads_compared": 138,
           "candidate_irq_instructions": {
-            "min": 212,
+            "min": 201,
             "max": 443
           }
         },
@@ -340,7 +362,7 @@
           "original_fifo_reads_compared": 0,
           "candidate_irq_instructions": {
             "min": 191,
-            "max": 412
+            "max": 358
           }
         },
         {
@@ -352,7 +374,7 @@
           "original_mmio_writes_compared": 3989,
           "original_fifo_reads_compared": 378,
           "candidate_irq_instructions": {
-            "min": 212,
+            "min": 201,
             "max": 651
           }
         },
@@ -366,7 +388,7 @@
           "original_fifo_reads_compared": 0,
           "candidate_irq_instructions": {
             "min": 195,
-            "max": 410
+            "max": 195
           }
         },
         {
@@ -378,8 +400,8 @@
           "original_mmio_writes_compared": 3281,
           "original_fifo_reads_compared": 0,
           "candidate_irq_instructions": {
-            "min": 202,
-            "max": 416
+            "min": 201,
+            "max": 362
           }
         },
         {
@@ -391,7 +413,7 @@
           "original_mmio_writes_compared": 4469,
           "original_fifo_reads_compared": 1188,
           "candidate_irq_instructions": {
-            "min": 216,
+            "min": 205,
             "max": 655
           }
         },
@@ -404,8 +426,8 @@
           "original_mmio_writes_compared": 1717,
           "original_fifo_reads_compared": 132,
           "candidate_irq_instructions": {
-            "min": 216,
-            "max": 420
+            "min": 205,
+            "max": 310
           }
         },
         {
@@ -417,7 +439,7 @@
           "original_mmio_writes_compared": 2773,
           "original_fifo_reads_compared": 1188,
           "candidate_irq_instructions": {
-            "min": 216,
+            "min": 205,
             "max": 518
           }
         },
@@ -430,7 +452,7 @@
           "original_mmio_writes_compared": 3413,
           "original_fifo_reads_compared": 132,
           "candidate_irq_instructions": {
-            "min": 216,
+            "min": 205,
             "max": 447
           }
         },
@@ -444,7 +466,7 @@
           "original_fifo_reads_compared": 0,
           "candidate_irq_instructions": {
             "min": 195,
-            "max": 416
+            "max": 360
           }
         },
         {
@@ -456,7 +478,7 @@
           "original_mmio_writes_compared": 3605,
           "original_fifo_reads_compared": 324,
           "candidate_irq_instructions": {
-            "min": 216,
+            "min": 205,
             "max": 578
           }
         }
@@ -476,16 +498,16 @@
           "ticks": 64,
           "original_mmio_writes_compared": 4268,
           "full_irq_instructions": {
-            "first_trigger": 451,
-            "minimum": 302,
+            "first_trigger": 285,
+            "minimum": 285,
             "maximum": 746,
             "post_crossfade_minimum": 557,
             "post_crossfade_maximum": 746
           },
           "extra_instructions_over_identical_stock_irq": {
-            "first_trigger": 308,
-            "minimum": 148,
-            "maximum": 308,
+            "first_trigger": 142,
+            "minimum": 142,
+            "maximum": 149,
             "post_crossfade_minimum": 148,
             "post_crossfade_maximum": 149
           }
@@ -497,16 +519,16 @@
           "ticks": 64,
           "original_mmio_writes_compared": 4268,
           "full_irq_instructions": {
-            "first_trigger": 564,
+            "first_trigger": 411,
             "minimum": 370,
             "maximum": 809,
             "post_crossfade_minimum": 617,
             "post_crossfade_maximum": 805
           },
           "extra_instructions_over_identical_stock_irq": {
-            "first_trigger": 421,
+            "first_trigger": 268,
             "minimum": 208,
-            "maximum": 421,
+            "maximum": 268,
             "post_crossfade_minimum": 208,
             "post_crossfade_maximum": 209
           }
@@ -518,16 +540,16 @@
           "ticks": 64,
           "original_mmio_writes_compared": 4268,
           "full_irq_instructions": {
-            "first_trigger": 1943,
+            "first_trigger": 1941,
             "minimum": 1310,
-            "maximum": 1943,
+            "maximum": 1941,
             "post_crossfade_minimum": 1477,
             "post_crossfade_maximum": 1672
           },
           "extra_instructions_over_identical_stock_irq": {
-            "first_trigger": 1800,
+            "first_trigger": 1798,
             "minimum": 1068,
-            "maximum": 1800,
+            "maximum": 1798,
             "post_crossfade_minimum": 1068,
             "post_crossfade_maximum": 1079
           }
@@ -560,16 +582,16 @@
           "ticks": 64,
           "original_mmio_writes_compared": 4268,
           "full_irq_instructions": {
-            "first_trigger": 454,
-            "minimum": 305,
+            "first_trigger": 288,
+            "minimum": 288,
             "maximum": 749,
             "post_crossfade_minimum": 560,
             "post_crossfade_maximum": 749
           },
           "extra_instructions_over_identical_stock_irq": {
-            "first_trigger": 311,
-            "minimum": 151,
-            "maximum": 311,
+            "first_trigger": 145,
+            "minimum": 145,
+            "maximum": 152,
             "post_crossfade_minimum": 151,
             "post_crossfade_maximum": 152
           }
@@ -581,16 +603,16 @@
           "ticks": 64,
           "original_mmio_writes_compared": 4268,
           "full_irq_instructions": {
-            "first_trigger": 575,
+            "first_trigger": 422,
             "minimum": 373,
             "maximum": 812,
             "post_crossfade_minimum": 620,
             "post_crossfade_maximum": 808
           },
           "extra_instructions_over_identical_stock_irq": {
-            "first_trigger": 432,
+            "first_trigger": 279,
             "minimum": 211,
-            "maximum": 432,
+            "maximum": 279,
             "post_crossfade_minimum": 211,
             "post_crossfade_maximum": 212
           }
@@ -602,16 +624,16 @@
           "ticks": 64,
           "original_mmio_writes_compared": 4268,
           "full_irq_instructions": {
-            "first_trigger": 2034,
+            "first_trigger": 2032,
             "minimum": 1313,
-            "maximum": 2034,
+            "maximum": 2032,
             "post_crossfade_minimum": 1480,
             "post_crossfade_maximum": 1668
           },
           "extra_instructions_over_identical_stock_irq": {
-            "first_trigger": 1891,
+            "first_trigger": 1889,
             "minimum": 1071,
-            "maximum": 1891,
+            "maximum": 1889,
             "post_crossfade_minimum": 1071,
             "post_crossfade_maximum": 1082
           }
@@ -644,16 +666,16 @@
           "ticks": 64,
           "original_mmio_writes_compared": 3885,
           "full_irq_instructions": {
-            "first_trigger": 458,
-            "minimum": 309,
+            "first_trigger": 292,
+            "minimum": 292,
             "maximum": 749,
             "post_crossfade_minimum": 564,
             "post_crossfade_maximum": 749
           },
           "extra_instructions_over_identical_stock_irq": {
-            "first_trigger": 315,
-            "minimum": 155,
-            "maximum": 315,
+            "first_trigger": 149,
+            "minimum": 149,
+            "maximum": 156,
             "post_crossfade_minimum": 155,
             "post_crossfade_maximum": 156
           }
@@ -665,16 +687,16 @@
           "ticks": 64,
           "original_mmio_writes_compared": 3885,
           "full_irq_instructions": {
-            "first_trigger": 576,
+            "first_trigger": 423,
             "minimum": 377,
             "maximum": 816,
             "post_crossfade_minimum": 624,
             "post_crossfade_maximum": 808
           },
           "extra_instructions_over_identical_stock_irq": {
-            "first_trigger": 433,
+            "first_trigger": 280,
             "minimum": 215,
-            "maximum": 433,
+            "maximum": 280,
             "post_crossfade_minimum": 215,
             "post_crossfade_maximum": 215
           }
@@ -686,16 +708,16 @@
           "ticks": 64,
           "original_mmio_writes_compared": 3885,
           "full_irq_instructions": {
-            "first_trigger": 2005,
+            "first_trigger": 2003,
             "minimum": 1317,
-            "maximum": 2005,
+            "maximum": 2003,
             "post_crossfade_minimum": 1484,
             "post_crossfade_maximum": 1668
           },
           "extra_instructions_over_identical_stock_irq": {
-            "first_trigger": 1862,
+            "first_trigger": 1860,
             "minimum": 1075,
-            "maximum": 1862,
+            "maximum": 1860,
             "post_crossfade_minimum": 1075,
             "post_crossfade_maximum": 1075
           }

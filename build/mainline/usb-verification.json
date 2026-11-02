@@ -1,13 +1,13 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "d6cda6d3344a63f62008cea4eabfdb5b3aa6092344359f5c527ffba847f0985f",
-  "candidate_container_sha256": "08b8f2f783718b8039dc66ddfc14aa2ce13f63447df4df73eb10fa098e77fd94",
+  "patched_app_sha256": "6908150871a345c689886a0c0f79d058f3c0294af8659cc084f657870834b0e4",
+  "candidate_container_sha256": "3c9d769e97366f7b0e7a929b4d47c0ad7f697928306e5d8f7e4a852ddbcc728f",
   "groups": [
     {
       "name": "Actual startup copies extension and preserves existing initialized data",
       "status": "pass",
-      "extension_bytes": 10224
+      "extension_bytes": 10216
     },
     {
       "name": "Patched initializer veneer, original registration, and live rate descriptors",

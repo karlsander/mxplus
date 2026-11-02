@@ -1,0 +1,69 @@
+# Generator/editor boot investigation
+
+## Hardware observations, 2 November 2026
+
+These are user-reported results on the same MX-1, not instrumented fault traces.
+Normal boot was checked with USB disconnected. The unit's board revision,
+sample rate, precise test duration and fault registers were not recorded.
+No USB streaming or generator audio result follows from a boot result.
+
+| Image | SHA-256 | Observed result |
+| --- | --- | --- |
+| First generator/editor mainline, PR #6 | `08b8f2f783718b8039dc66ddfc14aa2ce13f63447df4df73eb10fa098e77fd94` | Completely dark panel on normal power-on; TAP update mode still available |
+| Routing/end-stop predecessor, commit `7bad049115021af47a30b9d91bbc2ec4c92c211e` | `221e5ffb2a858a25d5691a1c818324fafa117bfa48d6a79aac0d666140ff2b95` | Restored via TAP updater; user confirmed normal operation |
+| Exact pre-generator mainline, commit `eb646b6cb3ad7f271097c4ab41f2098ab1399576` | `88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba` | Copied from historical Git blob, readback verified and ejected; user confirmed normal boot after update |
+
+The last image includes routing, end stops, stock-storage integration and USB-B
+UAC2. It excludes generators, the SELECT editor and the new code placement.
+This narrows the regression to that later batch; it does not validate the
+earlier image's persistence or USB audio, nor prove recovery from other faults.
+Historical artifacts remain in Git, not as maintained parallel builds.
+
+## Concrete startup defects corrected
+
+All addresses below are in the main application context.
+
+1. The sample callback pointer at decoded `0x168c` / runtime `0x6000168c`
+   invokes the new wrapper after registration, even without USB connected.
+   `internal_sources.c` initialized `previous_mask` to `0xffffffff`. Therefore
+   its first all-Auto frame wrote twelve zero words to inferred DSP exchange
+   ports `0x40101100..0x4010112c`. This was unnecessary hardware access before
+   any source selection. Initialize ownership to zero. Diagnostic invalidation
+   now resets the rate marker while retaining actual ownership; active voices
+   still reset and removed owned ports still clear.
+2. The SELECT renderer hook at decoded `0x14692` / runtime `0x60014692` called
+   `mx1_sources_ui_edit_target`, which queried mixer parameter `0xfb` through
+   `0x6001e65e` before checking the inactive editor or startup/view guards.
+   The SELECT press hook at decoded `0x10516` had the same ordering issue.
+   Both now gate extension queries first. Stock rendering/dispatch still runs.
+
+The new tests fail against the failed image: an access trap on the exact
+generator-port range catches its first idle write, and the UI test observes
+parameter queries from the inactive overlay. The corrected code must pass both.
+These establish unwanted accesses, **not that either caused the hardware boot
+failure**. The inferred port mapping remains unverified when a generator is
+selected; parameter storage and hardware delivery remain modeled in UI tests.
+
+## Next candidate and remaining uncertainty
+
+The startup-guard candidate is
+`3c9d769e97366f7b0e7a929b4d47c0ad7f697928306e5d8f7e4a852ddbcc728f`.
+Its physical boot result is pending. It retains the new code placement at
+`0x01018000`, generator features, clock hooks and SELECT editor so the test
+addresses the startup accesses without reverting those features.
+
+Original hook instructions and PC-relative literals were rechecked against
+the input bytes. Startup, MPU permissions, allocator separation, register/stack
+preservation and modeled audio/UI regressions run in the reproduction pipeline.
+Code is 6,732 bytes; load data is 10,216 bytes at decoded `0xe0448`, copied to
+`0x01017264` by the previously empty copy slot. No original nonempty startup
+operation, allocator, MPU configuration, boot/updater, panel or USB-processor
+component changes. See [build accounting](../build/mainline/build-report.json).
+
+The emulated SRAM mapping does not establish physical availability of the new
+code interval. The boot harness still stops before the final branch and runs
+application startup separately; it does not model complete RTOS scheduling,
+interrupt stack margin or board initialization. If the correction still boots
+dark, the next isolation should distinguish code placement from callback/UI
+integration. A successful boot would support this correction but would not by
+itself distinguish which of these two guards resolved the failure.

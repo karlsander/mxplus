@@ -3,8 +3,11 @@
 Useful contributions make a firmware change reproducible or resolve a specific unknown about the MX-1's audio behavior. The most valuable next evidence is identified in [ROADMAP.md](ROADMAP.md). Read the [research report](docs/RESEARCH_REPORT.md) and the relevant [host](docs/HOST_PROBE.md), [device](docs/DEVICE_PROBE.md), or [routing](docs/CHANNEL_ROUTING.md) report before expanding a probe.
 
 The sole mainline candidate combines routing and USB-B UAC2. The user reported
-working routing/end stops in its predecessor; combined USB audio and recovery
-remain unverified. Retired host-unlock work is documentation only.
+working routing/end stops in its predecessor. The pre-generator mainline boots;
+the first generator/editor integration failed normal boot, and TAP rollback
+worked for that failure. USB audio and recovery from other failures remain
+unverified. See [boot investigation](docs/BOOT_REGRESSION.md).
+Retired host-unlock work is documentation only.
 
 ## Set up and establish a baseline
 

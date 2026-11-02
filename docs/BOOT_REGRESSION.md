@@ -99,13 +99,18 @@ its label. Transport state was not recorded; NSE runs independently of transport
 This is a new activation failure, not a continued dark-boot failure. BD, USB
 audio on this image, sustained timing and peak heap usage remain unverified.
 
-The next one-off test keeps generator computation and DSP routing unchanged
-but sends the twelve computed sample words to owned private RAM. It forbids
+A one-off test kept generator computation and DSP routing unchanged
+but sent the twelve computed sample words to owned private RAM. It forbids
 CPU accesses to `0x40101100..0x4010112f` in its instruction harness. This is a
-selection-stability test, not a working generator-audio image. If selecting
-NSE becomes stable, it implicates the physical publication path, including bus
-access/timing, rather than the unchanged generator math or route operands.
-If it still freezes, route operands and callback timing remain candidates.
+selection-stability test, not a working generator-audio image. The user reported
+the same freeze, with P9r still displayed. Removing physical sample writes
+was insufficient; DSP source operands and active callback behavior remain
+unresolved. This result does not validate the original physical exchange bank.
 
 The exact diagnostic identity, source delta and offline reports are recorded in
 [generator-freeze evidence](../evidence/generator-freeze-20261102/README.md).
+
+The next [DSP-source isolation](../evidence/generator-freeze-20261102/route-isolation/README.md)
+retains RAM publication and active rendering but makes NSE/BD read the existing
+P9r operand `0xa011`. This separately tests the unverified DSP source change;
+it deliberately does not deliver generator audio.

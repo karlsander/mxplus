@@ -34,12 +34,14 @@ instruction harness checks the owned RAM destination and rejects any read or
 write to the original physical generator interval. Existing MMIO, USB FIFO,
 scheduler and DSP models do not establish hardware behavior or real-time cost.
 The candidate was copied to the MX-1 update drive, fully readback-verified and
-ejected successfully. Physical flashing and selection results are pending.
+ejected successfully. The user reported the same freeze after flashing: the
+display remained on P9r when advancing toward NSE. Redirecting CPU sample
+writes into RAM was therefore insufficient to prevent the failure. It does
+not establish that the original MMIO bank is usable; that access was absent
+from this test.
 
-If selection succeeds, removing physical writes changes the outcome and
-implicates that publication path, without proving the exact hardware cause.
-If selection still freezes, the unchanged routing, active computation and
-interrupt timing remain candidates. This is not a final firmware fix.
+The unchanged DSP routing, active computation and interrupt timing remain
+candidates. This experiment did not resolve the freeze.
 
 Forensic reproduction: apply `historical-source-delta.patch` to the base
 commit, use its pinned environment, and run `tools/reproduce.py`. Reports here

@@ -3,7 +3,8 @@
 This records a temporary diagnostic derived from the booting pre-generator
 mainline at `eb646b6cb3ad7f271097c4ab41f2098ab1399576`. It is not a second maintained
 builder or feature branch. The normal mainline sources remain unchanged by
-this experiment. Its physical result is pending.
+this experiment. After a repeated copy with full readback and successful eject,
+the user confirmed that flashing succeeded but normal boot stayed dark.
 
 Candidate SHA-256:
 `dac455b5634088e9d8f235d9af397821d2dedd46175fc51caca55ad406fa2c12`.
@@ -44,7 +45,7 @@ identify that exact output. The committed gate was run against a temporary
 local commit containing matching sources, binary artifacts and reports; no
 additional active firmware build is introduced in the main tree.
 
-If this image also boots dark, the new code-location/load operation is sufficient
-to reproduce the failure without generator/editor hooks. That would implicate
-the location but would not distinguish absent RAM, aliasing, bus permissions,
-or another physical memory constraint without further evidence.
+The new code-location/load operation is therefore sufficient to reproduce the
+failure without generator/editor hooks. This implicates the location but does
+not distinguish absent RAM, aliasing, bus permissions, or another physical
+memory constraint without further evidence.

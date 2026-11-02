@@ -51,9 +51,13 @@
   },
   "groups": [
     {
-      "name": "Original MPU makes injected code read-only and new route state read-write",
+      "name": "Original MPU permits executable SDRAM code and writable private state",
       "status": "pass",
-      "code_protection": "0x01001000..0x0100ffff and 0x01018000..0x0101ffff protected against writes",
+      "code_protection": "Stock private code is read-only; SDRAM extension is protected against writes only in the test harness",
+      "rejected_private_interval": [
+        "0x01018000",
+        "0x01020000"
+      ],
       "state_interval": [
         "0x1017264",
         "0x101784c"

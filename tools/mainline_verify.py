@@ -27,12 +27,14 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list:
     cut, size = scatter['insert_offset'], scatter['insert_length']
     assert cut == len(original) and len(patched) == cut+size
     assert scatter['runtime_address'] == 0x01017264
-    assert scatter['code_address'] == 0x01018000
-    assert 0 < scatter['code_length'] <= 0x4000 and scatter['code_length'] % 4 == 0
-    assert build['sram_bytes_remaining'] == 0x4000 - scatter['code_length']
+    assert scatter['code_address'] == 0x60664000
+    assert 0 < scatter['code_length'] <= 0x2000 and scatter['code_length'] % 4 == 0
+    assert build['code_bytes_remaining'] == 0x2000 - scatter['code_length']
     blob = patched[cut:]
     assert sha256(blob) == build['extension_sha256']
-    assert size == 0xd9c+scatter['code_length']
+    assert size == scatter['data_length'] + scatter['code_length']
+    assert scatter['data_length'] == build['writable_state']['size']
+    assert scatter['code_load_offset'] == scatter['data_length']
     expected = bytearray(original+blob)
     occupied = set()
     for patch in build['patches']:
@@ -51,10 +53,15 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list:
     for i,(old,new) in enumerate(zip(old_ops,new_ops)):
         if i == 4:
             assert old == {'call':0x60000032,'kind':'copy','destination':0x01020000,'length':0,'source':0x600dffb4}
-            assert new == dict(old,destination=0x01017264,length=size,source=BASE+cut)
+            assert new == dict(old,destination=0x01017264,length=scatter['data_length'],source=BASE+cut)
+        elif i == 8:
+            assert old == {'call':0x60000056,'kind':'copy','destination':0x40008000,'length':0,'source':0x600e0448}
+            assert new == dict(old,destination=0x60664000,length=scatter['code_length'],
+                              source=BASE+cut+scatter['data_length'])
         else: assert old == new
     machine=Machine(patched,scatter=False)
-    machine.write(0x01017264,b'\xa5'*0x4d9c)
+    machine.write(0x01017264,b'\xa5'*0xd9c)
+    machine.write(0x60664000,b'\xa5'*0x2000)
     machine.uc.reg_write(UC_ARM_REG_SP,0x2001fff0)
     machine.uc.emu_start(BASE|1,BASE+0x7e,timeout=5_000_000,count=3_000_000)
     assert machine.uc.reg_read(UC_ARM_REG_PC)==BASE+0x7e
@@ -63,20 +70,23 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list:
         contents = (patched[op['source']-BASE:op['source']-BASE+op['length']]
                     if op['kind']=='copy' else bytes(op['length']))
         assert machine.read(op['destination'],op['length'])==contents
-    assert machine.read(0x01017264,size)==blob
+    assert machine.read(0x01017264,scatter['data_length'])==blob[:scatter['data_length']]
+    assert machine.read(0x60664000,scatter['code_length'])==blob[scatter['data_length']:]
     sections=scatter['sections']
     assert [s['name'] for s in sections]==['.route_state','.usb_data','.usb_state','.generator_data','.text']
     covered=set()
     for section in sections:
-        off=section['address']-0x01017264
+        off=section['load_offset']
+        assert off == (scatter['data_length'] if section['name']=='.text'
+                       else section['address']-0x01017264)
         assert sha256(blob[off:off+section['size']])==section['sha256']
         assert not covered & set(range(off,off+section['size']))
         covered.update(range(off,off+section['size']))
         assert section['flags']&7 == (6 if section['name']=='.text' else 3)
     assert all(byte==0 for i,byte in enumerate(blob) if i not in covered)
-    return [{'name':'Every changed byte is guarded; only the original empty startup copy is repurposed',
+    return [{'name':'Every changed byte is guarded; empty copies and the SDRAM heap base reserve extension memory',
              'status':'pass','extension_bytes':size,'code_address':hex(scatter['code_address']),
-             'sram_bytes_remaining':build['sram_bytes_remaining']},
+             'code_bytes_remaining':build['code_bytes_remaining']},
             {'name':'Original startup initializes all sections and preserves every original nonempty region',
              'status':'pass','sections':sections}]
 
@@ -90,6 +100,9 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
     from routing_mpu_verify import verify as verify_mpu
     mpu = verify_mpu(original, patched, build)
     groups.extend(mpu['groups'])
+    from sdram_code_verify import verify as verify_heap
+    heap = verify_heap(original, patched, build)
+    groups.extend(heap['groups'])
     from usb_audio_verify import verify as verify_usb
     usb = verify_usb(original, patched, build)
     assert usb['status'] == 'pass'
@@ -125,7 +138,7 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
         'extension_sha256': build['extension_sha256'], 'groups': groups,
         'hardware_access': False,
         'scope': 'Integrated candidate ARM instructions with explicit DSP and peripheral models',
-        'details': {'storage': 'storage-verification.json', 'ui': 'ui-verification.json', 'audio': 'audio-verification.json',
+        'details': {'heap': 'heap-verification.json', 'storage': 'storage-verification.json', 'ui': 'ui-verification.json', 'audio': 'audio-verification.json',
                     'hardware_initialization': 'hardware-audit.json'},
         'limits': [
             'This candidate has offline evidence only; prior panel observations do not validate its audio or recovery',
@@ -133,7 +146,7 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
             'Instruction counts do not measure real-time deadline margin or CPU cycles',
         ],
     }
-    return report, {'usb-verification.json': usb, 'mpu-verification.json': mpu, 'storage-verification.json': storage, 'ui-verification.json': ui, 'audio-verification.json': audio,
+    return report, {'heap-verification.json': heap, 'usb-verification.json': usb, 'mpu-verification.json': mpu, 'storage-verification.json': storage, 'ui-verification.json': ui, 'audio-verification.json': audio,
                     'hardware-audit.json': hardware}
 
 

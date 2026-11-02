@@ -4,7 +4,8 @@ One maintained firmware contains routing, internal NSE/BD sources and USB-B UAC2
 passed user bench tests including encoder end stops. The pre-generator mainline
 boots, but the first generator/editor image left the panel dark. TAP-mode
 rollback worked for this failure. Startup guards did not resolve the dark boot;
-[root-cause investigation remains open](docs/BOOT_REGRESSION.md). The earlier
+[a location-only test reproduces the failure](docs/BOOT_REGRESSION.md). The
+current SDRAM code reservation needs its hardware test. The earlier
 image passed a user-reported iPhone/AUM duplex path over a direct USB cable.
 
 1. Verify combined-image boot, routing, snapshot save/recall, delayed restart

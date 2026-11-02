@@ -16,7 +16,7 @@ import sys
 
 from elftools.elf.elffile import ELFFile
 
-from firmware_patch import exact_patch, inject, ENTRY, DATA_START, LIMIT
+from firmware_patch import exact_patch, inject, ENTRY, DATA_START, DATA_LIMIT, LIMIT
 from container_tool import (COMPONENT_BY_NAME, ORIGINAL_SHA256, FormatError,
                             component_unpacked, repack_image, sha256)
 
@@ -94,7 +94,7 @@ def build(firmware: Path, out: Path) -> dict:
             raise FormatError("Routing extension link address mismatch")
         blob = text.data()
         if not blob or len(blob) % 4 or ENTRY + len(blob) > LIMIT:
-            raise FormatError("Routing extension exceeds reviewed SRAM interval")
+            raise FormatError("Mainline extension exceeds reserved SDRAM code interval")
         if any(s["sh_type"] in ("SHT_REL", "SHT_RELA") for s in ef.iter_sections()):
             raise FormatError("Unresolved extension relocation")
         allocated = [s.name for s in ef.iter_sections()
@@ -145,24 +145,26 @@ def build(firmware: Path, out: Path) -> dict:
                    if s.name.startswith(("mx1_", "mxkick_", "mxnoise_"))}
         generator = ef.get_section_by_name('.generator_data')
         if (generator['sh_type'] != 'SHT_PROGBITS' or generator['sh_addr'] != 0x010173f4
-                or generator['sh_flags'] & 7 != 3 or generator['sh_addr']+generator['sh_size'] > ENTRY):
+                or generator['sh_flags'] & 7 != 3 or generator['sh_addr']+generator['sh_size'] > DATA_LIMIT):
             raise FormatError('Generator state outside writable MPU region')
         sections = []
-        load = bytearray(ENTRY + len(blob) - DATA_START)
+        writable_end = generator['sh_addr'] + generator['sh_size']
+        data_length = writable_end - DATA_START
+        load = bytearray(data_length + len(blob))
         for section in (state, usb_data, usb_state, generator, text):
             address, length = section['sh_addr'], section['sh_size']
             contents = bytes(length) if section['sh_type'] == 'SHT_NOBITS' else section.data()
-            load[address-DATA_START:address-DATA_START+length] = contents
+            offset = data_length if section.name == '.text' else address - DATA_START
+            load[offset:offset+length] = contents
             sections.append({'name': section.name, 'address': address, 'size': length,
-                             'sha256': sha256(contents), 'flags': section['sh_flags']})
-        writable_end = generator['sh_addr'] + generator['sh_size']
+                             'load_offset': offset, 'sha256': sha256(contents), 'flags': section['sh_flags']})
     if not all(name in symbols for name in required):
         raise FormatError("Compiler omitted required routing exports")
     code_length = len(blob)
     blob = bytes(load)
     modified, scatter = inject(original, blob, code_length)
     scatter['sections'] = sections
-    changes = scatter['startup_updates'].copy()
+    changes = scatter['startup_updates'].copy() + [scatter['heap_update']]
     exact_patch(modified, 0xd980, bytes.fromhex('10b500f01ff80d48'),
                 absolute_jump(0x6000d980, symbols['mx1_uac2_initialize']), changes, "USB-B UAC2 initializer")
     exact_patch(modified, 0xb4afc, struct.pack('<I', 0x600b499c),
@@ -206,10 +208,10 @@ def build(firmware: Path, out: Path) -> dict:
         "scatter_extension": scatter, "patches": changes,
         "writable_state": {"start": 0x01017264, "size": writable_end-DATA_START, "end_exclusive": writable_end, "startup_copy_operation": 4},
         "audio_routing": audio, "container": container,
-        "sram_bytes_remaining": LIMIT - ENTRY - scatter['code_length'],
+        "code_bytes_remaining": LIMIT - ENTRY - scatter['code_length'],
         "hardware_access": False,
         "limits": [
-            "Routing predecessor passed user bench tests; combined USB-B/internal-source mainline awaits hardware testing",
+            "Pre-generator mainline boots and passed an iPhone/AUM duplex path; SDRAM code relocation awaits hardware testing",
             "Routing, NSE/BD generators and USB-B audio combined; USB-host application remains stock",
             "Real-time deadline margin and electrical/DMA behavior require hardware measurement",
         ],
@@ -225,7 +227,7 @@ def main() -> None:
     a = p.parse_args()
     r = build(a.firmware, a.output)
     print(json.dumps({k: r[k] for k in ("status", "container_sha256", "symbols",
-                    "scatter_extension", "patches", "sram_bytes_remaining")}, indent=2))
+                    "scatter_extension", "patches", "code_bytes_remaining")}, indent=2))
 
 
 if __name__ == "__main__":

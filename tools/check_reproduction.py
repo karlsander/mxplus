@@ -124,6 +124,11 @@ def audit(check_committed: bool = False) -> dict:
         storage = read(prefix + "storage-verification.json")
         require(storage.get("status") == "pass" and storage.get("patched_app_sha256") == actual["patched_app_sha256"],
                 "Mainline storage evidence missing or belongs to another candidate")
+        heap = read(prefix + "heap-verification.json")
+        require(heap.get("status") == "pass" and
+                heap.get("patched_app_sha256") == actual["patched_app_sha256"] and
+                heap.get("candidate_container_sha256") == actual["container_sha256"],
+                "Mainline heap reservation evidence missing or belongs to another candidate")
         boot = read(prefix + "boot-verification.json")
         require(boot.get("status") == "pass" and boot.get("candidate_sha256") == actual["container_sha256"],
                 "Mainline boot evidence missing or belongs to another candidate")

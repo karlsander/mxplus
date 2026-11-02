@@ -65,6 +65,9 @@ class ReproductionIdentityTests(unittest.TestCase):
             })
             self.write_json(prefix + "storage-verification.json", {
                 "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"]})
+            self.write_json(prefix + "heap-verification.json", {
+                "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"],
+                "candidate_container_sha256": hashes["container_sha256"]})
             self.write_json(prefix + "boot-verification.json", {
                 "status": "pass", "candidate_sha256": hashes["container_sha256"]})
             for generator in ('core', 'audio', 'ui'):

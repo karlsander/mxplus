@@ -1,75 +1,78 @@
 {
   "status": "OFFLINE EXPERIMENT; NOT HARDWARE VALIDATED",
-  "container_sha256": "3c9d769e97366f7b0e7a929b4d47c0ad7f697928306e5d8f7e4a852ddbcc728f",
+  "container_sha256": "232a1e87a8c4378ce740c295ed9df7d5659c3645899f4c51747e656c022cfe25",
   "symbols": {
-    "mxkick_trigger.sweep_drops": 16881964,
-    "mxkick_trigger.amplitude_numerators": 16881952,
+    "mxkick_trigger.sweep_drops": 1617320236,
+    "mxkick_trigger.amplitude_numerators": 1617320224,
     "mx1_uac2_rate": 16872416,
     "mx1_uac2_reply": 16872420,
-    "mx1_route_ui_event": 16877039,
-    "mx1_route_ui_display": 16876845,
-    "mx1_route_get": 16876021,
-    "mx1_route_adjust": 16876149,
-    "mx1_route_label": 16876047,
-    "mx1_route_recall": 16875709,
-    "mx1_uac2_initialize": 16875521,
-    "mx1_uac2_set_rate": 16881205,
-    "mx1_uac2_class_request": 16881217,
-    "mx1_uac2_start": 16881497,
-    "mx1_sources_ui_event": 16880375,
-    "mx1_sources_ui_press": 16879641,
-    "mx1_sources_ui_release": 16880021,
-    "mx1_sources_ui_steps": 16880675,
-    "mx1_sources_ui_select_leds": 16879349,
-    "mx1_sources_ui_value": 16880821,
-    "mx1_sources_ui_tempo": 16880949,
-    "mx1_sources_ui_target": 16879385,
-    "mx1_bd_step_get": 16877241,
-    "mx1_bd_step_toggle": 16877275,
-    "mx1_bd_step_adjust": 16877311,
-    "mx1_bd_current_step": 16877419,
-    "mx1_internal_routes": 16877463,
-    "mx1_internal_render": 16877627,
-    "mx1_internal_audio_frame": 16878965,
-    "mx1_internal_step": 16877537,
-    "mx1_internal_transport_reset": 16877485,
-    "mx1_internal_clock_start": 16878303,
-    "mx1_internal_clock_stop": 16878373,
-    "mx1_internal_clock_step": 16878431,
-    "mx1_route_dispatch": 16876805,
-    "mx1_route_flush": 16876289,
+    "mx1_route_ui_event": 1617315311,
+    "mx1_route_ui_display": 1617315117,
+    "mx1_route_get": 1617314293,
+    "mx1_route_adjust": 1617314421,
+    "mx1_route_label": 1617314319,
+    "mx1_route_recall": 1617313981,
+    "mx1_uac2_initialize": 1617313793,
+    "mx1_uac2_set_rate": 1617319477,
+    "mx1_uac2_class_request": 1617319489,
+    "mx1_uac2_start": 1617319769,
+    "mx1_sources_ui_event": 1617318647,
+    "mx1_sources_ui_press": 1617317913,
+    "mx1_sources_ui_release": 1617318293,
+    "mx1_sources_ui_steps": 1617318947,
+    "mx1_sources_ui_select_leds": 1617317621,
+    "mx1_sources_ui_value": 1617319093,
+    "mx1_sources_ui_tempo": 1617319221,
+    "mx1_sources_ui_target": 1617317657,
+    "mx1_bd_step_get": 1617315513,
+    "mx1_bd_step_toggle": 1617315547,
+    "mx1_bd_step_adjust": 1617315583,
+    "mx1_bd_current_step": 1617315691,
+    "mx1_internal_routes": 1617315735,
+    "mx1_internal_render": 1617315899,
+    "mx1_internal_audio_frame": 1617317237,
+    "mx1_internal_step": 1617315809,
+    "mx1_internal_transport_reset": 1617315757,
+    "mx1_internal_clock_start": 1617316575,
+    "mx1_internal_clock_stop": 1617316645,
+    "mx1_internal_clock_step": 1617316703,
+    "mx1_route_dispatch": 1617315077,
+    "mx1_route_flush": 1617314561,
     "mx1_route_state": 16872036,
-    "mx1_route_ui_display_original": 16877209,
-    "mx1_sources_ui_route_target": 16879287,
+    "mx1_route_ui_display_original": 1617315481,
+    "mx1_sources_ui_route_target": 1617317559,
     "mx1_uac2_configuration": 16872060,
     "mx1_bd_steps": 16872436,
     "mx1_bd_clock": 16873140,
     "mx1_internal_active_mask": 16873144,
-    "mx1_internal_invalidate": 16877593,
-    "mxnoise_next": 16878919,
-    "mxkick_reset": 16878493,
-    "mxkick_trigger": 16878513,
-    "mxkick_next": 16878735,
-    "mx1_internal_start_original": 16879025,
-    "mx1_internal_stop_original": 16879045,
-    "mx1_internal_step_original": 16879065,
-    "mx1_sources_ui_edit_target": 16879085,
-    "mx1_sources_ui_select_leds_original": 16881177,
-    "mx1_sources_ui_press_original": 16881093,
-    "mx1_sources_ui_release_original": 16881117,
-    "mx1_sources_ui_steps_original": 16881137,
-    "mx1_sources_ui_value_original": 16881161
+    "mx1_internal_invalidate": 1617315865,
+    "mxnoise_next": 1617317191,
+    "mxkick_reset": 1617316765,
+    "mxkick_trigger": 1617316785,
+    "mxkick_next": 1617317007,
+    "mx1_internal_start_original": 1617317297,
+    "mx1_internal_stop_original": 1617317317,
+    "mx1_internal_step_original": 1617317337,
+    "mx1_sources_ui_edit_target": 1617317357,
+    "mx1_sources_ui_select_leds_original": 1617319449,
+    "mx1_sources_ui_press_original": 1617319365,
+    "mx1_sources_ui_release_original": 1617319389,
+    "mx1_sources_ui_steps_original": 1617319409,
+    "mx1_sources_ui_value_original": 1617319433
   },
   "scatter_extension": {
     "insert_offset": 918600,
-    "insert_length": 10216,
+    "insert_length": 8244,
     "runtime_address": 16872036,
-    "code_address": 16875520,
+    "data_length": 1512,
+    "code_address": 1617313792,
     "code_length": 6732,
+    "code_load_offset": 1512,
     "copy_operation_index": 4,
+    "code_copy_operation_index": 8,
     "startup_updates": [
       {
-        "label": "Original empty startup copy initializes mainline writable state and read-only code",
+        "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
         "file_offset": 268,
         "runtime_address": 1610613004,
         "original": "00000201",
@@ -77,27 +80,67 @@
         "component": "app_main"
       },
       {
-        "label": "Original empty startup copy initializes mainline writable state and read-only code",
+        "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
         "file_offset": 272,
         "runtime_address": 1610613008,
         "original": "00000000",
-        "replacement": "e8270000",
+        "replacement": "e8050000",
         "component": "app_main"
       },
       {
-        "label": "Original empty startup copy initializes mainline writable state and read-only code",
+        "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
         "file_offset": 276,
         "runtime_address": 1610613012,
         "original": "b4ff0d60",
         "replacement": "48040e60",
         "component": "app_main"
+      },
+      {
+        "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
+        "file_offset": 308,
+        "runtime_address": 1610613044,
+        "original": "00800040",
+        "replacement": "00406660",
+        "component": "app_main"
+      },
+      {
+        "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
+        "file_offset": 312,
+        "runtime_address": 1610613048,
+        "original": "00000000",
+        "replacement": "4c1a0000",
+        "component": "app_main"
+      },
+      {
+        "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
+        "file_offset": 316,
+        "runtime_address": 1610613052,
+        "original": "48040e60",
+        "replacement": "300a0e60",
+        "component": "app_main"
       }
     ],
+    "heap_update": {
+      "label": "Reserve mainline code before stock SDRAM heap; initializer derives reduced capacity",
+      "file_offset": 55148,
+      "runtime_address": 1610667884,
+      "original": "d0346660",
+      "replacement": "00606660",
+      "component": "app_main"
+    },
+    "heap_reservation": {
+      "original_start": 1617310928,
+      "start": 1617321984,
+      "end_exclusive": 1644167168,
+      "reserved_bytes": 11056,
+      "remaining_bytes": 26845184
+    },
     "sections": [
       {
         "name": ".route_state",
         "address": 16872036,
         "size": 24,
+        "load_offset": 0,
         "sha256": "9d908ecfb6b256def8b49a7c504e6c889c4b0e41fe6ce3e01863dd7b61a20aa0",
         "flags": 3
       },
@@ -105,6 +148,7 @@
         "name": ".usb_data",
         "address": 16872060,
         "size": 356,
+        "load_offset": 24,
         "sha256": "aec06110cfbdecf3cc13a0477a7fafa618556294eca691e6675511be31f96d00",
         "flags": 3
       },
@@ -112,6 +156,7 @@
         "name": ".usb_state",
         "address": 16872416,
         "size": 20,
+        "load_offset": 380,
         "sha256": "de47c9b27eb8d300dbb5f2c353e632c393262cf06340c4fa7f1b40c4cbd36f90",
         "flags": 3
       },
@@ -119,21 +164,23 @@
         "name": ".generator_data",
         "address": 16872436,
         "size": 1112,
+        "load_offset": 400,
         "sha256": "71da145ecb4b538abec4faadfe3e390f51b0c1b93fafea2cc50964e64bb5d36d",
         "flags": 3
       },
       {
         "name": ".text",
-        "address": 16875520,
+        "address": 1617313792,
         "size": 6732,
-        "sha256": "9f9d062fe1b6ace9da628b97fa48a0ab7ec4fbaac45a8d713da4e3f08ae3025e",
+        "load_offset": 1512,
+        "sha256": "ce9ab03d18a9470ef74c4b7e28ea85f5464148ee18011aca8ff97511c1787685",
         "flags": 54
       }
     ]
   },
   "patches": [
     {
-      "label": "Original empty startup copy initializes mainline writable state and read-only code",
+      "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
       "file_offset": 268,
       "runtime_address": 1610613004,
       "original": "00000201",
@@ -141,15 +188,15 @@
       "component": "app_main"
     },
     {
-      "label": "Original empty startup copy initializes mainline writable state and read-only code",
+      "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
       "file_offset": 272,
       "runtime_address": 1610613008,
       "original": "00000000",
-      "replacement": "e8270000",
+      "replacement": "e8050000",
       "component": "app_main"
     },
     {
-      "label": "Original empty startup copy initializes mainline writable state and read-only code",
+      "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
       "file_offset": 276,
       "runtime_address": 1610613012,
       "original": "b4ff0d60",
@@ -157,11 +204,43 @@
       "component": "app_main"
     },
     {
+      "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
+      "file_offset": 308,
+      "runtime_address": 1610613044,
+      "original": "00800040",
+      "replacement": "00406660",
+      "component": "app_main"
+    },
+    {
+      "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
+      "file_offset": 312,
+      "runtime_address": 1610613048,
+      "original": "00000000",
+      "replacement": "4c1a0000",
+      "component": "app_main"
+    },
+    {
+      "label": "Original empty startup copies initialize SRAM state and reserved SDRAM code",
+      "file_offset": 316,
+      "runtime_address": 1610613052,
+      "original": "48040e60",
+      "replacement": "300a0e60",
+      "component": "app_main"
+    },
+    {
+      "label": "Reserve mainline code before stock SDRAM heap; initializer derives reduced capacity",
+      "file_offset": 55148,
+      "runtime_address": 1610667884,
+      "original": "d0346660",
+      "replacement": "00606660",
+      "component": "app_main"
+    },
+    {
       "label": "USB-B UAC2 initializer",
       "file_offset": 55680,
       "runtime_address": 1610668416,
       "original": "10b500f01ff80d48",
-      "replacement": "dff800f001800101",
+      "replacement": "dff800f001406660",
       "component": "app_main"
     },
     {
@@ -201,7 +280,7 @@
       "file_offset": 124806,
       "runtime_address": 1610737542,
       "original": "3eb50c46002202216846",
-      "replacement": "00bfdff800f0bd800101",
+      "replacement": "00bfdff800f0bd406660",
       "component": "app_main"
     },
     {
@@ -209,7 +288,7 @@
       "file_offset": 62936,
       "runtime_address": 1610675672,
       "original": "490b0160",
-      "replacement": "f7920101",
+      "replacement": "f7526660",
       "component": "app_main"
     },
     {
@@ -217,7 +296,7 @@
       "file_offset": 83602,
       "runtime_address": 1610696338,
       "original": "2de9f041844803f0defd",
-      "replacement": "00bfdff800f0f58e0101",
+      "replacement": "00bfdff800f0f54e6660",
       "component": "app_main"
     },
     {
@@ -225,7 +304,7 @@
       "file_offset": 66838,
       "runtime_address": 1610679574,
       "original": "114910b5083148806ff06300",
-      "replacement": "00bfdff800f01990010100bf",
+      "replacement": "00bfdff800f01950666000bf",
       "component": "app_main"
     },
     {
@@ -233,7 +312,7 @@
       "file_offset": 66872,
       "runtime_address": 1610679608,
       "original": "084910b514314880",
-      "replacement": "dff800f095910101",
+      "replacement": "dff800f095516660",
       "component": "app_main"
     },
     {
@@ -241,7 +320,7 @@
       "file_offset": 82114,
       "runtime_address": 1610694850,
       "original": "2de9f04100221146e548",
-      "replacement": "00bfdff800f023940101",
+      "replacement": "00bfdff800f023546660",
       "component": "app_main"
     },
     {
@@ -249,7 +328,7 @@
       "file_offset": 79680,
       "runtime_address": 1610692416,
       "original": "2de9fc4180460022",
-      "replacement": "dff800f0b5940101",
+      "replacement": "dff800f0b5546660",
       "component": "app_main"
     },
     {
@@ -257,7 +336,7 @@
       "file_offset": 78678,
       "runtime_address": 1610691414,
       "original": "feb50446c54804f07cff",
-      "replacement": "00bfdff800f035950101",
+      "replacement": "00bfdff800f035556660",
       "component": "app_main"
     },
     {
@@ -265,7 +344,7 @@
       "file_offset": 42972,
       "runtime_address": 1610655708,
       "original": "00b5ba48cdb00178",
-      "replacement": "dff800f0df8a0101",
+      "replacement": "dff800f0df4a6660",
       "component": "app_main"
     },
     {
@@ -273,7 +352,7 @@
       "file_offset": 43024,
       "runtime_address": 1610655760,
       "original": "10b5ad4cccb02178",
-      "replacement": "dff800f0258b0101",
+      "replacement": "dff800f0254b6660",
       "component": "app_main"
     },
     {
@@ -281,7 +360,7 @@
       "file_offset": 43156,
       "runtime_address": 1610655892,
       "original": "f0b5934cadf5197d",
-      "replacement": "dff800f05f8b0101",
+      "replacement": "dff800f05f4b6660",
       "component": "app_main"
     },
     {
@@ -289,7 +368,7 @@
       "file_offset": 5772,
       "runtime_address": 1610618508,
       "original": "41980001",
-      "replacement": "758d0101",
+      "replacement": "754d6660",
       "component": "app_main"
     },
     {
@@ -297,9 +376,9 @@
       "file_offset": 150446,
       "runtime_address": 1610763182,
       "original": "2de9f04387b0eaf702fb",
-      "replacement": "00bfdff800f005850101",
+      "replacement": "00bfdff800f005456660",
       "component": "app_main"
     }
   ],
-  "sram_bytes_remaining": 9652
+  "code_bytes_remaining": 1460
 }

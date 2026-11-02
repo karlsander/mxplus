@@ -1,14 +1,14 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "6908150871a345c689886a0c0f79d058f3c0294af8659cc084f657870834b0e4",
-  "candidate_container_sha256": "3c9d769e97366f7b0e7a929b4d47c0ad7f697928306e5d8f7e4a852ddbcc728f",
+  "patched_app_sha256": "a00393a8534f02b20591d149b8f87cc9e7eac6373eacabe419c4627935e8de39",
+  "candidate_container_sha256": "232a1e87a8c4378ce740c295ed9df7d5659c3645899f4c51747e656c022cfe25",
   "groups": [
     {
       "name": "Exact candidate callback literal registers the compiled wrapper through original code",
       "status": "pass",
       "decoded_offset": "0x168c",
-      "callback_pointer": "0x1018d75",
+      "callback_pointer": "0x60664d75",
       "slot_address": "0x20001330"
     },
     {

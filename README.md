@@ -5,7 +5,9 @@ One MX-1 firmware build: channel routing, internal noise/bass drum sources and e
 **The first generator/editor mainline failed normal boot with a dark panel.
 TAP update mode still worked; the routing predecessor and then the exact
 pre-generator mainline booted after restoration.** The startup-guard correction
-also failed normal boot; [investigation continues](docs/BOOT_REGRESSION.md).
+also failed normal boot. A location-only test reproduced the failure without
+generators or the editor. The current code placement uses an explicit SDRAM
+heap reservation and awaits testing: [boot investigation](docs/BOOT_REGRESSION.md).
 The pre-generator image passed a user-reported **iPhone/AUM audio round trip**
 over a direct USB cable: [hardware record](evidence/iphone-aum-20261102/README.md).
 The word mainline identifies the maintained build, not a certification of safety.

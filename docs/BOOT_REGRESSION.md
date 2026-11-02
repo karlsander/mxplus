@@ -13,6 +13,7 @@ No USB streaming or generator audio result follows from a boot result.
 | Routing/end-stop predecessor, commit `7bad049115021af47a30b9d91bbc2ec4c92c211e` | `221e5ffb2a858a25d5691a1c818324fafa117bfa48d6a79aac0d666140ff2b95` | Restored via TAP updater; user confirmed normal operation |
 | Exact pre-generator mainline, commit `eb646b6cb3ad7f271097c4ab41f2098ab1399576` | `88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba` | Copied from historical Git blob, readback verified and ejected; user confirmed normal boot after update |
 | Startup guards, commit `689019e32348370c4fcd0686fa1a153c11522d89` | `3c9d769e97366f7b0e7a929b4d47c0ad7f697928306e5d8f7e4a852ddbcc728f` | Copied and readback verified; user reported the panel still completely dark after normal power-on |
+| Pre-generator code relocated to `0x01018000` | `dac455b5634088e9d8f235d9af397821d2dedd46175fc51caca55ad406fa2c12` | Repeated copy/readback/eject on request; user confirmed successful flash and completely dark normal boot |
 
 The last image includes routing, end stops, stock-storage integration and USB-B
 UAC2. It excludes generators, the SELECT editor and the new code placement.
@@ -47,7 +48,7 @@ These establish unwanted accesses, **not that either caused the hardware boot
 failure**. The inferred port mapping remains unverified when a generator is
 selected; parameter storage and hardware delivery remain modeled in UI tests.
 
-## Next candidate and remaining uncertainty
+## Startup-guard experiment
 
 The startup-guard candidate is
 `3c9d769e97366f7b0e7a929b4d47c0ad7f697928306e5d8f7e4a852ddbcc728f`.
@@ -62,14 +63,33 @@ preservation and modeled audio/UI regressions run in the reproduction pipeline.
 Code is 6,732 bytes; load data is 10,216 bytes at decoded `0xe0448`, copied to
 `0x01017264` by the previously empty copy slot. No original nonempty startup
 operation, allocator, MPU configuration, boot/updater, panel or USB-processor
-component changes. See [build accounting](../build/mainline/build-report.json).
+component changes. These sizes describe that historical startup-guard image,
+not the subsequent SDRAM build.
 
 The emulated SRAM mapping does not establish physical availability of the new
 code interval. The boot harness still stops before the final branch and runs
 application startup separately; it does not model complete RTOS scheduling,
-interrupt stack margin or board initialization. The next isolation uses the
+interrupt stack margin or board initialization. The location isolation used the
 exact pre-generator feature sources and links their code at `0x01018000`.
 It preserves the historical startup copies, including an unused duplicate of
 the relocated code in the old slot, and repurposes empty copy operation 8 to
 also load the code at the test address. This separates execution at the new
-address from the generator/editor hooks and their startup-copy redesign.
+address from the generator/editor hooks and their startup-copy redesign. It
+also boots dark. This demonstrates that using the new code location/load is
+sufficient to reproduce the failure without the generator/editor changes.
+It does not distinguish absent memory, aliasing, bus access restrictions or
+another physical constraint. See the [isolation record](../evidence/boot-location-20261102/README.md).
+
+## SDRAM reservation correction
+
+The current image is
+`232a1e87a8c4378ce740c295ed9df7d5659c3645899f4c51747e656c022cfe25`.
+It restores all generator/editor features and links code at `0x60664000` in
+the stock SDRAM heap address range. An explicit heap-start adjustment reserves
+11,056 bytes, so the original allocator cannot reuse them. Private state stays
+at its existing addresses; startup copies state and code separately. Every
+original nonempty initialization region, private pool and MPU setup remains
+unchanged. [SDRAM code evidence](SDRAM_CODE.md) documents the original
+instructions, heap exclusion and remaining performance/workload risks.
+
+Physical boot and generator behavior on this corrected placement are pending.

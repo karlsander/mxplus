@@ -2,7 +2,9 @@
 
 `NSE` and `BD` are part of the sole mainline image. Both remain untested on a
 physical MX-1: their first integrated image failed before the panel lit, and
-the startup-guard correction also failed normal boot. See the
+the startup-guard correction also failed normal boot. A location-only test
+isolated the problematic private code address; the current SDRAM reservation
+awaits hardware testing. See the
 [boot investigation](BOOT_REGRESSION.md). They were recovered from the user's 2 November archive and
 adapted to the current guarded builder, writable-memory layout, source end
 stops and routing persistence. No old firmware variant is maintained.
@@ -67,7 +69,7 @@ wrapper replaces only ordinary same-channel deselection with the edit toggle.
 Original modal, multi-key and stereo-link decisions remain in that body.
 
 The [memory layout](MAINLINE.md) records the initialized writable data and
-read-only code reservations. Every overwritten instruction/literal, trampoline
+SDRAM code reservation. Every overwritten instruction/literal, trampoline
 target and callback is guarded and recorded in the [build report](../build/mainline/build-report.json).
 
 Offline reproduction includes:

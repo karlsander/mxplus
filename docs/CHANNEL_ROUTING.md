@@ -181,7 +181,7 @@ updater and panel-controller payload remain original.
 | `0x13356` | `0x60013356` | Tempo-renderer entry to the source-label overlay and original-instruction trampoline |
 | `0x24bae` | `0x60024bae` | DSP event-8 handler entry to the original drain followed by route application |
 | `0x10c..0x114` | `0x6000010c..0x60000114` | Repurpose original empty startup copy for mainline sections |
-| `0xe0448` | `0x01017264` onward | Appended load image; code starts at `0x01018000` |
+| `0xe0448` | `0x01017264` state; `0x60664000` code | Packed load image, two startup copies, explicit SDRAM heap reservation |
 
 The combined code/data layout, startup changes and allocator/MPU checks are
 specified in [MAINLINE.md](MAINLINE.md). Routing state occupies the first 24

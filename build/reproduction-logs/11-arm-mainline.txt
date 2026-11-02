@@ -1,10 +1,11 @@
 {
   "status": "pass",
   "groups": [
-    "Every changed byte is guarded; only the original empty startup copy is repurposed",
+    "Every changed byte is guarded; empty copies and the SDRAM heap base reserve extension memory",
     "Original startup initializes all sections and preserves every original nonempty region",
-    "Original MPU makes injected code read-only and new route state read-write",
+    "Original MPU permits executable SDRAM code and writable private state",
     "Dirty cold startup initializes state; original RTOS pools cannot allocate its reservation",
+    "Stock SDRAM heap creation and allocation exclude reserved code through exhaustion",
     "Actual startup copies extension and preserves existing initialized data",
     "Patched initializer veneer, original registration, and live rate descriptors",
     "Original request dispatch reaches compiled UAC2 handler with correct replies",
@@ -53,5 +54,5 @@
     "Independent factory graph audit matches all 18 raw PC and 18 serial read bindings",
     "Original native input gates and connection callbacks distinguish native and PC paths"
   ],
-  "patched_app_sha256": "6908150871a345c689886a0c0f79d058f3c0294af8659cc084f657870834b0e4"
+  "patched_app_sha256": "a00393a8534f02b20591d149b8f87cc9e7eac6373eacabe419c4627935e8de39"
 }

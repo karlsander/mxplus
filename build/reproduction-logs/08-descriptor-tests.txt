@@ -17,7 +17,7 @@ test_retired_parallel_build_is_rejected (test_repository_integrity.ReproductionI
 test_stale_committed_binary_is_rejected_even_when_reports_match_rebuild (test_repository_integrity.ReproductionIdentityTests.test_stale_committed_binary_is_rejected_even_when_reports_match_rebuild) ... ok
 test_storage_report_must_match_candidate (test_repository_integrity.ReproductionIdentityTests.test_storage_report_must_match_candidate) ... ok
 test_absolute_veneer_preserves_registers_stack_and_flags (test_routing_build_guards.RoutingGuardTests.test_absolute_veneer_preserves_registers_stack_and_flags) ... ok
-test_extension_respects_exact_reviewed_sram_boundary (test_routing_build_guards.RoutingGuardTests.test_extension_respects_exact_reviewed_sram_boundary) ... ok
+test_extension_respects_exact_state_and_reserved_sdram_boundaries (test_routing_build_guards.RoutingGuardTests.test_extension_respects_exact_state_and_reserved_sdram_boundaries) ... ok
 test_ui_hook_rejects_wrong_original_sites_and_double_application (test_routing_build_guards.RoutingGuardTests.test_ui_hook_rejects_wrong_original_sites_and_double_application) ... ok
 test_wrong_firmware_is_rejected_before_compilation_or_output_creation (test_routing_build_guards.RoutingGuardTests.test_wrong_firmware_is_rejected_before_compilation_or_output_creation) ... ok
 test_all_terminal_clock_and_stream_references_resolve (test_uac2_design.UAC2DesignTests.test_all_terminal_clock_and_stream_references_resolve) ... ok
@@ -33,6 +33,6 @@ test_reject_configuration_lengths (test_usb_descriptors.USBDescriptorTests.test_
 test_reject_truncated_rate_list (test_usb_descriptors.USBDescriptorTests.test_reject_truncated_rate_list) ... ok
 
 ----------------------------------------------------------------------
-Ran 33 tests in 0.572s
+Ran 33 tests in 0.568s
 
 OK

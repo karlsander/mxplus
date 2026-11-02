@@ -192,7 +192,9 @@ def audit(original: bytes, candidate: bytes, build: dict, applied_address: int) 
     cold_cases = []
     for pattern in (0x55, 0xAA):
         machine = Machine(main, scatter=False)
-        machine.write(BOOT_BASE, bytes([pattern]) * 0x30000)
+        machine.write(BOOT_BASE, bytes([pattern]) * 0x18000)
+        machine.write(0x01020000, bytes([pattern]) * 0x10000)
+        machine.write(0x60664000, bytes([pattern]) * 0x2000)
         machine.write(0x20000000, bytes([pattern]) * 0x20000)
         machine.uc.reg_write(UC_ARM_REG_SP, 0x2001FFF0)
         machine.uc.emu_start(BASE | 1, BASE + 0x7E, timeout=5_000_000, count=3_000_000)
@@ -206,11 +208,12 @@ def audit(original: bytes, candidate: bytes, build: dict, applied_address: int) 
         assert machine.read(state, 11) == bytes(11)
         assert machine.read(applied_address, 11) == bytes(11)
         start = build['scatter_extension']['runtime_address']
-        end = start + build['scatter_extension']['insert_length']
-        assert machine.read(end, 0x01020000 - end) == bytes([pattern]) * (0x01020000 - end)
+        end = start + build['scatter_extension']['data_length']
+        assert machine.read(end, 0x01018000 - end) == bytes([pattern]) * (0x01018000 - end)
         cold_cases.append({'dirty_byte': hex(pattern), 'routes': 'all Auto',
             'desired_and_applied_state_zero': True,
-            'extension_end': hex(end), 'untouched_gap_bytes': 0x01020000 - end})
+            'state_end': hex(end), 'untouched_private_gap_bytes': 0x01018000 - end,
+            'code_address': hex(build['scatter_extension']['code_address'])})
     checks.append({'name': 'Actual cold startup installs initialized route state without relying on zero SRAM',
                    'status': 'pass', 'cases': cold_cases})
 
@@ -225,7 +228,7 @@ def audit(original: bytes, candidate: bytes, build: dict, applied_address: int) 
         records = struct.unpack('<8I', machine.read(0x0100F234, 0x20))
         assert records == (1, 0, 0x8000, 0x01020000, 2, 0, 0x1000, 0x01013E18)
         extension_start = build['scatter_extension']['runtime_address']
-        extension_size = build['scatter_extension']['insert_length']
+        extension_size = build['scatter_extension']['data_length']
         extension_before = machine.read(extension_start, extension_size)
         machine.call(0x01006338, count=500_000)
         assert machine.read(extension_start, extension_size) == extension_before
@@ -321,12 +324,13 @@ def main():
         text = elf.get_section_by_name('.text')
         build = json.loads((args.build / 'build-report.json').read_text())
         blob = bytearray(build['scatter_extension']['insert_length'])
-        for section in elf.iter_sections():
-            if section['sh_flags'] & 2 and section['sh_size']:
-                offset = section['sh_addr'] - build['scatter_extension']['runtime_address']
-                assert 0 <= offset <= len(blob) - section['sh_size']
-                if section['sh_type'] != 'SHT_NOBITS':
-                    blob[offset:offset + section['sh_size']] = section.data()
+        for meta in build['scatter_extension']['sections']:
+            section = elf.get_section_by_name(meta['name'])
+            assert section['sh_addr'] == meta['address'] and section['sh_size'] == meta['size']
+            offset = meta['load_offset']
+            assert 0 <= offset <= len(blob) - section['sh_size']
+            if section['sh_type'] != 'SHT_NOBITS':
+                blob[offset:offset + section['sh_size']] = section.data()
         assert sha256(blob) == build['extension_sha256']
         applied = elf.get_section_by_name('.symtab').get_symbol_by_name('applied')
         assert len(applied) == 1 and applied[0]['st_size'] == 11

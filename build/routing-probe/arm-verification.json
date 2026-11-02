@@ -1,9 +1,9 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "5861514122801e486b78775548af91794c3f79330f2b615785d54f35fe87f884",
-  "candidate_container_sha256": "19567a92b3eb4e2eee5683601438eba77a4f4865300f8275774c59f0ee95b605",
-  "extension_sha256": "0732ca34a22d3dc50561e7124c4d8ba2f6494bec2c00645e2bf4ece7b90073ef",
+  "patched_app_sha256": "3e08c5e3258e071bb976c822d55dd73725b833e742645e05ead2433458517117",
+  "candidate_container_sha256": "221e5ffb2a858a25d5691a1c818324fafa117bfa48d6a79aac0d666140ff2b95",
+  "extension_sha256": "32c4e3488c2e228cf5209a2b1a8c0a01895d0b6b3e3aad05f5cf49104b2726d5",
   "groups": [
     {
       "name": "Every application change matches recorded guarded patches and scatter insertion",
@@ -380,8 +380,10 @@
       "source_destination_visits": 519,
       "mono_stereo_pairs_skipped": true,
       "four_character_labels": true,
+      "endpoints_clamp_without_event_posts": true,
+      "inward_turn_resumes": true,
       "largest_single_route_drain_commands": 4,
-      "largest_single_route_drain_instructions": 400
+      "largest_single_route_drain_instructions": 401
     },
     {
       "name": "Analog 5/6 split produces independent original-5/6 and USB2 input reads; own PC summand suppressed",

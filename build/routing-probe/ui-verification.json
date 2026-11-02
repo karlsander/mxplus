@@ -1,7 +1,7 @@
 {
   "status": "OFFLINE UI INSTRUCTION TESTS; NO PHYSICAL PANEL OR AUDIO CLAIM",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "5861514122801e486b78775548af91794c3f79330f2b615785d54f35fe87f884",
+  "patched_app_sha256": "3e08c5e3258e071bb976c822d55dd73725b833e742645e05ead2433458517117",
   "ui_only_fixture": false,
   "symbols": {
     "mx1_route_ui_event": 16841231,
@@ -10,7 +10,7 @@
     "mx1_route_adjust": 16840469,
     "mx1_route_label": 16840375,
     "mx1_route_dispatch": 16841013,
-    "mx1_route_flush": 16840611,
+    "mx1_route_flush": 16840609,
     "mx1_route_state": 16872036,
     "mx1_route_ui_display_original": 16841401
   },

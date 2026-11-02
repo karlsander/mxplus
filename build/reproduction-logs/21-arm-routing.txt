@@ -38,5 +38,5 @@
     "Independent factory graph audit matches all 18 raw PC and 18 serial read bindings",
     "Original native input gates and connection callbacks distinguish native and PC paths"
   ],
-  "patched_app_sha256": "5861514122801e486b78775548af91794c3f79330f2b615785d54f35fe87f884"
+  "patched_app_sha256": "3e08c5e3258e071bb976c822d55dd73725b833e742645e05ead2433458517117"
 }

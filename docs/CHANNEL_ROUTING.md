@@ -5,12 +5,10 @@ eleven physical channel strips. It supports the requested 5/6 split onto USB2,
 and extends the same mechanism to analog, digital, AIRA, return and computer
 sources. More than one strip can read the same source.
 
-**Status: SELECT now shows `Auto` on the user's MX-1, but the previous image
-froze on the first encoder step, leaving `Auto` visible.** This revision moves
-writable routing state out of MPU-protected code SRAM. The old image reproduces
-a write-protection fault offline before posting a DSP event; the new image
-passes protected-memory tests and awaits a bench test. Audio routing and
-failed-application recovery remain unverified. The candidate is
+**Status: the user reports successful channel rerouting with the state-memory
+fix on their MX-1.** This revision changes only source-menu endpoints and awaits
+its hardware test. The reported result does not establish every source/rate/mode
+combination, timing or failed-application recovery. The candidate is
 [`MX1_CHANNEL_ROUTING_UNTESTED.bin`](../build/routing-probe/MX1_CHANNEL_ROUTING_UNTESTED.bin).
 Its [build report](../build/routing-probe/build-report.json) records the exact
 input, output identities, source hashes, patch bytes and memory placement.
@@ -20,7 +18,8 @@ It is a separate main-application experiment, with the original USB transport.
 
 On the normal main page, hold the **SELECT button of the destination strip**
 and turn **TEMPO**. The four-character tempo display shows that strip's source.
-Each nonzero encoder event advances or reverses one source choice. Release
+Each nonzero encoder event advances or reverses one source choice. The selector
+stops at `Auto` and `P9 R` (the last computer playback channel); it does not wrap. Release
 SELECT to return the display and encoder to their normal operation.
 
 The destination order is 1, 2, 3, 4, 5/6, DIGITAL, USB1, USB2, USB3, USB4 and
@@ -206,7 +205,7 @@ reports. The [container report](../analysis/container_routing_candidate_verifica
 checks the rebuilt image with original decoder/updater instructions.
 
 The tests exercise all permitted source/destination combinations, source-menu
-wraparound, four-character labels, the explicit 5/6-to-USB2 split, simultaneous
+endpoint clamping, four-character labels, the explicit 5/6-to-USB2 split, simultaneous
 duplicates, original Return preservation, Auto restoration, mode transitions,
 DSP reloads, invalid strip IDs and excluded diagnostic modes. They execute the
 compiled extension and original ARM programming helpers. The UI tests also

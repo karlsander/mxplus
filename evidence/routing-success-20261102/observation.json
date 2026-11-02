@@ -1,0 +1,7 @@
+{
+  "source": "User report in chat, 2026-11-02",
+  "candidate_sha256": "19567a92b3eb4e2eee5683601438eba77a4f4865300f8275774c59f0ee95b605",
+  "report": "channel re-routing works completely",
+  "scope": "User-reported successful routing on this MX-1; no source/rate/mode coverage matrix, measured audio, duration or recovery test supplied",
+  "next_change": "Clamp source selector at Auto and P9 R instead of wrapping"
+}

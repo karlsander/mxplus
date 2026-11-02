@@ -224,3 +224,13 @@ This establishes modified application execution on the user's MX-1; it does
 not establish the earlier routing hooks or audio paths. There was no flash
 readback or instrumented timing/recovery measurement. The corrected routing
 candidate remains `UNTESTED` pending its own bench result.
+
+## Bounded source selection
+
+The user reported successful channel rerouting with candidate SHA-256
+`19567a92b3eb4e2eee5683601438eba77a4f4865300f8275774c59f0ee95b605`.
+No detailed source/rate matrix or instrumented audio trace was supplied.
+The subsequent requested change clamps encoder movement at Auto (index 0)
+and P9 R (index 52) instead of wrapping. Outward turns at an endpoint neither
+change state nor post a DSP event. Inward turns resume immediately. Existing
+mono-strip stereo-pair skipping and one-choice-per-event behavior remain.

@@ -2,7 +2,7 @@
 
 Useful contributions make a firmware change reproducible or resolve a specific unknown about the MX-1's audio behavior. The most valuable next evidence is identified in [ROADMAP.md](ROADMAP.md). Read the [research report](docs/RESEARCH_REPORT.md) and the relevant [host](docs/HOST_PROBE.md), [device](docs/DEVICE_PROBE.md), or [routing](docs/CHANNEL_ROUTING.md) report before expanding a probe.
 
-The current images are offline research candidates. The user has reported stock/routing update completion and visible custom-code execution with a separate display marker. Routing operation, failed-application recovery, class-driver enumeration and audio interoperability remain unverified. Keep that distinction in issues, pull requests and filenames.
+The current images are offline research candidates. The user has reported stock/routing update completion and visible custom-code execution with a separate display marker. The user subsequently reported successful channel rerouting with the writable-state fix. Exhaustive routing coverage, failed-application recovery and USB class-driver interoperability remain unverified. Keep that distinction in issues, pull requests and filenames.
 
 ## Set up and establish a baseline
 

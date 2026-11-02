@@ -2,9 +2,9 @@
   "status": "OFFLINE EXPERIMENT; NOT HARDWARE VALIDATED",
   "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "5861514122801e486b78775548af91794c3f79330f2b615785d54f35fe87f884",
-  "container_sha256": "19567a92b3eb4e2eee5683601438eba77a4f4865300f8275774c59f0ee95b605",
-  "extension_sha256": "0732ca34a22d3dc50561e7124c4d8ba2f6494bec2c00645e2bf4ece7b90073ef",
+  "patched_app_sha256": "3e08c5e3258e071bb976c822d55dd73725b833e742645e05ead2433458517117",
+  "container_sha256": "221e5ffb2a858a25d5691a1c818324fafa117bfa48d6a79aac0d666140ff2b95",
+  "extension_sha256": "32c4e3488c2e228cf5209a2b1a8c0a01895d0b6b3e3aad05f5cf49104b2726d5",
   "symbols": {
     "mx1_route_ui_event": 16841231,
     "mx1_route_ui_display": 16841049,
@@ -12,13 +12,13 @@
     "mx1_route_adjust": 16840469,
     "mx1_route_label": 16840375,
     "mx1_route_dispatch": 16841013,
-    "mx1_route_flush": 16840611,
+    "mx1_route_flush": 16840609,
     "mx1_route_state": 16872036,
     "mx1_route_ui_display_original": 16841401
   },
   "compiler": "ziglang 0.13.0 Cortex-M3 ReleaseSmall, no LTO",
   "sources": {
-    "patches/channel_routing_audio.c": "c63b673888831a489a98a43831681868334c67b32424c14491453efee439f20a",
+    "patches/channel_routing_audio.c": "4b577fa28f71acc964bf9050922d8f75ccec9c7a94e80f9984e31bdf43873ec4",
     "patches/channel_routing_ui.c": "4f3ddc32467e8fe414c88c61ddf0214b22c492d753534c09dca655ccfa0a2998",
     "patches/channel_routing_ui.S": "a5adb0bd43ba5a0a357f3927a6e372c4df4e3ff7cf2d9281b90022fcee9b3bcf",
     "patches/channel_routing.h": "ee5979ac7b1ce3bdd75e0c75542a18e2abcc21c9437d80fb54ae1f2b9fb54e31",
@@ -320,17 +320,17 @@
   },
   "container": {
     "base_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
-    "output_sha256": "19567a92b3eb4e2eee5683601438eba77a4f4865300f8275774c59f0ee95b605",
+    "output_sha256": "221e5ffb2a858a25d5691a1c818324fafa117bfa48d6a79aac0d666140ff2b95",
     "byte_identical_to_original": false,
     "changes": [
       {
         "name": "app_main",
-        "decoded_bytes_changed": 2828,
+        "decoded_bytes_changed": 2826,
         "old_decoded_size": 918600,
         "new_decoded_size": 920184,
         "decoded_size_change_explicitly_allowed": true,
         "old_decoded_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-        "new_decoded_sha256": "5861514122801e486b78775548af91794c3f79330f2b615785d54f35fe87f884",
+        "new_decoded_sha256": "3e08c5e3258e071bb976c822d55dd73725b833e742645e05ead2433458517117",
         "old_stored_size": 505462,
         "new_stored_size": 1035207,
         "encoding": "literal-only LZSS"
@@ -339,7 +339,7 @@
     "boot_images_and_trailer_unchanged": true,
     "all_bytes_outside_update_range_unchanged": true,
     "container_validation": {
-      "sha256": "19567a92b3eb4e2eee5683601438eba77a4f4865300f8275774c59f0ee95b605",
+      "sha256": "221e5ffb2a858a25d5691a1c818324fafa117bfa48d6a79aac0d666140ff2b95",
       "size": 4194320,
       "is_supplied_original": false,
       "format_scope": "Observed Roland MX-1 firmware 1.051132 layout only",
@@ -423,14 +423,14 @@
           "entry_address_field": 1610612736,
           "load_address": 1610612736,
           "stored_size": 1035207,
-          "checksum": 98804878,
+          "checksum": 98805291,
           "checksum_algorithm": "sum of stored payload bytes modulo 2^32",
           "checksum_valid": true,
           "compression": "lzss-zero-init-4096-18",
           "decoded_size": 920184,
-          "stored_sha256": "9b4316a0474f06a171390070afb1f2a4096783b58dda3059e0968da4ff0bbdf9",
+          "stored_sha256": "6fd38a2ba429000ff3e8277fca6d3e176507a32e0a46b6c54e296b498ee64e1e",
           "padding_is_ff": true,
-          "decoded_sha256": "5861514122801e486b78775548af91794c3f79330f2b615785d54f35fe87f884"
+          "decoded_sha256": "3e08c5e3258e071bb976c822d55dd73725b833e742645e05ead2433458517117"
         },
         {
           "name": "app_usb",

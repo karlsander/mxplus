@@ -14,8 +14,9 @@ No USB streaming or generator audio result follows from a boot result.
 | Exact pre-generator mainline, commit `eb646b6cb3ad7f271097c4ab41f2098ab1399576` | `88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba` | Copied from historical Git blob, readback verified and ejected; user confirmed normal boot after update |
 | Startup guards, commit `689019e32348370c4fcd0686fa1a153c11522d89` | `3c9d769e97366f7b0e7a929b4d47c0ad7f697928306e5d8f7e4a852ddbcc728f` | Copied and readback verified; user reported the panel still completely dark after normal power-on |
 | Pre-generator code relocated to `0x01018000` | `dac455b5634088e9d8f235d9af397821d2dedd46175fc51caca55ad406fa2c12` | Repeated copy/readback/eject on request; user confirmed successful flash and completely dark normal boot |
+| Full mainline with reserved SDRAM code | `232a1e87a8c4378ce740c295ed9df7d5659c3645899f4c51747e656c022cfe25` | Normal boot succeeds; selecting the first generator (NSE) freezes before its label appears |
 
-The last image includes routing, end stops, stock-storage integration and USB-B
+The pre-generator image includes routing, end stops, stock-storage integration and USB-B
 UAC2. It excludes generators, the SELECT editor and the new code placement.
 This narrows the regression to that later batch. The user separately reported
 successful iPhone/AUM duplex audio on the pre-generator image: see the
@@ -92,4 +93,19 @@ original nonempty initialization region, private pool and MPU setup remains
 unchanged. [SDRAM code evidence](SDRAM_CODE.md) documents the original
 instructions, heap exclusion and remaining performance/workload risks.
 
-Physical boot and generator behavior on this corrected placement are pending.
+The user confirmed normal boot with this corrected placement. Selecting the
+first generator in the list (NSE) freezes the mixer before the display shows
+its label. Transport state was not recorded; NSE runs independently of transport.
+This is a new activation failure, not a continued dark-boot failure. BD, USB
+audio on this image, sustained timing and peak heap usage remain unverified.
+
+The next one-off test keeps generator computation and DSP routing unchanged
+but sends the twelve computed sample words to owned private RAM. It forbids
+CPU accesses to `0x40101100..0x4010112f` in its instruction harness. This is a
+selection-stability test, not a working generator-audio image. If selecting
+NSE becomes stable, it implicates the physical publication path, including bus
+access/timing, rather than the unchanged generator math or route operands.
+If it still freezes, route operands and callback timing remain candidates.
+
+The exact diagnostic identity, source delta and offline reports are recorded in
+[generator-freeze evidence](../evidence/generator-freeze-20261102/README.md).

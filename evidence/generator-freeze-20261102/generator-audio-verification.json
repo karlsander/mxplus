@@ -1,0 +1,773 @@
+{
+  "status": "pass",
+  "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
+  "purpose": "One-off RAM-publication isolation; not physical generator audio",
+  "sample_destination": "0x101783c",
+  "patched_app_sha256": "7e4560f7b5974534fdf21f75ab0f0308f4c6fc245511e7f1a277a67a806086b4",
+  "candidate_container_sha256": "b294ea0dc9ee252ba3c0e03ed52b5a8c5d64c42b8e8ecf962d41116577b6a69e",
+  "groups": [
+    {
+      "name": "Exact candidate callback literal registers the compiled wrapper through original code",
+      "status": "pass",
+      "decoded_offset": "0x168c",
+      "callback_pointer": "0x60664d75",
+      "slot_address": "0x20001330"
+    },
+    {
+      "name": "Cold all-Auto callback never accesses the guarded generator bank",
+      "status": "pass",
+      "rates": [
+        0,
+        44100,
+        48000,
+        96000
+      ],
+      "modes": [
+        0,
+        0,
+        4,
+        4,
+        0,
+        0
+      ],
+      "guarded_interval": [
+        "0x101783c",
+        "0x101786c"
+      ],
+      "physical_generator_bank_forbidden_in_all_cases": [
+        "0x40101100",
+        "0x40101130"
+      ]
+    },
+    {
+      "name": "Actual IRQ calls retained pump first and supplies rate/ports only in normal programs",
+      "status": "pass",
+      "cases": [
+        {
+          "sample_rate": 44100,
+          "program_mode": 0,
+          "render_called": true,
+          "irq_wrapper_instructions_with_render_stub": 150
+        },
+        {
+          "sample_rate": 44100,
+          "program_mode": 1,
+          "render_called": true,
+          "irq_wrapper_instructions_with_render_stub": 150
+        },
+        {
+          "sample_rate": 44100,
+          "program_mode": 2,
+          "render_called": true,
+          "irq_wrapper_instructions_with_render_stub": 150
+        },
+        {
+          "sample_rate": 44100,
+          "program_mode": 3,
+          "render_called": true,
+          "irq_wrapper_instructions_with_render_stub": 150
+        },
+        {
+          "sample_rate": 44100,
+          "program_mode": 4,
+          "render_called": false,
+          "irq_wrapper_instructions_with_render_stub": 155
+        },
+        {
+          "sample_rate": 44100,
+          "program_mode": 11,
+          "render_called": false,
+          "irq_wrapper_instructions_with_render_stub": 155
+        },
+        {
+          "sample_rate": 44100,
+          "program_mode": 4294967295,
+          "render_called": false,
+          "irq_wrapper_instructions_with_render_stub": 155
+        },
+        {
+          "sample_rate": 48000,
+          "program_mode": 0,
+          "render_called": true,
+          "irq_wrapper_instructions_with_render_stub": 150
+        },
+        {
+          "sample_rate": 48000,
+          "program_mode": 1,
+          "render_called": true,
+          "irq_wrapper_instructions_with_render_stub": 150
+        },
+        {
+          "sample_rate": 48000,
+          "program_mode": 2,
+          "render_called": true,
+          "irq_wrapper_instructions_with_render_stub": 150
+        },
+        {
+          "sample_rate": 48000,
+          "program_mode": 3,
+          "render_called": true,
+          "irq_wrapper_instructions_with_render_stub": 150
+        },
+        {
+          "sample_rate": 48000,
+          "program_mode": 4,
+          "render_called": false,
+          "irq_wrapper_instructions_with_render_stub": 155
+        },
+        {
+          "sample_rate": 48000,
+          "program_mode": 11,
+          "render_called": false,
+          "irq_wrapper_instructions_with_render_stub": 155
+        },
+        {
+          "sample_rate": 48000,
+          "program_mode": 4294967295,
+          "render_called": false,
+          "irq_wrapper_instructions_with_render_stub": 155
+        },
+        {
+          "sample_rate": 96000,
+          "program_mode": 0,
+          "render_called": true,
+          "irq_wrapper_instructions_with_render_stub": 150
+        },
+        {
+          "sample_rate": 96000,
+          "program_mode": 1,
+          "render_called": true,
+          "irq_wrapper_instructions_with_render_stub": 150
+        },
+        {
+          "sample_rate": 96000,
+          "program_mode": 2,
+          "render_called": true,
+          "irq_wrapper_instructions_with_render_stub": 150
+        },
+        {
+          "sample_rate": 96000,
+          "program_mode": 3,
+          "render_called": true,
+          "irq_wrapper_instructions_with_render_stub": 150
+        },
+        {
+          "sample_rate": 96000,
+          "program_mode": 4,
+          "render_called": false,
+          "irq_wrapper_instructions_with_render_stub": 155
+        },
+        {
+          "sample_rate": 96000,
+          "program_mode": 11,
+          "render_called": false,
+          "irq_wrapper_instructions_with_render_stub": 155
+        },
+        {
+          "sample_rate": 96000,
+          "program_mode": 4294967295,
+          "render_called": false,
+          "irq_wrapper_instructions_with_render_stub": 155
+        }
+      ],
+      "renderer": "Isolated only in ABI cases; subsequent regression cases execute it"
+    },
+    {
+      "name": "Compiled idle renderer preserves mainline capture-first USB pump traces in 24 differential scenarios",
+      "status": "pass",
+      "cases": [
+        {
+          "sample_rate": 44100,
+          "scenario": "disconnected",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 1368,
+          "original_fifo_reads_compared": 0,
+          "candidate_irq_instructions": {
+            "min": 188,
+            "max": 188
+          }
+        },
+        {
+          "sample_rate": 44100,
+          "scenario": "capture_only",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3611,
+          "original_fifo_reads_compared": 0,
+          "candidate_irq_instructions": {
+            "min": 194,
+            "max": 355
+          }
+        },
+        {
+          "sample_rate": 44100,
+          "scenario": "duplex",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 4853,
+          "original_fifo_reads_compared": 1260,
+          "candidate_irq_instructions": {
+            "min": 198,
+            "max": 652
+          }
+        },
+        {
+          "sample_rate": 44100,
+          "scenario": "duplex",
+          "out_channels": 2,
+          "in_channels": 2,
+          "ticks": 72,
+          "original_mmio_writes_compared": 1765,
+          "original_fifo_reads_compared": 138,
+          "candidate_irq_instructions": {
+            "min": 198,
+            "max": 303
+          }
+        },
+        {
+          "sample_rate": 44100,
+          "scenario": "duplex",
+          "out_channels": 18,
+          "in_channels": 2,
+          "ticks": 72,
+          "original_mmio_writes_compared": 2869,
+          "original_fifo_reads_compared": 1260,
+          "candidate_irq_instructions": {
+            "min": 198,
+            "max": 515
+          }
+        },
+        {
+          "sample_rate": 44100,
+          "scenario": "duplex",
+          "out_channels": 2,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3749,
+          "original_fifo_reads_compared": 138,
+          "candidate_irq_instructions": {
+            "min": 198,
+            "max": 440
+          }
+        },
+        {
+          "sample_rate": 44100,
+          "scenario": "stop_restart",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 2599,
+          "original_fifo_reads_compared": 0,
+          "candidate_irq_instructions": {
+            "min": 188,
+            "max": 355
+          }
+        },
+        {
+          "sample_rate": 44100,
+          "scenario": "playback_then_silent",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3989,
+          "original_fifo_reads_compared": 378,
+          "candidate_irq_instructions": {
+            "min": 198,
+            "max": 648
+          }
+        },
+        {
+          "sample_rate": 48000,
+          "scenario": "disconnected",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 1368,
+          "original_fifo_reads_compared": 0,
+          "candidate_irq_instructions": {
+            "min": 191,
+            "max": 191
+          }
+        },
+        {
+          "sample_rate": 48000,
+          "scenario": "capture_only",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3611,
+          "original_fifo_reads_compared": 0,
+          "candidate_irq_instructions": {
+            "min": 197,
+            "max": 358
+          }
+        },
+        {
+          "sample_rate": 48000,
+          "scenario": "duplex",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 4853,
+          "original_fifo_reads_compared": 1260,
+          "candidate_irq_instructions": {
+            "min": 201,
+            "max": 655
+          }
+        },
+        {
+          "sample_rate": 48000,
+          "scenario": "duplex",
+          "out_channels": 2,
+          "in_channels": 2,
+          "ticks": 72,
+          "original_mmio_writes_compared": 1765,
+          "original_fifo_reads_compared": 138,
+          "candidate_irq_instructions": {
+            "min": 201,
+            "max": 306
+          }
+        },
+        {
+          "sample_rate": 48000,
+          "scenario": "duplex",
+          "out_channels": 18,
+          "in_channels": 2,
+          "ticks": 72,
+          "original_mmio_writes_compared": 2869,
+          "original_fifo_reads_compared": 1260,
+          "candidate_irq_instructions": {
+            "min": 201,
+            "max": 518
+          }
+        },
+        {
+          "sample_rate": 48000,
+          "scenario": "duplex",
+          "out_channels": 2,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3749,
+          "original_fifo_reads_compared": 138,
+          "candidate_irq_instructions": {
+            "min": 201,
+            "max": 443
+          }
+        },
+        {
+          "sample_rate": 48000,
+          "scenario": "stop_restart",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 2599,
+          "original_fifo_reads_compared": 0,
+          "candidate_irq_instructions": {
+            "min": 191,
+            "max": 358
+          }
+        },
+        {
+          "sample_rate": 48000,
+          "scenario": "playback_then_silent",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3989,
+          "original_fifo_reads_compared": 378,
+          "candidate_irq_instructions": {
+            "min": 201,
+            "max": 651
+          }
+        },
+        {
+          "sample_rate": 96000,
+          "scenario": "disconnected",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 1368,
+          "original_fifo_reads_compared": 0,
+          "candidate_irq_instructions": {
+            "min": 195,
+            "max": 195
+          }
+        },
+        {
+          "sample_rate": 96000,
+          "scenario": "capture_only",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3281,
+          "original_fifo_reads_compared": 0,
+          "candidate_irq_instructions": {
+            "min": 201,
+            "max": 362
+          }
+        },
+        {
+          "sample_rate": 96000,
+          "scenario": "duplex",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 4469,
+          "original_fifo_reads_compared": 1188,
+          "candidate_irq_instructions": {
+            "min": 205,
+            "max": 655
+          }
+        },
+        {
+          "sample_rate": 96000,
+          "scenario": "duplex",
+          "out_channels": 2,
+          "in_channels": 2,
+          "ticks": 72,
+          "original_mmio_writes_compared": 1717,
+          "original_fifo_reads_compared": 132,
+          "candidate_irq_instructions": {
+            "min": 205,
+            "max": 310
+          }
+        },
+        {
+          "sample_rate": 96000,
+          "scenario": "duplex",
+          "out_channels": 18,
+          "in_channels": 2,
+          "ticks": 72,
+          "original_mmio_writes_compared": 2773,
+          "original_fifo_reads_compared": 1188,
+          "candidate_irq_instructions": {
+            "min": 205,
+            "max": 518
+          }
+        },
+        {
+          "sample_rate": 96000,
+          "scenario": "duplex",
+          "out_channels": 2,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3413,
+          "original_fifo_reads_compared": 132,
+          "candidate_irq_instructions": {
+            "min": 205,
+            "max": 447
+          }
+        },
+        {
+          "sample_rate": 96000,
+          "scenario": "stop_restart",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 2181,
+          "original_fifo_reads_compared": 0,
+          "candidate_irq_instructions": {
+            "min": 195,
+            "max": 360
+          }
+        },
+        {
+          "sample_rate": 96000,
+          "scenario": "playback_then_silent",
+          "out_channels": 18,
+          "in_channels": 18,
+          "ticks": 72,
+          "original_mmio_writes_compared": 3605,
+          "original_fifo_reads_compared": 324,
+          "candidate_irq_instructions": {
+            "min": 205,
+            "max": 578
+          }
+        }
+      ],
+      "render_stub": false,
+      "converter": "Identity fixture for retained USB pump only",
+      "clock_phase": "Explicit per-tick stimulus; 44.1 kHz physical scheduling is not modeled"
+    },
+    {
+      "name": "Active compiled generators change only their twelve reserved exchange words",
+      "status": "pass",
+      "cases": [
+        {
+          "sample_rate": 44100,
+          "sources": "noise_only",
+          "source_mask": "0x10000",
+          "ticks": 64,
+          "original_mmio_writes_compared": 4268,
+          "full_irq_instructions": {
+            "first_trigger": 285,
+            "minimum": 285,
+            "maximum": 746,
+            "post_crossfade_minimum": 557,
+            "post_crossfade_maximum": 746
+          },
+          "extra_instructions_over_identical_stock_irq": {
+            "first_trigger": 142,
+            "minimum": 142,
+            "maximum": 149,
+            "post_crossfade_minimum": 148,
+            "post_crossfade_maximum": 149
+          }
+        },
+        {
+          "sample_rate": 44100,
+          "sources": "one_bd",
+          "source_mask": "0x1",
+          "ticks": 64,
+          "original_mmio_writes_compared": 4268,
+          "full_irq_instructions": {
+            "first_trigger": 411,
+            "minimum": 370,
+            "maximum": 809,
+            "post_crossfade_minimum": 617,
+            "post_crossfade_maximum": 805
+          },
+          "extra_instructions_over_identical_stock_irq": {
+            "first_trigger": 268,
+            "minimum": 208,
+            "maximum": 268,
+            "post_crossfade_minimum": 208,
+            "post_crossfade_maximum": 209
+          }
+        },
+        {
+          "sample_rate": 44100,
+          "sources": "eleven_bd",
+          "source_mask": "0x7ff",
+          "ticks": 64,
+          "original_mmio_writes_compared": 4268,
+          "full_irq_instructions": {
+            "first_trigger": 1941,
+            "minimum": 1310,
+            "maximum": 1941,
+            "post_crossfade_minimum": 1477,
+            "post_crossfade_maximum": 1672
+          },
+          "extra_instructions_over_identical_stock_irq": {
+            "first_trigger": 1798,
+            "minimum": 1068,
+            "maximum": 1798,
+            "post_crossfade_minimum": 1068,
+            "post_crossfade_maximum": 1079
+          }
+        },
+        {
+          "sample_rate": 44100,
+          "sources": "noise_and_eleven_bd",
+          "source_mask": "0x107ff",
+          "ticks": 64,
+          "original_mmio_writes_compared": 4268,
+          "full_irq_instructions": {
+            "first_trigger": 1971,
+            "minimum": 1339,
+            "maximum": 1971,
+            "post_crossfade_minimum": 1506,
+            "post_crossfade_maximum": 1702
+          },
+          "extra_instructions_over_identical_stock_irq": {
+            "first_trigger": 1828,
+            "minimum": 1097,
+            "maximum": 1828,
+            "post_crossfade_minimum": 1097,
+            "post_crossfade_maximum": 1109
+          }
+        },
+        {
+          "sample_rate": 48000,
+          "sources": "noise_only",
+          "source_mask": "0x10000",
+          "ticks": 64,
+          "original_mmio_writes_compared": 4268,
+          "full_irq_instructions": {
+            "first_trigger": 288,
+            "minimum": 288,
+            "maximum": 749,
+            "post_crossfade_minimum": 560,
+            "post_crossfade_maximum": 749
+          },
+          "extra_instructions_over_identical_stock_irq": {
+            "first_trigger": 145,
+            "minimum": 145,
+            "maximum": 152,
+            "post_crossfade_minimum": 151,
+            "post_crossfade_maximum": 152
+          }
+        },
+        {
+          "sample_rate": 48000,
+          "sources": "one_bd",
+          "source_mask": "0x1",
+          "ticks": 64,
+          "original_mmio_writes_compared": 4268,
+          "full_irq_instructions": {
+            "first_trigger": 422,
+            "minimum": 373,
+            "maximum": 812,
+            "post_crossfade_minimum": 620,
+            "post_crossfade_maximum": 808
+          },
+          "extra_instructions_over_identical_stock_irq": {
+            "first_trigger": 279,
+            "minimum": 211,
+            "maximum": 279,
+            "post_crossfade_minimum": 211,
+            "post_crossfade_maximum": 212
+          }
+        },
+        {
+          "sample_rate": 48000,
+          "sources": "eleven_bd",
+          "source_mask": "0x7ff",
+          "ticks": 64,
+          "original_mmio_writes_compared": 4268,
+          "full_irq_instructions": {
+            "first_trigger": 2032,
+            "minimum": 1313,
+            "maximum": 2032,
+            "post_crossfade_minimum": 1480,
+            "post_crossfade_maximum": 1668
+          },
+          "extra_instructions_over_identical_stock_irq": {
+            "first_trigger": 1889,
+            "minimum": 1071,
+            "maximum": 1889,
+            "post_crossfade_minimum": 1071,
+            "post_crossfade_maximum": 1082
+          }
+        },
+        {
+          "sample_rate": 48000,
+          "sources": "noise_and_eleven_bd",
+          "source_mask": "0x107ff",
+          "ticks": 64,
+          "original_mmio_writes_compared": 4268,
+          "full_irq_instructions": {
+            "first_trigger": 2062,
+            "minimum": 1342,
+            "maximum": 2062,
+            "post_crossfade_minimum": 1509,
+            "post_crossfade_maximum": 1698
+          },
+          "extra_instructions_over_identical_stock_irq": {
+            "first_trigger": 1919,
+            "minimum": 1100,
+            "maximum": 1919,
+            "post_crossfade_minimum": 1100,
+            "post_crossfade_maximum": 1112
+          }
+        },
+        {
+          "sample_rate": 96000,
+          "sources": "noise_only",
+          "source_mask": "0x10000",
+          "ticks": 64,
+          "original_mmio_writes_compared": 3885,
+          "full_irq_instructions": {
+            "first_trigger": 292,
+            "minimum": 292,
+            "maximum": 749,
+            "post_crossfade_minimum": 564,
+            "post_crossfade_maximum": 749
+          },
+          "extra_instructions_over_identical_stock_irq": {
+            "first_trigger": 149,
+            "minimum": 149,
+            "maximum": 156,
+            "post_crossfade_minimum": 155,
+            "post_crossfade_maximum": 156
+          }
+        },
+        {
+          "sample_rate": 96000,
+          "sources": "one_bd",
+          "source_mask": "0x1",
+          "ticks": 64,
+          "original_mmio_writes_compared": 3885,
+          "full_irq_instructions": {
+            "first_trigger": 423,
+            "minimum": 377,
+            "maximum": 816,
+            "post_crossfade_minimum": 624,
+            "post_crossfade_maximum": 808
+          },
+          "extra_instructions_over_identical_stock_irq": {
+            "first_trigger": 280,
+            "minimum": 215,
+            "maximum": 280,
+            "post_crossfade_minimum": 215,
+            "post_crossfade_maximum": 215
+          }
+        },
+        {
+          "sample_rate": 96000,
+          "sources": "eleven_bd",
+          "source_mask": "0x7ff",
+          "ticks": 64,
+          "original_mmio_writes_compared": 3885,
+          "full_irq_instructions": {
+            "first_trigger": 2003,
+            "minimum": 1317,
+            "maximum": 2003,
+            "post_crossfade_minimum": 1484,
+            "post_crossfade_maximum": 1668
+          },
+          "extra_instructions_over_identical_stock_irq": {
+            "first_trigger": 1860,
+            "minimum": 1075,
+            "maximum": 1860,
+            "post_crossfade_minimum": 1075,
+            "post_crossfade_maximum": 1075
+          }
+        },
+        {
+          "sample_rate": 96000,
+          "sources": "noise_and_eleven_bd",
+          "source_mask": "0x107ff",
+          "ticks": 64,
+          "original_mmio_writes_compared": 3885,
+          "full_irq_instructions": {
+            "first_trigger": 2033,
+            "minimum": 1346,
+            "maximum": 2033,
+            "post_crossfade_minimum": 1513,
+            "post_crossfade_maximum": 1698
+          },
+          "extra_instructions_over_identical_stock_irq": {
+            "first_trigger": 1890,
+            "minimum": 1104,
+            "maximum": 1890,
+            "post_crossfade_minimum": 1104,
+            "post_crossfade_maximum": 1105
+          }
+        }
+      ],
+      "original_pump": "Unchanged actual instructions in each case",
+      "external_numeric_model": "Identity conversion applies only to original USB pump",
+      "performance": "Instruction counts only; eleven-voice deadline margin is unmeasured"
+    },
+    {
+      "name": "Transport stop silences BD, noise continues, removal clears ports once then idle skips writes",
+      "status": "pass"
+    },
+    {
+      "name": "Diagnostic ownership is respected and normal-mode resume restores stopped BD silence",
+      "status": "pass",
+      "foreign_word": "Explicit 0x3e800000 fixture; diagnostic DSP arithmetic is not emulated"
+    }
+  ],
+  "limits": [
+    "Interrupts are invoked, not generated by a numerical DSP emulator",
+    "No hardware audio, converter scaling, FIFO capacities or deadline margin are tested",
+    "Instruction counts are not cycles",
+    "Active generator arithmetic and per-step sequencing have separate tests"
+  ]
+}

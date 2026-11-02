@@ -4,6 +4,9 @@ The location-only hardware test fails with previously working feature code
 linked at `0x01018000`; see [boot investigation](BOOT_REGRESSION.md). Code now
 lives at `0x60664000` in the address range of the stock SDRAM heap. This is an
 explicit reservation, not memory borrowed while leaving it allocatable.
+The user confirmed normal boot of this placement. NSE activation still freezes;
+that observation does not yet establish whether the cause is the generator
+exchange write, DSP route operand or execution timing.
 
 All runtime addresses below refer to the main application. Resident SDRAM
 instruction offsets equal runtime minus `0x60000000`; relocated private RTOS

@@ -1,10 +1,9 @@
 # Internal sources
 
-`NSE` and `BD` are part of the sole mainline image. Both remain untested on a
-physical MX-1: their first integrated image failed before the panel lit, and
-the startup-guard correction also failed normal boot. A location-only test
-isolated the problematic private code address; the current SDRAM reservation
-awaits hardware testing. See the
+`NSE` and `BD` are part of the sole mainline image. **On the current SDRAM build,
+normal boot works but selecting NSE freezes the mixer before its label appears.**
+BD remains unverified. Earlier images failed before the panel lit; a location-only
+test isolated the problematic private code address. See the
 [boot investigation](BOOT_REGRESSION.md). They were recovered from the user's 2 November archive and
 adapted to the current guarded builder, writable-memory layout, source end
 stops and routing persistence. No old firmware variant is maintained.

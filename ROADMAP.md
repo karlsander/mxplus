@@ -5,7 +5,8 @@ passed user bench tests including encoder end stops. The pre-generator mainline
 boots, but the first generator/editor image left the panel dark. TAP-mode
 rollback worked for this failure. Startup guards did not resolve the dark boot;
 [a location-only test reproduces the failure](docs/BOOT_REGRESSION.md). The
-current SDRAM code reservation needs its hardware test. The earlier
+SDRAM code reservation now boots normally. NSE activation still freezes before
+the label refresh; that is the next isolation target. The earlier
 image passed a user-reported iPhone/AUM duplex path over a direct USB cable.
 
 1. Verify combined-image boot, routing, snapshot save/recall, delayed restart

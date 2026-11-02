@@ -1,0 +1,76 @@
+diff --git a/patches/internal_sources_audio.c b/patches/internal_sources_audio.c
+index 5d592e9..ed32d47 100644
+--- a/patches/internal_sources_audio.c
++++ b/patches/internal_sources_audio.c
+@@ -8,13 +8,19 @@
+  */
+ #include "internal_sources.h"
+ 
++/* One-off freeze isolation: retain computation and DSP routing, but publish
++ * to owned RAM instead of the unverified physical generator exchange ports.
++ * This is not a generator-audio implementation. */
++volatile uint32_t mx1_internal_probe_samples[MX1_INTERNAL_PORT_COUNT]
++    __attribute__((section(".patch_data"))) = {0};
++
+ void mx1_internal_audio_frame(void)
+ {
+     ((void (*)(void))0x01009841u)();
+     /* Diagnostic programs use different shared-port layouts. */
+     if (*(const volatile uint32_t *)0x6051deb8u <= 3u)
+         mx1_internal_render(*(const volatile uint32_t *)0x20000b24u,
+-                            (volatile uint32_t *)0x40101100u);
++                            mx1_internal_probe_samples);
+     else
+         mx1_internal_invalidate();
+ }
+diff --git a/tools/internal_sources_audio_verify.py b/tools/internal_sources_audio_verify.py
+index d99583a..64c1720 100644
+--- a/tools/internal_sources_audio_verify.py
++++ b/tools/internal_sources_audio_verify.py
+@@ -66,6 +66,7 @@ class AudioMachine(Machine):
+                 uc.reg_write(UC_ARM_REG_PC, uc.reg_read(UC_ARM_REG_LR))
+ 
+     def _read(self, uc, access, address, size, value, user):
++        assert not 0x40101100 <= address < 0x40101130, 'Probe read physical generator bank'
+         if address == USBF + 0x1f4:
+             # Distinct positive words exercise actual copying and packet-tail
+             # bookkeeping. Their identity conversion is not an audio model.
+@@ -75,6 +76,7 @@ class AudioMachine(Machine):
+             self.out_reads.append((self.tick, fixture))
+ 
+     def _write(self, uc, access, address, size, value, user):
++        assert not 0x40101100 <= address < 0x40101130, 'Probe wrote physical generator bank'
+         if PORTS <= address < PORTS + GENERATOR_COUNT * 4:
+             self.generator_writes.append((self.tick, address, size, value))
+         elif 0x40000000 <= address < 0x40200000:
+@@ -115,7 +117,11 @@ class AudioMachine(Machine):
+ 
+ 
+ def verify(original, patched, build):
++    global PORTS
+     symbols = build['symbols']
++    PORTS = symbols['mx1_internal_probe_samples']
++    assert build['writable_state']['start'] <= PORTS
++    assert PORTS + 48 <= build['writable_state']['end_exclusive']
+     assert sha256(patched) == build['patched_app_sha256']
+     wrapper = symbols['mx1_internal_audio_frame'] | 1
+     assert original[0x168c:0x1690] == u32(0x01009841)
+@@ -158,7 +164,8 @@ def verify(original, patched, build):
+         assert not machine.generator_writes
+     passed('Cold all-Auto callback never accesses the guarded generator bank',
+            rates=[0, 44100, 48000, 96000], modes=[0, 0, 4, 4, 0, 0],
+-           guarded_interval=['0x40101100', '0x40101130'])
++           guarded_interval=[hex(PORTS), hex(PORTS + 48)],
++           physical_generator_bank_forbidden_in_all_cases=['0x40101100', '0x40101130'])
+ 
+     abi_cases = []
+     for rate in (44100, 48000, 96000):
+@@ -342,6 +349,8 @@ def verify(original, patched, build):
+            foreign_word='Explicit 0x3e800000 fixture; diagnostic DSP arithmetic is not emulated')
+ 
+     return {'status': 'pass', 'original_app_sha256': sha256(original),
++        'purpose': 'One-off RAM-publication isolation; not physical generator audio',
++        'sample_destination': hex(PORTS),
+         'patched_app_sha256': sha256(patched),
+         'candidate_container_sha256': build['container_sha256'],
+         'groups': groups,

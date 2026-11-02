@@ -6,8 +6,9 @@ One MX-1 firmware build: channel routing, internal noise/bass drum sources and e
 TAP update mode still worked; the routing predecessor and then the exact
 pre-generator mainline booted after restoration.** The startup-guard correction
 also failed normal boot. A location-only test reproduced the failure without
-generators or the editor. The current code placement uses an explicit SDRAM
-heap reservation and awaits testing: [boot investigation](docs/BOOT_REGRESSION.md).
+generators or the editor. The SDRAM reservation restores normal boot, but
+selecting NSE freezes the mixer before its label appears:
+[investigation](docs/BOOT_REGRESSION.md).
 The pre-generator image passed a user-reported **iPhone/AUM audio round trip**
 over a direct USB cable: [hardware record](evidence/iphone-aum-20261102/README.md).
 The word mainline identifies the maintained build, not a certification of safety.

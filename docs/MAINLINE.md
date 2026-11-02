@@ -9,8 +9,9 @@ Routing assignments use the stock snapshot and delayed system-save paths; see
 The first generator/editor image failed normal boot. The exact pre-generator
 mainline boots, and TAP update mode allowed restoration after this failure.
 The startup-guard candidate and a location-only test also failed normal boot.
-The current build moves code into an explicit SDRAM heap reservation and awaits
-its hardware test; see the [boot investigation](BOOT_REGRESSION.md).
+The current build moves code into an explicit SDRAM heap reservation and boots
+normally. Selecting NSE still freezes before its label appears; see the
+[investigation](BOOT_REGRESSION.md).
 
 ## Memory and binary integration
 
@@ -91,8 +92,8 @@ USB timing or deadline margin.
 Retain `UNTESTED` until combined-image hardware evidence supports a narrower
 status. Prior routing success does not establish USB audio behavior.
 
-Test NSE first at a low fader level, then one BD voice, then multiple voices at
-all rates while monitoring USB playback/capture. The generator exchange-port
+After resolving the selection freeze, test NSE first at a low fader level, then
+one BD voice, then multiple voices at all rates while monitoring USB playback/capture. The generator exchange-port
 mapping and worst-case IRQ deadline margin require hardware measurement; see
-[internal sources](INTERNAL_SOURCES.md). The current SDRAM placement awaits a
-physical boot test; generator functions remain untested on hardware.
+[internal sources](INTERNAL_SOURCES.md). The current SDRAM placement boots
+normally, but NSE activation freezes; generator audio is not validated.

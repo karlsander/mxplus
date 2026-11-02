@@ -31,7 +31,7 @@ The original is not an alternative maintained custom firmware.
 ## Features
 
 - Hold a strip's SELECT and turn TEMPO to choose its source. The menu stops at
-  `Auto` and `P9 R`. Routes reset to Auto on power-up. See [routing](docs/CHANNEL_ROUTING.md).
+  `Auto` and `P9 R`. Routes save with mixer snapshots and restore after restart. See [routing](docs/CHANNEL_ROUTING.md).
 - USB-B advertises UAC2 audio with stereo and 18-channel alternates. The mixer
   selects the fixed rate; USB MIDI remains proprietary. See [USB audio](docs/DEVICE_PROBE.md).
 - AIRA USB1–4 retain the original firmware implementation. The generic-host

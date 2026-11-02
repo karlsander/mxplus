@@ -3,7 +3,9 @@
 The only maintained custom firmware combines channel routing and USB-B UAC2.
 The USB-host unlock is excluded, with its evidence retained as documentation.
 This replaces the three separate builders, output directories and CI targets.
-The display-marker diagnostic is not part of mainline.
+The display-marker diagnostic is not part of mainline. Routing now uses scene
+and system reserved fields for snapshots and restart persistence; see
+[storage integration](ROUTING_STORAGE.md).
 
 ## Memory and binary integration
 
@@ -14,19 +16,19 @@ read-only code SRAM; the combined build fixes that placement before testing.
 
 | Runtime interval (end exclusive) | Contents | Initialization |
 | --- | --- | --- |
-| `0x0100f6a4..0x0100fedc` | 2,104 bytes of code/constants, read-only after MPU setup | Extended original first startup copy |
-| `0x01017264..0x0101727c` | Desired/applied routing state, padded to 24 bytes | Extended original writable BSS clear |
+| `0x0100f6a4..0x0100ffec` | 2,376 bytes of code/constants, read-only after MPU setup | Extended original first startup copy |
+| `0x01017264..0x0101727c` | Desired/applied routing cache and startup-ready flag, padded to 24 bytes | Extended original writable BSS clear |
 | `0x0101727c..0x010173e0` | 355-byte mutable USB descriptor plus padding | Repurposed formerly zero-length startup copy |
 | `0x010173e0..0x010173f4` | USB rate and 14-byte reply buffer, padded to 20 bytes | Extended original writable BSS clear |
 
-The code slot has 292 bytes remaining before `0x01010000`. The 400-byte writable
+The code slot has 20 bytes remaining before `0x01010000`. The 400-byte writable
 reservation begins exactly at the original BSS end, stays inside stock MPU
 region 2 (`0x01010000..0x01018000`), and overlaps neither RTOS pool. General
 allocation remains `0x01013e18..0x01014e18`; stacks remain
 `0x01020000..0x01028000`. No MPU or allocator configuration is changed.
 
-The load-image insertion is 2,460 bytes at main decoded offset `0xdff30`:
-2,104 code bytes followed by 356 descriptor bytes. Only code is copied into the
+The load-image insertion is 2,732 bytes at main decoded offset `0xdff30`:
+2,376 code bytes followed by 356 descriptor bytes. Only code is copied into the
 executable slot. Main decoded literal `0xe8` extends the first copy accordingly;
 `0x100`, `0x128`, `0x13c`, `0x150` shift existing initialized-data sources.
 `0x108` extends writable BSS clearing from `0x71dc` to `0x736c` bytes.
@@ -59,7 +61,8 @@ USB timing or deadline margin.
 ## Bench sequence
 
 1. Identify this exact image and keep monitoring muted for the first boot.
-2. Confirm SELECT labels, end stops and routing still work.
+2. Confirm SELECT labels, end stops and routing still work; save/recall differing
+   snapshots and restart after allowing several seconds for autosave.
 3. Connect USB-B to a host using its class audio driver; record OS/driver,
    negotiated speed, sample rate and channel configuration. A Roland driver
    binding is not evidence of class-only operation.

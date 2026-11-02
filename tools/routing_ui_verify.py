@@ -446,6 +446,7 @@ def verify(original: bytes, patched: bytes, build: dict) -> dict:
                                     stub_routes=False, mixer_mode=mode, dsp_mode=dsp_mode)
                 desired = bytes([7] * 11)  # Existing An6 assignments must survive.
                 machine.write(state_address, desired)
+                machine.write(0x604f41e0, b"MXR1" + desired + b"\0")
                 key = strip + 0x29
                 machine.packet(2, key, patched=True)
                 assert machine.characters[-4:] == [

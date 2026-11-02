@@ -14,6 +14,12 @@
     "Initializer returns failure for invalid rates and failed stock stages",
     "Original backup initializer retains descriptor and callback tables",
     "USB clock requests and routing edits coexist in the same protected-memory machine",
+    "Original storage registration remains identical; existing reserved fields only",
+    "All 64 scene saves/recalls retain routes and all unrelated scene bytes",
+    "Cold restart restores last routes independently of startup scene; edits preserve snapshots",
+    "UI retains its selected source across a modeled DSP cache refresh",
+    "Legacy, unknown-version, out-of-range and invalid mono records fall back to Auto",
+    "Stock autosave observes route bytes and coalesces edits with unchanged 1500-tick delay",
     "Original physical decoder, queue and logical key/encoder dispatch",
     "Original encoder1 reaches tempo parameter 0x1a; encoder0 does not",
     "Registered callback and aligned renderer hook bytes match symbols",
@@ -47,5 +53,5 @@
     "Independent factory graph audit matches all 18 raw PC and 18 serial read bindings",
     "Original native input gates and connection callbacks distinguish native and PC paths"
   ],
-  "patched_app_sha256": "64c6f2ed2404013ff1c1f31353069cd7a2578fe443088536edfb74c585cd5e42"
+  "patched_app_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758"
 }

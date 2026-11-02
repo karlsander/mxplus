@@ -123,6 +123,9 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
     assert usb['status'] == 'pass'
     groups.extend(usb['groups'])
     groups.extend(verify_shared_state(patched, build))
+    from routing_storage_verify import verify as verify_storage
+    storage = verify_storage(original, patched, build)
+    groups.extend(storage['groups'])
     ui = verify_ui(original, patched, build)
     assert ui['ui_only_fixture'] is False
     assert all(group['status'] == 'pass' for group in ui['groups'])
@@ -150,7 +153,7 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
         'extension_sha256': build['extension_sha256'], 'groups': groups,
         'hardware_access': False,
         'scope': 'Integrated candidate ARM instructions with explicit DSP and peripheral models',
-        'details': {'ui': 'ui-verification.json', 'audio': 'audio-verification.json',
+        'details': {'storage': 'storage-verification.json', 'ui': 'ui-verification.json', 'audio': 'audio-verification.json',
                     'hardware_initialization': 'hardware-audit.json'},
         'limits': [
             'This candidate has offline evidence only; prior panel observations do not validate its audio or recovery',
@@ -158,7 +161,7 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
             'Instruction counts do not measure real-time deadline margin or CPU cycles',
         ],
     }
-    return report, {'usb-verification.json': usb, 'mpu-verification.json': mpu, 'ui-verification.json': ui, 'audio-verification.json': audio,
+    return report, {'usb-verification.json': usb, 'mpu-verification.json': mpu, 'storage-verification.json': storage, 'ui-verification.json': ui, 'audio-verification.json': audio,
                     'hardware-audit.json': hardware}
 
 

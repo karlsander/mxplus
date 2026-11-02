@@ -8,9 +8,9 @@
  */
 #include "channel_routing.h"
 
-struct source { uint16_t left, right; char label[4]; };
-#define MONO(op, label) {op, op, label}
-#define PAIR(op, label) {op, (op) + 1, label}
+struct source { uint16_t operand; char label[4]; };
+#define MONO(op, label) {op, label}
+#define PAIR(op, label) {(op) | 0x1000, label}
 #define USB(n, op) PAIR(op, "US" #n " "), MONO(op, "U" #n " L"), MONO((op)+1, "U" #n " R")
 #define PC(n, op) PAIR(op, "PC" #n " "), MONO(op, "P" #n " L"), MONO((op)+1, "P" #n " R")
 static const struct source sources[MX1_ROUTE_SOURCE_COUNT] = {
@@ -42,6 +42,63 @@ static const uint16_t stock_operands[18] = {
 volatile uint8_t mx1_route_state[MX1_STRIP_COUNT] __attribute__((section(".route_state"))) = {0};
 static uint8_t applied[MX1_STRIP_COUNT] __attribute__((section(".route_state"))) = {0};
 
+/* Four formerly reserved scene words (global parameters 0x182..0x185).
+ * Format: M X R 1, eleven stable source IDs, zero padding. System reserved
+ * words 0x10..0x13 hold the latest assignment through stock delayed autosave.
+ * Records stay inside existing blocks; stock code updates its saved shadow.
+ * No flash API is added. */
+#define ROUTE_MAGIC 0x3152584du
+#define SCENE_RECORD ((volatile uint32_t *)0x604f41e0u)
+#define SYSTEM_RECORD ((volatile uint32_t *)0x604f39e4u)
+static uint8_t route_ready __attribute__((section(".route_ready")));
+
+__attribute__((noinline)) static void route_store(unsigned strip, unsigned value) {
+    volatile uint8_t *bytes = (volatile uint8_t *)SCENE_RECORD;
+    for (unsigned i = 0; i < MX1_STRIP_COUNT; ++i) bytes[4+i] = mx1_route_state[i];
+    /* Commit the local UI value after copying the cache: a DSP-task
+     * preemption may refresh that cache from the previous scene record. */
+    if (strip < MX1_STRIP_COUNT) bytes[4+strip] = mx1_route_state[strip] = value;
+    bytes[15] = 0;
+    SCENE_RECORD[0] = ROUTE_MAGIC;
+    if (route_ready)
+        for (unsigned i = 0; i < 4; ++i)
+            SYSTEM_RECORD[i] = SCENE_RECORD[i];
+}
+
+__attribute__((noinline)) static void route_restore(void) {
+    const volatile uint8_t *bytes = (const volatile uint8_t *)SCENE_RECORD;
+    for (unsigned i = 0; i < MX1_STRIP_COUNT; ++i) {
+        unsigned v = SCENE_RECORD[0] == ROUTE_MAGIC ? bytes[4+i] : 0;
+        if (v >= MX1_ROUTE_SOURCE_COUNT || (i < 4 && (sources[v].operand & 0x1000))) v = 0;
+        mx1_route_state[i] = v;
+    }
+}
+
+/* Original scene recall entry, displaced instructions executed verbatim. */
+__attribute__((naked)) static void original_recall(void) {
+    __asm__ volatile(
+        "push {r1-r5, lr}\n"
+        "mov r4, r1\n"
+        "movs r2, #0\n"
+        "movs r1, #2\n"
+        "mov r0, sp\n"
+        "ldr pc, =0x6001e791\n"
+    );
+}
+
+void mx1_route_recall(void *context, unsigned scene) {
+    unsigned caller = (unsigned)__builtin_return_address(0);
+    ((void (*)(void *, unsigned))original_recall)(context, scene);
+    /* Only the guarded normal-boot call restores the latest system routes.
+     * Ordinary recalls use the routes saved in that scene. */
+    if (caller == 0x60056995u)
+        for (unsigned i = 0; i < 4; ++i) SCENE_RECORD[i] = SYSTEM_RECORD[i];
+    route_restore();
+    route_ready = 1;
+    route_store(MX1_STRIP_COUNT, 0);
+    ((void (*)(uint32_t, uint32_t))0x0100e267)(0x6051dea8, 8);
+}
+
 static uint32_t parameter(uint32_t id)
 {
     return ((uint32_t (*)(uint32_t, uint32_t, uint32_t))0x6001a897)(0x600b5390, id, 0);
@@ -56,6 +113,7 @@ static int blocked(void)
 
 uint32_t mx1_route_get(uint32_t strip)
 {
+    route_restore();
     return strip < MX1_STRIP_COUNT ? mx1_route_state[strip] : 0;
 }
 
@@ -63,13 +121,13 @@ const char *mx1_route_label(uint32_t strip)
 {
     if (strip >= MX1_STRIP_COUNT) return "----";
     if (blocked()) return "modE";
-    return sources[mx1_route_state[strip]].label;
+    return sources[mx1_route_get(strip)].label;
 }
 
 void mx1_route_adjust(uint32_t strip, int32_t delta)
 {
     if (strip >= MX1_STRIP_COUNT || !delta || blocked()) return;
-    uint32_t value = mx1_route_state[strip];
+    uint32_t value = mx1_route_get(strip);
     do {
         if (delta > 0) {
             if (value == MX1_ROUTE_SOURCE_COUNT - 1) return;
@@ -78,10 +136,10 @@ void mx1_route_adjust(uint32_t strip, int32_t delta)
             if (value == 0) return;
             --value;
         }
-    } while (strip < 4 && sources[value].left != sources[value].right);
+    } while (strip < 4 && (sources[value].operand & 0x1000));
     /* A byte store is atomic. The higher-priority DSP task may process it
      * before or after this post; either order leaves the newest route queued. */
-    mx1_route_state[strip] = (uint8_t)value;
+    route_store(strip, value);
     ((void (*)(uint32_t, uint32_t))0x0100e267)(0x6051dea8, 8);
 }
 
@@ -101,6 +159,8 @@ void mx1_route_flush(void)
 {
     /* Never write normal-program operands into a diagnostic DSP program. */
     if (*(volatile uint32_t *)0x6051deb8 > 3) return;
+    route_restore();
+    if (route_ready) route_store(MX1_STRIP_COUNT, 0);
     uint32_t external = parameter(0x19) == 2;
     for (uint32_t strip = 0; strip < MX1_STRIP_COUNT; ++strip) {
         uint32_t value = external ? 0 : mx1_route_state[strip];
@@ -112,7 +172,7 @@ void mx1_route_flush(void)
             uint32_t lane = strip < 4 ? strip : 2 * strip - 4;
             uint32_t count = strip < 4 ? 1 : 2;
             for (uint32_t side = 0; side < count; ++side) {
-                uint32_t read = value ? (side ? sources[value].right : sources[value].left)
+                uint32_t read = value ? ((sources[value].operand & 0xefff) + (side && (sources[value].operand & 0x1000)))
                                       : stock_operands[lane + side];
                 operand(input_sites[lane + side], read);
             }

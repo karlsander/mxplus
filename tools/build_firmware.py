@@ -51,6 +51,18 @@ def build(firmware: Path, out: Path) -> dict:
     # generated routing data or compiler installation.
     from routing_audio_patch import REQUIRED_SYMBOLS, patch_audio
     original = component_unpacked(raw, COMPONENT_BY_NAME["app_main"])
+    # Frozen storage contract: four reserved zero-default words in each block,
+    # unchanged group lengths/slot counts and stock autosave policy.
+    for offset, expected in (
+        (0x684f0, struct.pack('<6I', 0x604f39a4, 2, 0x604f3e0c, 1, 0x604f4014, 66)),
+        (0x6ed08, struct.pack('<4I', 0, 141, 1, 2)),
+        (0x6ed28, struct.pack('<4I', 271, 268, 65, 1)),
+        (0x686d8 + 0x10*16, bytes(64)),
+        (0x686d8 + 0x182*16, struct.pack('<4I', 0, 0, 0, 0xa0200)*4),
+        (0x56990, bytes.fromhex('c7f7f9fe')),
+    ):
+        if original[offset:offset+len(expected)] != expected:
+            raise FormatError(f'Storage contract mismatch at app_main+{offset:#x}')
     out.mkdir(parents=True, exist_ok=True)
     cache = out / "compiler-cache"
     cache.mkdir(exist_ok=True)
@@ -70,7 +82,7 @@ def build(firmware: Path, out: Path) -> dict:
                "-fentry=mx1_route_ui_event", "--script", str(ROOT / "patches/mainline.ld"),
                "-femit-bin=" + str(elf), "-I", str(ROOT / "patches"), "-I", str(out)]
     required = ("mx1_route_ui_event", "mx1_route_ui_display", "mx1_route_get",
-                "mx1_route_adjust", "mx1_route_label", "mx1_uac2_initialize",
+                "mx1_route_adjust", "mx1_route_label", "mx1_route_recall", "mx1_uac2_initialize",
                 "mx1_uac2_set_rate", "mx1_uac2_class_request", "mx1_uac2_start", *REQUIRED_SYMBOLS)
     for name in required:
         command += ["--force_undefined", name]
@@ -122,6 +134,7 @@ def build(firmware: Path, out: Path) -> dict:
                     or ef.get_section(objects[0]["st_shndx"]).name != ".route_state"):
                 raise FormatError("Unexpected routing state object: " + name)
         for name, address, length, section in (
+            ("route_ready", 0x0101727a, 1, ".route_state"),
             ("mx1_uac2_rate", 0x010173e0, 4, ".usb_state"),
             ("mx1_uac2_reply", 0x010173e4, 14, ".usb_state"),
             ("mx1_uac2_configuration", 0x0101727c, 355, ".usb_data")):
@@ -170,6 +183,9 @@ def build(firmware: Path, out: Path) -> dict:
         exact_patch(modified, offset, bytes.fromhex('ff00ff'), bytes.fromhex('ef0201'), changes, "UAC2 device association")
     exact_patch(modified, 0xda292, bytes.fromhex('4ff0000c'), bytes.fromhex('4ff0010c'), changes, "Capture-first priming")
     changes[-1]['runtime_address'] = 0x01009a06
+    exact_patch(modified, 0x1e786, bytes.fromhex("3eb50c46002202216846"),
+                absolute_jump(0x6001e786, symbols["mx1_route_recall"]), changes,
+                "Scene recall routes and normal-boot latest-route restoration")
     patch_ui(modified, symbols, changes)
     audio = patch_audio(modified, symbols, changes)
     for change in changes:

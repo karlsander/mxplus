@@ -119,6 +119,9 @@ def audit(check_committed: bool = False) -> dict:
         require(arm.get("status") == "pass", kind + " ARM integration check failed")
         require(arm.get("patched_app_sha256") == actual["patched_app_sha256"],
                 kind + " ARM report belongs to another application")
+        storage = read(prefix + "storage-verification.json")
+        require(storage.get("status") == "pass" and storage.get("patched_app_sha256") == actual["patched_app_sha256"],
+                "Mainline storage evidence missing or belongs to another candidate")
         boot = read(prefix + "boot-verification.json")
         require(boot.get("status") == "pass" and boot.get("candidate_sha256") == actual["container_sha256"],
                 "Mainline boot evidence missing or belongs to another candidate")

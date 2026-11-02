@@ -58,7 +58,7 @@ def patch_audio(image: bytearray, symbols: dict, changes: list) -> dict:
         "task_event": {"task": 0x6051DEA8, "event": 8,
                        "original_handler": 0x60024BAE, "post": 0x0100E266},
         "mode_policy": "Mixer/Control Surface only; External Mixer restores stock; diagnostics excluded",
-        "persistence": "RAM only; AUTO at boot",
+        "persistence": "Scene reserved fields; latest routes through stock system autosave; see docs/ROUTING_STORAGE.md",
         "return_policy": "Copies raw Return; original Return bus and AUX controls remain unchanged",
         "limits": ["DSP execution and physical audio not emulated",
                    "Stereo pair writes are sequential, not frame-atomic; no click-free guarantee",

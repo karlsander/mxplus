@@ -4,7 +4,8 @@ One maintained firmware contains routing and USB-B UAC2. The routing predecessor
 passed user bench tests including encoder end stops. The combined image has
 offline evidence but still needs its own physical test.
 
-1. Verify combined-image boot, routing and unchanged ordinary controls.
+1. Verify combined-image boot, routing, snapshot save/recall, delayed restart
+   persistence and unchanged ordinary controls.
 2. Establish class-driver USB-B enumeration, playback, capture-only and duplex.
 3. Cover stop/restart, reconnect, stereo/18-channel and mixed alternates, all
    three rates, channel order/levels and sustained audio.

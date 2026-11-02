@@ -63,6 +63,8 @@ class ReproductionIdentityTests(unittest.TestCase):
                 "scatter_extension": {"insert_offset": 6, "insert_length": len(extension)},
                 **hashes,
             })
+            self.write_json(prefix + "storage-verification.json", {
+                "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"]})
             self.write_json(prefix + "boot-verification.json", {
                 "status": "pass", "candidate_sha256": hashes["container_sha256"]})
             self.reproduction["candidate_sha256"][kind] = hashes["container_sha256"]
@@ -181,6 +183,12 @@ class ReproductionIdentityTests(unittest.TestCase):
         self.write_json("analysis/reproduction.json", self.reproduction)
         with self.assertRaisesRegex(ValueError,
                                     f"complete ordered {len(CHECK.EXPECTED_STAGES)}-stage"):
+            CHECK.audit()
+
+    def test_storage_report_must_match_candidate(self):
+        self.edit_json("build/mainline/storage-verification.json",
+                       lambda report: report.update(patched_app_sha256="0" * 64))
+        with self.assertRaisesRegex(ValueError, "storage evidence"):
             CHECK.audit()
 
     def test_current_evidence_mode_does_not_read_git(self):

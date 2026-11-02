@@ -9,6 +9,7 @@ SECTIONS {
     }
     .route_state 0x01017264 (NOLOAD) : {
         KEEP(*(.route_state))
+        KEEP(*(.route_ready))
         . = ALIGN(4);
     }
     ASSERT(SIZEOF(.route_state) == 24, "Unexpected routing state size")

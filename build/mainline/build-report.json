@@ -2,78 +2,79 @@
   "status": "OFFLINE EXPERIMENT; NOT HARDWARE VALIDATED",
   "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "64c6f2ed2404013ff1c1f31353069cd7a2578fe443088536edfb74c585cd5e42",
-  "container_sha256": "fe1d72af8cc76785c7acb6add6058a091a820b9a0e6bb2f606eceb334414a2fa",
-  "extension_sha256": "63a0a349ff56541abcd5b02f89ba655c2d26f071b04032b08c593e0fd31e526a",
+  "patched_app_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758",
+  "container_sha256": "88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba",
+  "extension_sha256": "859b0ffc16473fcefcce41c53029821f1013c206f8b00d32203fbbc0e166be68",
   "symbols": {
     "mx1_uac2_rate": 16872416,
     "mx1_uac2_reply": 16872420,
-    "mx1_route_ui_event": 16841419,
-    "mx1_route_ui_display": 16841237,
-    "mx1_route_get": 16840545,
-    "mx1_route_adjust": 16840657,
-    "mx1_route_label": 16840563,
+    "mx1_route_ui_event": 16841795,
+    "mx1_route_ui_display": 16841613,
+    "mx1_route_get": 16840857,
+    "mx1_route_adjust": 16840985,
+    "mx1_route_label": 16840883,
+    "mx1_route_recall": 16840545,
     "mx1_uac2_initialize": 16840357,
-    "mx1_uac2_set_rate": 16841621,
-    "mx1_uac2_class_request": 16841633,
-    "mx1_uac2_start": 16841913,
-    "mx1_route_dispatch": 16841201,
-    "mx1_route_flush": 16840797,
+    "mx1_uac2_set_rate": 16841997,
+    "mx1_uac2_class_request": 16842009,
+    "mx1_uac2_start": 16842289,
+    "mx1_route_dispatch": 16841571,
+    "mx1_route_flush": 16841125,
     "mx1_route_state": 16872036,
-    "mx1_route_ui_display_original": 16841589,
+    "mx1_route_ui_display_original": 16841965,
     "mx1_uac2_configuration": 16872060
   },
   "compiler": "ziglang 0.13.0 Cortex-M3 ReleaseSmall, no LTO",
   "sources": {
-    "patches/channel_routing_audio.c": "4b577fa28f71acc964bf9050922d8f75ccec9c7a94e80f9984e31bdf43873ec4",
+    "patches/channel_routing_audio.c": "7d548dd68f8e9f9b176ed74049c28eb56dae58da07fd96ae28d85b6608d38de4",
     "patches/channel_routing_ui.c": "4f3ddc32467e8fe414c88c61ddf0214b22c492d753534c09dca655ccfa0a2998",
     "patches/channel_routing_ui.S": "a5adb0bd43ba5a0a357f3927a6e372c4df4e3ff7cf2d9281b90022fcee9b3bcf",
     "patches/usb_audio.c": "cd410e071e504ced297c96b74b1fbe33c9fc25bb69f1e17da6168857a86b3db6",
     "sources/hardware/uac2_adapter.c": "d2cd20af7f08639ad195ed525006124b9cff0d1b0c5ef253809b3bf0478b676d",
     "patches/channel_routing.h": "ee5979ac7b1ce3bdd75e0c75542a18e2abcc21c9437d80fb54ae1f2b9fb54e31",
-    "patches/mainline.ld": "4016fbcd7f495d15c185a6b403f04f6a209476bd1fe6c9992bf509e00e3a2444",
-    "tools/build_firmware.py": "4dbf98546e98cd3310399cdd497db71edf8c2bb194c6db9e03a090efe962bd47",
-    "tools/routing_audio_patch.py": "5a437e03b8d38d6af16248c26d47d38fa4b541f7abb41ce70062f436870c2123",
+    "patches/mainline.ld": "6d0473c616b4ea435fe142c106005a343f0f12b85dd97d7a162de19cf1f66e20",
+    "tools/build_firmware.py": "a3d537f1a1c10e0b90f91a2c72e6bbea1312dccaaae4ada76d57743b2815747c",
+    "tools/routing_audio_patch.py": "cc993ffb0f272f2f96328e9c26ca06a579847a0f83543dbaf11dff295632cb3e",
     "tools/firmware_patch.py": "5b0980447039dbb4f213b2c41f1635da1966d2972bb04db482f8aa9e2cfac6ed",
     "tools/uac2_design.py": "fa02f27556f54ac1a0c06a0ae712a97c62180edb2c33d747050ab728a73fd551"
   },
   "scatter_extension": {
     "insert_offset": 917296,
     "runtime_address": 16840356,
-    "insert_length": 2460,
+    "insert_length": 2732,
     "startup_updates": [
       {
         "offset": 232,
         "before": 62372,
-        "after": 64476
+        "after": 64748
       },
       {
         "offset": 256,
         "before": 1611530032,
-        "after": 1611532492
+        "after": 1611532764
       },
       {
         "offset": 276,
         "before": 1611530164,
-        "after": 1611532136
+        "after": 1611532408
       },
       {
         "offset": 296,
         "before": 1611530164,
-        "after": 1611532624
+        "after": 1611532896
       },
       {
         "offset": 316,
         "before": 1611531336,
-        "after": 1611533796
+        "after": 1611534068
       },
       {
         "offset": 336,
         "before": 1611531336,
-        "after": 1611533796
+        "after": 1611534068
       }
     ],
-    "code_length": 2104
+    "code_length": 2376
   },
   "patches": [
     {
@@ -141,11 +142,19 @@
       "component": "app_main"
     },
     {
+      "label": "Scene recall routes and normal-boot latest-route restoration",
+      "file_offset": 124806,
+      "runtime_address": 1610737542,
+      "original": "3eb50c46002202216846",
+      "replacement": "00bfdff800f061f70001",
+      "component": "app_main"
+    },
+    {
       "label": "Panel event callback: hold SELECT and turn TEMPO",
       "file_offset": 62936,
       "runtime_address": 1610675672,
       "original": "490b0160",
-      "replacement": "cbfa0001",
+      "replacement": "43fc0001",
       "component": "app_main"
     },
     {
@@ -153,7 +162,7 @@
       "file_offset": 78678,
       "runtime_address": 1610691414,
       "original": "feb50446c54804f07cff",
-      "replacement": "00bfdff800f015fa0001",
+      "replacement": "00bfdff800f08dfb0001",
       "component": "app_main"
     },
     {
@@ -161,7 +170,7 @@
       "file_offset": 150446,
       "runtime_address": 1610763182,
       "original": "2de9f04387b0eaf702fb",
-      "replacement": "00bfdff800f0f1f90001",
+      "replacement": "00bfdff800f063fb0001",
       "component": "app_main"
     }
   ],
@@ -377,7 +386,7 @@
       "post": 16835174
     },
     "mode_policy": "Mixer/Control Surface only; External Mixer restores stock; diagnostics excluded",
-    "persistence": "RAM only; AUTO at boot",
+    "persistence": "Scene reserved fields; latest routes through stock system autosave; see docs/ROUTING_STORAGE.md",
     "return_policy": "Copies raw Return; original Return bus and AUX controls remain unchanged",
     "limits": [
       "DSP execution and physical audio not emulated",
@@ -388,26 +397,26 @@
   },
   "container": {
     "base_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
-    "output_sha256": "fe1d72af8cc76785c7acb6add6058a091a820b9a0e6bb2f606eceb334414a2fa",
+    "output_sha256": "88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba",
     "byte_identical_to_original": false,
     "changes": [
       {
         "name": "app_main",
-        "decoded_bytes_changed": 3723,
+        "decoded_bytes_changed": 4002,
         "old_decoded_size": 918600,
-        "new_decoded_size": 921060,
+        "new_decoded_size": 921332,
         "decoded_size_change_explicitly_allowed": true,
         "old_decoded_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-        "new_decoded_sha256": "64c6f2ed2404013ff1c1f31353069cd7a2578fe443088536edfb74c585cd5e42",
+        "new_decoded_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758",
         "old_stored_size": 505462,
-        "new_stored_size": 1036193,
+        "new_stored_size": 1036499,
         "encoding": "literal-only LZSS"
       }
     ],
     "boot_images_and_trailer_unchanged": true,
     "all_bytes_outside_update_range_unchanged": true,
     "container_validation": {
-      "sha256": "fe1d72af8cc76785c7acb6add6058a091a820b9a0e6bb2f606eceb334414a2fa",
+      "sha256": "88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba",
       "size": 4194320,
       "is_supplied_original": false,
       "format_scope": "Observed Roland MX-1 firmware 1.051132 layout only",
@@ -490,15 +499,15 @@
           "version": "1.051132",
           "entry_address_field": 1610612736,
           "load_address": 1610612736,
-          "stored_size": 1036193,
-          "checksum": 98893492,
+          "stored_size": 1036499,
+          "checksum": 98934600,
           "checksum_algorithm": "sum of stored payload bytes modulo 2^32",
           "checksum_valid": true,
           "compression": "lzss-zero-init-4096-18",
-          "decoded_size": 921060,
-          "stored_sha256": "8beaeccca84519466ac85bac19b1f4accd9bfcefd0827b27be2fcfc37d94caf5",
+          "decoded_size": 921332,
+          "stored_sha256": "3b9ee8c822e741e84e29b2b4fa60f4aa282977b0e209ff921c8070d1af10c3c3",
           "padding_is_ff": true,
-          "decoded_sha256": "64c6f2ed2404013ff1c1f31353069cd7a2578fe443088536edfb74c585cd5e42"
+          "decoded_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758"
         },
         {
           "name": "app_usb",
@@ -546,7 +555,7 @@
     },
     "hardware_validation": "not performed; research output only"
   },
-  "sram_bytes_remaining": 292,
+  "sram_bytes_remaining": 20,
   "hardware_access": false,
   "limits": [
     "Routing predecessor passed user bench tests; combined USB-B mainline awaits hardware testing",

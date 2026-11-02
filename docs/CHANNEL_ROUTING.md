@@ -124,10 +124,14 @@ not remap the physical preamp controls.
 | Return from External Mixer | The remembered assignments in RAM apply again |
 | Sample-rate/DSP program reload | Active assignments are reapplied on the subsequent stock parameter-queue notification |
 | Diagnostic programs | No routing program writes |
-| Power cycle | All strips start at Auto |
+| Snapshot save/recall | Routes are stored and restored with the mixer scene; older scenes recall Auto |
+| Power cycle | Latest routes restore through stock delayed system autosave |
 
-Assignments are held in RAM. They are not written into scenes or persistent
-settings. The patch does not add a storage format or a flash-write operation.
+Assignments use reserved scene and system fields. Wait several seconds after
+an edit before powering off; instantaneous power-loss persistence is not
+guaranteed. Scene saves are still explicit. Roland text backups omit these
+fields. See [storage integration](ROUTING_STORAGE.md) for the format, guards,
+offline evidence and remaining hardware tests. No flash-writing routine is added.
 External Mixer has a separate downstream source switch; preserving its stock
 path avoids presenting an assignment that the active graph would bypass.
 

@@ -1,30 +1,31 @@
 {
   "status": "OFFLINE UI INSTRUCTION TESTS; NO PHYSICAL PANEL OR AUDIO CLAIM",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "64c6f2ed2404013ff1c1f31353069cd7a2578fe443088536edfb74c585cd5e42",
+  "patched_app_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758",
   "ui_only_fixture": false,
   "symbols": {
     "mx1_uac2_rate": 16872416,
     "mx1_uac2_reply": 16872420,
-    "mx1_route_ui_event": 16841419,
-    "mx1_route_ui_display": 16841237,
-    "mx1_route_get": 16840545,
-    "mx1_route_adjust": 16840657,
-    "mx1_route_label": 16840563,
+    "mx1_route_ui_event": 16841795,
+    "mx1_route_ui_display": 16841613,
+    "mx1_route_get": 16840857,
+    "mx1_route_adjust": 16840985,
+    "mx1_route_label": 16840883,
+    "mx1_route_recall": 16840545,
     "mx1_uac2_initialize": 16840357,
-    "mx1_uac2_set_rate": 16841621,
-    "mx1_uac2_class_request": 16841633,
-    "mx1_uac2_start": 16841913,
-    "mx1_route_dispatch": 16841201,
-    "mx1_route_flush": 16840797,
+    "mx1_uac2_set_rate": 16841997,
+    "mx1_uac2_class_request": 16842009,
+    "mx1_uac2_start": 16842289,
+    "mx1_route_dispatch": 16841571,
+    "mx1_route_flush": 16841125,
     "mx1_route_state": 16872036,
-    "mx1_route_ui_display_original": 16841589,
+    "mx1_route_ui_display_original": 16841965,
     "mx1_uac2_configuration": 16872060
   },
   "sources": {
     "patches/channel_routing_ui.c": "4f3ddc32467e8fe414c88c61ddf0214b22c492d753534c09dca655ccfa0a2998",
     "patches/channel_routing_ui.S": "a5adb0bd43ba5a0a357f3927a6e372c4df4e3ff7cf2d9281b90022fcee9b3bcf",
-    "tools/routing_ui_verify.py": "077fd1dc7817b18923fd162cd6996cf47c17fa4a122595c0a62a9df0a7ea4e80"
+    "tools/routing_ui_verify.py": "5749aaa6a276cb8c24b1ff706d9194cf34fd97c851be9a4ac1cbab7f52e1a969"
   },
   "groups": [
     {

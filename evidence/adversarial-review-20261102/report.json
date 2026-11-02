@@ -1,0 +1,423 @@
+{
+  "status": "observations reproduced; known defect remains",
+  "hardware_access": false,
+  "candidate_sha256": "88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba",
+  "patched_app_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758",
+  "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
+  "findings": [
+    {
+      "id": "USB-STEREO-ACCOUNTING",
+      "priority": "P1",
+      "component": "app_main",
+      "decoded_offset": "0xda1d0",
+      "runtime_address": "0x01009944",
+      "instruction": "subs r0, #0x48",
+      "observation": "Stereo consumes eight bytes but decrements the packet counter by 72; normal next-packet re-arm is not reached.",
+      "scope": "Inherited stock pump behavior exposed by the advertised stereo alternate; physical symptom not measured."
+    }
+  ],
+  "finite_packets": [
+    {
+      "channels": 18,
+      "frames": 5,
+      "packet_bytes": 360,
+      "first_counter_underflow_tick": null,
+      "sample_words_in_order": true,
+      "fifo_overread_observed": false,
+      "history": [
+        {
+          "tick": 0,
+          "remaining_counter": 288,
+          "fifo_words_left": 72,
+          "state": 2
+        },
+        {
+          "tick": 1,
+          "remaining_counter": 216,
+          "fifo_words_left": 54,
+          "state": 2
+        },
+        {
+          "tick": 2,
+          "remaining_counter": 144,
+          "fifo_words_left": 0,
+          "state": 3
+        },
+        {
+          "tick": 3,
+          "remaining_counter": 144,
+          "fifo_words_left": 0,
+          "state": 3
+        },
+        {
+          "tick": 4,
+          "remaining_counter": 144,
+          "fifo_words_left": 0,
+          "state": 2
+        }
+      ]
+    },
+    {
+      "channels": 18,
+      "frames": 6,
+      "packet_bytes": 432,
+      "first_counter_underflow_tick": null,
+      "sample_words_in_order": true,
+      "fifo_overread_observed": false,
+      "history": [
+        {
+          "tick": 0,
+          "remaining_counter": 360,
+          "fifo_words_left": 90,
+          "state": 2
+        },
+        {
+          "tick": 1,
+          "remaining_counter": 288,
+          "fifo_words_left": 72,
+          "state": 2
+        },
+        {
+          "tick": 2,
+          "remaining_counter": 216,
+          "fifo_words_left": 54,
+          "state": 2
+        },
+        {
+          "tick": 3,
+          "remaining_counter": 144,
+          "fifo_words_left": 0,
+          "state": 3
+        },
+        {
+          "tick": 4,
+          "remaining_counter": 144,
+          "fifo_words_left": 0,
+          "state": 3
+        },
+        {
+          "tick": 5,
+          "remaining_counter": 144,
+          "fifo_words_left": 0,
+          "state": 2
+        }
+      ]
+    },
+    {
+      "channels": 18,
+      "frames": 12,
+      "packet_bytes": 864,
+      "first_counter_underflow_tick": null,
+      "sample_words_in_order": true,
+      "fifo_overread_observed": false,
+      "history": [
+        {
+          "tick": 0,
+          "remaining_counter": 792,
+          "fifo_words_left": 198,
+          "state": 2
+        },
+        {
+          "tick": 1,
+          "remaining_counter": 720,
+          "fifo_words_left": 180,
+          "state": 2
+        },
+        {
+          "tick": 2,
+          "remaining_counter": 648,
+          "fifo_words_left": 162,
+          "state": 2
+        },
+        {
+          "tick": 3,
+          "remaining_counter": 576,
+          "fifo_words_left": 144,
+          "state": 2
+        },
+        {
+          "tick": 4,
+          "remaining_counter": 504,
+          "fifo_words_left": 126,
+          "state": 2
+        },
+        {
+          "tick": 5,
+          "remaining_counter": 432,
+          "fifo_words_left": 108,
+          "state": 2
+        },
+        {
+          "tick": 6,
+          "remaining_counter": 360,
+          "fifo_words_left": 90,
+          "state": 2
+        },
+        {
+          "tick": 7,
+          "remaining_counter": 288,
+          "fifo_words_left": 72,
+          "state": 2
+        },
+        {
+          "tick": 8,
+          "remaining_counter": 216,
+          "fifo_words_left": 54,
+          "state": 2
+        },
+        {
+          "tick": 9,
+          "remaining_counter": 144,
+          "fifo_words_left": 0,
+          "state": 3
+        },
+        {
+          "tick": 10,
+          "remaining_counter": 144,
+          "fifo_words_left": 0,
+          "state": 3
+        },
+        {
+          "tick": 11,
+          "remaining_counter": 144,
+          "fifo_words_left": 0,
+          "state": 2
+        }
+      ]
+    },
+    {
+      "channels": 2,
+      "frames": 5,
+      "packet_bytes": 40,
+      "first_counter_underflow_tick": 0,
+      "sample_words_in_order": true,
+      "fifo_overread_observed": false,
+      "history": [
+        {
+          "tick": 0,
+          "remaining_counter": 4294967264,
+          "fifo_words_left": 8,
+          "state": 2
+        },
+        {
+          "tick": 1,
+          "remaining_counter": 4294967192,
+          "fifo_words_left": 6,
+          "state": 2
+        },
+        {
+          "tick": 2,
+          "remaining_counter": 4294967120,
+          "fifo_words_left": 4,
+          "state": 2
+        },
+        {
+          "tick": 3,
+          "remaining_counter": 4294967048,
+          "fifo_words_left": 2,
+          "state": 2
+        },
+        {
+          "tick": 4,
+          "remaining_counter": 4294966976,
+          "fifo_words_left": 0,
+          "state": 2
+        }
+      ]
+    },
+    {
+      "channels": 2,
+      "frames": 6,
+      "packet_bytes": 48,
+      "first_counter_underflow_tick": 0,
+      "sample_words_in_order": true,
+      "fifo_overread_observed": false,
+      "history": [
+        {
+          "tick": 0,
+          "remaining_counter": 4294967272,
+          "fifo_words_left": 10,
+          "state": 2
+        },
+        {
+          "tick": 1,
+          "remaining_counter": 4294967200,
+          "fifo_words_left": 8,
+          "state": 2
+        },
+        {
+          "tick": 2,
+          "remaining_counter": 4294967128,
+          "fifo_words_left": 6,
+          "state": 2
+        },
+        {
+          "tick": 3,
+          "remaining_counter": 4294967056,
+          "fifo_words_left": 4,
+          "state": 2
+        },
+        {
+          "tick": 4,
+          "remaining_counter": 4294966984,
+          "fifo_words_left": 2,
+          "state": 2
+        },
+        {
+          "tick": 5,
+          "remaining_counter": 4294966912,
+          "fifo_words_left": 0,
+          "state": 2
+        }
+      ]
+    },
+    {
+      "channels": 2,
+      "frames": 12,
+      "packet_bytes": 96,
+      "first_counter_underflow_tick": 1,
+      "sample_words_in_order": true,
+      "fifo_overread_observed": false,
+      "history": [
+        {
+          "tick": 0,
+          "remaining_counter": 24,
+          "fifo_words_left": 22,
+          "state": 2
+        },
+        {
+          "tick": 1,
+          "remaining_counter": 4294967248,
+          "fifo_words_left": 20,
+          "state": 2
+        },
+        {
+          "tick": 2,
+          "remaining_counter": 4294967176,
+          "fifo_words_left": 18,
+          "state": 2
+        },
+        {
+          "tick": 3,
+          "remaining_counter": 4294967104,
+          "fifo_words_left": 16,
+          "state": 2
+        },
+        {
+          "tick": 4,
+          "remaining_counter": 4294967032,
+          "fifo_words_left": 14,
+          "state": 2
+        },
+        {
+          "tick": 5,
+          "remaining_counter": 4294966960,
+          "fifo_words_left": 12,
+          "state": 2
+        },
+        {
+          "tick": 6,
+          "remaining_counter": 4294966888,
+          "fifo_words_left": 10,
+          "state": 2
+        },
+        {
+          "tick": 7,
+          "remaining_counter": 4294966816,
+          "fifo_words_left": 8,
+          "state": 2
+        },
+        {
+          "tick": 8,
+          "remaining_counter": 4294966744,
+          "fifo_words_left": 6,
+          "state": 2
+        },
+        {
+          "tick": 9,
+          "remaining_counter": 4294966672,
+          "fifo_words_left": 4,
+          "state": 2
+        },
+        {
+          "tick": 10,
+          "remaining_counter": 4294966600,
+          "fifo_words_left": 2,
+          "state": 2
+        },
+        {
+          "tick": 11,
+          "remaining_counter": 4294966528,
+          "fifo_words_left": 0,
+          "state": 2
+        }
+      ]
+    }
+  ],
+  "accelerated_stereo_counter_wrap": {
+    "modeled_prefix_ticks": 357913939,
+    "trigger_tick": 357913940,
+    "prefix_assumption": "Continuous stereo packets and OUT readiness with no reset/re-arm",
+    "counter_seed": 216,
+    "available_packet_words": 10,
+    "actual_callback_fifo_reads": 38,
+    "reads_beyond_supplied_packet": 28,
+    "physical_occurrence_verified": false
+  },
+  "routing_preemptions": [
+    {
+      "strip": 0,
+      "delta": 1,
+      "boundaries": 336,
+      "it_internal_boundaries_excluded": 4,
+      "status": "pass"
+    },
+    {
+      "strip": 4,
+      "delta": 1,
+      "boundaries": 332,
+      "it_internal_boundaries_excluded": 4,
+      "status": "pass"
+    },
+    {
+      "strip": 10,
+      "delta": 1,
+      "boundaries": 332,
+      "it_internal_boundaries_excluded": 4,
+      "status": "pass"
+    },
+    {
+      "strip": 0,
+      "delta": -1,
+      "boundaries": 335,
+      "it_internal_boundaries_excluded": 4,
+      "status": "pass"
+    },
+    {
+      "strip": 4,
+      "delta": -1,
+      "boundaries": 331,
+      "it_internal_boundaries_excluded": 4,
+      "status": "pass"
+    },
+    {
+      "strip": 10,
+      "delta": -1,
+      "boundaries": 331,
+      "it_internal_boundaries_excluded": 4,
+      "status": "pass"
+    }
+  ],
+  "boundaries": [
+    "Original/candidate Thumb instructions run; Ghidra pseudocode is not executed.",
+    "Packet tests start in running playback state2 with a new packet; capture is inactive.",
+    "OUT length/readiness and finite FIFO contents are supplied, conversion is identity; no peripheral timing or USB bus emulation.",
+    "No FIFO overread or incorrect sample order occurs in these short packet fixtures; the established defect is counter underflow and missing packet re-arm.",
+    "A separately accelerated uninterrupted-readiness case seeds the arithmetically derived later counter and reproduces a 38-word read burst against ten remaining packet words; physical occurrence is unverified.",
+    "Routing tests execute compiled restore/store/adjust/flush with code write protection and separate UI/DSP stacks.",
+    "Routing mode is Mixer; parameter lookup, event delivery, DSP writers, notifications and storage boundaries are modeled.",
+    "One complete DSP refresh interrupts each edit at each tested boundary; this is not an exhaustive RTOS or scene-copy race test.",
+    "Thumb IT blocks are tested at their outer boundaries; Unicorn cannot faithfully pause at their internal conditional returns.",
+    "No physical flash read/program, power-loss recovery, DSP arithmetic, audio quality or deadline margin is established."
+  ]
+}

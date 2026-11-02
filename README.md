@@ -21,7 +21,9 @@ routine is added. [Routing instructions](docs/CHANNEL_ROUTING.md) include the
 analog 5/6 split and [storage details](docs/ROUTING_STORAGE.md) explain persistence.
 
 USB-B advertises stereo and 18-channel UAC2 alternates at the mixer-selected
-sample rate. MIDI remains proprietary. See [USB audio](docs/DEVICE_PROBE.md).
+sample rate. A [known stereo playback accounting defect](docs/ADVERSARIAL_REVIEW.md)
+remains open; stereo playback is not validated. MIDI remains proprietary.
+See [USB audio](docs/DEVICE_PROBE.md).
 
 Generators, the blinking SELECT edit mode and generic USB-host unlocking are
 retired. Their findings are documentation only:

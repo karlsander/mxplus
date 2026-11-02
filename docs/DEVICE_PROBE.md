@@ -13,6 +13,12 @@ standalone candidate's mutable SRAM placement was invalid under the stock MPU;
 mainline uses separate writable descriptor/rate/reply storage. Historical build
 identities are in `evidence/retired-probes-20261102/`.
 
+The [adversarial review](ADVERSARIAL_REVIEW.md) reproduced a stereo playback
+accounting defect: the original pump consumes two words but subtracts an
+18-channel frame and retains an 18-channel tail. The existing mixed-alternate
+branch tests do not validate packet boundaries. The defect is unresolved in
+this image; stereo OUT needs correction or removal before wider validation.
+
 ## What the candidate changes
 
 The normal USB initializer at `0x6000d980` redirects to
@@ -56,7 +62,7 @@ clock and FIFO conditions before playback starts.
 
 ### Compiled ARM integration
 
-`tools/device_probe_verify.py` executes the candidate through the original
+`tools/usb_audio_verify.py` executes the candidate through the original
 normal initializer entry point. Eight groups pass:
 
 1. The original ARM startup copies the extension and preserves all original
@@ -148,10 +154,10 @@ installed may bind differently from a class-only host, and driver caches may
 affect comparisons. No inference about physical Apple driver behavior should
 be drawn from the CPU tests.
 
-The current evidence makes the candidate reviewable and explains exactly
-which missing behavior it attempts to add. Successful flashing, recovery
-after a failed flash, class compliance, and useful iOS audio are not yet
-demonstrated.
+The iPhone/AUM observation establishes one useful duplex path. It does not
+establish every advertised alternate or universal class compliance. TAP
+rollback has worked after the observed application failures; other recovery
+classes remain unverified. The stereo accounting finding above remains open.
 
 ## Source map
 

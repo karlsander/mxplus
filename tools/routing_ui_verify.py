@@ -6,8 +6,7 @@ four-character text loop run as original ARM instructions. Higher-level key
 actions, modal actions, parameter storage, and final character/LED delivery are
 stubbed. Panel-isolation cases capture routing API calls; final-candidate cases
 also execute the real route state/label APIs with parameter and RTOS boundaries.
-Audio correctness has independent tests. --ui-only compiles an explicit test
-fixture, never a flashable container.
+Audio correctness has independent tests. The verifier consumes the sole mainline build.
 """
 from __future__ import annotations
 
@@ -26,11 +25,11 @@ from unicorn.arm_const import (UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_R2,
     UC_ARM_REG_R8, UC_ARM_REG_R9, UC_ARM_REG_R10, UC_ARM_REG_R11,
     UC_ARM_REG_LR, UC_ARM_REG_PC)
 
-from build_device_probe import inject
-from build_routing_probe import patch_ui
+from firmware_patch import inject
+from build_firmware import patch_ui
 from container_tool import (ORIGINAL_SHA256, COMPONENT_BY_NAME,
                             component_unpacked, sha256)
-from host_probe_verify import Machine
+from arm_machine import Machine
 
 ROOT = Path(__file__).resolve().parents[1]
 KEYS = 0x605129A4
@@ -180,59 +179,6 @@ class StartupPageMachine(UIMachine):
         assert struct.unpack('<h', self.read(PAGE, 2))[0] == requested
         self.parameters.clear()
         return requested
-
-
-def fixture(original, out):
-    """Link production UI with explicitly inert route API for interface tests."""
-    out.mkdir(parents=True, exist_ok=True)
-    (out / 'channel_routing.h').write_text(
-        'unsigned mx1_route_get(unsigned);\n'
-        'void mx1_route_adjust(unsigned,int);\n'
-        'const char *mx1_route_label(unsigned);\n')
-    (out / 'route_api_test_stub.c').write_text(
-        'unsigned mx1_route_get(unsigned s){return s;}\n'
-        'void mx1_route_adjust(unsigned s,int d){(void)s;(void)d;}\n'
-        'const char *mx1_route_label(unsigned s){(void)s;return "----";}\n')
-    (out / 'ui_test.ld').write_text('''ENTRY(mx1_route_ui_event)
-SECTIONS {
- . = 0x0100f6a4;
- .text : { *(.text*) *(.rodata*) . = ALIGN(4); }
- /DISCARD/ : { *(.comment*) *(.ARM.exidx*) *(.ARM.extab*) *(.eh_frame*) }
- ASSERT(. <= 0x01010000, "UI test exceeds reviewed SRAM gap")
-}
-''')
-    cache = out / 'compiler-cache'
-    cache.mkdir(exist_ok=True)
-    env = dict(os.environ, ZIG_GLOBAL_CACHE_DIR=str(cache.resolve()),
-               ZIG_LOCAL_CACHE_DIR=str(cache.resolve()))
-    elf = out / 'routing_ui_test.elf'
-    command = [sys.executable, '-m', 'ziglang', 'build-exe', '-target',
-        'thumb-freestanding-eabi', '-mcpu', 'cortex_m3', '-O', 'ReleaseSmall',
-        '-fno-strip', '-fno-compiler-rt', '-fno-lto', '-fno-stack-protector',
-        '-fentry=mx1_route_ui_event', '--script', str(out / 'ui_test.ld'),
-        '-femit-bin=' + str(elf), '-I', str(out),
-        '--force_undefined', 'mx1_route_ui_display', '-cflags', '-ffreestanding',
-        '-fno-builtin', '-fno-unwind-tables', '-fno-asynchronous-unwind-tables',
-        '-Wall', '-Wextra', '-Werror', '--',
-        str(ROOT / 'patches/channel_routing_ui.c'),
-        str(ROOT / 'patches/channel_routing_ui.S'),
-        str(out / 'route_api_test_stub.c')]
-    subprocess.run(command, check=True, env=env)
-    with elf.open('rb') as f:
-        ef = ELFFile(f)
-        section = ef.get_section_by_name('.text')
-        assert section['sh_addr'] == 0x0100f6a4
-        blob = section.data()
-        symbols = {s.name: s.entry['st_value']
-            for s in ef.get_section_by_name('.symtab').iter_symbols()
-            if s.name.startswith('mx1_')}
-    patched, scatter = inject(original, blob)
-    changes = []
-    patch_ui(patched, symbols, changes)
-    return bytes(patched), {'symbols': symbols, 'test_fixture': True,
-        'extension_bytes': len(blob), 'extension_sha256': sha256(blob),
-        'patched_app_sha256': sha256(patched), 'scatter_extension': scatter,
-        'patches': changes}
 
 
 def verify(original: bytes, patched: bytes, build: dict) -> dict:
@@ -500,6 +446,7 @@ def verify(original: bytes, patched: bytes, build: dict) -> dict:
                                     stub_routes=False, mixer_mode=mode, dsp_mode=dsp_mode)
                 desired = bytes([7] * 11)  # Existing An6 assignments must survive.
                 machine.write(state_address, desired)
+                machine.write(0x604f41e0, b"MXR1" + desired + b"\0")
                 key = strip + 0x29
                 machine.packet(2, key, patched=True)
                 assert machine.characters[-4:] == [
@@ -552,24 +499,20 @@ def verify(original: bytes, patched: bytes, build: dict) -> dict:
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('firmware', type=Path)
-    p.add_argument('--build', type=Path, default=ROOT / 'build/routing-probe')
-    p.add_argument('--ui-only', action='store_true')
+    p.add_argument('--build', type=Path, default=ROOT / 'build/mainline')
     p.add_argument('--output', type=Path,
                    default=ROOT / 'analysis/channel_routing_ui_verification.json')
     a = p.parse_args()
     raw = a.firmware.read_bytes()
     assert sha256(raw) == ORIGINAL_SHA256, 'input firmware hash mismatch'
     original = component_unpacked(raw, COMPONENT_BY_NAME['app_main'])
-    if a.ui_only:
-        patched, build = fixture(original, ROOT / 'build/routing-ui-only')
-    else:
-        build = json.loads((a.build / 'build-report.json').read_text())
-        patched = (a.build / 'app_main.routing.bin').read_bytes()
-        assert sha256(patched) == build['patched_app_sha256']
+    build = json.loads((a.build / 'build-report.json').read_text())
+    patched = (a.build / 'app_main.mainline.bin').read_bytes()
+    assert sha256(patched) == build['patched_app_sha256']
     report = verify(original, patched, build)
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(report, indent=2) + '\n')
-    print(json.dumps({'status': report['status'], 'ui_only_fixture': a.ui_only,
+    print(json.dumps({'status': report['status'], 'ui_only_fixture': False,
                       'groups_passed': len(report['groups']),
                       'extension_bytes': build.get('extension_bytes',
                           build.get('scatter_extension', {}).get('insert_length'))}, indent=2))

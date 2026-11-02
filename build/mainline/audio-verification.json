@@ -1,0 +1,468 @@
+{
+  "status": "pass",
+  "groups": [
+    {
+      "name": "Original ARM DSP uploader reconstructs all 36 normal-program chunks and guarded source operands",
+      "status": "pass",
+      "executed": [
+        "0x0100bfe2 descriptor wrapper",
+        "0x0100ab32 uploader",
+        "0x0100ab04 original boundary-write helper"
+      ],
+      "modeled": [
+        "bulk DMA byte copying",
+        "DSP programming-command storage semantics"
+      ],
+      "program_hashes": [
+        "ad9da6b0a0d250259477738ea60b85407b3da1c37e707ff8c0140dcb91fd78ec",
+        "4c17a48ac7ed9d143f0ea085cf32ad96f807b2f7dbd8986e36c0053e389a66f7"
+      ]
+    },
+    {
+      "name": "Original factory DSP graph uses identical direct-copy read bindings for raw PC and serial inputs",
+      "status": "pass",
+      "component": "app_main",
+      "decoded_descriptor_offset": 833408,
+      "descriptor_runtime": "0x600cb780",
+      "program_source_runtime": "0x600cad4c",
+      "program_sha256": "039b17e226e3e125037e903d3b0839b8e1f56db19dd85195c2259a8029a5d197",
+      "raw_pc_import_range": [
+        "0x20",
+        "0x166"
+      ],
+      "serial_import_range": [
+        "0x16a",
+        "0x220"
+      ],
+      "common_read_binding": "0x0fe0",
+      "common_write_binding": "0x8fe2",
+      "inference": "Both raw source banks are consumed as compatible ordinary DSP audio operands",
+      "limitation": "This is guarded original-program evidence, not execution of ESC2 arithmetic"
+    },
+    {
+      "name": "AUTO boot, original empty parameter drain, no DSP programming writes, AAPCS preserved",
+      "status": "pass"
+    },
+    {
+      "name": "Every permitted source on every destination executes actual compiled menu and original DSP writers",
+      "status": "pass",
+      "source_choices": 53,
+      "strips": 11,
+      "source_destination_visits": 519,
+      "mono_stereo_pairs_skipped": true,
+      "four_character_labels": true,
+      "endpoints_clamp_without_event_posts": true,
+      "inward_turn_resumes": true,
+      "largest_single_route_drain_commands": 4,
+      "largest_single_route_drain_instructions": 581
+    },
+    {
+      "name": "Analog 5/6 split produces independent original-5/6 and USB2 input reads; own PC summand suppressed",
+      "status": "pass",
+      "original_strip_label": "An5 ",
+      "usb2_label": "An6 ",
+      "usb2_connected": false
+    },
+    {
+      "name": "Duplicate raw PC source survives other destination PC suppression; Return copy preserves original Return reads",
+      "status": "pass",
+      "model_boundary": "Address/token independence, not ESC2 numeric sample execution"
+    },
+    {
+      "name": "External Mixer restores stock operands and connection policy, blocks UI edits, resumes saved routes in Control Surface",
+      "status": "pass"
+    },
+    {
+      "name": "Queued parameter drain reasserts selected sources after full DSP program reload",
+      "status": "pass"
+    },
+    {
+      "name": "Original queued connection callback runs first; routing flush then overrides its unwanted PC summand",
+      "status": "pass",
+      "queue_message": "type0/group1",
+      "callback": "0x60027bf8",
+      "observed_selector_requests": [
+        [
+          582,
+          1065353216,
+          true
+        ],
+        [
+          608,
+          1065353216,
+          true
+        ],
+        [
+          582,
+          0,
+          true
+        ],
+        [
+          608,
+          0,
+          true
+        ]
+      ],
+      "modeled": "Parameter accessor and queue contents; real callback lookup/table fixture and callback execute"
+    },
+    {
+      "name": "Diagnostic programs, invalid strip IDs and invalid display accesses are excluded",
+      "status": "pass"
+    },
+    {
+      "name": "AUTO restoration matches original DIGITAL direction and all five native connection truth tables",
+      "status": "pass",
+      "original_writers": [
+        "0x100ab04",
+        "0x100baee"
+      ],
+      "original_callbacks_executed": 60,
+      "modes": [
+        0,
+        1,
+        2
+      ]
+    }
+  ],
+  "patched_app_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758",
+  "source_choices": [
+    {
+      "id": 0,
+      "left_operand": 0,
+      "right_operand": 0,
+      "label": "Auto"
+    },
+    {
+      "id": 1,
+      "left_operand": 24576,
+      "right_operand": 24576,
+      "label": "An1 "
+    },
+    {
+      "id": 2,
+      "left_operand": 24577,
+      "right_operand": 24577,
+      "label": "An2 "
+    },
+    {
+      "id": 3,
+      "left_operand": 24578,
+      "right_operand": 24578,
+      "label": "An3 "
+    },
+    {
+      "id": 4,
+      "left_operand": 24579,
+      "right_operand": 24579,
+      "label": "An4 "
+    },
+    {
+      "id": 5,
+      "left_operand": 24580,
+      "right_operand": 24581,
+      "label": "A56 "
+    },
+    {
+      "id": 6,
+      "left_operand": 24580,
+      "right_operand": 24580,
+      "label": "An5 "
+    },
+    {
+      "id": 7,
+      "left_operand": 24581,
+      "right_operand": 24581,
+      "label": "An6 "
+    },
+    {
+      "id": 8,
+      "left_operand": 24584,
+      "right_operand": 24585,
+      "label": "dIG "
+    },
+    {
+      "id": 9,
+      "left_operand": 24584,
+      "right_operand": 24584,
+      "label": "dI L"
+    },
+    {
+      "id": 10,
+      "left_operand": 24585,
+      "right_operand": 24585,
+      "label": "dI R"
+    },
+    {
+      "id": 11,
+      "left_operand": 24586,
+      "right_operand": 24587,
+      "label": "US1 "
+    },
+    {
+      "id": 12,
+      "left_operand": 24586,
+      "right_operand": 24586,
+      "label": "U1 L"
+    },
+    {
+      "id": 13,
+      "left_operand": 24587,
+      "right_operand": 24587,
+      "label": "U1 R"
+    },
+    {
+      "id": 14,
+      "left_operand": 24588,
+      "right_operand": 24589,
+      "label": "US2 "
+    },
+    {
+      "id": 15,
+      "left_operand": 24588,
+      "right_operand": 24588,
+      "label": "U2 L"
+    },
+    {
+      "id": 16,
+      "left_operand": 24589,
+      "right_operand": 24589,
+      "label": "U2 R"
+    },
+    {
+      "id": 17,
+      "left_operand": 24590,
+      "right_operand": 24591,
+      "label": "US3 "
+    },
+    {
+      "id": 18,
+      "left_operand": 24590,
+      "right_operand": 24590,
+      "label": "U3 L"
+    },
+    {
+      "id": 19,
+      "left_operand": 24591,
+      "right_operand": 24591,
+      "label": "U3 R"
+    },
+    {
+      "id": 20,
+      "left_operand": 24592,
+      "right_operand": 24593,
+      "label": "US4 "
+    },
+    {
+      "id": 21,
+      "left_operand": 24592,
+      "right_operand": 24592,
+      "label": "U4 L"
+    },
+    {
+      "id": 22,
+      "left_operand": 24593,
+      "right_operand": 24593,
+      "label": "U4 R"
+    },
+    {
+      "id": 23,
+      "left_operand": 24582,
+      "right_operand": 24583,
+      "label": "rtn "
+    },
+    {
+      "id": 24,
+      "left_operand": 24582,
+      "right_operand": 24582,
+      "label": "rt L"
+    },
+    {
+      "id": 25,
+      "left_operand": 24583,
+      "right_operand": 24583,
+      "label": "rt R"
+    },
+    {
+      "id": 26,
+      "left_operand": 40960,
+      "right_operand": 40961,
+      "label": "PC1 "
+    },
+    {
+      "id": 27,
+      "left_operand": 40960,
+      "right_operand": 40960,
+      "label": "P1 L"
+    },
+    {
+      "id": 28,
+      "left_operand": 40961,
+      "right_operand": 40961,
+      "label": "P1 R"
+    },
+    {
+      "id": 29,
+      "left_operand": 40962,
+      "right_operand": 40963,
+      "label": "PC2 "
+    },
+    {
+      "id": 30,
+      "left_operand": 40962,
+      "right_operand": 40962,
+      "label": "P2 L"
+    },
+    {
+      "id": 31,
+      "left_operand": 40963,
+      "right_operand": 40963,
+      "label": "P2 R"
+    },
+    {
+      "id": 32,
+      "left_operand": 40964,
+      "right_operand": 40965,
+      "label": "PC3 "
+    },
+    {
+      "id": 33,
+      "left_operand": 40964,
+      "right_operand": 40964,
+      "label": "P3 L"
+    },
+    {
+      "id": 34,
+      "left_operand": 40965,
+      "right_operand": 40965,
+      "label": "P3 R"
+    },
+    {
+      "id": 35,
+      "left_operand": 40966,
+      "right_operand": 40967,
+      "label": "PC4 "
+    },
+    {
+      "id": 36,
+      "left_operand": 40966,
+      "right_operand": 40966,
+      "label": "P4 L"
+    },
+    {
+      "id": 37,
+      "left_operand": 40967,
+      "right_operand": 40967,
+      "label": "P4 R"
+    },
+    {
+      "id": 38,
+      "left_operand": 40968,
+      "right_operand": 40969,
+      "label": "PC5 "
+    },
+    {
+      "id": 39,
+      "left_operand": 40968,
+      "right_operand": 40968,
+      "label": "P5 L"
+    },
+    {
+      "id": 40,
+      "left_operand": 40969,
+      "right_operand": 40969,
+      "label": "P5 R"
+    },
+    {
+      "id": 41,
+      "left_operand": 40970,
+      "right_operand": 40971,
+      "label": "PC6 "
+    },
+    {
+      "id": 42,
+      "left_operand": 40970,
+      "right_operand": 40970,
+      "label": "P6 L"
+    },
+    {
+      "id": 43,
+      "left_operand": 40971,
+      "right_operand": 40971,
+      "label": "P6 R"
+    },
+    {
+      "id": 44,
+      "left_operand": 40972,
+      "right_operand": 40973,
+      "label": "PC7 "
+    },
+    {
+      "id": 45,
+      "left_operand": 40972,
+      "right_operand": 40972,
+      "label": "P7 L"
+    },
+    {
+      "id": 46,
+      "left_operand": 40973,
+      "right_operand": 40973,
+      "label": "P7 R"
+    },
+    {
+      "id": 47,
+      "left_operand": 40974,
+      "right_operand": 40975,
+      "label": "PC8 "
+    },
+    {
+      "id": 48,
+      "left_operand": 40974,
+      "right_operand": 40974,
+      "label": "P8 L"
+    },
+    {
+      "id": 49,
+      "left_operand": 40975,
+      "right_operand": 40975,
+      "label": "P8 R"
+    },
+    {
+      "id": 50,
+      "left_operand": 40976,
+      "right_operand": 40977,
+      "label": "PC9 "
+    },
+    {
+      "id": 51,
+      "left_operand": 40976,
+      "right_operand": 40976,
+      "label": "P9 L"
+    },
+    {
+      "id": 52,
+      "left_operand": 40977,
+      "right_operand": 40977,
+      "label": "P9 R"
+    }
+  ],
+  "executed": [
+    "Compiled routing APIs and dispatch trampoline",
+    "Original parameter queue-loop control and epilogue",
+    "Original raw/float DSP command helpers 0x0100ab04 and 0x0100baee",
+    "Original program uploader and its partial-word merges"
+  ],
+  "modeled": [
+    "Parameter-store lookup results",
+    "Queue contents/accessor construction and task mode query",
+    "RTOS post recorded here; actual RTOS wrapper tested separately",
+    "DSP program halfword storage; float immediate requests recorded without conversion",
+    "Source operands treated as symbolic tokens, not numerical audio"
+  ],
+  "not_tested": [
+    "ESC2 arithmetic/float format interpretation",
+    "Real DSP frame/command timing",
+    "Physical input/output channel order",
+    "Click-free route changes",
+    "Physical panel or audio operation"
+  ]
+}

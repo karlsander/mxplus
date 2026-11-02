@@ -3,6 +3,7 @@ test_manifest_cannot_escape_project (test_repository_integrity.BundleAllowlistTe
 test_source_archive_allowlist_excludes_unlisted_local_files (test_repository_integrity.BundleAllowlistTests.test_source_archive_allowlist_excludes_unlisted_local_files) ... ok
 test_source_archive_without_manifest_is_rejected (test_repository_integrity.BundleAllowlistTests.test_source_archive_without_manifest_is_rejected) ... ok
 test_symlink_dereference_is_rejected (test_repository_integrity.BundleAllowlistTests.test_symlink_dereference_is_rejected) ... ok
+test_boot_report_from_another_candidate_is_rejected (test_repository_integrity.ReproductionIdentityTests.test_boot_report_from_another_candidate_is_rejected) ... ok
 test_candidate_decoder_evidence_must_identify_the_actual_application (test_repository_integrity.ReproductionIdentityTests.test_candidate_decoder_evidence_must_identify_the_actual_application) ... ok
 test_committed_original_must_match_the_supported_input (test_repository_integrity.ReproductionIdentityTests.test_committed_original_must_match_the_supported_input) ... ok
 test_committed_report_mismatch_is_rejected (test_repository_integrity.ReproductionIdentityTests.test_committed_report_mismatch_is_rejected) ... ok
@@ -11,7 +12,9 @@ test_current_report_mismatch_is_rejected (test_repository_integrity.Reproduction
 test_extension_hash_alone_does_not_establish_embedding (test_repository_integrity.ReproductionIdentityTests.test_extension_hash_alone_does_not_establish_embedding) ... ok
 test_incomplete_reproduction_is_rejected (test_repository_integrity.ReproductionIdentityTests.test_incomplete_reproduction_is_rejected) ... ok
 test_matching_working_artifacts_and_committed_bytes_pass (test_repository_integrity.ReproductionIdentityTests.test_matching_working_artifacts_and_committed_bytes_pass) ... ok
+test_retired_parallel_build_is_rejected (test_repository_integrity.ReproductionIdentityTests.test_retired_parallel_build_is_rejected) ... ok
 test_stale_committed_binary_is_rejected_even_when_reports_match_rebuild (test_repository_integrity.ReproductionIdentityTests.test_stale_committed_binary_is_rejected_even_when_reports_match_rebuild) ... ok
+test_storage_report_must_match_candidate (test_repository_integrity.ReproductionIdentityTests.test_storage_report_must_match_candidate) ... ok
 test_absolute_veneer_preserves_registers_stack_and_flags (test_routing_build_guards.RoutingGuardTests.test_absolute_veneer_preserves_registers_stack_and_flags) ... ok
 test_extension_respects_exact_reviewed_sram_boundary (test_routing_build_guards.RoutingGuardTests.test_extension_respects_exact_reviewed_sram_boundary) ... ok
 test_ui_hook_rejects_wrong_original_sites_and_double_application (test_routing_build_guards.RoutingGuardTests.test_ui_hook_rejects_wrong_original_sites_and_double_application) ... ok
@@ -29,6 +32,6 @@ test_reject_configuration_lengths (test_usb_descriptors.USBDescriptorTests.test_
 test_reject_truncated_rate_list (test_usb_descriptors.USBDescriptorTests.test_reject_truncated_rate_list) ... ok
 
 ----------------------------------------------------------------------
-Ran 29 tests in 0.632s
+Ran 32 tests in 0.557s
 
 OK

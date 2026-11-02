@@ -1,4 +1,10 @@
-# MX-1 generic UAC1 host enumeration prototype
+# Retired USB-host unlock research
+
+**Documentation only, retired 2 November 2026.** Mainline leaves the USB-host
+application unchanged. The following records the earlier narrow UAC1 experiment;
+its code, builder and binaries have been removed from the current tree because
+suitable hardware validation is unavailable. No generic USB-host compatibility
+is claimed. Paths and hashes below refer to the historical implementation.
 
 ## Result and status
 
@@ -140,52 +146,13 @@ that placement but does not prove the absence of every computed pointer or
 hardware use. The USB-core allocator reservation must not be transferred
 between cores merely because the numeric SRAM addresses overlap.
 
-## Reproduce from the project root
+## Retired implementation
 
-The recorded build used Python 3.12.14 on Linux x86-64, `ziglang 0.13.0`,
-`capstone 5.0.6`, `unicorn 2.1.4`, and `pyelftools 0.33`. Zig supplies the
-Clang/LLVM Cortex-M3 Thumb compiler. The commands are offline firmware-file
-operations; none communicates with a mixer.
-
-If the project environment has not been created:
-
-```sh
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
-```
-
-Build and verify the exact host candidate:
-
-```sh
-.venv/bin/python tools/build_host_probe.py inputs/MX1_UPD.original.bin \
-  --output build/host-probe
-
-.venv/bin/python tools/host_probe_verify.py inputs/MX1_UPD.original.bin \
-  --build build/host-probe \
-  --output analysis/host_probe_verification.json
-
-.venv/bin/python tools/container_candidate_verify.py \
-  inputs/MX1_UPD.original.bin \
-  build/host-probe/MX1_UAC1_HOST_PROBE_UNTESTED.bin \
-  --output analysis/container_host_candidate_verification.json
-```
-
-The underlying original-image investigations can also be repeated:
-
-```sh
-.venv/bin/python tools/container_verify.py inputs/MX1_UPD.original.bin \
-  --output analysis/container_verification.json
-
-.venv/bin/python tools/container_updater_verify.py inputs/MX1_UPD.original.bin \
-  --output analysis/container_updater_verification.json
-
-.venv/bin/python tools/container_binding_verify.py inputs/MX1_UPD.original.bin \
-  --output analysis/container_binding_verification.json
-```
-
-The ELF, extracted machine-code blob, decoded modified application, rebuilt
-container, and build manifest are emitted under `build/host-probe/`. Ghidra is
-not required to compile or run these verification scripts.
+There is no current host-unlock builder, extension source or candidate binary.
+The historical implementation and reproduction commands can be inspected at
+[commit 6322349](https://github.com/karlsander/mxplus/tree/6322349).
+The reports are preserved under `evidence/retired-probes-20261102/`. They describe
+the old experiment, not mainline behavior or a maintained research build.
 
 ## What the tests establish
 

@@ -1,7 +1,7 @@
 # Offline continuous integration
 
-The [verification workflow](../.github/workflows/verify.yml) rebuilds all three
-experimental candidates and runs the same offline checks used in the research.
+The [verification workflow](../.github/workflows/verify.yml) rebuilds the sole
+mainline candidate and runs the same offline checks used in the research.
 A successful run establishes that the checked-out source, generated firmware,
 and recorded hashes agree. It does not establish safe flashing, recovery, USB
 enumeration, or working audio on a physical MX-1.
@@ -38,40 +38,31 @@ python tools/check_reproduction.py --check-committed
 ```
 
 `tools/reproduce.py` checks the exact original firmware, extracts its programs,
-then runs these 22 named stages in order:
+then runs these 17 stages in order:
 
-| Stage | Name | Purpose |
-|---:|---|---|
-| 1 | `map-main` | Recover main application startup mappings |
-| 2 | `map-usb` | Recover USB application startup mappings |
-| 3 | `map-updater` | Recover updater startup mappings |
-| 4 | `container_verify` | Check container decoding and original loader behavior |
-| 5 | `container_updater_verify` | Execute original updater checks with file/flash stubs |
-| 6 | `container_binding_verify` | Check original host-driver binding |
-| 7 | `usb-descriptor-scan` | Extract and parse original USB descriptors |
-| 8 | `descriptor-tests` | Run the repository's discovered unit tests |
-| 9 | `bridge-plan-tests` | Check bridge planning, directions, and default read-only behavior |
-| 10 | `build-host` | Compile and package the host-port experiment |
-| 11 | `arm-host` | Execute the host hooks and original parser/selection paths |
-| 12 | `container-host-candidate` | Execute original loader/updater checks against the rebuilt host image |
-| 13 | `build-device` | Compile and package the USB-B experiment |
-| 14 | `arm-device` | Execute device initialization, descriptors, and control dispatch |
-| 15 | `container-device-candidate` | Execute original loader/updater checks against the rebuilt device image |
-| 16 | `original-audio-pump` | Execute the Thumb audio pump with explicit readiness/phase inputs |
-| 17 | `compile-native-controls` | Compile the native class-control boundary harness |
-| 18 | `native-controls` | Run the native request/response boundary cases |
-| 19 | `subcpu-evidence` | Regenerate panel-controller evidence and disassembly |
-| 20 | `build-routing` | Compile and package the independent channel-routing experiment |
-| 21 | `arm-routing` | Check all patch bytes and startup copies; execute panel, routing and original DSP control paths with explicit models |
-| 22 | `container-routing-candidate` | Execute original loader/updater checks against the rebuilt routing image |
+1. `map-main`
+2. `map-usb`
+3. `map-updater`
+4. `container_verify`
+5. `container_updater_verify`
+6. `container_binding_verify`
+7. `usb-descriptor-scan`
+8. `descriptor-tests`
+9. `bridge-plan-tests`
+10. `build-mainline`
+11. `arm-mainline`
+12. `container-mainline-candidate`
+13. `boot-mainline`
+14. `original-audio-pump`
+15. `compile-native-controls`
+16. `native-controls`
+17. `subcpu-evidence`
 
-The final consistency check requires all 22 expected stages to have passed and
-the reproduction report to declare `hardware_access: false`. It hashes the
-actual original firmware and each candidate's update container, decoded
-application, and compiled code blob, checks their agreement with the current
-evidence, then reads and hashes the corresponding **artifact blobs in Git
-`HEAD`**. Each rebuilt artifact must match the actual committed bytes, and the
-hash recorded in the committed build report must agree as well.
+The final gate requires the complete ordered pipeline and compares the one
+mainline container, decoded application and load-image blob against both current
+reports and actual committed artifact bytes. It also checks the unchanged
+original firmware. All USB/routing verification runs against the combined
+candidate. Historical separate targets are not built or published.
 
 The actual committed artifacts and their reports form the baseline. Updating
 only a report's hash while leaving a stale binary committed therefore fails,

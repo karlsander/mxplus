@@ -9,7 +9,7 @@ permission denial, not delivery of a real MemManage exception or DSP timing.
 import struct
 from unicorn import UC_HOOK_CODE, UC_HOOK_MEM_WRITE, UC_PROT_READ, UC_PROT_EXEC
 from unicorn.arm_const import UC_ARM_REG_PC, UC_ARM_REG_LR, UC_ARM_REG_SP
-from host_probe_verify import Machine, BASE
+from arm_machine import Machine, BASE
 from memory_map import recover
 
 
@@ -70,10 +70,13 @@ def verify(original, patched, build):
     assert regions[2] == {'base': 0x01010000, 'attributes': 0x1300001d,
                           'size': 0x8000, 'access_permission': 3}
     assert all(permission(regions, a) == 6 for a in range(0x01001000, 0x01010000))
-    state, end = 0x01017264, 0x0101727c
+    state, end = 0x01017264, 0x010173f4
     assert build['writable_state']['start'] == state and build['writable_state']['end_exclusive'] == end
     assert build['symbols']['mx1_route_state'] == state
     assert all(permission(regions, a) == 3 for a in range(state, end))
+    for name in ('mx1_uac2_rate', 'mx1_uac2_reply', 'mx1_uac2_configuration'):
+        assert state <= build['symbols'][name] < end
+        assert permission(regions, build['symbols'][name]) == 3
     old_bss, new_bss = recover(original)['operations'][3], recover(patched)['operations'][3]
     assert old_bss['destination'] + old_bss['length'] == state
     assert new_bss['destination'] + new_bss['length'] == end
@@ -85,14 +88,17 @@ def verify(original, patched, build):
         machine.uc.emu_start(BASE | 1, BASE + 0x7e, timeout=5_000_000, count=3_000_000)
         assert machine.uc.reg_read(UC_ARM_REG_PC) == BASE + 0x7e
         assert machine.read(state, 24) == bytes(24)
+        assert machine.read(0x010173e0, 20) == bytes(20)
+        from uac2_design import prototype_configuration
+        assert machine.read(0x0101727c, 356) == prototype_configuration(preserve_modes=True) + b'\0'
         assert machine.read(end, 4) == bytes([pattern]) * 4
         # Exercise original pool initialization over sentinels in the reserve.
         machine.uc.mem_map(0xe000e000, 0x2000)
         assert struct.unpack('<8I', machine.read(0x0100f234, 32)) == (
             1, 0, 0x8000, 0x01020000, 2, 0, 0x1000, 0x01013e18)
-        machine.write(state, bytes([pattern]) * 24)
+        machine.write(state, bytes([pattern]) * 400)
         machine.call(0x01006338, count=500_000)
-        assert machine.read(state, 24) == bytes([pattern]) * 24
+        assert machine.read(state, 400) == bytes([pattern]) * 400
     return {'status': 'pass', 'mpu_setup': {'decoded_offset': '0xd824', 'runtime': '0x6000d824',
                 'regions': regions, 'exception_registration': 'stubbed at 0x60054ef8'},
             'groups': [
@@ -101,6 +107,6 @@ def verify(original, patched, build):
                  'state_interval': [hex(state), hex(end)]},
                 {'name': 'Dirty cold startup clears state; original RTOS pools cannot allocate its reservation', 'status': 'pass',
                  'general_pool': ['0x01013e18', '0x01014e18'], 'stack_pool': ['0x01020000', '0x01028000'],
-                 'state_zero_bytes': 24, 'patterns': [85, 170]}],
+                 'state_reservation_bytes': 400, 'descriptor_initialized_bytes': 356, 'patterns': [85, 170]}],
             'limits': ['Permission rejection is modeled with Unicorn page protection; no real MemManage exception delivery.',
                        'RTOS initializer ICSR reads use thread-mode zero; no hardware or numerical DSP execution.']}

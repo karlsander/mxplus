@@ -1,0 +1,160 @@
+{
+  "status": "OFFLINE EXPERIMENT; NOT HARDWARE VALIDATED",
+  "container_sha256": "88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba",
+  "symbols": {
+    "mx1_uac2_rate": 16872416,
+    "mx1_uac2_reply": 16872420,
+    "mx1_route_ui_event": 16841795,
+    "mx1_route_ui_display": 16841613,
+    "mx1_route_get": 16840857,
+    "mx1_route_adjust": 16840985,
+    "mx1_route_label": 16840883,
+    "mx1_route_recall": 16840545,
+    "mx1_uac2_initialize": 16840357,
+    "mx1_uac2_set_rate": 16841997,
+    "mx1_uac2_class_request": 16842009,
+    "mx1_uac2_start": 16842289,
+    "mx1_route_dispatch": 16841571,
+    "mx1_route_flush": 16841125,
+    "mx1_route_state": 16872036,
+    "mx1_route_ui_display_original": 16841965,
+    "mx1_uac2_configuration": 16872060
+  },
+  "scatter_extension": {
+    "insert_offset": 917296,
+    "runtime_address": 16840356,
+    "insert_length": 2732,
+    "startup_updates": [
+      {
+        "offset": 232,
+        "before": 62372,
+        "after": 64748
+      },
+      {
+        "offset": 256,
+        "before": 1611530032,
+        "after": 1611532764
+      },
+      {
+        "offset": 276,
+        "before": 1611530164,
+        "after": 1611532408
+      },
+      {
+        "offset": 296,
+        "before": 1611530164,
+        "after": 1611532896
+      },
+      {
+        "offset": 316,
+        "before": 1611531336,
+        "after": 1611534068
+      },
+      {
+        "offset": 336,
+        "before": 1611531336,
+        "after": 1611534068
+      }
+    ],
+    "code_length": 2376
+  },
+  "patches": [
+    {
+      "label": "Zero 400-byte mainline writable state reservation after original writable SRAM BSS",
+      "file_offset": 264,
+      "runtime_address": 1610613000,
+      "original": "dc710000",
+      "replacement": "6c730000",
+      "component": "app_main"
+    },
+    {
+      "label": "Repurpose zero-length startup copy for writable USB descriptor",
+      "file_offset": 268,
+      "runtime_address": 1610613004,
+      "original": "00000201",
+      "replacement": "7c720101",
+      "component": "app_main"
+    },
+    {
+      "label": "Initialize 356-byte USB descriptor storage after writable BSS clear",
+      "file_offset": 272,
+      "runtime_address": 1610613008,
+      "original": "00000000",
+      "replacement": "64010000",
+      "component": "app_main"
+    },
+    {
+      "label": "USB-B UAC2 initializer",
+      "file_offset": 55680,
+      "runtime_address": 1610668416,
+      "original": "10b500f01ff80d48",
+      "replacement": "dff800f0a5f60001",
+      "component": "app_main"
+    },
+    {
+      "label": "UAC2 configuration pointer",
+      "file_offset": 740092,
+      "runtime_address": 1611352828,
+      "original": "9c490b60",
+      "replacement": "7c720101",
+      "component": "app_main"
+    },
+    {
+      "label": "UAC2 device association",
+      "file_offset": 739716,
+      "runtime_address": 1611352452,
+      "original": "ff00ff",
+      "replacement": "ef0201",
+      "component": "app_main"
+    },
+    {
+      "label": "UAC2 device association",
+      "file_offset": 739734,
+      "runtime_address": 1611352470,
+      "original": "ff00ff",
+      "replacement": "ef0201",
+      "component": "app_main"
+    },
+    {
+      "label": "Capture-first priming",
+      "file_offset": 893586,
+      "runtime_address": 16816646,
+      "original": "4ff0000c",
+      "replacement": "4ff0010c",
+      "component": "app_main"
+    },
+    {
+      "label": "Scene recall routes and normal-boot latest-route restoration",
+      "file_offset": 124806,
+      "runtime_address": 1610737542,
+      "original": "3eb50c46002202216846",
+      "replacement": "00bfdff800f061f70001",
+      "component": "app_main"
+    },
+    {
+      "label": "Panel event callback: hold SELECT and turn TEMPO",
+      "file_offset": 62936,
+      "runtime_address": 1610675672,
+      "original": "490b0160",
+      "replacement": "43fc0001",
+      "component": "app_main"
+    },
+    {
+      "label": "Tempo display overlay with relocated original prologue",
+      "file_offset": 78678,
+      "runtime_address": 1610691414,
+      "original": "feb50446c54804f07cff",
+      "replacement": "00bfdff800f08dfb0001",
+      "component": "app_main"
+    },
+    {
+      "label": "DSP parameter-event-8 drain, then queued routing update",
+      "file_offset": 150446,
+      "runtime_address": 1610763182,
+      "original": "2de9f04387b0eaf702fb",
+      "replacement": "00bfdff800f063fb0001",
+      "component": "app_main"
+    }
+  ],
+  "sram_bytes_remaining": 20
+}

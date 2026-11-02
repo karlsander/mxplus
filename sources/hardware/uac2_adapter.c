@@ -10,9 +10,14 @@
 #include <stdint.h>
 #include <stddef.h>
 
-/* Kept in the injected image's writable memory. Initialize before USB start. */
-static uint32_t mx1_uac2_rate;
-static uint8_t mx1_uac2_reply[14];
+/* Shared writable mainline reservation. Native tests use ordinary host BSS. */
+#ifdef MX1_UAC2_NATIVE_TEST
+#define USB_STATE
+#else
+#define USB_STATE __attribute__((section(".usb_state")))
+#endif
+static uint32_t mx1_uac2_rate USB_STATE;
+static uint8_t mx1_uac2_reply[14] USB_STATE;
 
 #ifdef MX1_UAC2_NATIVE_TEST
 extern void mx1_uac2_transport_reply(const void *, uint32_t, uint32_t);

@@ -49,7 +49,7 @@ class ReproductionIdentityTests(unittest.TestCase):
             self.write_json("analysis/" + name + ".json",
                             {"status": "passed", "input_sha256": self.original_sha})
         for kind, names in CHECK.ARTIFACTS.items():
-            prefix = "build/" + kind + "-probe/"
+            prefix = "build/" + kind + "/"
             extension = (kind + " extension").encode()
             application = b"prefix" + extension + b"tail"
             contents = {"container_sha256": (kind + " candidate").encode(),
@@ -63,6 +63,10 @@ class ReproductionIdentityTests(unittest.TestCase):
                 "scatter_extension": {"insert_offset": 6, "insert_length": len(extension)},
                 **hashes,
             })
+            self.write_json(prefix + "storage-verification.json", {
+                "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"]})
+            self.write_json(prefix + "boot-verification.json", {
+                "status": "pass", "candidate_sha256": hashes["container_sha256"]})
             self.reproduction["candidate_sha256"][kind] = hashes["container_sha256"]
             self.write_json("analysis/container_" + kind + "_candidate_verification.json", {
                 "status": "passed", "original_sha256": self.original_sha,
@@ -114,19 +118,19 @@ class ReproductionIdentityTests(unittest.TestCase):
         requested = {call.args[0][2] for call in git.call_args_list}
         for kind, names in CHECK.ARTIFACTS.items():
             for name in names.values():
-                self.assertIn("HEAD:build/" + kind + "-probe/" + name, requested)
+                self.assertIn("HEAD:build/" + kind + "/" + name, requested)
 
     def test_stale_committed_binary_is_rejected_even_when_reports_match_rebuild(self):
         for kind, names in CHECK.ARTIFACTS.items():
             for filename in names.values():
-                path = "build/" + kind + "-probe/" + filename
+                path = "build/" + kind + "/" + filename
                 with self.subTest(path=path), mock.patch.dict(self.head, {path: b"stale published bytes"}), \
                         mock.patch.object(CHECK.subprocess, "check_output", side_effect=self.git_read):
                     with self.assertRaisesRegex(ValueError, "committed artifact/report mismatch"):
                         CHECK.audit(True)
 
     def test_committed_report_mismatch_is_rejected(self):
-        path = "build/host-probe/build-report.json"
+        path = "build/mainline/build-report.json"
         stale = json.loads(self.head[path])
         stale["container_sha256"] = "0" * 64
         with mock.patch.dict(self.head, {path: json.dumps(stale).encode()}), \
@@ -141,13 +145,13 @@ class ReproductionIdentityTests(unittest.TestCase):
                 CHECK.audit(True)
 
     def test_current_report_mismatch_is_rejected(self):
-        self.edit_json("build/host-probe/build-report.json",
+        self.edit_json("build/mainline/build-report.json",
                        lambda r: r.update(extension_sha256="0" * 64))
         with self.assertRaisesRegex(ValueError, "artifact/report mismatch"):
             CHECK.audit()
 
     def test_candidate_decoder_evidence_must_identify_the_actual_application(self):
-        self.edit_json("analysis/container_host_candidate_verification.json",
+        self.edit_json("analysis/container_mainline_candidate_verification.json",
                        lambda r: r["changed_decoded_components"][0].update(
                            candidate_decoded_sha256="0" * 64))
         with self.assertRaisesRegex(ValueError, "decoded candidate evidence"):
@@ -155,12 +159,23 @@ class ReproductionIdentityTests(unittest.TestCase):
 
     def test_extension_hash_alone_does_not_establish_embedding(self):
         replacement = b"unrelated compiled extension"
-        self.write("build/host-probe/uac1_host_probe.code.bin", replacement)
+        self.write("build/mainline/mainline.load.bin", replacement)
         def change(report):
             report["extension_sha256"] = sha(replacement)
             report["scatter_extension"]["insert_length"] = len(replacement)
-        self.edit_json("build/host-probe/build-report.json", change)
+        self.edit_json("build/mainline/build-report.json", change)
         with self.assertRaisesRegex(ValueError, "not embedded"):
+            CHECK.audit()
+
+    def test_retired_parallel_build_is_rejected(self):
+        self.write("tools/build_host_probe.py", b"retired builder")
+        with self.assertRaisesRegex(ValueError, "Retired parallel build"):
+            CHECK.audit()
+
+    def test_boot_report_from_another_candidate_is_rejected(self):
+        self.edit_json("build/mainline/boot-verification.json",
+                       lambda r: r.update(candidate_sha256="0" * 64))
+        with self.assertRaisesRegex(ValueError, "boot evidence"):
             CHECK.audit()
 
     def test_incomplete_reproduction_is_rejected(self):
@@ -168,6 +183,12 @@ class ReproductionIdentityTests(unittest.TestCase):
         self.write_json("analysis/reproduction.json", self.reproduction)
         with self.assertRaisesRegex(ValueError,
                                     f"complete ordered {len(CHECK.EXPECTED_STAGES)}-stage"):
+            CHECK.audit()
+
+    def test_storage_report_must_match_candidate(self):
+        self.edit_json("build/mainline/storage-verification.json",
+                       lambda report: report.update(patched_app_sha256="0" * 64))
+        with self.assertRaisesRegex(ValueError, "storage evidence"):
             CHECK.audit()
 
     def test_current_evidence_mode_does_not_read_git(self):

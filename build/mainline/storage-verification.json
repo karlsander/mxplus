@@ -1,0 +1,37 @@
+{
+  "status": "pass",
+  "patched_app_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758",
+  "groups": [
+    {
+      "name": "Original storage registration remains identical; existing reserved fields only",
+      "status": "pass"
+    },
+    {
+      "name": "All 64 scene saves/recalls retain routes and all unrelated scene bytes",
+      "status": "pass"
+    },
+    {
+      "name": "Cold restart restores last routes independently of startup scene; edits preserve snapshots",
+      "status": "pass"
+    },
+    {
+      "name": "UI retains its selected source across a modeled DSP cache refresh",
+      "status": "pass"
+    },
+    {
+      "name": "Legacy, unknown-version, out-of-range and invalid mono records fall back to Auto",
+      "status": "pass"
+    },
+    {
+      "name": "Stock autosave observes route bytes and coalesces edits with unchanged 1500-tick delay",
+      "status": "pass"
+    }
+  ],
+  "boundaries": [
+    "Original scene copy/save/recall and autosave comparison/deadline ARM instructions execute",
+    "Storage requests are captured; flash erase/program and power-loss durability are not emulated",
+    "Storage nodes, time, singleton access, notifications and mutex calls are modeled",
+    "Restart fixtures supply the saved settings bytes; physical flash reload is untested",
+    "Text backup omits reserved fields; it does not export custom routes"
+  ]
+}

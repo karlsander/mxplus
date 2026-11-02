@@ -1,0 +1,264 @@
+{
+  "status": "pass",
+  "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
+  "patched_app_sha256": "595c901fc03dc83851e390554542ae18566e3539f0c46971d7a7c9774f147758",
+  "candidate_container_sha256": "88457445ffe1abeca8365198d0c15ed967c6f5b4dac08393da52c575a80660ba",
+  "groups": [
+    {
+      "name": "Actual startup copies extension and preserves existing initialized data",
+      "status": "pass",
+      "extension_bytes": 2732
+    },
+    {
+      "name": "Patched initializer veneer, original registration, and live rate descriptors",
+      "status": "pass",
+      "cases": [
+        {
+          "rate": 44100,
+          "packet_sizes": [
+            504,
+            56,
+            504,
+            56
+          ],
+          "instructions": 1551
+        },
+        {
+          "rate": 48000,
+          "packet_sizes": [
+            576,
+            64,
+            576,
+            64
+          ],
+          "instructions": 1558
+        },
+        {
+          "rate": 96000,
+          "packet_sizes": [
+            1008,
+            112,
+            1008,
+            112
+          ],
+          "instructions": 1555
+        }
+      ]
+    },
+    {
+      "name": "Original request dispatch reaches compiled UAC2 handler with correct replies",
+      "status": "pass",
+      "cases": 84,
+      "min_instructions": 92,
+      "max_instructions": 118,
+      "abi": "setup pointer preserved through01004646 and6003b664; callback return ignored"
+    },
+    {
+      "name": "Compiled rejection path executes original EP0 stall routine",
+      "status": "pass",
+      "cases": [
+        "zero_length",
+        "frequency_write",
+        "wrong_recipient",
+        "wrong_endpoint_recipient",
+        "wrong_entity",
+        "wrong_interface",
+        "wrong_channel",
+        "unknown_selector",
+        "validity_range",
+        "unknown_request"
+      ]
+    },
+    {
+      "name": "Original GET_DESCRIPTOR and other-speed paths use new live descriptor",
+      "status": "pass",
+      "cases": [
+        {
+          "speed": "high",
+          "descriptor_type": 1,
+          "requested_length": 18,
+          "returned_length": 18
+        },
+        {
+          "speed": "high",
+          "descriptor_type": 2,
+          "requested_length": 9,
+          "returned_length": 9
+        },
+        {
+          "speed": "high",
+          "descriptor_type": 2,
+          "requested_length": 1000,
+          "returned_length": 355
+        },
+        {
+          "speed": "high",
+          "descriptor_type": 6,
+          "requested_length": 10,
+          "returned_length": 10
+        },
+        {
+          "speed": "high",
+          "descriptor_type": 7,
+          "requested_length": 1000,
+          "returned_length": 45
+        },
+        {
+          "speed": "full",
+          "descriptor_type": 1,
+          "requested_length": 18,
+          "returned_length": 18
+        },
+        {
+          "speed": "full",
+          "descriptor_type": 2,
+          "requested_length": 9,
+          "returned_length": 9
+        },
+        {
+          "speed": "full",
+          "descriptor_type": 2,
+          "requested_length": 1000,
+          "returned_length": 45
+        },
+        {
+          "speed": "full",
+          "descriptor_type": 6,
+          "requested_length": 10,
+          "returned_length": 10
+        },
+        {
+          "speed": "full",
+          "descriptor_type": 7,
+          "requested_length": 1000,
+          "returned_length": 355
+        }
+      ],
+      "full_speed_limit": "The unchanged full-speed configuration has no audio endpoints"
+    },
+    {
+      "name": "Original descriptor walker produces identical endpoint hardware tables",
+      "status": "pass",
+      "cases": [
+        {
+          "rate": 44100,
+          "speed": "high",
+          "table_sha256": "db195904df55d2e2bf8fca03558735a1d51bffe1f46cd34dfe2ac9c4bf7ec9c4",
+          "interface_register_hex": "34230004",
+          "register_writes_compared": 38
+        },
+        {
+          "rate": 44100,
+          "speed": "full",
+          "table_sha256": "38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca",
+          "interface_register_hex": "14110004",
+          "register_writes_compared": 30
+        },
+        {
+          "rate": 48000,
+          "speed": "high",
+          "table_sha256": "bea96fc6daed235b9d0b76b0b7fc6a4c9f7d4d72e16e04509b6bf2cce064d182",
+          "interface_register_hex": "34230004",
+          "register_writes_compared": 38
+        },
+        {
+          "rate": 48000,
+          "speed": "full",
+          "table_sha256": "38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca",
+          "interface_register_hex": "14110004",
+          "register_writes_compared": 30
+        },
+        {
+          "rate": 96000,
+          "speed": "high",
+          "table_sha256": "c6b5321b2b2c0f8202bef36110959c1f45bacd6644ccce662913939dfd30f594",
+          "interface_register_hex": "34230004",
+          "register_writes_compared": 38
+        },
+        {
+          "rate": 96000,
+          "speed": "full",
+          "table_sha256": "38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca",
+          "interface_register_hex": "14110004",
+          "register_writes_compared": 30
+        }
+      ]
+    },
+    {
+      "name": "Initializer returns failure for invalid rates and failed stock stages",
+      "status": "pass",
+      "cases": [
+        {
+          "failure": "unsupported_rate",
+          "return": "0xffffffff",
+          "calls": []
+        },
+        {
+          "failure": "descriptor_init",
+          "return": "0xffffffff",
+          "calls": [
+            "0x6003b764"
+          ]
+        },
+        {
+          "failure": "class_registration",
+          "return": "0xffffffff",
+          "calls": [
+            "0x6003b764",
+            "0x6003b7cc"
+          ]
+        },
+        {
+          "failure": "callback_registration",
+          "return": "0xffffffff",
+          "calls": [
+            "0x6003b764",
+            "0x6003b7cc",
+            "0x6003b7f4"
+          ]
+        },
+        {
+          "failure": "task_creation",
+          "return": "0xffffffff",
+          "calls": [
+            "0x6003b764",
+            "0x6003b7cc",
+            "0x6003b7f4",
+            "0x6003b786",
+            "0x6003b3ae"
+          ]
+        },
+        {
+          "failure": "hardware_start",
+          "return": "0xffffffff",
+          "calls": [
+            "0x6003b764",
+            "0x6003b7cc",
+            "0x6003b7f4",
+            "0x6003b786",
+            "0x6003b3ae",
+            "0x6003cae4"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Original backup initializer retains descriptor and callback tables",
+      "status": "pass"
+    }
+  ],
+  "scope": "Actual ARM startup/init/descriptor/control code plus compiled C extension executed in Unicorn",
+  "stubs": [
+    "6003b3ae RTOS task creation",
+    "6003cae4 low-level hardware startup",
+    "010046ba EP0 response FIFO delivery; pointer/length/data/flags recorded"
+  ],
+  "not_emulated": [
+    "USB bus tokens and host enumeration",
+    "FIFO capacity and timing",
+    "DSP clock lock",
+    "actual sustained audio",
+    "physical flash programming"
+  ],
+  "instruction_measurement": "Executed instructions only; not cycles or timing predictions"
+}

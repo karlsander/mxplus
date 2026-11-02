@@ -1,3 +1,5 @@
+> Historical investigation: standalone build paths refer to Git history. The only active firmware is [mainline](../docs/MAINLINE.md). Historical evidence has not been rewritten as combined-image evidence.
+
 # Channel-source selection with SELECT and TEMPO
 
 This investigation implements the requested gesture: hold one destination

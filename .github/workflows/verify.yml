@@ -48,3 +48,6 @@ jobs:
 
       - name: Check evidence and committed candidate hashes
         run: python tools/check_reproduction.py --check-committed
+
+      - name: Audit boot selection and routing cold startup offline
+        run: python tools/boot_path_verify.py

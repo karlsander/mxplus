@@ -245,3 +245,10 @@ Detailed evidence is in [the UI trace](../research/channel-routing-ui.md),
 Physical work follows the repository's
 [hardware validation plan](HARDWARE_VALIDATION.md); successful offline checks
 do not change the candidate's `UNTESTED` status.
+
+An additional [TAP-entry and cold-start audit](../research/tap-boot-audit.md)
+executes original boot selection/decompression with application flash unmapped,
+checks dirty-SRAM routing initialization and original RTOS pool reservations,
+and records the final SDRAM-handoff emulation limit. Run it separately with
+`.venv/bin/python tools/boot_path_verify.py`. It does not establish physical
+recovery or continuous boot execution, and it changes no candidate bytes.

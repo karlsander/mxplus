@@ -35,7 +35,18 @@ The job runs:
 python -m pip install --requirement requirements.txt
 python tools/reproduce.py
 python tools/check_reproduction.py --check-committed
+python tools/boot_path_verify.py
 ```
+
+The additional boot audit writes `analysis/boot_path_verification.json`. It
+executes the original main-boot reset, selector and decoder with both application
+flash regions unmapped on the updater branch, checks the normal-branch fault
+control, and audits routing cold initialization and the original RTOS pool
+reservations. Board setup and peer transfers are modeled. It stops before the
+final SDRAM branch, whose stock reset-context execution raises a Unicorn CPU
+exception; application startup is tested separately. This is not a continuous
+boot, physical TAP-net, USB-enumeration or recovery test. See
+[the boot audit](../research/tap-boot-audit.md) for the exact boundaries.
 
 `tools/reproduce.py` checks the exact original firmware, extracts its programs,
 then runs these 22 named stages in order:

@@ -1,0 +1,733 @@
+{
+  "source_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
+  "executed": [
+    "0x0100bfe2 descriptor wrapper",
+    "0x0100ab32 uploader",
+    "0x0100ab04 original boundary-write helper"
+  ],
+  "modeled": [
+    "bulk DMA byte copying",
+    "DSP programming-command storage semantics"
+  ],
+  "not_tested": [
+    "DSP instruction execution",
+    "DMA or DSP timing",
+    "physical audio"
+  ],
+  "chunks": [
+    {
+      "core": 0,
+      "index": 0,
+      "program_offset": 9472,
+      "length": 26,
+      "source": 1611374220
+    },
+    {
+      "core": 0,
+      "index": 1,
+      "program_offset": 5628,
+      "length": 700,
+      "source": 1611373520
+    },
+    {
+      "core": 0,
+      "index": 2,
+      "program_offset": 0,
+      "length": 308,
+      "source": 1611367884
+    },
+    {
+      "core": 0,
+      "index": 3,
+      "program_offset": 28672,
+      "length": 34,
+      "source": 1611374512
+    },
+    {
+      "core": 0,
+      "index": 4,
+      "program_offset": 308,
+      "length": 486,
+      "source": 1611368192
+    },
+    {
+      "core": 0,
+      "index": 5,
+      "program_offset": 12288,
+      "length": 26,
+      "source": 1611374248
+    },
+    {
+      "core": 0,
+      "index": 6,
+      "program_offset": 13568,
+      "length": 26,
+      "source": 1611374276
+    },
+    {
+      "core": 0,
+      "index": 7,
+      "program_offset": 20480,
+      "length": 34,
+      "source": 1611374368
+    },
+    {
+      "core": 0,
+      "index": 8,
+      "program_offset": 16384,
+      "length": 26,
+      "source": 1611374304
+    },
+    {
+      "core": 0,
+      "index": 9,
+      "program_offset": 1276,
+      "length": 642,
+      "source": 1611369164
+    },
+    {
+      "core": 0,
+      "index": 10,
+      "program_offset": 794,
+      "length": 482,
+      "source": 1611368680
+    },
+    {
+      "core": 0,
+      "index": 11,
+      "program_offset": 29952,
+      "length": 34,
+      "source": 1611374548
+    },
+    {
+      "core": 0,
+      "index": 12,
+      "program_offset": 21760,
+      "length": 34,
+      "source": 1611374404
+    },
+    {
+      "core": 0,
+      "index": 13,
+      "program_offset": 17664,
+      "length": 34,
+      "source": 1611374332
+    },
+    {
+      "core": 0,
+      "index": 14,
+      "program_offset": 24576,
+      "length": 34,
+      "source": 1611374440
+    },
+    {
+      "core": 0,
+      "index": 15,
+      "program_offset": 1918,
+      "length": 3710,
+      "source": 1611369808
+    },
+    {
+      "core": 0,
+      "index": 16,
+      "program_offset": 32754,
+      "length": 14,
+      "source": 1611374584
+    },
+    {
+      "core": 0,
+      "index": 17,
+      "program_offset": 25856,
+      "length": 34,
+      "source": 1611374476
+    },
+    {
+      "core": 1,
+      "index": 0,
+      "program_offset": 6858,
+      "length": 104,
+      "source": 1611382092
+    },
+    {
+      "core": 1,
+      "index": 1,
+      "program_offset": 0,
+      "length": 106,
+      "source": 1611375184
+    },
+    {
+      "core": 1,
+      "index": 2,
+      "program_offset": 4146,
+      "length": 408,
+      "source": 1611379372
+    },
+    {
+      "core": 1,
+      "index": 3,
+      "program_offset": 1722,
+      "length": 404,
+      "source": 1611376924
+    },
+    {
+      "core": 1,
+      "index": 4,
+      "program_offset": 914,
+      "length": 404,
+      "source": 1611376108
+    },
+    {
+      "core": 1,
+      "index": 5,
+      "program_offset": 2126,
+      "length": 404,
+      "source": 1611377332
+    },
+    {
+      "core": 1,
+      "index": 6,
+      "program_offset": 6962,
+      "length": 188,
+      "source": 1611382200
+    },
+    {
+      "core": 1,
+      "index": 7,
+      "program_offset": 4554,
+      "length": 2304,
+      "source": 1611379784
+    },
+    {
+      "core": 1,
+      "index": 8,
+      "program_offset": 2530,
+      "length": 404,
+      "source": 1611377740
+    },
+    {
+      "core": 1,
+      "index": 9,
+      "program_offset": 3742,
+      "length": 404,
+      "source": 1611378964
+    },
+    {
+      "core": 1,
+      "index": 10,
+      "program_offset": 2934,
+      "length": 404,
+      "source": 1611378148
+    },
+    {
+      "core": 1,
+      "index": 11,
+      "program_offset": 16384,
+      "length": 34,
+      "source": 1611382392
+    },
+    {
+      "core": 1,
+      "index": 12,
+      "program_offset": 3338,
+      "length": 404,
+      "source": 1611378556
+    },
+    {
+      "core": 1,
+      "index": 13,
+      "program_offset": 106,
+      "length": 404,
+      "source": 1611375292
+    },
+    {
+      "core": 1,
+      "index": 14,
+      "program_offset": 32754,
+      "length": 14,
+      "source": 1611382464
+    },
+    {
+      "core": 1,
+      "index": 15,
+      "program_offset": 24576,
+      "length": 34,
+      "source": 1611382428
+    },
+    {
+      "core": 1,
+      "index": 16,
+      "program_offset": 1318,
+      "length": 404,
+      "source": 1611376516
+    },
+    {
+      "core": 1,
+      "index": 17,
+      "program_offset": 510,
+      "length": 404,
+      "source": 1611375700
+    }
+  ],
+  "transport_trace": [
+    {
+      "type": "original_boundary_write",
+      "destination": 1075127576,
+      "value": 65536
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611374220,
+      "destination": 1075127552,
+      "length": 24
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611373520,
+      "destination": 1075123708,
+      "length": 700
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611367884,
+      "destination": 1075118080,
+      "length": 308
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075146784,
+      "value": 65536
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611374512,
+      "destination": 1075146752,
+      "length": 32
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075118872,
+      "value": 65536
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611368192,
+      "destination": 1075118388,
+      "length": 484
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075130392,
+      "value": 65536
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611374248,
+      "destination": 1075130368,
+      "length": 24
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075131672,
+      "value": 65536
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611374276,
+      "destination": 1075131648,
+      "length": 24
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075138592,
+      "value": 65536
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611374368,
+      "destination": 1075138560,
+      "length": 32
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075134488,
+      "value": 65536
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611374304,
+      "destination": 1075134464,
+      "length": 24
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075119996,
+      "value": 65536
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611369164,
+      "destination": 1075119356,
+      "length": 640
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075118872,
+      "value": 68098
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611368684,
+      "destination": 1075118876,
+      "length": 480
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075148064,
+      "value": 65536
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611374548,
+      "destination": 1075148032,
+      "length": 32
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075139872,
+      "value": 65536
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611374404,
+      "destination": 1075139840,
+      "length": 32
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075135776,
+      "value": 65536
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611374332,
+      "destination": 1075135744,
+      "length": 32
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075142688,
+      "value": 65536
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611374440,
+      "destination": 1075142656,
+      "length": 32
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075119996,
+      "value": 68098
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611369812,
+      "destination": 1075120000,
+      "length": 3708
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075150832,
+      "value": 3075
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611374588,
+      "destination": 1075150836,
+      "length": 12
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075143968,
+      "value": 65536
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611374476,
+      "destination": 1075143936,
+      "length": 32
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075256008,
+      "value": 2562
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075256112,
+      "value": 4285530112
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611382096,
+      "destination": 1075256012,
+      "length": 100
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075249256,
+      "value": 4285595648
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611375184,
+      "destination": 1075249152,
+      "length": 104
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075253296,
+      "value": 7685
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075253704,
+      "value": 4285530112
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611379376,
+      "destination": 1075253300,
+      "length": 404
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075250872,
+      "value": 7685
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075251276,
+      "value": 2704015360
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611376928,
+      "destination": 1075250876,
+      "length": 400
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075250064,
+      "value": 7685
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075250468,
+      "value": 2703884288
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611376112,
+      "destination": 1075250068,
+      "length": 400
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075251276,
+      "value": 2704023045
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075251680,
+      "value": 2704146432
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611377336,
+      "destination": 1075251280,
+      "length": 400
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075256112,
+      "value": 4285532674
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075256300,
+      "value": 65536
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611382204,
+      "destination": 1075256116,
+      "length": 184
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075253704,
+      "value": 4285532674
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075256008,
+      "value": 68098
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611379788,
+      "destination": 1075253708,
+      "length": 2300
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075251680,
+      "value": 2704154117
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075252084,
+      "value": 2704277504
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611377744,
+      "destination": 1075251684,
+      "length": 400
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075252892,
+      "value": 7685
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075253296,
+      "value": 2704678405
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611378968,
+      "destination": 1075252896,
+      "length": 400
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075252084,
+      "value": 2704285189
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075252488,
+      "value": 2704408576
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611378152,
+      "destination": 1075252088,
+      "length": 400
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075265568,
+      "value": 65536
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611382392,
+      "destination": 1075265536,
+      "length": 32
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075252488,
+      "value": 2704416261
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075252892,
+      "value": 2704547333
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611378560,
+      "destination": 1075252492,
+      "length": 400
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075249256,
+      "value": 4285603333
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075249660,
+      "value": 2703753216
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611375296,
+      "destination": 1075249260,
+      "length": 400
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075281904,
+      "value": 3075
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611382468,
+      "destination": 1075281908,
+      "length": 12
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075273760,
+      "value": 65536
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611382428,
+      "destination": 1075273728,
+      "length": 32
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075250468,
+      "value": 2703891973
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075250872,
+      "value": 2703957509
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611376520,
+      "destination": 1075250472,
+      "length": 400
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075249660,
+      "value": 2703760901
+    },
+    {
+      "type": "original_boundary_write",
+      "destination": 1075250064,
+      "value": 2703826437
+    },
+    {
+      "type": "modeled_dma",
+      "source": 1611375704,
+      "destination": 1075249664,
+      "length": 400
+    }
+  ],
+  "instruction_memory_sha256": [
+    "ad9da6b0a0d250259477738ea60b85407b3da1c37e707ff8c0140dcb91fd78ec",
+    "4c17a48ac7ed9d143f0ea085cf32ad96f807b2f7dbd8986e36c0053e389a66f7"
+  ]
+}

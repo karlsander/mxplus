@@ -32,6 +32,10 @@ ghidra-projects/
 /build/local/
 /build/tmp/
 /build/ci/
+/build/routing-ui-only/
+/build/routing-audio-development/
+/analysis/channel_routing_ui_only_verification.json
+/analysis/routing-audio/test-development.json
 /build/reproduction-logs/
 **/uac2_adapter_native_test
 

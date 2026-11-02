@@ -1,7 +1,7 @@
 {
   "status": "passed",
   "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
-  "started_utc": "2026-11-01T16:25:22.825334+00:00",
+  "started_utc": "2026-11-01T17:38:13.576417+00:00",
   "python": "3.12.14",
   "dependencies": {
     "capstone": "5.0.6",
@@ -13,10 +13,10 @@
     {
       "name": "map-main",
       "passed": true,
-      "elapsed_seconds": 0.084,
+      "elapsed_seconds": 0.077,
       "log": "build/reproduction-logs/01-map-main.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/.venv/bin/python",
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
         "tools/memory_map.py",
         "analysis/container_app_main.bin",
         "--output",
@@ -26,10 +26,10 @@
     {
       "name": "map-usb",
       "passed": true,
-      "elapsed_seconds": 0.073,
+      "elapsed_seconds": 0.069,
       "log": "build/reproduction-logs/02-map-usb.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/.venv/bin/python",
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
         "tools/memory_map.py",
         "analysis/container_app_usb.bin",
         "--output",
@@ -39,10 +39,10 @@
     {
       "name": "map-updater",
       "passed": true,
-      "elapsed_seconds": 0.083,
+      "elapsed_seconds": 0.068,
       "log": "build/reproduction-logs/03-map-updater.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/.venv/bin/python",
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
         "tools/memory_map.py",
         "analysis/container_updater.bin",
         "--output",
@@ -52,12 +52,12 @@
     {
       "name": "container_verify",
       "passed": true,
-      "elapsed_seconds": 7.793,
+      "elapsed_seconds": 8.078,
       "log": "build/reproduction-logs/04-container_verify.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/.venv/bin/python",
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
         "tools/container_verify.py",
-        "/workspace/scratch/7c277c91200b/mxplus/inputs/MX1_UPD.original.bin",
+        "/workspace/scratch/62eb51d7779c/mxplus/inputs/MX1_UPD.original.bin",
         "--output",
         "analysis/container_verification.json"
       ]
@@ -65,12 +65,12 @@
     {
       "name": "container_updater_verify",
       "passed": true,
-      "elapsed_seconds": 2.061,
+      "elapsed_seconds": 2.195,
       "log": "build/reproduction-logs/05-container_updater_verify.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/.venv/bin/python",
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
         "tools/container_updater_verify.py",
-        "/workspace/scratch/7c277c91200b/mxplus/inputs/MX1_UPD.original.bin",
+        "/workspace/scratch/62eb51d7779c/mxplus/inputs/MX1_UPD.original.bin",
         "--output",
         "analysis/container_updater_verification.json"
       ]
@@ -78,12 +78,12 @@
     {
       "name": "container_binding_verify",
       "passed": true,
-      "elapsed_seconds": 0.188,
+      "elapsed_seconds": 0.199,
       "log": "build/reproduction-logs/06-container_binding_verify.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/.venv/bin/python",
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
         "tools/container_binding_verify.py",
-        "/workspace/scratch/7c277c91200b/mxplus/inputs/MX1_UPD.original.bin",
+        "/workspace/scratch/62eb51d7779c/mxplus/inputs/MX1_UPD.original.bin",
         "--output",
         "analysis/container_binding_verification.json"
       ]
@@ -91,10 +91,10 @@
     {
       "name": "usb-descriptor-scan",
       "passed": true,
-      "elapsed_seconds": 0.572,
+      "elapsed_seconds": 0.552,
       "log": "build/reproduction-logs/07-usb-descriptor-scan.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/.venv/bin/python",
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
         "tools/usb_descriptors.py",
         "analysis/container_app_main.bin",
         "--output",
@@ -104,10 +104,10 @@
     {
       "name": "descriptor-tests",
       "passed": true,
-      "elapsed_seconds": 0.649,
+      "elapsed_seconds": 0.786,
       "log": "build/reproduction-logs/08-descriptor-tests.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/.venv/bin/python",
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
         "-m",
         "unittest",
         "discover",
@@ -119,10 +119,10 @@
     {
       "name": "bridge-plan-tests",
       "passed": true,
-      "elapsed_seconds": 0.079,
+      "elapsed_seconds": 0.082,
       "log": "build/reproduction-logs/09-bridge-plan-tests.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/.venv/bin/python",
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
         "tools/linux_bridge_test.py",
         "-v"
       ]
@@ -130,12 +130,12 @@
     {
       "name": "build-host",
       "passed": true,
-      "elapsed_seconds": 1.373,
+      "elapsed_seconds": 1.355,
       "log": "build/reproduction-logs/10-build-host.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/.venv/bin/python",
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
         "tools/build_host_probe.py",
-        "/workspace/scratch/7c277c91200b/mxplus/inputs/MX1_UPD.original.bin",
+        "/workspace/scratch/62eb51d7779c/mxplus/inputs/MX1_UPD.original.bin",
         "--output",
         "build/host-probe"
       ]
@@ -143,12 +143,12 @@
     {
       "name": "arm-host",
       "passed": true,
-      "elapsed_seconds": 0.572,
+      "elapsed_seconds": 0.637,
       "log": "build/reproduction-logs/11-arm-host.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/.venv/bin/python",
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
         "tools/host_probe_verify.py",
-        "/workspace/scratch/7c277c91200b/mxplus/inputs/MX1_UPD.original.bin",
+        "/workspace/scratch/62eb51d7779c/mxplus/inputs/MX1_UPD.original.bin",
         "--build",
         "build/host-probe",
         "--output",
@@ -158,12 +158,12 @@
     {
       "name": "container-host-candidate",
       "passed": true,
-      "elapsed_seconds": 2.268,
+      "elapsed_seconds": 2.267,
       "log": "build/reproduction-logs/12-container-host-candidate.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/.venv/bin/python",
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
         "tools/container_candidate_verify.py",
-        "/workspace/scratch/7c277c91200b/mxplus/inputs/MX1_UPD.original.bin",
+        "/workspace/scratch/62eb51d7779c/mxplus/inputs/MX1_UPD.original.bin",
         "build/host-probe/MX1_UAC1_HOST_PROBE_UNTESTED.bin",
         "--output",
         "analysis/container_host_candidate_verification.json"
@@ -172,12 +172,12 @@
     {
       "name": "build-device",
       "passed": true,
-      "elapsed_seconds": 2.173,
+      "elapsed_seconds": 1.816,
       "log": "build/reproduction-logs/13-build-device.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/.venv/bin/python",
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
         "tools/build_device_probe.py",
-        "/workspace/scratch/7c277c91200b/mxplus/inputs/MX1_UPD.original.bin",
+        "/workspace/scratch/62eb51d7779c/mxplus/inputs/MX1_UPD.original.bin",
         "--output",
         "build/device-probe"
       ]
@@ -185,12 +185,12 @@
     {
       "name": "arm-device",
       "passed": true,
-      "elapsed_seconds": 1.192,
+      "elapsed_seconds": 1.081,
       "log": "build/reproduction-logs/14-arm-device.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/.venv/bin/python",
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
         "tools/device_probe_verify.py",
-        "/workspace/scratch/7c277c91200b/mxplus/inputs/MX1_UPD.original.bin",
+        "/workspace/scratch/62eb51d7779c/mxplus/inputs/MX1_UPD.original.bin",
         "--build",
         "build/device-probe",
         "--output",
@@ -200,12 +200,12 @@
     {
       "name": "container-device-candidate",
       "passed": true,
-      "elapsed_seconds": 2.37,
+      "elapsed_seconds": 2.383,
       "log": "build/reproduction-logs/15-container-device-candidate.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/.venv/bin/python",
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
         "tools/container_candidate_verify.py",
-        "/workspace/scratch/7c277c91200b/mxplus/inputs/MX1_UPD.original.bin",
+        "/workspace/scratch/62eb51d7779c/mxplus/inputs/MX1_UPD.original.bin",
         "build/device-probe/MX1_UAC2_DEVICE_PROBE_UNTESTED.bin",
         "--output",
         "analysis/container_device_candidate_verification.json"
@@ -214,17 +214,17 @@
     {
       "name": "original-audio-pump",
       "passed": true,
-      "elapsed_seconds": 0.198,
+      "elapsed_seconds": 0.245,
       "log": "build/reproduction-logs/16-original-audio-pump.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/.venv/bin/python",
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
         "sources/hardware/uac2_pump_harness.py"
       ]
     },
     {
       "name": "compile-native-controls",
       "passed": true,
-      "elapsed_seconds": 0.103,
+      "elapsed_seconds": 0.091,
       "log": "build/reproduction-logs/17-compile-native-controls.txt",
       "command": [
         "/usr/bin/x86_64-linux-gnu-gcc-13",
@@ -237,7 +237,7 @@
         "sources/hardware/uac2_adapter.c",
         "sources/hardware/uac2_adapter_native_test.c",
         "-o",
-        "/workspace/scratch/7c277c91200b/mxplus/build/device-probe/uac2_adapter_native_test"
+        "/workspace/scratch/62eb51d7779c/mxplus/build/device-probe/uac2_adapter_native_test"
       ]
     },
     {
@@ -246,28 +246,71 @@
       "elapsed_seconds": 0.001,
       "log": "build/reproduction-logs/18-native-controls.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/mxplus/build/device-probe/uac2_adapter_native_test"
+        "/workspace/scratch/62eb51d7779c/mxplus/build/device-probe/uac2_adapter_native_test"
       ]
     },
     {
       "name": "subcpu-evidence",
       "passed": true,
-      "elapsed_seconds": 0.073,
+      "elapsed_seconds": 0.07,
       "log": "build/reproduction-logs/19-subcpu-evidence.txt",
       "command": [
-        "/workspace/scratch/7c277c91200b/.venv/bin/python",
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
         "sources/hardware/inspect_subcpu.py",
-        "/workspace/scratch/7c277c91200b/mxplus/inputs/MX1_UPD.original.bin",
+        "/workspace/scratch/62eb51d7779c/mxplus/inputs/MX1_UPD.original.bin",
         "sources/hardware",
         "--disassemble"
+      ]
+    },
+    {
+      "name": "build-routing",
+      "passed": true,
+      "elapsed_seconds": 1.939,
+      "log": "build/reproduction-logs/20-build-routing.txt",
+      "command": [
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
+        "tools/build_routing_probe.py",
+        "/workspace/scratch/62eb51d7779c/mxplus/inputs/MX1_UPD.original.bin",
+        "--output",
+        "build/routing-probe"
+      ]
+    },
+    {
+      "name": "arm-routing",
+      "passed": true,
+      "elapsed_seconds": 16.585,
+      "log": "build/reproduction-logs/21-arm-routing.txt",
+      "command": [
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
+        "tools/routing_probe_verify.py",
+        "/workspace/scratch/62eb51d7779c/mxplus/inputs/MX1_UPD.original.bin",
+        "--build",
+        "build/routing-probe",
+        "--output",
+        "build/routing-probe/arm-verification.json"
+      ]
+    },
+    {
+      "name": "container-routing-candidate",
+      "passed": true,
+      "elapsed_seconds": 2.357,
+      "log": "build/reproduction-logs/22-container-routing-candidate.txt",
+      "command": [
+        "/workspace/scratch/62eb51d7779c/mxplus/.venv/bin/python",
+        "tools/container_candidate_verify.py",
+        "/workspace/scratch/62eb51d7779c/mxplus/inputs/MX1_UPD.original.bin",
+        "build/routing-probe/MX1_CHANNEL_ROUTING_UNTESTED.bin",
+        "--output",
+        "analysis/container_routing_candidate_verification.json"
       ]
     }
   ],
   "hardware_access": false,
   "limits": "CPU instruction tests use explicit I/O stubs; no physical USB, flash or audio validation.",
-  "finished_utc": "2026-11-01T16:25:45.529432+00:00",
+  "finished_utc": "2026-11-01T17:38:57.384142+00:00",
   "candidate_sha256": {
     "host": "516fc0a3baeaf179e018d7eff2eba376ba21eaed8b9e43a9b9860dce6f45dd58",
-    "device": "b17f9005dd2b32b9fd89ccdd07c3a2ef0dda0854fb67ad5732a76390cc005d57"
+    "device": "b17f9005dd2b32b9fd89ccdd07c3a2ef0dda0854fb67ad5732a76390cc005d57",
+    "routing": "1810461b87255931fdce8696dff0c0b1c28758e3a95e28ac02b4e01723526c21"
   }
 }

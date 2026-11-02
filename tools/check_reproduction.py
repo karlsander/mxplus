@@ -24,6 +24,7 @@ EXPECTED_STAGES = (
     "build-host", "arm-host", "container-host-candidate", "build-device",
     "arm-device", "container-device-candidate", "original-audio-pump",
     "compile-native-controls", "native-controls", "subcpu-evidence",
+    "build-routing", "arm-routing", "container-routing-candidate",
 )
 ARTIFACTS = {
     "host": {
@@ -35,6 +36,11 @@ ARTIFACTS = {
         "container_sha256": "MX1_UAC2_DEVICE_PROBE_UNTESTED.bin",
         "patched_app_sha256": "app_main.uac2_probe.bin",
         "extension_sha256": "uac2_device_probe.code.bin",
+    },
+    "routing": {
+        "container_sha256": "MX1_CHANNEL_ROUTING_UNTESTED.bin",
+        "patched_app_sha256": "app_main.routing.bin",
+        "extension_sha256": "channel_routing.code.bin",
     },
 }
 
@@ -68,7 +74,7 @@ def audit(check_committed: bool = False) -> dict:
     require(reproduction.get("input_sha256") == ORIGINAL_SHA256, "Reproduction input mismatch")
     checks = reproduction.get("checks", [])
     require(tuple(c.get("name") for c in checks) == EXPECTED_STAGES,
-            "Expected the complete ordered 19-stage reproduction run")
+            f"Expected the complete ordered {len(EXPECTED_STAGES)}-stage reproduction run")
     require(all(c.get("passed") is True for c in checks), "A reproduction stage failed")
 
     for relative in ("analysis/container_verification.json",

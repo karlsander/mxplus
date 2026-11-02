@@ -99,7 +99,7 @@ def main() -> None:
                                 "--output", "analysis/usb_descriptors.json"])
     run("descriptor-tests", [py, "-m", "unittest", "discover", "-s", "tests", "-v"])
     run("bridge-plan-tests", [py, "tools/linux_bridge_test.py", "-v"])
-    for kind in ("host", "device"):
+    def candidate(kind: str) -> None:
         builddir = "build/" + kind + "-probe"
         run("build-" + kind, [py, "tools/build_" + kind + "_probe.py", source,
                              "--output", builddir])
@@ -107,11 +107,14 @@ def main() -> None:
                         else builddir + "/arm-verification.json")
         run("arm-" + kind, [py, "tools/" + kind + "_probe_verify.py", source,
                            "--build", builddir, "--output", verification])
-        name = ("MX1_UAC1_HOST_PROBE_UNTESTED.bin" if kind == "host"
-                else "MX1_UAC2_DEVICE_PROBE_UNTESTED.bin")
+        name = {"host": "MX1_UAC1_HOST_PROBE_UNTESTED.bin",
+                "device": "MX1_UAC2_DEVICE_PROBE_UNTESTED.bin",
+                "routing": "MX1_CHANNEL_ROUTING_UNTESTED.bin"}[kind]
         run("container-" + kind + "-candidate", [py, "tools/container_candidate_verify.py",
              source, builddir + "/" + name,
              "--output", "analysis/container_" + kind + "_candidate_verification.json"])
+    for kind in ("host", "device"):
+        candidate(kind)
     run("original-audio-pump", [py, "sources/hardware/uac2_pump_harness.py"])
     native = ROOT / "build/device-probe/uac2_adapter_native_test"
     run("compile-native-controls", [compiler, "-std=c11", "-Wall", "-Wextra", "-Werror", "-O2",
@@ -120,11 +123,12 @@ def main() -> None:
     run("native-controls", [native])
     run("subcpu-evidence", [py, "sources/hardware/inspect_subcpu.py", source,
                             "sources/hardware", "--disassemble"])
+    candidate("routing")
     report["status"] = "passed"
     report["finished_utc"] = datetime.now(timezone.utc).isoformat()
     report["candidate_sha256"] = {
         kind: json.loads((ROOT / "build" / (kind + "-probe") / "build-report.json").read_text())["container_sha256"]
-        for kind in ("host", "device")}
+        for kind in ("host", "device", "routing")}
     save()
     print(f"All {len(report['checks'])} offline stages passed. Report: {output}")
     print("No hardware was accessed. These results do not establish safe flashing or working USB audio.")

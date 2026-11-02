@@ -1,12 +1,12 @@
 # Working on mxplus
 
-mxplus investigates the Roland MX-1 firmware and contains two separate USB experiments. Read [README.md](README.md), the relevant candidate report, and [CONTRIBUTING.md](CONTRIBUTING.md) before changing a build or interpreting its evidence. Use [ROADMAP.md](ROADMAP.md) to distinguish the present result from future work.
+mxplus investigates the Roland MX-1 firmware and contains separate USB-host, USB-device and channel-routing experiments. Read [README.md](README.md), the relevant candidate report, and [CONTRIBUTING.md](CONTRIBUTING.md) before changing a build or interpreting its evidence. Use [ROADMAP.md](ROADMAP.md) to distinguish the present result from future work.
 
 ## Scope and current boundary
 
 The current candidates have passed offline checks but have not run on physical MX-1 hardware. Do not describe them as working audio interfaces, safe upgrades, broadly compatible USB implementations, or verified recovery images. The user may authorize a particular hardware experiment; do not infer that authorization solely from a request to analyze, edit or rebuild files.
 
-The host-port candidate modifies the USB-host application. The USB-B candidate modifies the main application. Keep them separate unless a task explicitly defines a combined experiment with its own builder, guards, reports and validation. The external Linux bridge is a third, independently scoped route using stock mixer firmware.
+The host-port candidate modifies the USB-host application. The USB-B and channel-routing candidates independently modify the main application. Keep them separate unless a task explicitly defines a combined experiment with its own builder, guards, reports and validation. The external Linux bridge uses stock mixer firmware and has its own scope.
 
 ## Binary identity and patch discipline
 

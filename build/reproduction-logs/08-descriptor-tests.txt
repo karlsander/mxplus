@@ -12,6 +12,10 @@ test_extension_hash_alone_does_not_establish_embedding (test_repository_integrit
 test_incomplete_reproduction_is_rejected (test_repository_integrity.ReproductionIdentityTests.test_incomplete_reproduction_is_rejected) ... ok
 test_matching_working_artifacts_and_committed_bytes_pass (test_repository_integrity.ReproductionIdentityTests.test_matching_working_artifacts_and_committed_bytes_pass) ... ok
 test_stale_committed_binary_is_rejected_even_when_reports_match_rebuild (test_repository_integrity.ReproductionIdentityTests.test_stale_committed_binary_is_rejected_even_when_reports_match_rebuild) ... ok
+test_absolute_veneer_preserves_registers_stack_and_flags (test_routing_build_guards.RoutingGuardTests.test_absolute_veneer_preserves_registers_stack_and_flags) ... ok
+test_extension_respects_exact_reviewed_sram_boundary (test_routing_build_guards.RoutingGuardTests.test_extension_respects_exact_reviewed_sram_boundary) ... ok
+test_ui_hook_rejects_wrong_original_sites_and_double_application (test_routing_build_guards.RoutingGuardTests.test_ui_hook_rejects_wrong_original_sites_and_double_application) ... ok
+test_wrong_firmware_is_rejected_before_compilation_or_output_creation (test_routing_build_guards.RoutingGuardTests.test_wrong_firmware_is_rejected_before_compilation_or_output_creation) ... ok
 test_all_terminal_clock_and_stream_references_resolve (test_uac2_design.UAC2DesignTests.test_all_terminal_clock_and_stream_references_resolve) ... ok
 test_audio_alternates_and_endpoint_framing (test_uac2_design.UAC2DesignTests.test_audio_alternates_and_endpoint_framing) ... ok
 test_highest_rate_packet_capacity_has_one_frame_headroom (test_uac2_design.UAC2DesignTests.test_highest_rate_packet_capacity_has_one_frame_headroom) ... ok
@@ -25,6 +29,6 @@ test_reject_configuration_lengths (test_usb_descriptors.USBDescriptorTests.test_
 test_reject_truncated_rate_list (test_usb_descriptors.USBDescriptorTests.test_reject_truncated_rate_list) ... ok
 
 ----------------------------------------------------------------------
-Ran 25 tests in 0.554s
+Ran 29 tests in 0.632s
 
 OK

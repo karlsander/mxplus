@@ -39,7 +39,6 @@ async function choose(file) {
     selected = undefined;
     patchButton.disabled = true;
     clearResult();
-    $("file-name").textContent = file?.name || "Choose original firmware";
     if (!file) {
         report("Choose the extracted .BIN file to begin.");
         return;
@@ -161,7 +160,7 @@ async function load() {
         $("candidate-hash").textContent = manifest.output.sha256;
         $("build-id").textContent = manifest.output.sha256.slice(0, 8);
         $("source").textContent =
-            `Source ${manifest.sourceCommit.slice(0, 7)} ↗`;
+            `Source ${manifest.sourceCommit.slice(0, 7)}`;
         $("source").href =
             `https://github.com/karlsander/mxplus/tree/${manifest.sourceCommit}`;
         fileInput.disabled = false;

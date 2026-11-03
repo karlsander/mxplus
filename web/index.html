@@ -1,365 +1,61 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta
-            name="description"
-            content="Create an experimental mxplus firmware file for the Roland MX-1, locally in your browser. Includes verification and installation instructions."
-        />
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
-        />
-        <title>mxplus — Firmware patcher</title>
-        <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-        <link rel="stylesheet" href="./style.css" />
-        <script type="module" src="./app.mjs"></script>
-    </head>
-    <body>
-        <a class="skip" href="#patcher">Skip to patcher</a>
-        <header class="site-header">
-            <a class="wordmark" href="./" aria-label="mxplus home"
-                >mx<span>plus</span><i aria-hidden="true"></i
-            ></a>
-            <nav aria-label="Main">
-                <a href="#installation">Installation</a
-                ><a href="https://github.com/karlsander/mxplus">GitHub ↗</a>
-            </nav>
-        </header>
-        <main>
-            <section class="intro" aria-labelledby="title">
-                <div class="eyebrow">
-                    <span class="light"></span> INDEPENDENT FIRMWARE / ROLAND
-                    MX-1
-                </div>
-                <h1 id="title">More from<br />your <span>MX-1.</span></h1>
-                <p class="lead">
-                    Channel routing. Hands-on mastering.<br />Experimental USB-B
-                    audio. One firmware.
-                </p>
-                <div class="intro-bottom">
-                    <span class="tag">EXPERIMENTAL · UNTESTED</span
-                    ><span class="small">Patch locally. No upload.</span>
-                </div>
-                <div class="mixer" aria-hidden="true">
-                    <div class="mixer-label">
-                        MX<span>+</span> <small>MAINLINE</small>
-                    </div>
-                    <div class="channels">
-                        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i
-                        ><i></i><i></i><i></i>
-                    </div>
-                    <div class="pads">
-                        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-                    </div>
-                    <div class="mixer-footer">
-                        ROUTE <span>MASTER</span> USB-B
-                    </div>
-                </div>
-            </section>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Patch Roland MX-1 firmware locally in your browser.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>mxplus firmware patcher</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <main>
+    <h1>mxplus firmware patcher</h1>
+    <p>For the Roland MX-1. Files are processed locally in this browser.</p>
+    <p><strong>Experimental / UNTESTED.</strong> Hardware acceptance is incomplete.</p>
 
-            <section
-                class="workspace"
-                id="patcher"
-                aria-labelledby="patcher-title"
-            >
-                <div class="section-heading">
-                    <div>
-                        <div class="eyebrow">01 / PREPARE YOUR FILE</div>
-                        <h2 id="patcher-title">Make it mxplus.</h2>
-                    </div>
-                    <span class="local-badge">● BROWSER ONLY</span>
-                </div>
-                <div class="patch-grid">
-                    <div class="patch-controls">
-                        <p>
-                            Download
-                            <a
-                                href="https://www.roland.com/uk/support/by_product/mx-1/updates_drivers/82415302-0466-4c5c-be4e-138a8946d4a7/"
-                                >Roland’s MX-1 v1.05 system program ↗</a
-                            >
-                            and extract the ZIP. Choose the original
-                            <code>MX-1_UPD.BIN</code> below.
-                        </p>
-                        <label class="dropzone" id="dropzone" for="firmware">
-                            <span class="file-icon" aria-hidden="true">↓</span>
-                            <strong id="file-name"
-                                >Choose original firmware</strong
-                            >
-                            <span>or drop the extracted .BIN here</span>
-                            <input
-                                id="firmware"
-                                type="file"
-                                accept=".bin,.BIN"
-                                aria-describedby="status"
-                                disabled
-                            />
-                        </label>
-                        <button id="patch" class="button" disabled>
-                            Create patched firmware
-                            <span aria-hidden="true">→</span>
-                        </button>
-                        <p id="status" role="status" aria-live="polite">
-                            Loading release details…
-                        </p>
-                        <noscript
-                            ><p class="notice">
-                                JavaScript is required to verify and patch the
-                                file in your browser.
-                            </p></noscript
-                        >
-                        <div id="result" class="result" hidden>
-                            <strong>Your file is ready.</strong>
-                            <p>
-                                The output matches the maintained mainline
-                                candidate byte for byte. This is an integrity
-                                check, not hardware validation.
-                            </p>
-                            <a class="button" id="download"
-                                >Download UNTESTED firmware ↓</a
-                            >
-                            <a id="receipt" class="receipt"
-                                >Save verification receipt ↓</a
-                            >
-                            <p class="small">
-                                Keep both files, then read
-                                <a href="#installation"
-                                    >installation instructions</a
-                                >.
-                            </p>
-                        </div>
-                    </div>
-                    <aside class="candidate" aria-labelledby="candidate-title">
-                        <div class="eyebrow">CURRENT CANDIDATE</div>
-                        <h3 id="candidate-title">
-                            Mainline <span id="build-id">—</span>
-                        </h3>
-                        <dl class="features">
-                            <div>
-                                <dt>Channel source routing</dt>
-                                <dd>SELECT + TEMPO</dd>
-                            </div>
-                            <div>
-                                <dt>Mastering controls</dt>
-                                <dd>Hold MASTERING</dd>
-                            </div>
-                            <div>
-                                <dt>USB-B UAC2 audio</dt>
-                                <dd>Stereo / 18 channels</dd>
-                            </div>
-                        </dl>
-                        <p class="notice">
-                            <strong>Hardware acceptance is incomplete.</strong>
-                            The mastering mode and stereo packet fix have
-                            offline evidence only. Earlier boot and iPhone/AUM
-                            results belong to a different image.
-                        </p>
-                        <details>
-                            <summary>Candidate identity &amp; limits</summary>
-                            <p>Output SHA-256</p>
-                            <code id="candidate-hash">Loading…</code>
-                            <p>
-                                Snapshots and restart persistence still need
-                                physical acceptance. USB uses a mixer-selected,
-                                read-only rate, configuration-based clock
-                                validity and implicit feedback. MIDI remains
-                                proprietary; audio requires high speed. Real
-                                stereo/mixed-alternate packet boundaries and
-                                sustained use remain unverified.
-                            </p>
-                            <p>
-                                USB1–4 stay stock. No generators or generic
-                                USB-host unlock.
-                            </p>
-                            <a
-                                href="https://github.com/karlsander/mxplus/blob/main/docs/MAINLINE.md"
-                                >Evidence and memory layout ↗</a
-                            >
-                        </details>
-                        <a
-                            id="source"
-                            class="source"
-                            href="https://github.com/karlsander/mxplus"
-                            >Source on GitHub ↗</a
-                        >
-                    </aside>
-                </div>
-            </section>
+    <section id="patcher" aria-label="Patch firmware">
+      <p>Download <a href="https://www.roland.com/uk/support/by_product/mx-1/updates_drivers/82415302-0466-4c5c-be4e-138a8946d4a7/">Roland’s v1.05 firmware</a>, extract the ZIP, and select the original <code>MX-1_UPD.BIN</code>.</p>
+      <div id="dropzone">
+        <label for="firmware">Original firmware</label>
+        <input id="firmware" type="file" accept=".bin,.BIN" aria-describedby="status" disabled>
+      </div>
+      <button id="patch" disabled>Create patched firmware</button>
+      <p id="status" role="status" aria-live="polite">Loading release details…</p>
+      <noscript><p>JavaScript is required to patch the file.</p></noscript>
+      <div id="result" hidden>
+        <a id="download">Download UNTESTED firmware</a>
+        <a id="receipt">Save verification receipt</a>
+      </div>
+    </section>
 
-            <section
-                class="installation"
-                id="installation"
-                aria-labelledby="installation-title"
-            >
-                <div class="section-heading">
-                    <div>
-                        <div class="eyebrow">02 / AT THE MIXER</div>
-                        <h2 id="installation-title">
-                            Install with the full picture.
-                        </h2>
-                    </div>
-                </div>
-                <p class="install-intro">
-                    This page prepares a file; it does not connect to or flash
-                    the mixer. Installation is a separate hardware experiment.
-                    Establish a stock baseline, back up settings and arrange a
-                    device-specific recovery route first. Preserved boot code
-                    and previous TAP rollback observations do not guarantee
-                    recovery.
-                </p>
-                <p>
-                    <a
-                        href="https://github.com/karlsander/mxplus/blob/main/docs/HARDWARE_VALIDATION.md"
-                        >Read the hardware preparation guide ↗</a
-                    >
-                </p>
-                <ol class="steps">
-                    <li>
-                        <div>
-                            <h3>Keep a clearly labelled copy</h3>
-                            <p>
-                                Save
-                                <code>MXPLUS_MAINLINE_UNTESTED.bin</code> and
-                                its receipt. In a separate installation folder,
-                                duplicate the verified candidate and name that
-                                copy <code>MX-1_UPD.BIN</code>. Keep the stock
-                                file elsewhere. Renaming does not change the
-                                hash.
-                            </p>
-                        </div>
-                    </li>
-                    <li>
-                        <div>
-                            <h3>Enter update mode</h3>
-                            <p>
-                                With the MX-1 off, hold TAP while switching it
-                                on. Connect the computer to the mixer’s USB-B
-                                port. Open the MX-1 drive that appears.
-                            </p>
-                        </div>
-                    </li>
-                    <li>
-                        <div>
-                            <h3>Copy, then eject</h3>
-                            <p>
-                                Copy only the prepared
-                                <code>MX-1_UPD.BIN</code> into the drive’s top
-                                level. Wait for copying to finish, eject the
-                                drive through the operating system, then unplug
-                                USB.
-                            </p>
-                        </div>
-                    </li>
-                    <li>
-                        <div>
-                            <h3>Run the update</h3>
-                            <p>
-                                Press TAP. Keep power connected while the pads
-                                indicate progress. Wait for
-                                <code>Fin</code> before switching off. If the
-                                expected sequence fails, stop and use the
-                                established recovery plan.
-                            </p>
-                        </div>
-                    </li>
-                    <li>
-                        <div>
-                            <h3>Check the exact candidate</h3>
-                            <p>
-                                Start with monitoring muted. Check ordinary
-                                mixer operation, then routing, mastering and USB
-                                in small steps. Keep the hash, settings,
-                                connections and observations with the
-                                <a
-                                    href="https://github.com/karlsander/mxplus/blob/main/docs/MAINLINE.md#bench-sequence"
-                                    >bench record</a
-                                >. The displayed Roland version cannot identify
-                                mxplus.
-                            </p>
-                        </div>
-                    </li>
-                </ol>
-                <p class="small">
-                    The transfer sequence follows Roland’s
-                    <a
-                        href="https://www.roland.com/uk/support/by_product/mx-1/updates_drivers/82415302-0466-4c5c-be4e-138a8946d4a7/"
-                        >official v1.05 update procedure</a
-                    >. Using a renamed copy of this experimental candidate is an
-                    mxplus step, not a Roland-supported update.
-                </p>
-            </section>
+    <section id="installation" aria-labelledby="installation-title">
+      <h2 id="installation-title">Installation</h2>
+      <p>Back up settings, establish a stock baseline and arrange a device-specific recovery route first. Previous TAP rollback results do not guarantee recovery. Read the <a href="https://github.com/karlsander/mxplus/blob/main/docs/HARDWARE_VALIDATION.md">hardware preparation guide</a>.</p>
+      <ol>
+        <li>Keep the downloaded <code>MXPLUS_MAINLINE_UNTESTED.bin</code> and its receipt. Make a separate copy named <code>MX-1_UPD.BIN</code> for installation. Keep the stock file elsewhere.</li>
+        <li>With the MX-1 off, hold <strong>TAP</strong> while switching it on. Connect the computer to USB-B and open the MX-1 drive.</li>
+        <li>Copy only the prepared <code>MX-1_UPD.BIN</code> to the drive’s top level. Wait for copying to finish, eject the drive, then disconnect USB.</li>
+        <li>Press <strong>TAP</strong> to update. Keep power connected until <strong>Fin</strong> appears, then switch off. If the expected sequence fails, use the established recovery plan.</li>
+        <li>Restart with monitoring muted and follow the <a href="https://github.com/karlsander/mxplus/blob/main/docs/MAINLINE.md#bench-sequence">bench checks</a>. The displayed Roland version does not identify mxplus.</li>
+      </ol>
+      <p class="note">Transfer steps follow <a href="https://www.roland.com/uk/support/by_product/mx-1/updates_drivers/82415302-0466-4c5c-be4e-138a8946d4a7/">Roland’s update procedure</a>. The renamed experimental file is an mxplus step, not a Roland-supported update.</p>
+    </section>
 
-            <section class="help" aria-labelledby="help-title">
-                <div class="eyebrow">03 / GOOD TO KNOW</div>
-                <h2 id="help-title">Before you press play.</h2>
-                <details>
-                    <summary>Does my firmware leave this browser?</summary>
-                    <p>
-                        No. The page downloads the patch and processes your
-                        chosen firmware in browser memory. It has no upload
-                        endpoint, analytics, external scripts or account
-                        requirement. GitHub serves the page and assets; the
-                        original and patched files stay on your computer.
-                    </p>
-                </details>
-                <details>
-                    <summary>Why was my file rejected?</summary>
-                    <p>
-                        Only the exact original MX-1 v1.05 file is accepted. ZIP
-                        archives, other models or revisions, truncated files and
-                        already patched files will fail. Extract a fresh
-                        official download; do not try to bypass the check.
-                    </p>
-                </details>
-                <details>
-                    <summary>Is this ready for every MX-1 setup?</summary>
-                    <p>
-                        No. This is an experimental preview with incomplete
-                        hardware acceptance. Earlier limited tests do not
-                        establish broad compatibility, safe upgrades or recovery
-                        from all failures. See the
-                        <a
-                            href="https://github.com/karlsander/mxplus/blob/main/ROADMAP.md"
-                            >remaining validation work</a
-                        >.
-                    </p>
-                </details>
-                <details>
-                    <summary>Where are the controls and support notes?</summary>
-                    <p>
-                        Read the
-                        <a
-                            href="https://github.com/karlsander/mxplus/blob/main/docs/CHANNEL_ROUTING.md"
-                            >routing guide</a
-                        >,
-                        <a
-                            href="https://github.com/karlsander/mxplus/blob/main/docs/MASTERING.md"
-                            >mastering layout</a
-                        >
-                        and
-                        <a
-                            href="https://github.com/karlsander/mxplus/blob/main/docs/DEVICE_PROBE.md"
-                            >USB limitations</a
-                        >. Report issues with your candidate hash and setup on
-                        <a href="https://github.com/karlsander/mxplus/issues"
-                            >GitHub</a
-                        >.
-                    </p>
-                </details>
-            </section>
-        </main>
-        <footer>
-            <a class="wordmark" href="./">mx<span>plus</span></a>
-            <p>
-                Independent research. Not affiliated with or endorsed by
-                Roland.<br />No project-wide license has been selected. Roland
-                firmware rights remain with Roland.
-                <a
-                    href="https://github.com/karlsander/mxplus/blob/main/PROVENANCE.md"
-                    >Provenance ↗</a
-                >
-            </p>
-        </footer>
-    </body>
+    <details>
+      <summary>Firmware details — <span id="build-id">loading…</span></summary>
+      <p>Output SHA-256: <code id="candidate-hash">Loading…</code></p>
+      <p>The mastering mode and stereo packet fix have offline evidence only. Earlier boot and iPhone/AUM results belong to a different image. Snapshot/restart persistence and broader USB operation still need physical acceptance.</p>
+      <p>USB uses a mixer-selected, read-only rate, configuration-based clock validity and implicit feedback. MIDI remains proprietary; audio requires high speed. Real stereo/mixed-alternate packet boundaries and sustained use remain unverified. USB1–4 stay stock; no generators or generic USB-host unlock.</p>
+      <p><a href="https://github.com/karlsander/mxplus/blob/main/docs/MAINLINE.md">Evidence and limitations</a> · <a id="source" href="https://github.com/karlsander/mxplus">Source</a></p>
+    </details>
+
+    <footer>
+      <a href="https://github.com/karlsander/mxplus">GitHub</a> · <a href="https://github.com/karlsander/mxplus/blob/main/PROVENANCE.md">Provenance</a>
+      <p>Independent project. Not affiliated with or endorsed by Roland.</p>
+    </footer>
+  </main>
+</body>
 </html>

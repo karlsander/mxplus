@@ -1,8 +1,8 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "d122894dd8448e943dabe0e5c740f9c34571d6af7ffa766056a2e944295af14d",
-  "candidate_container_sha256": "adb0c284b24e2813dd2a978471f43997b4e76864396d596f18554831c537c474",
+  "patched_app_sha256": "f79bdad226afeabcb4b6bde9c13ac3cc9f990879a56e6cb750c59b83484dcbdc",
+  "candidate_container_sha256": "35efb7ffd6486dae78f7b9acdf66d313e6861049f10429da00326cb09dd68bfc",
   "extension_sha256": "fc4ed00c31546c74a84dbaece0ac9fda8fad28a3c21f19038e123617b945bbeb",
   "groups": [
     {
@@ -117,11 +117,15 @@
       "status": "pass"
     },
     {
-      "name": "Long hold, short tap, exit and stock modifier gestures; guards and timer wrap",
+      "name": "Original GAIN/PAN/TONE/AUX/BFX/FADER key actions identify all six supported mixer pages",
       "status": "pass"
     },
     {
-      "name": "Mastering hold survives continuous ADC samples and unrelated panel notifications; short taps retain the stock action",
+      "name": "MASTERING then TAP enters immediately without clock or periodic callbacks; exit, stock taps and modifier guards",
+      "status": "pass"
+    },
+    {
+      "name": "Mastering chord survives ADC/background traffic; elapsed time alone never enters; TAP alone preserves the stock action",
       "status": "pass"
     },
     {

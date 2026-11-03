@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "d122894dd8448e943dabe0e5c740f9c34571d6af7ffa766056a2e944295af14d",
+  "patched_app_sha256": "f79bdad226afeabcb4b6bde9c13ac3cc9f990879a56e6cb750c59b83484dcbdc",
   "parameters": [
     {
       "n": 1,
@@ -913,6 +913,14 @@
       "display_decoded_offset": "0xafc6e"
     }
   ],
+  "channel_setting_pages_from_original_keys": [
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
   "groups": [
     {
       "name": "Reclaimed stock mixer lookup agrees for all 263 valid IDs and invalid boundaries; external literal/shared returns preserved",
@@ -923,11 +931,15 @@
       "status": "pass"
     },
     {
-      "name": "Long hold, short tap, exit and stock modifier gestures; guards and timer wrap",
+      "name": "Original GAIN/PAN/TONE/AUX/BFX/FADER key actions identify all six supported mixer pages",
       "status": "pass"
     },
     {
-      "name": "Mastering hold survives continuous ADC samples and unrelated panel notifications; short taps retain the stock action",
+      "name": "MASTERING then TAP enters immediately without clock or periodic callbacks; exit, stock taps and modifier guards",
+      "status": "pass"
+    },
+    {
+      "name": "Mastering chord survives ADC/background traffic; elapsed time alone never enters; TAP alone preserves the stock action",
       "status": "pass"
     },
     {
@@ -950,7 +962,7 @@
   "boundaries": [
     "Original parameter lookup, getters, clamping setters, group storage and formatter execute unchanged except compressed mixer ID lookup",
     "Original fader handlers and blink renderer execute; physical ADC/LED protocol and timing are not modeled",
-    "Object vtables and parameter defaults are initialized fixtures; RTOS time, periodic callback body, mutex, notifications, MIDI send, storage singleton/submission and final panel I/O are stubbed",
+    "Object vtables and parameter defaults are initialized fixtures; periodic callback body, mutex, notifications, MIDI send, storage singleton/submission and final panel I/O are stubbed; any mastering clock call fails",
     "No hardware, audio measurements or physical save/restart acceptance; no new sample callback, MPU region or heap reservation"
   ]
 }

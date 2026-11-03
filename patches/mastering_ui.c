@@ -15,7 +15,7 @@ typedef unsigned int u32;
 #define ANALOG ((volatile u16 *)0x605129b4u)
 #define DIRTY (*(volatile u16 *)0x605141ccu)
 #define MASTER_KEY 0x17u
-#define HOLD_TICKS 1200u
+#define TAP_KEY 0u
 extern void mx1_route_ui_event(const u8 *event);
 extern void mx1_master_redraw_original(void *context);
 
@@ -43,7 +43,7 @@ static const char labels[30][3] = {
     "EQ ","Lty","Hty","EXP","CMP","LCt","Enh","LIM"
 };
 struct master_state {
-    u32 started, acquired, restore;
+    u32 reserved, acquired, restore; /* Preserve the reviewed 140-byte state layout. */
     u16 before[28], last[28];
     u8 swallowed[11];
     u8 active, pending, selected, redraw;
@@ -56,15 +56,10 @@ static int get(void *ctx, unsigned id, unsigned addr) {
 static void set(void *ctx, unsigned id, int value) {
     FN(0x600161f7u,void (*)(void *,unsigned,int,unsigned))(ctx,id,value,0);
 }
-static u32 now(void) {
-    u32 ticks[2];
-    FN(0x010037e9u,void (*)(u32 *))(ticks);
-    return ticks[1];
-}
-static int eligible(void) {
+static __attribute__((noinline)) int eligible(void) {
     unsigned page = *(volatile u16 *)0x600b4b5eu;
     return *(volatile u32 *)0x600b4b94u == 0 && !*(volatile u32 *)0x600b537cu &&
-        (page == 5 || page == 15) &&
+        ((page >= 5 && page <= 10) || page == 15) &&
         !FN(0x60018259u,int (*)(void *))((void *)0x605144ccu);
 }
 __attribute__((section(".master_head"),noinline))
@@ -117,7 +112,7 @@ static int linked_follower(unsigned adc) {
 static void clear_stock_pickup(unsigned adc) {
     if (adc>=6) set(SETUP,(adc-6)/2+((adc&1)?0x2d:0x38),-1);
 }
-static void enter(void) {
+static __attribute__((noinline)) void enter(void) {
     S.pending=0; S.active=1; S.selected=22; S.acquired=0; S.restore=0;
     for (unsigned i=0;i<28;++i) {
         S.last[i]=ANALOG[i*4]; S.before[i]=(u16)target(i);
@@ -167,10 +162,9 @@ void mx1_master_tick(void) {
     /* Preserve the registered stock periodic callback and queue drain. */
     FN(0x60010b77u,void (*)(void))();
     if (S.pending && (!eligible() || !no_keys())) {
-        /* Pending gesture must never take over a newly opened modal/page. */
+        /* Pending modifier must never take over a newly opened modal/page. */
         S.pending=0;
     }
-    if (S.pending && (u32)(now()-S.started)>=HOLD_TICKS) enter();
     if (S.active && !eligible()) leave();
     if (S.active && S.redraw) mx1_master_redraw(CONTEXT);
 }
@@ -192,7 +186,11 @@ void mx1_master_ui_event(const u8 *event) {
             mx1_route_ui_event(down); mx1_route_ui_event(event); return;
         }
         if (key && id==MASTER_KEY) return;
-        /* Only a button or encoder cancels the hold. ADC samples and other
+        if (key && id==TAP_KEY && type==2 && eligible() && no_keys()) {
+            S.swallowed[id/8]|=bit;
+            enter(); mx1_master_redraw(CONTEXT); return;
+        }
+        /* Only another button or encoder cancels the modifier. ADC samples and other
          * panel notifications keep flowing without fabricating a stock press. */
         if (type-1u<5u) {
             S.pending=0; S.swallowed[MASTER_KEY/8]&=(u8)~(1u<<(MASTER_KEY&7));
@@ -201,7 +199,7 @@ void mx1_master_ui_event(const u8 *event) {
         }
     }
     if (!S.active && key && type==2 && id==MASTER_KEY && eligible() && no_keys()) {
-        S.pending=1; S.started=now(); S.swallowed[id/8]|=bit; return;
+        S.pending=1; S.swallowed[id/8]|=bit; return;
     }
     if (S.active) {
         if (key) {

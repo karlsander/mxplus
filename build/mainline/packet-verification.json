@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "d122894dd8448e943dabe0e5c740f9c34571d6af7ffa766056a2e944295af14d",
+  "patched_app_sha256": "f79bdad226afeabcb4b6bde9c13ac3cc9f990879a56e6cb750c59b83484dcbdc",
   "groups": [
     {
       "name": "Finite stereo/18-channel packets of 1..14 complete frames preserve samples and re-arm",

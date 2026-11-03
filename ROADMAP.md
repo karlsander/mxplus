@@ -13,7 +13,8 @@ not sustained or comprehensive validation.
    rates, channel maps and duration. Verify capture-only, stereo/18-channel
    and mixed alternates, stop/restart, reconnect and sustained audio at all
    three rates.
-3. Physically validate [mastering mode](docs/MASTERING.md), including
+3. Physically validate [mastering mode](docs/MASTERING.md), now entered with
+   MASTERING then TAP after the previous timed hold failed on hardware. Check
    gesture isolation, all parameter assignments, pickup/blink, save/recall and
    sustained audio. The new UI reclaims an existing stock lookup footprint;
    its offline checks do not establish hardware stability.

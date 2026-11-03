@@ -24,7 +24,7 @@ function clearResult() {
     for (const url of urls) URL.revokeObjectURL(url);
     urls = [];
     $("result").hidden = true;
-    for (const id of ["download", "receipt"]) $(id).removeAttribute("href");
+    $("download").removeAttribute("href");
 }
 
 function downloadLink(id, bytes, name, type) {
@@ -119,25 +119,9 @@ patchButton.addEventListener("click", async () => {
             manifest.output.filename,
             "application/octet-stream",
         );
-        const receipt = {
-            status: manifest.status,
-            sourceCommit: manifest.sourceCommit,
-            filename: manifest.output.filename,
-            installationFilename: "MX-1_UPD.BIN",
-            inputSHA256: manifest.input.sha256,
-            outputSHA256: manifest.output.sha256,
-            size: output.length,
-            hardwareValidated: false,
-        };
-        downloadLink(
-            "receipt",
-            JSON.stringify(receipt, null, 2) + "\n",
-            "MXPLUS_MAINLINE_UNTESTED-receipt.json",
-            "application/json",
-        );
         $("result").hidden = false;
         report(
-            "Patched file verified. Download it and keep its receipt.",
+            "Patched file verified. Ready to download.",
             "success",
         );
         $("download").focus();
@@ -158,12 +142,6 @@ async function load() {
                 "Release details could not be loaded. Reload and try again.",
             );
         manifest = validateManifest(await response.json());
-        $("candidate-hash").textContent = manifest.output.sha256;
-        $("build-id").textContent = manifest.output.sha256.slice(0, 8);
-        $("source").textContent =
-            `Source ${manifest.sourceCommit.slice(0, 7)}`;
-        $("source").href =
-            `https://github.com/karlsander/mxplus/tree/${manifest.sourceCommit}`;
         fileInput.disabled = false;
         report("Choose the extracted .BIN file to begin.");
     } catch (error) {

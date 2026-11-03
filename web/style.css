@@ -41,11 +41,7 @@ button:disabled { background: #eee; color: #777; border-color: #ddd; cursor: not
 [hidden] { display: none !important; }
 ol { padding-left: 22px; margin: 0 0 16px; }
 li { padding-left: 3px; margin-bottom: 10px; }
-.note, details, footer { font-size: 13px; color: #555; }
-details { border-top: 1px solid #ddd; padding: 16px 0; }
-summary { cursor: pointer; color: #222; }
-details p { margin: 12px 0 0; }
-#candidate-hash { display: block; }
+.note, footer { font-size: 13px; color: #555; }
 footer { border-top: 1px solid #ddd; padding-top: 16px; }
 footer p { margin: 8px 0 0; }
 @media (max-width: 480px) {

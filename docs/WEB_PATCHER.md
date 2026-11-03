@@ -19,7 +19,7 @@ prerequisite for a hardware experiment.
 2. Open the patcher in a current browser over HTTPS. Choose or drop the
    extracted `MX-1_UPD.BIN`. The original remains on the computer.
 3. After the exact original hash is verified, select **Create patched firmware**.
-4. Download `MXPLUS_MAINLINE_UNTESTED.bin` and the verification receipt.
+4. Download `MXPLUS_MAINLINE_UNTESTED.bin`.
    The output must match the maintained mainline candidate's SHA-256.
 5. Read the site's installation instructions before any device operation.
    Keep the labelled experimental file. Only the separate copy prepared for
@@ -49,8 +49,7 @@ adds no new firmware patch sites or runtime memory use.
 source commit, and a hash-named patch asset. The browser validates the manifest,
 hashes the input, verifies the patch asset, checks range bounds/encoding, applies
 XOR to a copy, and checks the whole output hash before offering a download.
-The receipt preserves the candidate identity after a copy is renamed for the
-updater. These checks detect corruption and mismatched releases; they are not
+These checks detect corruption and mismatched releases; they are not
 a signature or protection against a compromised hosting account.
 
 Only explicitly listed website files, the manifest and XOR patch are copied

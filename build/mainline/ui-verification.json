@@ -1,11 +1,14 @@
 {
   "status": "OFFLINE UI INSTRUCTION TESTS; NO PHYSICAL PANEL OR AUDIO CLAIM",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "f79bdad226afeabcb4b6bde9c13ac3cc9f990879a56e6cb750c59b83484dcbdc",
+  "patched_app_sha256": "b3e82df469ef75446c380991cbb9c63ab9a647e890cf6c2c2c4fa74d5d67655a",
   "ui_only_fixture": false,
   "symbols": {
     "mx1_uac2_rate": 16872496,
     "mx1_uac2_reply": 16872500,
+    "mx1_diag_event": 1617314181,
+    "mx1_diag_tick": 1617314123,
+    "mx1_diag_redraw": 1617313793,
     "mx1_route_ui_event": 16841795,
     "mx1_route_ui_display": 16841613,
     "mx1_route_get": 16840857,
@@ -29,12 +32,13 @@
     "mx1_usb_playback_alt": 16872514,
     "mx1_master_state": 16872516,
     "mx1_master_redraw_original": 1610735033,
-    "mx1_original_mix_invalid": 1610737232
+    "mx1_original_mix_invalid": 1610737232,
+    "mx1_diag_state": 16872656
   },
   "sources": {
     "patches/channel_routing_ui.c": "4f3ddc32467e8fe414c88c61ddf0214b22c492d753534c09dca655ccfa0a2998",
     "patches/channel_routing_ui.S": "a5adb0bd43ba5a0a357f3927a6e372c4df4e3ff7cf2d9281b90022fcee9b3bcf",
-    "tools/routing_ui_verify.py": "bb098970eb6f89ac1047db601dae57651b9b930875ab131691ef46f788d2eebb"
+    "tools/routing_ui_verify.py": "7f0e8ac0096ffa9e3419d653793e970e98ba1f86cdbfce369924a040355aa9a5"
   },
   "groups": [
     {

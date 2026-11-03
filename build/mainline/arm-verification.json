@@ -1,29 +1,29 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "f79bdad226afeabcb4b6bde9c13ac3cc9f990879a56e6cb750c59b83484dcbdc",
-  "candidate_container_sha256": "a21259c0c896fa06db18e87f8a3d997fe1661c7e9ee14ad7c8077fdf6446292b",
-  "extension_sha256": "fc4ed00c31546c74a84dbaece0ac9fda8fad28a3c21f19038e123617b945bbeb",
+  "patched_app_sha256": "b3e82df469ef75446c380991cbb9c63ab9a647e890cf6c2c2c4fa74d5d67655a",
+  "candidate_container_sha256": "72050c85919774c40cad920a97b6a31bf03571380a71e0885f7052f4f5f7a695",
+  "extension_sha256": "401c16f1021a72fdc47da3bd438f8cb707c3f8638c28c2dbab7a3bd4d3b3573d",
   "groups": [
     {
       "name": "Every application change matches recorded guarded patches and scatter insertion",
       "status": "pass",
-      "patch_sites": 17,
-      "extension_bytes": 2812,
-      "sram_bytes_remaining": 20
+      "patch_sites": 20,
+      "extension_bytes": 3904,
+      "sram_bytes_remaining": 4
     },
     {
       "name": "Actual original startup installs routing code and preserves existing initialized data and BSS",
       "status": "pass",
       "runtime_interval": [
         "0x0100f6a4",
-        "0x100ffec"
+        "0x100fffc"
       ],
       "existing_nonempty_destinations_unchanged": true,
       "repurposed_empty_copy": "USB descriptor at 0x0101727c"
     },
     {
-      "name": "Generator callback, transport, extra SELECT UI and SDRAM heap patches are absent",
+      "name": "Generator callback, transport, extra SELECT UI patches are absent",
       "status": "pass",
       "component": "app_main",
       "unchanged_sites": [
@@ -71,15 +71,10 @@
           "decoded_offset": "0x13740",
           "runtime_address": "0x60013740",
           "length": 8
-        },
-        {
-          "decoded_offset": "0xd76c",
-          "runtime_address": "0x6000d76c",
-          "length": 4
         }
       ],
       "callback_target": "0x01009841",
-      "stock_heap_start": "0x606634d0"
+      "diagnostic_heap_start": "0x60665000"
     },
     {
       "name": "Original MPU makes injected code read-only and new route state read-write",
@@ -87,7 +82,7 @@
       "code_protection": "0x01001000..0x0100ffff enforced in all UI/audio instruction cases",
       "state_interval": [
         "0x1017264",
-        "0x10174d0"
+        "0x10174f4"
       ]
     },
     {
@@ -101,11 +96,107 @@
         "0x01020000",
         "0x01028000"
       ],
-      "state_reservation_bytes": 620,
+      "state_reservation_bytes": 656,
       "descriptor_initialized_bytes": 436,
       "patterns": [
         85,
         170
+      ]
+    },
+    {
+      "name": "Original main host notification decoder and MIDI-ready reader establish displayed bits",
+      "status": "pass",
+      "component": "app_main",
+      "decoded_offset": "0x35c8",
+      "runtime": "0x600035c8",
+      "flags_runtime": "0x600b1b3a",
+      "midi_ready_bits": "0x05, unless error bits 0x18",
+      "modeled": "Transaction constructor/commit/parameter delivery and error logging"
+    },
+    {
+      "name": "SELECT 1 plus TAP toggles diagnostic display; TEMPO pages wrap without changing tempo/routes; releases preserved",
+      "status": "pass"
+    },
+    {
+      "name": "Diagnostic entry bypasses mastering page/lock/modal guards but excludes boot/setup",
+      "status": "pass"
+    },
+    {
+      "name": "Captured button IDs, every entry guard including key 87, before/after chord state and event/tick cancellation",
+      "status": "pass"
+    },
+    {
+      "name": "All four live host flag bytes and both per-port clock gates render independently; tick updates changed values",
+      "status": "pass"
+    },
+    {
+      "name": "Original MIDI sender independently rejects each host destination when either displayed clock gate is zero",
+      "status": "pass",
+      "runtime": "0x01000e92",
+      "decoded_offset": "0xd171e",
+      "modeled": "Cross-core mailbox acceptance"
+    },
+    {
+      "name": "Stock SDRAM heap creation and allocation exclude reserved code through exhaustion",
+      "status": "pass",
+      "heap_initializer": "0x6000d6f4",
+      "pool_creator": "0x010033b8",
+      "allocation_primitive": "0x01007604",
+      "heap_base_literal_decoded": "0xd76c",
+      "reserved_bytes": 6960,
+      "cases": [
+        {
+          "image": "stock",
+          "heap_start": "0x606634d0",
+          "heap_bytes": 26856240,
+          "allocations": [
+            {
+              "address": "0x606634d8",
+              "requested_bytes": 16
+            },
+            {
+              "address": "0x606634f0",
+              "requested_bytes": 4096
+            },
+            {
+              "address": "0x606644f8",
+              "requested_bytes": 1048576
+            },
+            {
+              "address": "0x60764500",
+              "requested_bytes": 25803520
+            }
+          ],
+          "exhausted_request_returns_null": true,
+          "lowest_allocator_write": "0x606634d0",
+          "reservation_unchanged": false
+        },
+        {
+          "image": "candidate",
+          "heap_start": "0x60665000",
+          "heap_bytes": 26849280,
+          "allocations": [
+            {
+              "address": "0x60665008",
+              "requested_bytes": 16
+            },
+            {
+              "address": "0x60665020",
+              "requested_bytes": 4096
+            },
+            {
+              "address": "0x60666028",
+              "requested_bytes": 1048576
+            },
+            {
+              "address": "0x60766030",
+              "requested_bytes": 25796560
+            }
+          ],
+          "exhausted_request_returns_null": true,
+          "lowest_allocator_write": "0x60665000",
+          "reservation_unchanged": true
+        }
       ]
     },
     {
@@ -147,7 +238,7 @@
     {
       "name": "Actual startup copies extension and preserves existing initialized data",
       "status": "pass",
-      "extension_bytes": 2812
+      "extension_bytes": 3904
     },
     {
       "name": "Patched initializer veneer, original registration, and live rate descriptors",

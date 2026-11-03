@@ -1,9 +1,12 @@
 {
   "status": "OFFLINE EXPERIMENT; NOT HARDWARE VALIDATED",
-  "container_sha256": "a21259c0c896fa06db18e87f8a3d997fe1661c7e9ee14ad7c8077fdf6446292b",
+  "container_sha256": "72050c85919774c40cad920a97b6a31bf03571380a71e0885f7052f4f5f7a695",
   "symbols": {
     "mx1_uac2_rate": 16872496,
     "mx1_uac2_reply": 16872500,
+    "mx1_diag_event": 1617314181,
+    "mx1_diag_tick": 1617314123,
+    "mx1_diag_redraw": 1617313793,
     "mx1_route_ui_event": 16841795,
     "mx1_route_ui_display": 16841613,
     "mx1_route_get": 16840857,
@@ -27,53 +30,54 @@
     "mx1_usb_playback_alt": 16872514,
     "mx1_master_state": 16872516,
     "mx1_master_redraw_original": 1610735033,
-    "mx1_original_mix_invalid": 1610737232
+    "mx1_original_mix_invalid": 1610737232,
+    "mx1_diag_state": 16872656
   },
   "scatter_extension": {
     "insert_offset": 917296,
     "runtime_address": 16840356,
-    "insert_length": 2812,
+    "insert_length": 3904,
     "startup_updates": [
       {
         "offset": 232,
         "before": 62372,
-        "after": 64748
+        "after": 64764
       },
       {
         "offset": 256,
         "before": 1611530032,
-        "after": 1611532844
+        "after": 1611533936
       },
       {
         "offset": 276,
         "before": 1611530164,
-        "after": 1611532408
+        "after": 1611532424
       },
       {
         "offset": 296,
         "before": 1611530164,
-        "after": 1611532976
+        "after": 1611534068
       },
       {
         "offset": 316,
         "before": 1611531336,
-        "after": 1611534148
+        "after": 1611532860
       },
       {
         "offset": 336,
         "before": 1611531336,
-        "after": 1611534148
+        "after": 1611535240
       }
     ],
-    "code_length": 2376
+    "code_length": 2392
   },
   "patches": [
     {
-      "label": "Zero 620-byte mainline writable state reservation after original writable SRAM BSS",
+      "label": "Zero 656-byte mainline writable state reservation after original writable SRAM BSS",
       "file_offset": 264,
       "runtime_address": 1610613000,
       "original": "dc710000",
-      "replacement": "48740000",
+      "replacement": "6c740000",
       "component": "app_main"
     },
     {
@@ -90,6 +94,30 @@
       "runtime_address": 1610613008,
       "original": "00000000",
       "replacement": "b4010000",
+      "component": "app_main"
+    },
+    {
+      "label": "Repurpose empty copy 8 for diagnostic SDRAM code",
+      "file_offset": 308,
+      "runtime_address": 1610613044,
+      "original": "00800040",
+      "replacement": "00406660",
+      "component": "app_main"
+    },
+    {
+      "label": "Copy bounded diagnostic code before the final SDRAM clear",
+      "file_offset": 312,
+      "runtime_address": 1610613048,
+      "original": "00000000",
+      "replacement": "34040000",
+      "component": "app_main"
+    },
+    {
+      "label": "Exclude alignment and diagnostic code from the SDRAM heap",
+      "file_offset": 55148,
+      "runtime_address": 1610667884,
+      "original": "d0346660",
+      "replacement": "00506660",
       "component": "app_main"
     },
     {
@@ -145,7 +173,7 @@
       "file_offset": 62936,
       "runtime_address": 1610675672,
       "original": "490b0160",
-      "replacement": "87df0160",
+      "replacement": "85416660",
       "component": "app_main"
     },
     {
@@ -157,11 +185,11 @@
       "component": "app_main"
     },
     {
-      "label": "Mastering hold timer around original periodic callback",
+      "label": "Diagnostic wrapper around mastering and stock periodic callback",
       "file_offset": 62940,
       "runtime_address": 1610675676,
       "original": "770b0160",
-      "replacement": "0dde0160",
+      "replacement": "4b416660",
       "component": "app_main"
     },
     {
@@ -169,7 +197,7 @@
       "file_offset": 84042,
       "runtime_address": 1610696778,
       "original": "10b50446008800287dd0",
-      "replacement": "00bfdff800f0f5db0160",
+      "replacement": "00bfdff800f001406660",
       "component": "app_main"
     },
     {
@@ -205,5 +233,5 @@
       "component": "app_main"
     }
   ],
-  "sram_bytes_remaining": 20
+  "sram_bytes_remaining": 4
 }

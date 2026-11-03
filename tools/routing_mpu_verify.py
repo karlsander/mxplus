@@ -17,6 +17,8 @@ def protect_code(machine):
     # Region 1 is read-only throughout this interval; higher-priority RW
     # regions 3/4 affect only 0x01000000..0x010002ff, outside these pages.
     machine.uc.mem_protect(0x01001000, 0xf000, UC_PROT_READ | UC_PROT_EXEC)
+    # Additional harness guard: stock SDRAM MPU remains writable/executable.
+    machine.uc.mem_protect(0x60664000, 0x1000, UC_PROT_READ | UC_PROT_EXEC)
 
 
 def original_mpu(image):
@@ -70,13 +72,15 @@ def verify(original, patched, build):
     assert regions[2] == {'base': 0x01010000, 'attributes': 0x1300001d,
                           'size': 0x8000, 'access_permission': 3}
     assert all(permission(regions, a) == 6 for a in range(0x01001000, 0x01010000))
-    state, end = 0x01017264, 0x010174d0
+    state, end = 0x01017264, 0x010174f4
     assert build['writable_state']['start'] == state and build['writable_state']['end_exclusive'] == end
     assert build['symbols']['mx1_route_state'] == state
     assert all(permission(regions, a) == 3 for a in range(state, end))
     for name in ('mx1_uac2_rate', 'mx1_uac2_reply', 'mx1_uac2_configuration', 'mx1_usb_playback_alt'):
         assert state <= build['symbols'][name] < end
         assert permission(regions, build['symbols'][name]) == 3
+    assert permission(regions, 0x60664000) == 3
+    assert not regions[6]['attributes'] & (1 << 28), 'SDRAM execute-never'
     old_bss, new_bss = recover(original)['operations'][3], recover(patched)['operations'][3]
     assert old_bss['destination'] + old_bss['length'] == state
     assert new_bss['destination'] + new_bss['length'] == end
@@ -89,7 +93,7 @@ def verify(original, patched, build):
         machine.uc.emu_start(BASE | 1, BASE + 0x7e, timeout=5_000_000, count=3_000_000)
         assert machine.uc.reg_read(UC_ARM_REG_PC) == BASE + 0x7e
         assert machine.read(state, 24) == bytes(24)
-        assert machine.read(0x01017430, 160) == bytes(160)
+        assert machine.read(0x01017430, 196) == bytes(196)
         from usb_midi_descriptors import mainline_configuration
         assert machine.read(0x0101727c, 436) == mainline_configuration() + b'\0'
         assert machine.read(end, 4) == bytes([pattern]) * 4
@@ -97,9 +101,9 @@ def verify(original, patched, build):
         machine.uc.mem_map(0xe000e000, 0x2000)
         assert struct.unpack('<8I', machine.read(0x0100f234, 32)) == (
             1, 0, 0x8000, 0x01020000, 2, 0, 0x1000, 0x01013e18)
-        machine.write(state, bytes([pattern]) * 620)
+        machine.write(state, bytes([pattern]) * 656)
         machine.call(0x01006338, count=500_000)
-        assert machine.read(state, 620) == bytes([pattern]) * 620
+        assert machine.read(state, 656) == bytes([pattern]) * 656
     return {'status': 'pass', 'mpu_setup': {'decoded_offset': '0xd824', 'runtime': '0x6000d824',
                 'regions': regions, 'exception_registration': 'stubbed at 0x60054ef8'},
             'groups': [
@@ -108,6 +112,6 @@ def verify(original, patched, build):
                  'state_interval': [hex(state), hex(end)]},
                 {'name': 'Dirty cold startup clears state; original RTOS pools cannot allocate its reservation', 'status': 'pass',
                  'general_pool': ['0x01013e18', '0x01014e18'], 'stack_pool': ['0x01020000', '0x01028000'],
-                 'state_reservation_bytes': 620, 'descriptor_initialized_bytes': 436, 'patterns': [85, 170]}],
+                 'state_reservation_bytes': 656, 'descriptor_initialized_bytes': 436, 'patterns': [85, 170]}],
             'limits': ['Permission rejection is modeled with Unicorn page protection; no real MemManage exception delivery.',
                        'RTOS initializer ICSR reads use thread-mode zero; no hardware or numerical DSP execution.']}

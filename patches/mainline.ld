@@ -44,5 +44,13 @@ SECTIONS {
         *(.master_state) . = ALIGN(4);
     }
     ASSERT(ADDR(.master_state) + SIZEOF(.master_state) <= 0x01018000, "Mastering state overflow")
+    .diag_text (DEFINED(mx1_host_image) ? ADDR(.host_state) + SIZEOF(.host_state) : 0x60664000) : {
+        *(.diag_text) *(.diag_rodata) . = ALIGN(4);
+    }
+    .diag_state (DEFINED(mx1_host_image) ? ADDR(.host_state) + SIZEOF(.host_state) : 0x010174d0) (NOLOAD) : {
+        *(.diag_state) . = ALIGN(4);
+    }
+    ASSERT(SIZEOF(.diag_text) <= 4096, "Diagnostic code exceeds reserved SDRAM page")
+    ASSERT(SIZEOF(.diag_state) == (DEFINED(mx1_host_image) ? 0 : 36), "Unexpected diagnostic state")
     /DISCARD/ : { *(.comment*) *(.ARM.exidx*) *(.ARM.extab*) *(.eh_frame*) }
 }

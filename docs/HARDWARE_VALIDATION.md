@@ -1,4 +1,4 @@
-> Current scope: one routing + persistence + USB-B mainline image. Generators and host unlocking are retired. The pre-generator image, now restored, boots and passed one iPhone/AUM duplex path. Historical host sections below are research guidance, not an available firmware build. See [MAINLINE.md](MAINLINE.md).
+> Current scope: one routing + persistence + mastering + USB-B/host-MIDI mainline image, now with [display diagnostics](DISPLAY_DIAGNOSTICS.md). Generic host audio and generators remain excluded. The pre-generator baseline passed one iPhone/AUM duplex path; this does not validate the changed candidate. Historical generic-audio host sections below are research guidance, not an available firmware build. See [MAINLINE.md](MAINLINE.md).
 
 # Staged MX-1 hardware validation
 

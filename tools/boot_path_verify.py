@@ -204,7 +204,7 @@ def audit(original: bytes, candidate: bytes, build: dict, applied_address: int) 
                             if op['kind'] == 'copy' else bytes(op['length']))
                 if index == 3:
                     from usb_midi_descriptors import mainline_configuration
-                    expected = bytes(op['length'] - 596) + mainline_configuration() + bytes(161)
+                    expected = bytes(op['length'] - 632) + mainline_configuration() + bytes(197)
                 assert machine.read(op['destination'], op['length']) == expected
         state = symbols['mx1_route_state']
         assert machine.read(state, 11) == bytes(11)
@@ -322,12 +322,12 @@ def main():
         elf = ELFFile(stream)
         text = elf.get_section_by_name('.text')
         build = json.loads((args.build / 'build-report.json').read_text())
-        assert sha256(text.data() + elf.get_section_by_name('.usb_data').data()) == build['extension_sha256']
+        assert sha256(text.data() + elf.get_section_by_name('.usb_data').data() + elf.get_section_by_name('.diag_text').data()) == build['extension_sha256']
         applied = elf.get_section_by_name('.symtab').get_symbol_by_name('applied')
         assert len(applied) == 1 and applied[0]['st_size'] == 11
         applied_address = applied[0]['st_value']
         assert applied_address == 0x0101726f
-        assert build["writable_state"] == {"start": 0x01017264, "size": 620, "end_exclusive": 0x010174d0, "startup_zero_length_offset": 0x108}
+        assert build["writable_state"] == {"start": 0x01017264, "size": 656, "end_exclusive": 0x010174f4, "startup_zero_length_offset": 0x108}
     report = audit(args.firmware.read_bytes(),
         (args.build / 'MXPLUS_MAINLINE_UNTESTED.bin').read_bytes(),
         build, applied_address)

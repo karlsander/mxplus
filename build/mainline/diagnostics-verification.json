@@ -1,0 +1,109 @@
+{
+  "status": "pass",
+  "patched_app_sha256": "b3e82df469ef75446c380991cbb9c63ab9a647e890cf6c2c2c4fa74d5d67655a",
+  "candidate_container_sha256": "72050c85919774c40cad920a97b6a31bf03571380a71e0885f7052f4f5f7a695",
+  "groups": [
+    {
+      "name": "Original main host notification decoder and MIDI-ready reader establish displayed bits",
+      "status": "pass",
+      "component": "app_main",
+      "decoded_offset": "0x35c8",
+      "runtime": "0x600035c8",
+      "flags_runtime": "0x600b1b3a",
+      "midi_ready_bits": "0x05, unless error bits 0x18",
+      "modeled": "Transaction constructor/commit/parameter delivery and error logging"
+    },
+    {
+      "name": "SELECT 1 plus TAP toggles diagnostic display; TEMPO pages wrap without changing tempo/routes; releases preserved",
+      "status": "pass"
+    },
+    {
+      "name": "Diagnostic entry bypasses mastering page/lock/modal guards but excludes boot/setup",
+      "status": "pass"
+    },
+    {
+      "name": "Captured button IDs, every entry guard including key 87, before/after chord state and event/tick cancellation",
+      "status": "pass"
+    },
+    {
+      "name": "All four live host flag bytes and both per-port clock gates render independently; tick updates changed values",
+      "status": "pass"
+    },
+    {
+      "name": "Original MIDI sender independently rejects each host destination when either displayed clock gate is zero",
+      "status": "pass",
+      "runtime": "0x01000e92",
+      "decoded_offset": "0xd171e",
+      "modeled": "Cross-core mailbox acceptance"
+    },
+    {
+      "name": "Stock SDRAM heap creation and allocation exclude reserved code through exhaustion",
+      "status": "pass",
+      "heap_initializer": "0x6000d6f4",
+      "pool_creator": "0x010033b8",
+      "allocation_primitive": "0x01007604",
+      "heap_base_literal_decoded": "0xd76c",
+      "reserved_bytes": 6960,
+      "cases": [
+        {
+          "image": "stock",
+          "heap_start": "0x606634d0",
+          "heap_bytes": 26856240,
+          "allocations": [
+            {
+              "address": "0x606634d8",
+              "requested_bytes": 16
+            },
+            {
+              "address": "0x606634f0",
+              "requested_bytes": 4096
+            },
+            {
+              "address": "0x606644f8",
+              "requested_bytes": 1048576
+            },
+            {
+              "address": "0x60764500",
+              "requested_bytes": 25803520
+            }
+          ],
+          "exhausted_request_returns_null": true,
+          "lowest_allocator_write": "0x606634d0",
+          "reservation_unchanged": false
+        },
+        {
+          "image": "candidate",
+          "heap_start": "0x60665000",
+          "heap_bytes": 26849280,
+          "allocations": [
+            {
+              "address": "0x60665008",
+              "requested_bytes": 16
+            },
+            {
+              "address": "0x60665020",
+              "requested_bytes": 4096
+            },
+            {
+              "address": "0x60666028",
+              "requested_bytes": 1048576
+            },
+            {
+              "address": "0x60766030",
+              "requested_bytes": 25796560
+            }
+          ],
+          "exhausted_request_returns_null": true,
+          "lowest_allocator_write": "0x60665000",
+          "reservation_unchanged": true
+        }
+      ]
+    }
+  ],
+  "hardware_access": false,
+  "limits": [
+    "Control-task ARM execution; higher panel actions, periodic body, parameter notifications and final panel I/O modeled.",
+    "Main host flags are delivered stock notifications, not USB enumeration traces or transfer-completion counters.",
+    "No physical display, scheduler timing, peak heap use, USB PHY/DMA or FM-1 acceptance established."
+  ]
+}

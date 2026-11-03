@@ -2,12 +2,15 @@
   "status": "OFFLINE EXPERIMENT; NOT HARDWARE VALIDATED",
   "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "f79bdad226afeabcb4b6bde9c13ac3cc9f990879a56e6cb750c59b83484dcbdc",
-  "container_sha256": "a21259c0c896fa06db18e87f8a3d997fe1661c7e9ee14ad7c8077fdf6446292b",
-  "extension_sha256": "fc4ed00c31546c74a84dbaece0ac9fda8fad28a3c21f19038e123617b945bbeb",
+  "patched_app_sha256": "b3e82df469ef75446c380991cbb9c63ab9a647e890cf6c2c2c4fa74d5d67655a",
+  "container_sha256": "72050c85919774c40cad920a97b6a31bf03571380a71e0885f7052f4f5f7a695",
+  "extension_sha256": "401c16f1021a72fdc47da3bd438f8cb707c3f8638c28c2dbab7a3bd4d3b3573d",
   "symbols": {
     "mx1_uac2_rate": 16872496,
     "mx1_uac2_reply": 16872500,
+    "mx1_diag_event": 1617314181,
+    "mx1_diag_tick": 1617314123,
+    "mx1_diag_redraw": 1617313793,
     "mx1_route_ui_event": 16841795,
     "mx1_route_ui_display": 16841613,
     "mx1_route_get": 16840857,
@@ -31,7 +34,8 @@
     "mx1_usb_playback_alt": 16872514,
     "mx1_master_state": 16872516,
     "mx1_master_redraw_original": 1610735033,
-    "mx1_original_mix_invalid": 1610737232
+    "mx1_original_mix_invalid": 1610737232,
+    "mx1_diag_state": 16872656
   },
   "host_midi": {
     "original_app_sha256": "fe52cf6c9e8ec8677963b1c4b876ddeaefae5136b7a5f1f49010e3cda9203a6e",
@@ -200,7 +204,7 @@
     "sources": {
       "patches/usb_host_midi.c": "45cda9c2d0a06007eb28cfd9dcd07e246fe84f8f4b77447374f532f55993583d",
       "patches/usb_host_midi.S": "f0a9806001fa1c532d552cfa2ccb59ef20acca6d184d5a899e9b831a2788f53d",
-      "patches/mainline.ld": "c4a66e06d6ba63fb40b2a298d30d7fbe242dbe158cff9751fdc53b494b2dc275",
+      "patches/mainline.ld": "64e9384b7e4a31f4e9d606aa44c99c4507039721fa33b48e0bbd00ebbf9e9a06",
       "tools/host_midi_patch.py": "c423dd439d670569711739d7e427e582a5823d4640f56fe1c2ef6b884a6aa2c8"
     }
   },
@@ -215,11 +219,12 @@
     "patches/usb_playback.S": "4dce1a1e7295f6453184554fd4f963a643655f818b39070c68f734c900ae06d8",
     "patches/mastering_ui.c": "d2079d55fc234c06a744ec04635e4ecab886c4742871747f666f6ef88a53c5cc",
     "patches/mastering_ui.S": "8e532e7aa1b5d86a50b6302240fc316af0da8addac39305002de8a640a02d4c7",
+    "patches/display_diagnostics.c": "cfc5d2995df21322c5b9f26e78d69d2a43563d303a57430cfe2894f0ec1e0c2a",
     "sources/hardware/uac2_adapter.c": "d2cd20af7f08639ad195ed525006124b9cff0d1b0c5ef253809b3bf0478b676d",
     "patches/channel_routing.h": "ee5979ac7b1ce3bdd75e0c75542a18e2abcc21c9437d80fb54ae1f2b9fb54e31",
-    "patches/mainline.ld": "c4a66e06d6ba63fb40b2a298d30d7fbe242dbe158cff9751fdc53b494b2dc275",
+    "patches/mainline.ld": "64e9384b7e4a31f4e9d606aa44c99c4507039721fa33b48e0bbd00ebbf9e9a06",
     "patches/mastering_sites.json": "41c74c7db0e33fdad7c8158dc79a2bfc55ca3ddf7939f1490343c0bb8556a545",
-    "tools/build_firmware.py": "ed5f02c2a3e7daafc6a7868f8452dcdd7d01cb96c5d5cac3fd3972f0b2eee676",
+    "tools/build_firmware.py": "2f13a1dc24814e185196c14770866459f08eb5164e082695a7e97e228ce20222",
     "tools/routing_audio_patch.py": "cc993ffb0f272f2f96328e9c26ca06a579847a0f83543dbaf11dff295632cb3e",
     "tools/firmware_patch.py": "5b0980447039dbb4f213b2c41f1635da1966d2972bb04db482f8aa9e2cfac6ed",
     "tools/uac2_design.py": "fa02f27556f54ac1a0c06a0ae712a97c62180edb2c33d747050ab728a73fd551",
@@ -229,48 +234,48 @@
   "scatter_extension": {
     "insert_offset": 917296,
     "runtime_address": 16840356,
-    "insert_length": 2812,
+    "insert_length": 3904,
     "startup_updates": [
       {
         "offset": 232,
         "before": 62372,
-        "after": 64748
+        "after": 64764
       },
       {
         "offset": 256,
         "before": 1611530032,
-        "after": 1611532844
+        "after": 1611533936
       },
       {
         "offset": 276,
         "before": 1611530164,
-        "after": 1611532408
+        "after": 1611532424
       },
       {
         "offset": 296,
         "before": 1611530164,
-        "after": 1611532976
+        "after": 1611534068
       },
       {
         "offset": 316,
         "before": 1611531336,
-        "after": 1611534148
+        "after": 1611532860
       },
       {
         "offset": 336,
         "before": 1611531336,
-        "after": 1611534148
+        "after": 1611535240
       }
     ],
-    "code_length": 2376
+    "code_length": 2392
   },
   "patches": [
     {
-      "label": "Zero 620-byte mainline writable state reservation after original writable SRAM BSS",
+      "label": "Zero 656-byte mainline writable state reservation after original writable SRAM BSS",
       "file_offset": 264,
       "runtime_address": 1610613000,
       "original": "dc710000",
-      "replacement": "48740000",
+      "replacement": "6c740000",
       "component": "app_main"
     },
     {
@@ -287,6 +292,30 @@
       "runtime_address": 1610613008,
       "original": "00000000",
       "replacement": "b4010000",
+      "component": "app_main"
+    },
+    {
+      "label": "Repurpose empty copy 8 for diagnostic SDRAM code",
+      "file_offset": 308,
+      "runtime_address": 1610613044,
+      "original": "00800040",
+      "replacement": "00406660",
+      "component": "app_main"
+    },
+    {
+      "label": "Copy bounded diagnostic code before the final SDRAM clear",
+      "file_offset": 312,
+      "runtime_address": 1610613048,
+      "original": "00000000",
+      "replacement": "34040000",
+      "component": "app_main"
+    },
+    {
+      "label": "Exclude alignment and diagnostic code from the SDRAM heap",
+      "file_offset": 55148,
+      "runtime_address": 1610667884,
+      "original": "d0346660",
+      "replacement": "00506660",
       "component": "app_main"
     },
     {
@@ -342,7 +371,7 @@
       "file_offset": 62936,
       "runtime_address": 1610675672,
       "original": "490b0160",
-      "replacement": "87df0160",
+      "replacement": "85416660",
       "component": "app_main"
     },
     {
@@ -354,11 +383,11 @@
       "component": "app_main"
     },
     {
-      "label": "Mastering hold timer around original periodic callback",
+      "label": "Diagnostic wrapper around mastering and stock periodic callback",
       "file_offset": 62940,
       "runtime_address": 1610675676,
       "original": "770b0160",
-      "replacement": "0dde0160",
+      "replacement": "4b416660",
       "component": "app_main"
     },
     {
@@ -366,7 +395,7 @@
       "file_offset": 84042,
       "runtime_address": 1610696778,
       "original": "10b50446008800287dd0",
-      "replacement": "00bfdff800f0f5db0160",
+      "replacement": "00bfdff800f001406660",
       "component": "app_main"
     },
     {
@@ -404,9 +433,25 @@
   ],
   "writable_state": {
     "start": 16872036,
-    "size": 620,
-    "end_exclusive": 16872656,
+    "size": 656,
+    "end_exclusive": 16872692,
     "startup_zero_length_offset": 264
+  },
+  "diagnostics": {
+    "build_id": "d001",
+    "runtime": 1617313792,
+    "code_bytes": 1076,
+    "load_offset": 920124,
+    "code_sha256": "db702dd4618840f23511b2006724e6b296356ca396c743942e7c2b7de75f50cc",
+    "state_start": 16872656,
+    "state_bytes": 36,
+    "heap_reservation": {
+      "original_start": 1617310928,
+      "start": 1617317888,
+      "end_exclusive": 1644167168,
+      "reserved_bytes": 6960,
+      "remaining_bytes": 26849280
+    }
   },
   "mastering_ui": {
     "placement": "Reclaimed original mixer lookup; no heap or additional code-memory reservation",
@@ -700,19 +745,19 @@
   },
   "container": {
     "base_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
-    "output_sha256": "a21259c0c896fa06db18e87f8a3d997fe1661c7e9ee14ad7c8077fdf6446292b",
+    "output_sha256": "72050c85919774c40cad920a97b6a31bf03571380a71e0885f7052f4f5f7a695",
     "byte_identical_to_original": false,
     "changes": [
       {
         "name": "app_main",
-        "decoded_bytes_changed": 6986,
+        "decoded_bytes_changed": 8087,
         "old_decoded_size": 918600,
-        "new_decoded_size": 921412,
+        "new_decoded_size": 922504,
         "decoded_size_change_explicitly_allowed": true,
         "old_decoded_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-        "new_decoded_sha256": "f79bdad226afeabcb4b6bde9c13ac3cc9f990879a56e6cb750c59b83484dcbdc",
+        "new_decoded_sha256": "b3e82df469ef75446c380991cbb9c63ab9a647e890cf6c2c2c4fa74d5d67655a",
         "old_stored_size": 505462,
-        "new_stored_size": 1036589,
+        "new_stored_size": 1037817,
         "encoding": "literal-only LZSS"
       },
       {
@@ -731,7 +776,7 @@
     "boot_images_and_trailer_unchanged": true,
     "all_bytes_outside_update_range_unchanged": true,
     "container_validation": {
-      "sha256": "a21259c0c896fa06db18e87f8a3d997fe1661c7e9ee14ad7c8077fdf6446292b",
+      "sha256": "72050c85919774c40cad920a97b6a31bf03571380a71e0885f7052f4f5f7a695",
       "size": 4194320,
       "is_supplied_original": false,
       "format_scope": "Observed Roland MX-1 firmware 1.051132 layout only",
@@ -814,15 +859,15 @@
           "version": "1.051132",
           "entry_address_field": 1610612736,
           "load_address": 1610612736,
-          "stored_size": 1036589,
-          "checksum": 98979250,
+          "stored_size": 1037817,
+          "checksum": 99133030,
           "checksum_algorithm": "sum of stored payload bytes modulo 2^32",
           "checksum_valid": true,
           "compression": "lzss-zero-init-4096-18",
-          "decoded_size": 921412,
-          "stored_sha256": "2f323008fbd1ac9f6edccc0d86ace43d052e5927757d5388a3e1ca46d562b9d9",
+          "decoded_size": 922504,
+          "stored_sha256": "87af19e4de6b8dee65720cfdc212192aecfce24b744281f7c72aa86e7bee6c2d",
           "padding_is_ff": true,
-          "decoded_sha256": "f79bdad226afeabcb4b6bde9c13ac3cc9f990879a56e6cb750c59b83484dcbdc"
+          "decoded_sha256": "b3e82df469ef75446c380991cbb9c63ab9a647e890cf6c2c2c4fa74d5d67655a"
         },
         {
           "name": "app_usb",
@@ -870,7 +915,7 @@
     },
     "hardware_validation": "not performed; research output only"
   },
-  "sram_bytes_remaining": 20,
+  "sram_bytes_remaining": 4,
   "hardware_access": false,
   "limits": [
     "Stereo packet fix builds on the pre-generator baseline; this changed image has no hardware acceptance yet",

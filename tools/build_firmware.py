@@ -69,7 +69,7 @@ def build(firmware: Path, out: Path) -> dict:
     env = dict(os.environ, ZIG_GLOBAL_CACHE_DIR=str(cache.resolve()),
                ZIG_LOCAL_CACHE_DIR=str(cache.resolve()))
     sources = [ROOT / "patches" / p for p in (
-        "channel_routing_audio.c", "channel_routing_ui.c", "channel_routing_ui.S", "usb_audio.c", "usb_playback.S", "mastering_ui.c", "mastering_ui.S")]
+        "channel_routing_audio.c", "channel_routing_ui.c", "channel_routing_ui.S", "usb_audio.c", "usb_playback.S", "mastering_ui.c", "mastering_ui.S", "display_diagnostics.c")]
     from usb_midi_descriptors import mainline_configuration, validate_configuration
     config = mainline_configuration()
     (out / "uac2_configuration.h").write_text("#define MX1_UAC2_CONFIGURATION_BYTES {" +
@@ -81,7 +81,7 @@ def build(firmware: Path, out: Path) -> dict:
                "-fno-strip", "-fno-compiler-rt", "-fno-lto", "-fno-stack-protector",
                "-fentry=mx1_route_ui_event", "--script", str(ROOT / "patches/mainline.ld"),
                "-femit-bin=" + str(elf), "-I", str(ROOT / "patches"), "-I", str(out)]
-    required = ("mx1_route_ui_event", "mx1_route_ui_display", "mx1_route_get",
+    required = ("mx1_diag_event", "mx1_diag_tick", "mx1_diag_redraw", "mx1_route_ui_event", "mx1_route_ui_display", "mx1_route_get",
                 "mx1_route_adjust", "mx1_route_label", "mx1_route_recall", "mx1_uac2_initialize",
                 "mx1_master_ui_event", "mx1_master_tick", "mx1_master_redraw", "mx1_mixer_parameter_id",
                 "mx1_uac2_set_rate", "mx1_uac2_class_request", "mx1_uac2_start", *REQUIRED_SYMBOLS)
@@ -103,7 +103,7 @@ def build(firmware: Path, out: Path) -> dict:
             raise FormatError("Unresolved extension relocation")
         allocated = [s.name for s in ef.iter_sections()
                      if s["sh_flags"] & 2 and s["sh_size"]]
-        if allocated != [".usb_playback_patch", ".text", ".route_state", ".usb_data", ".usb_state", ".master_lookup", ".master_head", ".master_text", ".master_state"] or text["sh_type"] != "SHT_PROGBITS":
+        if allocated != [".usb_playback_patch", ".text", ".route_state", ".usb_data", ".usb_state", ".master_lookup", ".master_head", ".master_text", ".master_state", ".diag_text", ".diag_state"] or text["sh_type"] != "SHT_PROGBITS":
             raise FormatError("ELF contains allocated bytes outside the injected section")
         playback = ef.get_section_by_name(".usb_playback_patch")
         if (playback["sh_addr"] != 0x01009860 or playback["sh_size"] != 438 or
@@ -143,6 +143,14 @@ def build(firmware: Path, out: Path) -> dict:
         if (master_state['sh_addr'] != 0x01017444 or master_state['sh_size'] != 140 or
             master_state['sh_type'] != 'SHT_NOBITS' or master_state['sh_flags'] & 7 != 3):
             raise FormatError('Unexpected mastering state')
+        diagnostic = ef.get_section_by_name('.diag_text')
+        diagnostic_state = ef.get_section_by_name('.diag_state')
+        if (diagnostic['sh_addr'] != 0x60664000 or not 0 < diagnostic['sh_size'] <= 4096 or
+            diagnostic['sh_type'] != 'SHT_PROGBITS' or diagnostic['sh_flags'] & 7 != 6 or
+            diagnostic_state['sh_addr'] != 0x010174d0 or diagnostic_state['sh_size'] != 36 or
+            diagnostic_state['sh_type'] != 'SHT_NOBITS' or diagnostic_state['sh_flags'] & 7 != 3):
+            raise FormatError('Unexpected diagnostic code/state reservation')
+        diagnostic_blob = diagnostic.data()
         for name in required:
             matches = table.get_symbol_by_name(name) or []
             if len(matches) != 1:
@@ -150,7 +158,7 @@ def build(firmware: Path, out: Path) -> dict:
             symbol = matches[0]
             is_master = name.startswith('mx1_master_') or name == 'mx1_mixer_parameter_id'
             section_name = ef.get_section(symbol['st_shndx']).name if isinstance(symbol['st_shndx'], int) else ''
-            valid_location = (section_name in ('.master_lookup', '.master_head', '.master_text') if is_master else
+            valid_location = (section_name == '.diag_text' if name.startswith('mx1_diag_') else section_name in ('.master_lookup', '.master_head', '.master_text') if is_master else
                               section_name == '.text' and ENTRY <= (symbol['st_value'] & ~1) < ENTRY + len(blob))
             if (symbol["st_info"]["type"] != "STT_FUNC" or
                 not isinstance(symbol["st_shndx"], int) or
@@ -180,16 +188,18 @@ def build(firmware: Path, out: Path) -> dict:
         raise FormatError("Compiler omitted required routing exports")
     modified, scatter = inject(original, blob)
     cut = scatter['insert_offset'] + len(blob)
-    modified[cut:cut] = descriptor_blob
+    tail = descriptor_blob + diagnostic_blob
+    modified[cut:cut] = tail
     for update in scatter['startup_updates']:
         if update['offset'] == 0xe8: continue
         value = (0x60000000 + cut if update['offset'] == 0x114
-                 else update['after'] + len(descriptor_blob))
+                 else 0x60000000 + cut + len(descriptor_blob) if update['offset'] == 0x13c
+                 else update['after'] + len(tail))
         struct.pack_into('<I', modified, update['offset'], value)
         update['after'] = value
     scatter['code_length'] = len(blob)
-    scatter['insert_length'] += len(descriptor_blob)
-    blob += descriptor_blob
+    scatter['insert_length'] += len(tail)
+    blob += tail
     changes: list[dict] = []
     # Original BSS ends exactly at the reserved state start. Extend only its
     # zero count, preserving every existing destination and allocator record.
@@ -199,12 +209,18 @@ def build(firmware: Path, out: Path) -> dict:
                "length": 0x71dc}:
         raise FormatError("Unexpected original writable SRAM BSS")
     exact_patch(modified, 0x108, struct.pack("<I", 0x71dc),
-                struct.pack("<I", 0x7448), changes,
-                "Zero 620-byte mainline writable state reservation after original writable SRAM BSS")
+                struct.pack("<I", 0x746c), changes,
+                "Zero 656-byte mainline writable state reservation after original writable SRAM BSS")
     exact_patch(modified, 0x10c, struct.pack('<I', 0x01020000), struct.pack('<I', 0x0101727c), changes,
                 "Repurpose zero-length startup copy for writable USB descriptor")
     exact_patch(modified, 0x110, bytes(4), struct.pack('<I', 436), changes,
                 "Initialize 436-byte USB descriptor storage after writable BSS clear")
+    exact_patch(modified, 0x134, struct.pack('<I', 0x40008000), struct.pack('<I', 0x60664000), changes,
+                'Repurpose empty copy 8 for diagnostic SDRAM code')
+    exact_patch(modified, 0x138, bytes(4), struct.pack('<I', len(diagnostic_blob)), changes,
+                'Copy bounded diagnostic code before the final SDRAM clear')
+    exact_patch(modified, 0xd76c, struct.pack('<I', 0x606634d0), struct.pack('<I', 0x60665000), changes,
+                'Exclude alignment and diagnostic code from the SDRAM heap')
     exact_patch(modified, 0xd980, bytes.fromhex('10b500f01ff80d48'),
                 absolute_jump(0x6000d980, symbols['mx1_uac2_initialize']), changes, "USB-B UAC2 initializer")
     exact_patch(modified, 0xb4afc, struct.pack('<I', 0x600b499c),
@@ -218,13 +234,13 @@ def build(firmware: Path, out: Path) -> dict:
                 "Scene recall routes and normal-boot latest-route restoration")
     # Existing routing event implementation stays intact; only the registered
     # callback is replaced with the mastering-mode dispatcher around it.
-    ui_symbols = dict(symbols, mx1_route_ui_event=symbols['mx1_master_ui_event'])
+    ui_symbols = dict(symbols, mx1_route_ui_event=symbols['mx1_diag_event'])
     patch_ui(modified, ui_symbols, changes)
     exact_patch(modified, 0xf5dc, struct.pack('<I', 0x60010b77),
-                struct.pack('<I', symbols['mx1_master_tick'] | 1), changes,
-                'Mastering hold timer around original periodic callback')
+                struct.pack('<I', symbols['mx1_diag_tick'] | 1), changes,
+                'Diagnostic wrapper around mastering and stock periodic callback')
     exact_patch(modified, 0x1484a, bytes.fromhex('10b50446008800287dd0'),
-                absolute_jump(0x6001484a, symbols['mx1_master_redraw']), changes,
+                absolute_jump(0x6001484a, symbols['mx1_diag_redraw']), changes,
                 'Mastering surface redraw with original conditional-prologue trampoline')
     for name, site in sites.items():
         data = master_sections[name]
@@ -253,7 +269,12 @@ def build(firmware: Path, out: Path) -> dict:
             Path(__file__).resolve(), ROOT / "tools/routing_audio_patch.py",
             ROOT / "tools/firmware_patch.py", ROOT / "tools/uac2_design.py", ROOT / "tools/usb_midi_descriptors.py", ROOT / "tools/usb_playback_patch.py"]},
         "scatter_extension": scatter, "patches": changes,
-        "writable_state": {"start": 0x01017264, "size": 620, "end_exclusive": 0x010174d0, "startup_zero_length_offset": 0x108},
+        "writable_state": {"start": 0x01017264, "size": 656, "end_exclusive": 0x010174f4, "startup_zero_length_offset": 0x108},
+        "diagnostics": {"build_id": "d001", "runtime": 0x60664000, "code_bytes": len(diagnostic_blob),
+            "load_offset": cut + len(descriptor_blob), "code_sha256": sha256(diagnostic_blob),
+            "state_start": 0x010174d0, "state_bytes": 36,
+            "heap_reservation": {"original_start": 0x606634d0, "start": 0x60665000,
+                "end_exclusive": 0x62000000, "reserved_bytes": 6960, "remaining_bytes": 0x62000000-0x60665000}},
         "mastering_ui": {"placement": "Reclaimed original mixer lookup; no heap or additional code-memory reservation",
             "sections": {name: {"runtime": 0x60000000+site['offset'], "capacity": site['size'],
                 "used": len(master_sections[name])} for name, site in sites.items()},

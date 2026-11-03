@@ -8,8 +8,9 @@
     "Dirty cold startup clears state; original RTOS pools cannot allocate its reservation",
     "Reclaimed stock mixer lookup agrees for all 263 valid IDs and invalid boundaries; external literal/shared returns preserved",
     "All 65 mastering names and ranges linked to actual original index instructions",
-    "Long hold, short tap, exit and stock modifier gestures; guards and timer wrap",
-    "Mastering hold survives continuous ADC samples and unrelated panel notifications; short taps retain the stock action",
+    "Original GAIN/PAN/TONE/AUX/BFX/FADER key actions identify all six supported mixer pages",
+    "MASTERING then TAP enters immediately without clock or periodic callbacks; exit, stock taps and modifier guards",
+    "Mastering chord survives ADC/background traffic; elapsed time alone never enters; TAP alone preserves the stock action",
     "All 22 assigned controls and eight switches execute stock transactions, correct display/LED selection, and preserve unmapped parameters",
     "Ten step-pad slots use original copy/save preparation; all 65 values survive slot round trips; pickup resets and same-slot presses are inert",
     "Entire edit surface isolated; held-button releases cannot leak after exit",
@@ -89,5 +90,5 @@
     "Notes, controllers and SysEx survive RX unchanged",
     "Background queue overload leaves sync output running"
   ],
-  "patched_app_sha256": "d122894dd8448e943dabe0e5c740f9c34571d6af7ffa766056a2e944295af14d"
+  "patched_app_sha256": "f79bdad226afeabcb4b6bde9c13ac3cc9f990879a56e6cb750c59b83484dcbdc"
 }

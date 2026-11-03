@@ -9,8 +9,8 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`adb0c284b24e2813dd2a978471f43997b4e76864396d596f18554831c537c474`.
-It includes the [mastering-hold fix](../evidence/mastering-hold-20261103/README.md)
+`35efb7ffd6486dae78f7b9acdf66d313e6861049f10429da00326cb09dd68bfc`.
+It replaces timed mastering entry with the [MASTERING + TAP combination](../evidence/mastering-chord-20261103/README.md)
 and adds [USB-B MIDI](USB_MIDI.md) and [USB-host MIDI](USB_HOST_MIDI.md) to the existing
 [mastering mode](MASTERING.md) and
 [stereo packet fix](USB_PACKET_FIX.md). The pre-generator image
@@ -24,7 +24,7 @@ The intervals below describe the **main processor**. The independent USB process
 adds 2,624 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
 see [host placement and allocator evidence](USB_HOST_MIDI.md#integration-and-memory).
 
-USB-host MIDI additionally modifies the USB application. Boot programs, updater and panel-controller payload remain byte-identical to stock. The main application is byte-identical to the preceding USB-B MIDI candidate.
+USB-host MIDI additionally modifies the USB application. Boot programs, updater and panel-controller payload remain byte-identical to stock. The USB application is byte-identical to host-MIDI PR #14; this follow-up changes mastering entry in the main application.
 The descriptor, rate and reply buffer in the retired USB-B build occupied
 read-only code SRAM; the combined build fixes that placement before testing.
 
@@ -88,7 +88,7 @@ USB timing or deadline margin.
 ## Bench sequence
 
 1. Identify this exact image and keep monitoring muted for the first boot.
-2. Confirm MASTERING hold/exit, all mapped controls and ten slot pads, pickup and original shortcuts;
+2. Confirm MASTERING + TAP entry and MASTERING exit, all mapped controls and ten slot pads, pickup and original shortcuts;
    the [mastering procedure](MASTERING.md#verification-and-limits) scopes this new check.
 3. Confirm SELECT labels, end stops and routing still work; save/recall differing
    snapshots and restart after allowing several seconds for autosave.

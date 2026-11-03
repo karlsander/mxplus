@@ -1,16 +1,27 @@
 # Mastering mode
 
-Hold **MASTERING** alone until it blinks, then release it. Press MASTERING
-once to return to the mixer. A short tap retains the stock mastering bypass
-operation. MASTERING + TEMPO still selects the stock preset when the encoder
-is turned before the hold completes. Entry is limited to the stock operational pages (IDs 5 and 15), outside
-boot, lock and modal states.
+Hold **MASTERING**, press **TAP**, then release both buttons. Entry is immediate;
+there is no timed hold. MASTERING must be pressed first. Press MASTERING once
+while editing to save and return to the mixer.
 
-Knob/fader samples and unrelated panel notifications continue through their
-ordinary handlers while the hold is pending. Another button or an encoder
-movement cancels the hold and preserves the stock modified gesture. The
-[hold regression record](../evidence/mastering-hold-20261103/README.md) documents
-the previous cancellation bug and the limits of its offline reproduction.
+MASTERING alone retains its stock short-press operation. MASTERING + TEMPO
+still selects the stock preset. TAP alone reaches the original tap-tempo handler
+immediately; the entry combination consumes TAP and both releases, so it does
+not tap a new tempo. Pressing TAP first remains an ordinary tap-tempo action.
+
+Entry is allowed from all six channel-setting pages: GAIN, PAN, TONE, AUX, BFX
+and FADER (IDs 5–10), plus the existing control-surface page 15. Boot, lock,
+modal and other pages remain excluded. Knob/fader samples and unrelated panel
+notifications continue through their ordinary handlers while MASTERING is held.
+Another button or encoder movement preserves the stock modified gesture.
+
+The previous long-hold build still failed to enter on the user's mixer,
+including after selecting GAIN. The page guard was independently too narrow,
+but does not explain that complete observation. The
+[chord change record](../evidence/mastering-chord-20261103/README.md) separates
+that unresolved hardware behavior from the new button-combination tests.
+The earlier [background-traffic fix](../evidence/mastering-hold-20261103/README.md)
+is retained as historical evidence.
 
 The mode takes over panel buttons, encoders, faders and scanned knobs. Step
 pads **1–10** select the ten built-in mastering slots; the current slot lights.
@@ -127,9 +138,10 @@ with the actual original instructions; the final storage worker is a boundary.
 
 Callbacks retain the Cortex-M3 Thumb AAPCS convention. Function pointers set
 Thumb bit 0; calls preserve r4–r11 and stack balance in the instruction tests.
-The clock call at relocated SRAM `0x010037e8` returns a two-word value; the
-hold uses its low word with unsigned wrap-safe subtraction and a 1,200-tick
-threshold. Physical hold duration and panel scheduling remain to be measured.
+Entry runs directly in the registered event callback on the TAP press. It no
+longer reads the RTOS clock at `0x010037e8` or waits for the periodic callback.
+The tests reject any clock call from the mastering gesture. The periodic wrapper
+still preserves original work, redraw and modal-exit handling.
 Stock fader and tone handlers are `0x600174f2` / `0x600175d4`; stock fader
 blink rendering is `0x60014488` (decoded offsets subtract `0x60000000`).
 
@@ -139,21 +151,23 @@ component checksums. [The guarded sites](../patches/mastering_sites.json) contai
 the exact original lookup bytes. Mastering uses the reclaimed resident lookup
 space and adds 140 bytes of writable state. With the [MIDI descriptor](USB_MIDI.md),
 the total reservation is now 620 bytes inside stock MPU region 2.
-No heap, MPU, USB application, boot program, updater or panel payload changes.
+This mastering change adds no heap, MPU, USB-application, boot-program, updater
+or panel-payload changes.
 
 ## Verification and limits
 
 [mastering-verification.json](../build/mainline/mastering-verification.json)
 executes the compiled registered callbacks, original parameter storage/getters/
-clamping transactions and value formatter. It covers short/long gestures, timer
-wrap, interleaved ADC/background traffic, page/modal/lock guards, all 22 analog assignments, eight switches and ranges, isolated controls,
+clamping transactions and value formatter. It covers immediate chord entry without a tick, standalone MASTERING and TAP,
+both release orders, repeats, interleaved ADC/background traffic, original
+channel-setting button-to-page requests, page/modal/lock guards, all 22 analog assignments, eight switches and ranges, isolated controls,
 held releases, return pickup in Jump and Pass modes, externally changed targets,
 original tone/fader handling, blink encoding and the displaced redraw branches.
 It also checks all ten slots, 65-value round trips, outgoing save payloads,
 selected-pad LEDs, mute ordering, same-slot no-ops and renewed pickup.
 
 Object constructors are represented by original vtables and initialized values.
-Clock time, the periodic callback body, mutex operations, parameter notification
+The periodic callback body, mutex operations, parameter notification
 boundaries, MIDI output, storage singletons/submission and final panel I/O are
 stubbed. Save preparation and slot buffer copying execute unchanged. Physical LED timing,
 DSP sound, task timing and mastering save/recall/restart are not established.

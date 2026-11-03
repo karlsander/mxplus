@@ -5,7 +5,7 @@ is the priority. **No physical host-MIDI compatibility or timing result exists
 for this candidate.** The descriptor fixtures are synthetic, not captures from
 an FM-1. Generic USB audio remains disabled.
 
-Candidate SHA-256: `adb0c284b24e2813dd2a978471f43997b4e76864396d596f18554831c537c474`.
+Candidate SHA-256: `35efb7ffd6486dae78f7b9acdf66d313e6861049f10429da00326cb09dd68bfc`.
 
 ## Behavior and scope
 
@@ -76,8 +76,9 @@ Only `tools/build_firmware.py` builds the candidate. It uses `patches/mainline.l
 for two separate processor ELFs, then rebuilds the existing main and USB
 application components in one container. There is no separate host firmware.
 Boot programs, updater, panel payload, update range and container boundaries
-remain unchanged. The main-application bytes are unchanged from USB-B MIDI
-PR #13; all new executable behavior is in **app_usb**.
+remain unchanged. The host-MIDI addition in PR #14 changed **app_usb** while retaining PR #13
+main-application bytes. Later mastering changes are documented in
+[mainline integration](MAINLINE.md); the USB application remains identical to PR #14.
 
 USB startup originally copies decoded `0x2b1f4..0x36dd8` to
 `0x01000300..0x0100bee4`. The new USB code is inserted at decoded `0x36dd8`,

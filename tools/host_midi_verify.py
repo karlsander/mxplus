@@ -39,6 +39,61 @@ def pipeline(image,cfg,vid=0x1234,speed=0,policy=0x60007bf8):
     m.call(policy,INFO,OUT)
     return rc, (m.read(RECORD,0x200),m.read(OUT,18))
 
+def verify_descriptor_lengths(patched,report):
+    policy=report['host_midi']['symbols']['mx1_host_select']
+    fixture=Path(__file__).resolve().parents[1]/'evidence/fm1-host-midi-20261103'
+    cfg=bytes.fromhex((fixture/'configuration.hex').read_text())
+    device=bytes.fromhex((fixture/'device.hex').read_text())
+    assert sha256(cfg)=='9d0d30219e1228a7809ef0abe08bda1068a4a0de5487737445d4f06f7e9162b0'
+    assert sha256(device)=='3d15b0b23702b6dae0db3a850dc1229d31700f62416a9b4521bd302e7cc7d40a'
+    vid=struct.unpack_from('<H',device,8)[0]
+    selected=struct.pack('<9H',0,0,0,0,0,0,1,0,0)
+    rc,result=pipeline(patched,cfg,vid=vid,policy=policy)
+    assert rc==0 and result[1]==selected
+    # FM-1 has audio streaming before MIDI. Only MIDI interface 2 is selected;
+    # audio remains disabled even though an audio alternate is advertised.
+    assert result[0][0x64+0xe4]==2
+    headers=[];at=9
+    while at<len(cfg):
+        if cfg[at:at+5]==bytes([7,0x24,1,0,1]):headers.append(at)
+        at+=cfg[at]
+    assert len(headers)==1
+    header=headers[0];accepted=[]
+    # Every length near this exact descriptor must fail except the two
+    # documented counts. Include truncation into each descriptor boundary.
+    for length in range(len(cfg)+2):
+        c=bytearray(cfg);c[header+5:header+7]=H(length)
+        rc,res=pipeline(patched,c,vid=vid,policy=policy)
+        if not rc:
+            assert res[1]==selected
+            accepted.append(length)
+    assert accepted==[37,65],accepted
+    for length in range(9,len(cfg)):
+        c=bytearray(cfg[:length]);c[2:4]=H(length)
+        assert pipeline(patched,c,vid=vid,policy=policy)[0]!=0,length
+    cases=[]
+    # Count the actual span, not a hardcoded 65: one-way endpoints, 7-byte
+    # standard endpoints and a following unrelated interface are covered.
+    for direction in ('both','in','out'):
+      for epbytes in (7,9):
+        c=configuration(direction=direction,composite=True)
+        parts=[];at=9
+        while at<len(c):
+            d=c[at:at+c[at]];at+=len(d)
+            if d[1]==5 and epbytes==7:d=bytes([7])+d[1:7]
+            parts.append(d)
+        c=c[:9]+b''.join(parts);c=bytearray(c);c[2:4]=H(len(c))
+        total=37+(epbytes+5)*(2 if direction=='both' else 1)
+        for length in (37,total,total-1,total+1,total+9):
+            c[41:43]=H(length)
+            rc,res=pipeline(patched,c,policy=policy)
+            assert (rc==0)==(length in (37,total)),(direction,epbytes,length,rc)
+            if not rc:assert res[1]==selected
+        cases.append([direction,epbytes,total])
+    return dict(fm1_configuration_sha256=sha256(cfg),accepted_fm1_lengths=accepted,
+                length_cases=len(cfg)+2,truncated_cases=len(cfg)-9,endpoint_cases=cases,
+                source='FM-1 monitor built descriptor, not a live USB capture')
+
 class Transport:
     def __init__(self,image,report):
         self.m=Machine(image);self.m.uc.mem_protect(0x01001000,0xf000,UC_PROT_READ|UC_PROT_EXEC);self.s=report['symbols'];self.requests=[];self.received=[];self.cancels=[];self.reject=0
@@ -151,6 +206,8 @@ def verify(original,patched,main,report):
     cfg=main[0xb499c:0xb499c+0x102]
     assert pipeline(original,cfg,0x582,0x400)==pipeline(patched,cfg,0x582,0x400,s['mx1_host_select'])
     passed('Standard MIDI-only/composite descriptors through original ABI; Roland unchanged',cases=samples)
+    passed('FM-1 descriptor and both bounded MIDI header length conventions',
+           **verify_descriptor_lengths(patched,report))
     cfg=configuration();malformed=[]
     for n in range(9,len(cfg)):
         c=bytearray(cfg[:n]);c[2:4]=H(n);malformed.append(bytes(c))
@@ -264,7 +321,7 @@ def verify(original,patched,main,report):
     passed('Background queue overload leaves sync output running')
     return {'status':'pass','patched_app_sha256':sha256(patched),'groups':groups,'hardware_access':False,
             'limits':['Asynchronous USB submission/cancel and RTOS flag delivery are stubbed; no USB controller or PHY is simulated',
-                      'Synthetic standard descriptors; no physical FM-1 capture or device validation',
+                      'Synthetic descriptors and FM-1 built-image descriptors; no physical USB capture or device validation',
                       'No latency/jitter, electrical, disconnect timing or full firmware scheduling claim']}
 
 if __name__=='__main__':

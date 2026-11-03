@@ -75,7 +75,10 @@ int mx1_host_config(uint8_t *r, const uint8_t *cfg) {
             ep=0;
         } else return -1;
     }
-    if(ep || !header || header!=cslen || epcount!=start[4] || (!incable && !outcable)) return -1;
+    /* MIDI 1.0 table 6-2 counts header/jacks; appendix B (and FM-1) also
+     * counts endpoint descriptors. Accept either exact, validated span. */
+    if(ep || !header || (header!=cslen && header!=(unsigned)(end-start-9)) ||
+       epcount!=start[4] || (!incable && !outcable)) return -1;
     /* Validate all output-jack source IDs after collecting the complete graph. */
     for(const uint8_t *p=start+9;p<end;p+=p[0])
         if(p[1]==0x24 && p[2]==3 && !(ids&(1u<<p[6]))) return -1;

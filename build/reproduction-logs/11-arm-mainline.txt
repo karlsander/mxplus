@@ -80,6 +80,7 @@
     "Original USB MPU permissions and RTOS pools exclude the extension state",
     "Original TX loop remains intact; task call sites target the new poll wrappers",
     "Standard MIDI-only/composite descriptors through original ABI; Roland unchanged",
+    "FM-1 descriptor and both bounded MIDI header length conventions",
     "Malformed/truncated descriptor chains remain unselected",
     "Original TX ring dispatches all four ports; sync precedes queued channel data",
     "RX uses stock port/cable numbering and blocks clock/transport/SPP/MTC on every port",

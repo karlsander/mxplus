@@ -1,11 +1,11 @@
 {
   "status": "pass",
-  "patched_app_sha256": "b601ca64f700ecf28241b86cf3c8a90270854845a0d40cb299f3efe3bdd44d05",
+  "patched_app_sha256": "d01abbe0142470cf990147aef59698c0a36a541b8bfd113479aeb84319946ae3",
   "groups": [
     {
       "name": "Original USB startup copies code, zeroes state, preserves existing initialized data",
       "status": "pass",
-      "code_bytes": 2624,
+      "code_bytes": 2640,
       "state_bytes": 1472
     },
     {
@@ -241,6 +241,50 @@
       ]
     },
     {
+      "name": "FM-1 descriptor and both bounded MIDI header length conventions",
+      "status": "pass",
+      "fm1_configuration_sha256": "9d0d30219e1228a7809ef0abe08bda1068a4a0de5487737445d4f06f7e9162b0",
+      "accepted_fm1_lengths": [
+        37,
+        65
+      ],
+      "length_cases": 177,
+      "truncated_cases": 166,
+      "endpoint_cases": [
+        [
+          "both",
+          7,
+          61
+        ],
+        [
+          "both",
+          9,
+          65
+        ],
+        [
+          "in",
+          7,
+          49
+        ],
+        [
+          "in",
+          9,
+          51
+        ],
+        [
+          "out",
+          7,
+          49
+        ],
+        [
+          "out",
+          9,
+          51
+        ]
+      ],
+      "source": "FM-1 monitor built descriptor, not a live USB capture"
+    },
+    {
       "name": "Malformed/truncated descriptor chains remain unselected",
       "status": "pass",
       "rejected_cases": 111
@@ -253,7 +297,7 @@
           "ep": 536936528,
           "buffer": 536872960,
           "size": 16,
-          "callback": 16827267,
+          "callback": 16827283,
           "token": 1,
           "timeout": 100,
           "flags": 0,
@@ -263,7 +307,7 @@
           "ep": 536936784,
           "buffer": 536873472,
           "size": 16,
-          "callback": 16827267,
+          "callback": 16827283,
           "token": 3,
           "timeout": 100,
           "flags": 0,
@@ -273,7 +317,7 @@
           "ep": 536937040,
           "buffer": 536873984,
           "size": 16,
-          "callback": 16827267,
+          "callback": 16827283,
           "token": 5,
           "timeout": 100,
           "flags": 0,
@@ -283,7 +327,7 @@
           "ep": 536937296,
           "buffer": 536874496,
           "size": 16,
-          "callback": 16827267,
+          "callback": 16827283,
           "token": 7,
           "timeout": 100,
           "flags": 0,
@@ -293,7 +337,7 @@
           "ep": 536936528,
           "buffer": 536872960,
           "size": 16,
-          "callback": 16827267,
+          "callback": 16827283,
           "token": 1,
           "timeout": 100,
           "flags": 0,
@@ -303,7 +347,7 @@
           "ep": 536936784,
           "buffer": 536873472,
           "size": 16,
-          "callback": 16827267,
+          "callback": 16827283,
           "token": 3,
           "timeout": 100,
           "flags": 0,
@@ -313,7 +357,7 @@
           "ep": 536937040,
           "buffer": 536873984,
           "size": 16,
-          "callback": 16827267,
+          "callback": 16827283,
           "token": 5,
           "timeout": 100,
           "flags": 0,
@@ -323,7 +367,7 @@
           "ep": 536937296,
           "buffer": 536874496,
           "size": 16,
-          "callback": 16827267,
+          "callback": 16827283,
           "token": 7,
           "timeout": 100,
           "flags": 0,
@@ -415,7 +459,7 @@
   "hardware_access": false,
   "limits": [
     "Asynchronous USB submission/cancel and RTOS flag delivery are stubbed; no USB controller or PHY is simulated",
-    "Synthetic standard descriptors; no physical FM-1 capture or device validation",
+    "Synthetic descriptors and FM-1 built-image descriptors; no physical USB capture or device validation",
     "No latency/jitter, electrical, disconnect timing or full firmware scheduling claim"
   ]
 }

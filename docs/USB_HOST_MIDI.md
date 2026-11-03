@@ -1,11 +1,14 @@
 # USB-host MIDI experiment
 
 Mainline adds USB-MIDI 1.0 input and output on the four host ports. Sync output
-is the priority. **No physical host-MIDI compatibility or timing result exists
-for this candidate.** The descriptor fixtures are synthetic, not captures from
-an FM-1. Generic USB audio remains disabled.
+is the priority. **No successful physical host-MIDI compatibility or timing result exists
+for this candidate.** A user reported no visible MIDI on an FM-1 after selecting
+INT and restarting both devices. The parser rejected that monitor build's
+MIDI descriptor length; the [compatibility fix and exact built-image fixture](../evidence/fm1-host-midi-20261103/README.md)
+now have ARM regression coverage. This fixture is not a live USB capture.
+Generic USB audio remains disabled.
 
-Candidate SHA-256: `35efb7ffd6486dae78f7b9acdf66d313e6861049f10429da00326cb09dd68bfc`.
+Candidate SHA-256: `a21259c0c896fa06db18e87f8a3d997fe1661c7e9ee14ad7c8077fdf6446292b`.
 
 ## Behavior and scope
 
@@ -13,6 +16,9 @@ Candidate SHA-256: `35efb7ffd6486dae78f7b9acdf66d313e6861049f10429da00326cb09dd6
   cable per direction. Input-only, output-only and bidirectional devices are
   accepted. MIDI-only devices do not need an audio interface. Composite audio
   interfaces are ignored; no generic audio alternate is selected.
+- MIDI header length accepts the header/jack sum or the exact full MIDI span,
+  including endpoint descriptors, as used by the FM-1. Every descriptor is still
+  individually validated; unrelated audio interfaces are not counted.
 - Standard bulk endpoints at full speed (8/16/32/64-byte maximum packets) or
   high speed (512 bytes). Low speed, MIDI 2.0, multiple streaming interfaces,
   multiple cables per endpoint and nonzero MIDI alternates are excluded.
@@ -78,13 +84,15 @@ application components in one container. There is no separate host firmware.
 Boot programs, updater, panel payload, update range and container boundaries
 remain unchanged. The host-MIDI addition in PR #14 changed **app_usb** while retaining PR #13
 main-application bytes. Later mastering changes are documented in
-[mainline integration](MAINLINE.md); the USB application remains identical to PR #14.
+[mainline integration](MAINLINE.md). The FM-1 compatibility fix changes only the
+USB parser and regenerated extension placement/patch accounting; the main
+application remains identical to the MASTERING + TAP candidate.
 
 USB startup originally copies decoded `0x2b1f4..0x36dd8` to
 `0x01000300..0x0100bee4`. The new USB code is inserted at decoded `0x36dd8`,
 runtime `0x0100bee4`, below the existing USB allocator at `0x0100d000`.
-The extension occupies 2,624 bytes (`0x0100bee4..0x0100c924`), leaving
-1,756 bytes before that allocator. State occupies 1,472 bytes
+The extension occupies 2,640 bytes (`0x0100bee4..0x0100c934`), leaving
+1,740 bytes before that allocator. State occupies 1,472 bytes
 (`0x01017868..0x01017e28`), leaving 472 bytes before the writable-region limit.
 The five following initialized-data source literals move; their destinations
 do not. New zero-initialized state starts at the original USB BSS end,
@@ -129,7 +137,8 @@ stock controller driver, scheduling and physical topology.
 startup and pool initialization, MPU programming, configuration ABI construction,
 Roland descriptor parsing/selection, cross-core TX ring dispatch, asynchronous
 request packing and completion dispatch. New code executes as ARM instructions,
-including all four ports, both speeds, malformed descriptors, sync filtering,
+including all four ports, both speeds, the FM-1 built descriptor, malformed
+descriptors, both MIDI length conventions, sync filtering,
 priority, short writes, overload isolation and reconnect with old DMA pending.
 Transport calls preserve r4–r11 and SP; code pages are protected against writes.
 

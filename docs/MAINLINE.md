@@ -9,9 +9,10 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`35efb7ffd6486dae78f7b9acdf66d313e6861049f10429da00326cb09dd68bfc`.
+`a21259c0c896fa06db18e87f8a3d997fe1661c7e9ee14ad7c8077fdf6446292b`.
 It replaces timed mastering entry with the [MASTERING + TAP combination](../evidence/mastering-chord-20261103/README.md)
-and adds [USB-B MIDI](USB_MIDI.md) and [USB-host MIDI](USB_HOST_MIDI.md) to the existing
+and fixes [FM-1 host-MIDI descriptor rejection](../evidence/fm1-host-midi-20261103/README.md).
+It adds [USB-B MIDI](USB_MIDI.md) and [USB-host MIDI](USB_HOST_MIDI.md) to the existing
 [mastering mode](MASTERING.md) and
 [stereo packet fix](USB_PACKET_FIX.md). The pre-generator image
 `88457445…` was confirmed by the user to boot and pass one iPhone/AUM duplex

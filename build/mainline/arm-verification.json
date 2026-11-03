@@ -2,7 +2,7 @@
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
   "patched_app_sha256": "f79bdad226afeabcb4b6bde9c13ac3cc9f990879a56e6cb750c59b83484dcbdc",
-  "candidate_container_sha256": "35efb7ffd6486dae78f7b9acdf66d313e6861049f10429da00326cb09dd68bfc",
+  "candidate_container_sha256": "a21259c0c896fa06db18e87f8a3d997fe1661c7e9ee14ad7c8077fdf6446292b",
   "extension_sha256": "fc4ed00c31546c74a84dbaece0ac9fda8fad28a3c21f19038e123617b945bbeb",
   "groups": [
     {
@@ -1782,7 +1782,7 @@
     {
       "name": "Original USB startup copies code, zeroes state, preserves existing initialized data",
       "status": "pass",
-      "code_bytes": 2624,
+      "code_bytes": 2640,
       "state_bytes": 1472
     },
     {
@@ -2018,6 +2018,50 @@
       ]
     },
     {
+      "name": "FM-1 descriptor and both bounded MIDI header length conventions",
+      "status": "pass",
+      "fm1_configuration_sha256": "9d0d30219e1228a7809ef0abe08bda1068a4a0de5487737445d4f06f7e9162b0",
+      "accepted_fm1_lengths": [
+        37,
+        65
+      ],
+      "length_cases": 177,
+      "truncated_cases": 166,
+      "endpoint_cases": [
+        [
+          "both",
+          7,
+          61
+        ],
+        [
+          "both",
+          9,
+          65
+        ],
+        [
+          "in",
+          7,
+          49
+        ],
+        [
+          "in",
+          9,
+          51
+        ],
+        [
+          "out",
+          7,
+          49
+        ],
+        [
+          "out",
+          9,
+          51
+        ]
+      ],
+      "source": "FM-1 monitor built descriptor, not a live USB capture"
+    },
+    {
       "name": "Malformed/truncated descriptor chains remain unselected",
       "status": "pass",
       "rejected_cases": 111
@@ -2030,7 +2074,7 @@
           "ep": 536936528,
           "buffer": 536872960,
           "size": 16,
-          "callback": 16827267,
+          "callback": 16827283,
           "token": 1,
           "timeout": 100,
           "flags": 0,
@@ -2040,7 +2084,7 @@
           "ep": 536936784,
           "buffer": 536873472,
           "size": 16,
-          "callback": 16827267,
+          "callback": 16827283,
           "token": 3,
           "timeout": 100,
           "flags": 0,
@@ -2050,7 +2094,7 @@
           "ep": 536937040,
           "buffer": 536873984,
           "size": 16,
-          "callback": 16827267,
+          "callback": 16827283,
           "token": 5,
           "timeout": 100,
           "flags": 0,
@@ -2060,7 +2104,7 @@
           "ep": 536937296,
           "buffer": 536874496,
           "size": 16,
-          "callback": 16827267,
+          "callback": 16827283,
           "token": 7,
           "timeout": 100,
           "flags": 0,
@@ -2070,7 +2114,7 @@
           "ep": 536936528,
           "buffer": 536872960,
           "size": 16,
-          "callback": 16827267,
+          "callback": 16827283,
           "token": 1,
           "timeout": 100,
           "flags": 0,
@@ -2080,7 +2124,7 @@
           "ep": 536936784,
           "buffer": 536873472,
           "size": 16,
-          "callback": 16827267,
+          "callback": 16827283,
           "token": 3,
           "timeout": 100,
           "flags": 0,
@@ -2090,7 +2134,7 @@
           "ep": 536937040,
           "buffer": 536873984,
           "size": 16,
-          "callback": 16827267,
+          "callback": 16827283,
           "token": 5,
           "timeout": 100,
           "flags": 0,
@@ -2100,7 +2144,7 @@
           "ep": 536937296,
           "buffer": 536874496,
           "size": 16,
-          "callback": 16827267,
+          "callback": 16827283,
           "token": 7,
           "timeout": 100,
           "flags": 0,

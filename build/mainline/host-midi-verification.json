@@ -1,0 +1,421 @@
+{
+  "status": "pass",
+  "patched_app_sha256": "b601ca64f700ecf28241b86cf3c8a90270854845a0d40cb299f3efe3bdd44d05",
+  "groups": [
+    {
+      "name": "Original USB startup copies code, zeroes state, preserves existing initialized data",
+      "status": "pass",
+      "code_bytes": 2624,
+      "state_bytes": 1472
+    },
+    {
+      "name": "Original USB MPU permissions and RTOS pools exclude the extension state",
+      "status": "pass",
+      "regions": {
+        "0": {
+          "base": 0,
+          "attributes": 318767167
+        },
+        "1": {
+          "base": 16777216,
+          "attributes": 100663329
+        },
+        "2": {
+          "base": 16842752,
+          "attributes": 318767133
+        },
+        "3": {
+          "base": 16777216,
+          "attributes": 318767121
+        },
+        "4": {
+          "base": 16777728,
+          "attributes": 318767119
+        },
+        "5": {
+          "base": 33554432,
+          "attributes": 100663323
+        },
+        "6": {
+          "base": 1610612736,
+          "attributes": 50331701
+        }
+      },
+      "general_pool": [
+        "0x010142c4",
+        "0x010152c4"
+      ],
+      "stack_pool": [
+        "0x01020000",
+        "0x01028000"
+      ]
+    },
+    {
+      "name": "Original TX loop remains intact; task call sites target the new poll wrappers",
+      "status": "pass"
+    },
+    {
+      "name": "Standard MIDI-only/composite descriptors through original ABI; Roland unchanged",
+      "status": "pass",
+      "cases": [
+        [
+          0,
+          8,
+          "both",
+          false
+        ],
+        [
+          0,
+          8,
+          "both",
+          true
+        ],
+        [
+          0,
+          8,
+          "in",
+          false
+        ],
+        [
+          0,
+          8,
+          "in",
+          true
+        ],
+        [
+          0,
+          8,
+          "out",
+          false
+        ],
+        [
+          0,
+          8,
+          "out",
+          true
+        ],
+        [
+          0,
+          16,
+          "both",
+          false
+        ],
+        [
+          0,
+          16,
+          "both",
+          true
+        ],
+        [
+          0,
+          16,
+          "in",
+          false
+        ],
+        [
+          0,
+          16,
+          "in",
+          true
+        ],
+        [
+          0,
+          16,
+          "out",
+          false
+        ],
+        [
+          0,
+          16,
+          "out",
+          true
+        ],
+        [
+          0,
+          32,
+          "both",
+          false
+        ],
+        [
+          0,
+          32,
+          "both",
+          true
+        ],
+        [
+          0,
+          32,
+          "in",
+          false
+        ],
+        [
+          0,
+          32,
+          "in",
+          true
+        ],
+        [
+          0,
+          32,
+          "out",
+          false
+        ],
+        [
+          0,
+          32,
+          "out",
+          true
+        ],
+        [
+          0,
+          64,
+          "both",
+          false
+        ],
+        [
+          0,
+          64,
+          "both",
+          true
+        ],
+        [
+          0,
+          64,
+          "in",
+          false
+        ],
+        [
+          0,
+          64,
+          "in",
+          true
+        ],
+        [
+          0,
+          64,
+          "out",
+          false
+        ],
+        [
+          0,
+          64,
+          "out",
+          true
+        ],
+        [
+          1024,
+          512,
+          "both",
+          false
+        ],
+        [
+          1024,
+          512,
+          "both",
+          true
+        ],
+        [
+          1024,
+          512,
+          "in",
+          false
+        ],
+        [
+          1024,
+          512,
+          "in",
+          true
+        ],
+        [
+          1024,
+          512,
+          "out",
+          false
+        ],
+        [
+          1024,
+          512,
+          "out",
+          true
+        ]
+      ]
+    },
+    {
+      "name": "Malformed/truncated descriptor chains remain unselected",
+      "status": "pass",
+      "rejected_cases": 111
+    },
+    {
+      "name": "Original TX ring dispatches all four ports; sync precedes queued channel data",
+      "status": "pass",
+      "requests": [
+        {
+          "ep": 536936528,
+          "buffer": 536872960,
+          "size": 16,
+          "callback": 16827267,
+          "token": 1,
+          "timeout": 100,
+          "flags": 0,
+          "data": "0ff800000ffa00000ffc000009903c64"
+        },
+        {
+          "ep": 536936784,
+          "buffer": 536873472,
+          "size": 16,
+          "callback": 16827267,
+          "token": 3,
+          "timeout": 100,
+          "flags": 0,
+          "data": "0ff800000ffa00000ffc000009903c64"
+        },
+        {
+          "ep": 536937040,
+          "buffer": 536873984,
+          "size": 16,
+          "callback": 16827267,
+          "token": 5,
+          "timeout": 100,
+          "flags": 0,
+          "data": "0ff800000ffa00000ffc000009903c64"
+        },
+        {
+          "ep": 536937296,
+          "buffer": 536874496,
+          "size": 16,
+          "callback": 16827267,
+          "token": 7,
+          "timeout": 100,
+          "flags": 0,
+          "data": "0ff800000ffa00000ffc000009903c64"
+        },
+        {
+          "ep": 536936528,
+          "buffer": 536872960,
+          "size": 16,
+          "callback": 16827267,
+          "token": 1,
+          "timeout": 100,
+          "flags": 0,
+          "data": "0ff800000ffa00000ffc000009903c64"
+        },
+        {
+          "ep": 536936784,
+          "buffer": 536873472,
+          "size": 16,
+          "callback": 16827267,
+          "token": 3,
+          "timeout": 100,
+          "flags": 0,
+          "data": "0ff800000ffa00000ffc000009903c64"
+        },
+        {
+          "ep": 536937040,
+          "buffer": 536873984,
+          "size": 16,
+          "callback": 16827267,
+          "token": 5,
+          "timeout": 100,
+          "flags": 0,
+          "data": "0ff800000ffa00000ffc000009903c64"
+        },
+        {
+          "ep": 536937296,
+          "buffer": 536874496,
+          "size": 16,
+          "callback": 16827267,
+          "token": 7,
+          "timeout": 100,
+          "flags": 0,
+          "data": "0ff800000ffa00000ffc000009903c64"
+        }
+      ]
+    },
+    {
+      "name": "RX uses stock port/cable numbering and blocks clock/transport/SPP/MTC on every port",
+      "status": "pass",
+      "received": [
+        "0x643c9009",
+        "0x7b00b",
+        "0x643c9029",
+        "0x7b02b",
+        "0x643c9049",
+        "0x7b04b",
+        "0x643c9069",
+        "0x7b06b"
+      ]
+    },
+    {
+      "name": "Reconnect retains DMA ownership until old completion; stale RX is discarded",
+      "status": "pass"
+    },
+    {
+      "name": "Submission/completion/short-write/overflow failures isolate the affected output",
+      "status": "pass"
+    },
+    {
+      "name": "Original USB request builder and completion dispatcher establish callback ABI",
+      "status": "pass",
+      "completion_cases": [
+        [
+          536985600,
+          536981504,
+          "0000000040000000",
+          3
+        ],
+        [
+          536985600,
+          536981504,
+          "f9ffffff40000000",
+          3
+        ],
+        [
+          536985600,
+          536981504,
+          "f7ffffff40000000",
+          3
+        ]
+      ]
+    },
+    {
+      "name": "Original main MIDI sender fans Clock/Start/Continue/Stop to all enabled host ports",
+      "status": "pass",
+      "runtime": "0x01000e92",
+      "decoded_offset": "0xd171e",
+      "enabled_host_mask": "0x2a800",
+      "words": [
+        "0ff80000",
+        "2ff80000",
+        "4ff80000",
+        "6ff80000",
+        "0ffa0000",
+        "2ffa0000",
+        "4ffa0000",
+        "6ffa0000",
+        "0ffb0000",
+        "2ffb0000",
+        "4ffb0000",
+        "6ffb0000",
+        "0ffc0000",
+        "2ffc0000",
+        "4ffc0000",
+        "6ffc0000"
+      ]
+    },
+    {
+      "name": "Notes, controllers and SysEx survive RX unchanged",
+      "status": "pass",
+      "events": 17
+    },
+    {
+      "name": "Background queue overload leaves sync output running",
+      "status": "pass"
+    }
+  ],
+  "hardware_access": false,
+  "limits": [
+    "Asynchronous USB submission/cancel and RTOS flag delivery are stubbed; no USB controller or PHY is simulated",
+    "Synthetic standard descriptors; no physical FM-1 capture or device validation",
+    "No latency/jitter, electrical, disconnect timing or full firmware scheduling claim"
+  ]
+}

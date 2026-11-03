@@ -2,7 +2,7 @@
 """Build the sole MX-1 mainline routing and USB-B firmware candidate.
 
 Only files are read/written. The exact stock input and every overwritten site
-are guarded. USB-host unlocking is excluded. This never flashes a unit.
+are guarded. Host MIDI is included; generic host audio remains excluded. This never flashes a unit.
 """
 from __future__ import annotations
 
@@ -234,7 +234,10 @@ def build(firmware: Path, out: Path) -> dict:
     audio = patch_audio(modified, symbols, changes)
     for change in changes:
         change["component"] = "app_main"
-    rebuilt, container = repack_image(raw, {"app_main": bytes(modified)}, allow_resize=True)
+    from host_midi_patch import integrate
+    usb_original = component_unpacked(raw, COMPONENT_BY_NAME["app_usb"])
+    usb_modified, host = integrate(usb_original, ROOT, out, env, absolute_jump)
+    rebuilt, container = repack_image(raw, {"app_main": bytes(modified), "app_usb": usb_modified}, allow_resize=True)
     (out / "mainline.load.bin").write_bytes(blob)
     (out / "app_main.mainline.bin").write_bytes(modified)
     (out / "MXPLUS_MAINLINE_UNTESTED.bin").write_bytes(rebuilt)
@@ -243,6 +246,7 @@ def build(firmware: Path, out: Path) -> dict:
         "input_sha256": sha256(raw), "original_app_sha256": sha256(original),
         "patched_app_sha256": sha256(modified), "container_sha256": sha256(rebuilt),
         "extension_sha256": sha256(blob), "symbols": symbols,
+        "host_midi": host, "patched_usb_sha256": sha256(usb_modified), "host_extension_sha256": host["extension_sha256"],
         "compiler": "ziglang 0.13.0 Cortex-M3 ReleaseSmall, no LTO",
         "sources": {str(p.relative_to(ROOT)): sha256(p.read_bytes()) for p in [
             *sources, ROOT / "patches/channel_routing.h", ROOT / "patches/mainline.ld", ROOT / "patches/mastering_sites.json",
@@ -269,7 +273,7 @@ def build(firmware: Path, out: Path) -> dict:
         "hardware_access": False,
         "limits": [
             "Stereo packet fix builds on the pre-generator baseline; this changed image has no hardware acceptance yet",
-            "Routing and USB-B audio combined; USB-host application remains stock",
+            "Routing, USB-B audio/MIDI and host MIDI combined; generic host audio remains disabled",
             "Real-time deadline margin and electrical/DMA behavior require hardware measurement",
         ],
     }

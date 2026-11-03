@@ -53,7 +53,8 @@ class ReproductionIdentityTests(unittest.TestCase):
             extension = (kind + " extension").encode()
             application = b"prefix" + extension + b"tail"
             contents = {"container_sha256": (kind + " candidate").encode(),
-                        "patched_app_sha256": application, "extension_sha256": extension}
+                        "patched_app_sha256": application, "extension_sha256": extension,
+                        "patched_usb_sha256": application, "host_extension_sha256": extension}
             hashes = {key: sha(data) for key, data in contents.items()}
             for key, data in contents.items():
                 self.write(prefix + names[key], data)
@@ -61,12 +62,15 @@ class ReproductionIdentityTests(unittest.TestCase):
                 "input_sha256": self.original_sha,
                 "status": "OFFLINE EXPERIMENT; NOT HARDWARE VALIDATED",
                 "scatter_extension": {"insert_offset": 6, "insert_length": len(extension)},
+                "host_midi": {"insert_offset": 6, "code_bytes": len(extension), "patched_app_sha256": hashes["patched_usb_sha256"], "extension_sha256": hashes["host_extension_sha256"]},
                 **hashes,
             })
             self.write_json(prefix + "storage-verification.json", {
                 "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"]})
             self.write_json(prefix + "packet-verification.json", {
                 "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"]})
+            self.write_json(prefix + "host-midi-verification.json", {
+                "status": "pass", "patched_app_sha256": hashes["patched_usb_sha256"]})
             self.write_json(prefix + "midi-verification.json", {
                 "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"]})
             self.write_json(prefix + "mastering-verification.json", {
@@ -79,10 +83,10 @@ class ReproductionIdentityTests(unittest.TestCase):
                 "candidate_sha256": hashes["container_sha256"],
                 "hardware_flash_or_audio_functionality_verified": False,
                 "changed_decoded_components": [{
-                    "component": "app_usb" if kind == "host" else "app_main",
+                    "component": "app_main",
                     "candidate_decoded_sha256": hashes["patched_app_sha256"],
                     "original_decoder_matches": True,
-                }],
+                }, {"component": "app_usb", "candidate_decoded_sha256": hashes["patched_usb_sha256"], "original_decoder_matches": True}],
             })
             self.write_json("analysis/host_probe_verification.json" if kind == "host"
                             else prefix + "arm-verification.json", {

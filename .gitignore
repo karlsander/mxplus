@@ -32,6 +32,7 @@ ghidra-projects/
 /build/local/
 /build/tmp/
 /build/ci/
+/build/web-patcher/
 /build/routing-ui-only/
 /build/routing-audio-development/
 /analysis/channel_routing_ui_only_verification.json

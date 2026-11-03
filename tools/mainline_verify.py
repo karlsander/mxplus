@@ -233,6 +233,11 @@ def main() -> None:
     assert build['input_sha256'] == ORIGINAL_SHA256
     patched = (args.build / 'app_main.mainline.bin').read_bytes()
     report, details = verify(original, patched, build)
+    from host_midi_verify import verify as verify_host
+    host = verify_host(component_unpacked(raw, COMPONENT_BY_NAME['app_usb']),
+        (args.build / 'app_usb.mainline.bin').read_bytes(), original, build)
+    details['host-midi-verification.json'] = host
+    report['groups'].extend(host['groups'])
     for name, detail in details.items():
         (args.build / name).write_text(json.dumps(detail, indent=2) + '\n')
     args.output.parent.mkdir(parents=True, exist_ok=True)

@@ -1,6 +1,6 @@
 # Working on mxplus
 
-mxplus maintains one Roland MX-1 mainline build combining channel routing, mastering editing, USB-B UAC2 and experimental USB-MIDI 1.0. The USB-host unlock is documented only. Read [README.md](README.md), the relevant candidate report, and [CONTRIBUTING.md](CONTRIBUTING.md) before changing a build or interpreting its evidence. Use [ROADMAP.md](ROADMAP.md) to distinguish the present result from future work.
+mxplus maintains one Roland MX-1 mainline build combining channel routing, mastering editing, USB-B UAC2 and experimental USB-MIDI 1.0. USB-host MIDI is an offline experiment; generic host audio remains documented only. Read [README.md](README.md), the relevant candidate report, and [CONTRIBUTING.md](CONTRIBUTING.md) before changing a build or interpreting its evidence. Use [ROADMAP.md](ROADMAP.md) to distinguish the present result from future work.
 
 ## Scope and current boundary
 
@@ -14,9 +14,8 @@ the preceding image's hardware result to these changed routines.
 
 Maintain only `tools/build_firmware.py`, `patches/mainline.ld` and
 `build/mainline/MXPLUS_MAINLINE_UNTESTED.bin` as the active firmware build.
-Generators, extra SELECT editing and USB-host unlocking must remain documentation only; no parallel builder or code
-variant. The original USB application, boot programs, updater and panel payload
-remain unchanged. Read `docs/MAINLINE.md` for the combined memory layout and
+Generators, extra SELECT editing and generic USB-host audio must remain documentation only; no parallel builder or code
+variant. Host MIDI changes the USB application as documented in `docs/USB_HOST_MIDI.md`; boot programs, updater and panel payload remain unchanged. Read `docs/MAINLINE.md` for the combined memory layout and
 `docs/GENERATOR_RESEARCH.md` before proposing future DSP work.
 
 ## Binary identity and patch discipline

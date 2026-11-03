@@ -26,7 +26,9 @@ not sustained or comprehensive validation.
 6. Keep exact image identities and scoped hardware results. TAP rollback worked
    for the observed application failures; other recovery classes are unverified.
 
-Generators, extra SELECT editing and generic USB-host unlocking are excluded.
+Validate [USB-host MIDI](docs/USB_HOST_MIDI.md): prioritize sync output, block incoming host sync, then test notes/controllers/SysEx and routing. Any future routing configuration belongs in the existing GAIN-at-boot system menu.
+
+Generators, extra SELECT editing and generic USB-host audio are excluded.
 Future DSP work needs a separate explicit experiment and evidence about real
 interrupt timing, memory placement and sample transport before reintegration.
 No alternate generator or host-unlock firmware is maintained.

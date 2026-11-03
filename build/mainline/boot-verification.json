@@ -1,12 +1,12 @@
 {
   "status": "pass",
   "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
-  "candidate_sha256": "049273122cc94de5970429d33cefbe8083e3cf455dcecbada17ecc5ecc841284",
+  "candidate_sha256": "adb0c284b24e2813dd2a978471f43997b4e76864396d596f18554831c537c474",
   "hardware_access": false,
   "hardware_recovery_verified": false,
   "checks": [
     {
-      "name": "Only the main application slot differs; boot/updater/panel/USB/trailer preserved",
+      "name": "Only main and USB application slots differ; boot/updater/panel/trailer preserved",
       "status": "pass"
     },
     {
@@ -169,8 +169,8 @@
           "normal_peer_setup_calls": 1,
           "usb_application_handoff": {
             "header": "0x3200000",
-            "decoded_bytes": 224868,
-            "sha256": "fe52cf6c9e8ec8677963b1c4b876ddeaefae5136b7a5f1f49010e3cda9203a6e"
+            "decoded_bytes": 227492,
+            "sha256": "b601ca64f700ecf28241b86cf3c8a90270854845a0d40cb299f3efe3bdd44d05"
           },
           "stub_calls": [
             "0x1000540",

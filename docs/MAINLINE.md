@@ -1,7 +1,7 @@
 # Mainline integration
 
 The only maintained custom firmware combines channel routing, mastering editing, USB-B UAC2 and experimental USB-MIDI 1.0.
-The USB-host unlock is excluded, with its evidence retained as documentation.
+USB-host MIDI is an offline experiment with sync output prioritized and incoming host sync blocked; see [host MIDI](USB_HOST_MIDI.md). Generic host audio remains excluded.
 Generators and their SELECT editor are removed; their findings are in
 [the DSP handoff](GENERATOR_RESEARCH.md).
 The display-marker diagnostic is not part of mainline. Routing now uses scene
@@ -9,9 +9,9 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`049273122cc94de5970429d33cefbe8083e3cf455dcecbada17ecc5ecc841284`.
+`adb0c284b24e2813dd2a978471f43997b4e76864396d596f18554831c537c474`.
 It includes the [mastering-hold fix](../evidence/mastering-hold-20261103/README.md)
-and adds a [USB-MIDI 1.0 descriptor function](USB_MIDI.md) to the existing
+and adds [USB-B MIDI](USB_MIDI.md) and [USB-host MIDI](USB_HOST_MIDI.md) to the existing
 [mastering mode](MASTERING.md) and
 [stereo packet fix](USB_PACKET_FIX.md). The pre-generator image
 `88457445…` was confirmed by the user to boot and pass one iPhone/AUM duplex
@@ -20,8 +20,11 @@ require physical acceptance.
 
 ## Memory and binary integration
 
-These features modify only the main application. The USB application, boot
-programs, updater and panel-controller payload remain byte-identical to stock.
+The intervals below describe the **main processor**. The independent USB processor
+adds 2,624 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
+see [host placement and allocator evidence](USB_HOST_MIDI.md#integration-and-memory).
+
+USB-host MIDI additionally modifies the USB application. Boot programs, updater and panel-controller payload remain byte-identical to stock. The main application is byte-identical to the preceding USB-B MIDI candidate.
 The descriptor, rate and reply buffer in the retired USB-B build occupied
 read-only code SRAM; the combined build fixes that placement before testing.
 
@@ -95,7 +98,9 @@ USB timing or deadline margin.
 5. Test playback, recording without playback, duplex, stop/start and reconnect.
 6. Follow the [MIDI bench checks](USB_MIDI.md#hardware-acceptance) for both ports
    in both directions, including simultaneous audio.
-7. Test stereo/18-channel and mixed alternates, then 44.1/48/96 kHz and sustained
+7. Follow the [host MIDI bench checks](USB_HOST_MIDI.md#verification-and-remaining-work),
+   especially sync output and rejection of incoming host clock/transport.
+8. Test stereo/18-channel and mixed alternates, then 44.1/48/96 kHz and sustained
    audio. Record levels, channel order and any glitches or failures.
 
 The filename retains `UNTESTED` because acceptance is incomplete. The
@@ -105,3 +110,7 @@ iPhone/AUM result; it does not establish every channel, rate or stream mode.
 A separate retirement guard verifies the original sample callback pointer, transport,
 SELECT/pad handlers and SDRAM heap start. Saved retired source IDs 53/54 fall
 back to Auto on normal boot and recall; remaining routes keep their IDs.
+
+## USB-processor MIDI extension
+
+See [host MIDI](USB_HOST_MIDI.md) for its separate SRAM map, ABI, queues and limitations. Exact current sizes and hashes are recorded in `build/mainline/build-report.json` under `host_midi`. Host reports are checked against the USB artifact as well as the complete candidate.

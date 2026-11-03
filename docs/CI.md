@@ -61,11 +61,13 @@ then runs these 17 stages in order:
 17. `subcpu-evidence`
 
 The `arm-mainline` stage includes finite-packet playback/capture and alternate
-transition tests. The final gate also requires `packet-verification.json` to
+transition tests plus the [host MIDI instruction checks](USB_HOST_MIDI.md#verification-and-remaining-work).
+The gate requires host MIDI evidence matching the USB application and inserted host code.
+The final gate also requires `packet-verification.json` to
 pass and identify the actual current application hash.
 
 The final gate requires the complete ordered pipeline and compares the one
-mainline container, decoded application and load-image blob against both current
+mainline container, both decoded applications and both load-image blobs against both current
 reports and actual committed artifact bytes. It also checks the unchanged
 original firmware. All USB/routing verification runs against the combined
 candidate. Historical separate targets are not built or published.

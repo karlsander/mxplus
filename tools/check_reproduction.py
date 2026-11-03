@@ -29,6 +29,8 @@ ARTIFACTS = {
         "container_sha256": "MXPLUS_MAINLINE_UNTESTED.bin",
         "patched_app_sha256": "app_main.mainline.bin",
         "extension_sha256": "mainline.load.bin",
+        "patched_usb_sha256": "app_usb.mainline.bin",
+        "host_extension_sha256": "usb-host.load.bin",
     },
 }
 
@@ -104,12 +106,23 @@ def audit(check_committed: bool = False) -> dict:
         require(candidate.get("hardware_flash_or_audio_functionality_verified") is False,
                 kind + " updater report has an unexpected hardware claim")
         decoded = candidate.get("changed_decoded_components", [])
-        require(len(decoded) == 1 and
-                decoded[0].get("component") == "app_main",
-                kind + " updater report must identify only the intended changed application")
-        require(decoded[0].get("candidate_decoded_sha256") == actual["patched_app_sha256"] and
-                decoded[0].get("original_decoder_matches") is True,
-                kind + " decoded candidate evidence does not match the application artifact")
+        expected_components = {"app_main": actual["patched_app_sha256"], "app_usb": actual["patched_usb_sha256"]}
+        require(len(decoded) == 2 and {d.get("component") for d in decoded} == set(expected_components),
+                kind + " updater report must identify exactly main and USB applications")
+        for d in decoded:
+            require(d.get("candidate_decoded_sha256") == expected_components[d["component"]] and d.get("original_decoder_matches") is True,
+                    kind + " decoded candidate evidence does not match application artifact")
+        host = read(prefix + "host-midi-verification.json")
+        require(host.get("status") == "pass" and host.get("patched_app_sha256") == actual["patched_usb_sha256"],
+                "Host MIDI evidence missing or stale")
+        usb = (ROOT / prefix / names["patched_usb_sha256"]).read_bytes()
+        host_blob = (ROOT / prefix / names["host_extension_sha256"]).read_bytes()
+        host_report = report["host_midi"]
+        require(host_report["patched_app_sha256"] == actual["patched_usb_sha256"] and
+                host_report["extension_sha256"] == actual["host_extension_sha256"] and
+                host_report["code_bytes"] == len(host_blob) and
+                usb[host_report["insert_offset"]:host_report["insert_offset"] + len(host_blob)] == host_blob,
+                "Host artifact, insertion and build accounting disagree")
         application = (ROOT / prefix / names["patched_app_sha256"]).read_bytes()
         extension = (ROOT / prefix / names["extension_sha256"]).read_bytes()
         scatter = report.get("scatter_extension", {})

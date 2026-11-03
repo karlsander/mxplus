@@ -1,7 +1,7 @@
 {
   "status": "pass",
   "checks": [
-    "Only the main application slot differs; boot/updater/panel/USB/trailer preserved",
+    "Only main and USB application slots differ; boot/updater/panel/trailer preserved",
     "Reset selects and decodes updater with both application regions unmapped",
     "Normal-branch negative control faults on missing USB application header",
     "Original main-boot loader decodes complete stock and routing applications",
@@ -10,6 +10,6 @@
     "First and repeated Auto drains produce no routing DSP writes or event posts",
     "Original and routing empty-handler stack depth measured under stated stubs"
   ],
-  "candidate_sha256": "049273122cc94de5970429d33cefbe8083e3cf455dcecbada17ecc5ecc841284",
+  "candidate_sha256": "adb0c284b24e2813dd2a978471f43997b4e76864396d596f18554831c537c474",
   "hardware_recovery_verified": false
 }

@@ -127,11 +127,11 @@ def audit(original: bytes, candidate: bytes, build: dict, applied_address: int) 
     stock_info, candidate_info = inspect_image(original), inspect_image(candidate)
     assert stock_info['update_plan'] == candidate_info['update_plan']
     assert original[:0x80000] == candidate[:0x80000]
-    assert original[0x200000:] == candidate[0x200000:]
-    for name in ('updater', 'subcpu', 'app_usb'):
+    assert original[0x300000:] == candidate[0x300000:]
+    for name in ('updater', 'subcpu'):
         component = COMPONENT_BY_NAME[name]
         assert component_unpacked(original, component) == component_unpacked(candidate, component)
-    checks = [{'name': 'Only the main application slot differs; boot/updater/panel/USB/trailer preserved',
+    checks = [{'name': 'Only main and USB application slots differ; boot/updater/panel/trailer preserved',
                'status': 'pass'}]
 
     # The reset entry and selector execute, with BOTH application regions

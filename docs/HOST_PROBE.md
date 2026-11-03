@@ -1,7 +1,6 @@
 # Retired USB-host unlock research
 
-**Documentation only, retired 2 November 2026.** Mainline leaves the USB-host
-application unchanged. The following records the earlier narrow UAC1 experiment;
+**Documentation only, retired 2 November 2026.** Mainline now includes a separate [MIDI-only host change](USB_HOST_MIDI.md); generic host audio remains disabled. The following records the earlier narrow UAC1 experiment;
 its code, builder and binaries have been removed from the current tree because
 suitable hardware validation is unavailable. No generic USB-host compatibility
 is claimed. Paths and hashes below refer to the historical implementation.

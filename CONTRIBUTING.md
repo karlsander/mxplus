@@ -8,7 +8,7 @@ iPhone/AUM duplex path. Routing/end stops were tested in its predecessor.
 Physical snapshot/restart acceptance and broad USB validation remain open.
 The mastering controls, stereo packet fix and USB-MIDI descriptors have offline evidence only;
 the preceding image's hardware result does not validate these changes.
-Generators, extra SELECT editing and USB-host unlocking are documentation only;
+USB-host MIDI is an offline experiment. Generators, extra SELECT editing and generic USB-host audio are documentation only;
 see [generator handoff](docs/GENERATOR_RESEARCH.md). TAP rollback was observed
 for particular application failures, not every possible failure class.
 
@@ -37,7 +37,7 @@ The reproduction runner executes 17 offline stages and writes `analysis/reproduc
 
 Maintain one builder (`tools/build_firmware.py`), linker layout and artifact
 (`build/mainline/MXPLUS_MAINLINE_UNTESTED.bin`). Do not reintroduce separate
-host/device/routing build targets. The USB-host application stays stock.
+host/device/routing build targets. Host MIDI changes the USB application; generic host audio stays disabled. See `docs/USB_HOST_MIDI.md`.
 
 Describe the observed problem, the original path that produces it, and the intended new behavior. For a parser change, supply the descriptor bytes that trigger it. For a control change, supply the setup request and expected response or stall. For a pump change, describe the start/stop sequence, stream states and required hardware inputs. Prefer one resolved behavior over an unsupported compatibility claim.
 
@@ -83,7 +83,7 @@ A useful report includes:
 
 For USB-B, an interface name appearing in an app is insufficient evidence of audio. A capture-first result needs actual IN packets before OUT traffic; some compatibility paths can open playback behind a recording application's back. Test stereo, 18-channel and both mixed combinations with the selected alternates recorded. The current clock-validity reply does not measure PLL lock.
 
-USB1–4 retain stock behavior. The retired generic-host experiment is documented
+USB1–4 add experimental class MIDI input/output, with incoming host sync blocked. The retired generic-host experiment is documented
 in `docs/HOST_PROBE.md`; it is not an available test image or maintained source target.
 
 Publish only relevant trace data. Remove unrelated device serial numbers, personal file paths, account data or audio that should not be shared, and document any redaction that affects reproduction.

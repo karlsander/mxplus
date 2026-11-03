@@ -203,8 +203,8 @@ def audit(original: bytes, candidate: bytes, build: dict, applied_address: int) 
                 expected = (main[op['source'] - BASE:op['source'] - BASE + op['length']]
                             if op['kind'] == 'copy' else bytes(op['length']))
                 if index == 3:
-                    from uac2_design import prototype_configuration
-                    expected = bytes(op['length'] - 516) + prototype_configuration(preserve_modes=True) + bytes(161)
+                    from usb_midi_descriptors import mainline_configuration
+                    expected = bytes(op['length'] - 596) + mainline_configuration() + bytes(161)
                 assert machine.read(op['destination'], op['length']) == expected
         state = symbols['mx1_route_state']
         assert machine.read(state, 11) == bytes(11)
@@ -327,7 +327,7 @@ def main():
         assert len(applied) == 1 and applied[0]['st_size'] == 11
         applied_address = applied[0]['st_value']
         assert applied_address == 0x0101726f
-        assert build["writable_state"] == {"start": 0x01017264, "size": 540, "end_exclusive": 0x01017480, "startup_zero_length_offset": 0x108}
+        assert build["writable_state"] == {"start": 0x01017264, "size": 620, "end_exclusive": 0x010174d0, "startup_zero_length_offset": 0x108}
     report = audit(args.firmware.read_bytes(),
         (args.build / 'MXPLUS_MAINLINE_UNTESTED.bin').read_bytes(),
         build, applied_address)

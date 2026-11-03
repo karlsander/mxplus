@@ -1,15 +1,15 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "56d7b7c8a3259e37c6e1a276c377e3dcecbed4a4fa84088754f7426d52a7c1b6",
-  "candidate_container_sha256": "1ed56e3569df508f8d099eb9d162ff9c37d8915a895ef7d2cc64696662e221cf",
-  "extension_sha256": "859b0ffc16473fcefcce41c53029821f1013c206f8b00d32203fbbc0e166be68",
+  "patched_app_sha256": "d122894dd8448e943dabe0e5c740f9c34571d6af7ffa766056a2e944295af14d",
+  "candidate_container_sha256": "049273122cc94de5970429d33cefbe8083e3cf455dcecbada17ecc5ecc841284",
+  "extension_sha256": "fc4ed00c31546c74a84dbaece0ac9fda8fad28a3c21f19038e123617b945bbeb",
   "groups": [
     {
       "name": "Every application change matches recorded guarded patches and scatter insertion",
       "status": "pass",
       "patch_sites": 17,
-      "extension_bytes": 2732,
+      "extension_bytes": 2812,
       "sram_bytes_remaining": 20
     },
     {
@@ -87,7 +87,7 @@
       "code_protection": "0x01001000..0x0100ffff enforced in all UI/audio instruction cases",
       "state_interval": [
         "0x1017264",
-        "0x1017480"
+        "0x10174d0"
       ]
     },
     {
@@ -101,8 +101,8 @@
         "0x01020000",
         "0x01028000"
       ],
-      "state_reservation_bytes": 540,
-      "descriptor_initialized_bytes": 356,
+      "state_reservation_bytes": 620,
+      "descriptor_initialized_bytes": 436,
       "patterns": [
         85,
         170
@@ -143,7 +143,7 @@
     {
       "name": "Actual startup copies extension and preserves existing initialized data",
       "status": "pass",
-      "extension_bytes": 2732
+      "extension_bytes": 2812
     },
     {
       "name": "Patched initializer veneer, original registration, and live rate descriptors",
@@ -157,7 +157,7 @@
             504,
             56
           ],
-          "instructions": 1551
+          "instructions": 1645
         },
         {
           "rate": 48000,
@@ -167,7 +167,7 @@
             576,
             64
           ],
-          "instructions": 1558
+          "instructions": 1652
         },
         {
           "rate": 96000,
@@ -177,7 +177,7 @@
             1008,
             112
           ],
-          "instructions": 1555
+          "instructions": 1649
         }
       ]
     },
@@ -225,7 +225,7 @@
           "speed": "high",
           "descriptor_type": 2,
           "requested_length": 1000,
-          "returned_length": 355
+          "returned_length": 435
         },
         {
           "speed": "high",
@@ -267,56 +267,107 @@
           "speed": "full",
           "descriptor_type": 7,
           "requested_length": 1000,
-          "returned_length": 355
+          "returned_length": 435
         }
       ],
       "full_speed_limit": "The unchanged full-speed configuration has no audio endpoints"
     },
     {
-      "name": "Original descriptor walker produces identical endpoint hardware tables",
+      "name": "Original descriptor walker preserves audio tables and applies only reviewed MIDI changes",
       "status": "pass",
       "cases": [
         {
           "rate": 44100,
           "speed": "high",
-          "table_sha256": "db195904df55d2e2bf8fca03558735a1d51bffe1f46cd34dfe2ac9c4bf7ec9c4",
-          "interface_register_hex": "34230004",
-          "register_writes_compared": 38
+          "table_sha256": "5c44beed56363f555d09072568c2be297d3bed749e2c76880c7c7d910e2f952c",
+          "interface_register_hex": "34530005",
+          "reviewed_midi_changes": {
+            "0x40010208": [
+              "0x100018c3",
+              "0x100020c3"
+            ],
+            "0x4001020c": [
+              "0x100098e3",
+              "0x0"
+            ],
+            "0x40010210": [
+              "0x100018d4",
+              "0x100020d4"
+            ],
+            "0x40010218": [
+              "0x100098f5",
+              "0x0"
+            ]
+          }
         },
         {
           "rate": 44100,
           "speed": "full",
           "table_sha256": "38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca",
           "interface_register_hex": "14110004",
-          "register_writes_compared": 30
+          "reviewed_midi_changes": {}
         },
         {
           "rate": 48000,
           "speed": "high",
-          "table_sha256": "bea96fc6daed235b9d0b76b0b7fc6a4c9f7d4d72e16e04509b6bf2cce064d182",
-          "interface_register_hex": "34230004",
-          "register_writes_compared": 38
+          "table_sha256": "cfd912160e96b9cc34d5d8a6df0577cedcfdf1debb6ba2ffe82d5a183d7350eb",
+          "interface_register_hex": "34530005",
+          "reviewed_midi_changes": {
+            "0x40010208": [
+              "0x100018c3",
+              "0x100020c3"
+            ],
+            "0x4001020c": [
+              "0x100098e3",
+              "0x0"
+            ],
+            "0x40010210": [
+              "0x100018d4",
+              "0x100020d4"
+            ],
+            "0x40010218": [
+              "0x100098f5",
+              "0x0"
+            ]
+          }
         },
         {
           "rate": 48000,
           "speed": "full",
           "table_sha256": "38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca",
           "interface_register_hex": "14110004",
-          "register_writes_compared": 30
+          "reviewed_midi_changes": {}
         },
         {
           "rate": 96000,
           "speed": "high",
-          "table_sha256": "c6b5321b2b2c0f8202bef36110959c1f45bacd6644ccce662913939dfd30f594",
-          "interface_register_hex": "34230004",
-          "register_writes_compared": 38
+          "table_sha256": "b3087c696882baf66c0d68a51ebfb535c10912d390820108f1538b633fe2964f",
+          "interface_register_hex": "34530005",
+          "reviewed_midi_changes": {
+            "0x40010208": [
+              "0x100018c3",
+              "0x100020c3"
+            ],
+            "0x4001020c": [
+              "0x100098e3",
+              "0x0"
+            ],
+            "0x40010210": [
+              "0x100018d4",
+              "0x100020d4"
+            ],
+            "0x40010218": [
+              "0x100098f5",
+              "0x0"
+            ]
+          }
         },
         {
           "rate": 96000,
           "speed": "full",
           "table_sha256": "38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca",
           "interface_register_hex": "14110004",
-          "register_writes_compared": 30
+          "reviewed_midi_changes": {}
         }
       ]
     },
@@ -805,6 +856,455 @@
       ]
     },
     {
+      "name": "Original MIDI routines remain byte-identical after startup relocation",
+      "status": "pass",
+      "routines": [
+        {
+          "component": "app_main",
+          "decoded_offset": "0xd0c24",
+          "runtime": "0x1000398",
+          "bytes": 154,
+          "sha256": "328f667e211df518e6c2361c885c8c564f3b1978a6edbbc6132ec06c12c1ca35"
+        },
+        {
+          "component": "app_main",
+          "decoded_offset": "0xd0df2",
+          "runtime": "0x1000566",
+          "bytes": 284,
+          "sha256": "92e1231a9128ae20a5cbe1b5b1fe865cbff64d264c65b8065a1e10fe3058f575"
+        },
+        {
+          "component": "app_main",
+          "decoded_offset": "0xd0f50",
+          "runtime": "0x10006c4",
+          "bytes": 418,
+          "sha256": "c64f273c4ad9ac9d8369e2e527a5702b5e96a0da1968a8b1a45eb24c2fa4f70a"
+        },
+        {
+          "component": "app_main",
+          "decoded_offset": "0xd1c20",
+          "runtime": "0x1001394",
+          "bytes": 320,
+          "sha256": "0deeaee148c87b1152ea1d28fd77a73fa387092c0b2e347a3ecdf1f62d32c77e"
+        },
+        {
+          "component": "app_main",
+          "decoded_offset": "0xd204e",
+          "runtime": "0x10017c2",
+          "bytes": 126,
+          "sha256": "250daaa00da4aacfef29e6773051ca2b3a856ceec183dd67be6927ea91ffbcb5"
+        },
+        {
+          "component": "app_main",
+          "decoded_offset": "0xdeefc",
+          "runtime": "0x100e670",
+          "bytes": 20,
+          "sha256": "d22af2905d0b76693520eda09bd1d7eda803861715625e7b1b678e20b60a9c8b"
+        }
+      ]
+    },
+    {
+      "name": "Original packetizer emits USB-MIDI 1.0 CIN/cable records",
+      "status": "pass",
+      "cases": [
+        {
+          "name": "note_on",
+          "cable": 0,
+          "midi_hex": "903c64",
+          "usb_hex": "09903c64"
+        },
+        {
+          "name": "note_off",
+          "cable": 0,
+          "midi_hex": "803c00",
+          "usb_hex": "08803c00"
+        },
+        {
+          "name": "poly_pressure",
+          "cable": 0,
+          "midi_hex": "a03c40",
+          "usb_hex": "0aa03c40"
+        },
+        {
+          "name": "cc",
+          "cable": 0,
+          "midi_hex": "b00764",
+          "usb_hex": "0bb00764"
+        },
+        {
+          "name": "program",
+          "cable": 0,
+          "midi_hex": "c005",
+          "usb_hex": "0cc00500"
+        },
+        {
+          "name": "pressure",
+          "cable": 0,
+          "midi_hex": "d040",
+          "usb_hex": "0dd04000"
+        },
+        {
+          "name": "bend",
+          "cable": 0,
+          "midi_hex": "e00040",
+          "usb_hex": "0ee00040"
+        },
+        {
+          "name": "quarter_frame",
+          "cable": 0,
+          "midi_hex": "f110",
+          "usb_hex": "02f11000"
+        },
+        {
+          "name": "song_position",
+          "cable": 0,
+          "midi_hex": "f20102",
+          "usb_hex": "03f20102"
+        },
+        {
+          "name": "song_select",
+          "cable": 0,
+          "midi_hex": "f301",
+          "usb_hex": "02f30100"
+        },
+        {
+          "name": "tune",
+          "cable": 0,
+          "midi_hex": "f6",
+          "usb_hex": "05f60000"
+        },
+        {
+          "name": "clock",
+          "cable": 0,
+          "midi_hex": "f8",
+          "usb_hex": "0ff80000"
+        },
+        {
+          "name": "start",
+          "cable": 0,
+          "midi_hex": "fa",
+          "usb_hex": "0ffa0000"
+        },
+        {
+          "name": "continue",
+          "cable": 0,
+          "midi_hex": "fb",
+          "usb_hex": "0ffb0000"
+        },
+        {
+          "name": "stop",
+          "cable": 0,
+          "midi_hex": "fc",
+          "usb_hex": "0ffc0000"
+        },
+        {
+          "name": "active_sensing_filtered_by_stock_packetizer",
+          "cable": 0,
+          "midi_hex": "fe",
+          "usb_hex": ""
+        },
+        {
+          "name": "reset",
+          "cable": 0,
+          "midi_hex": "ff",
+          "usb_hex": "0fff0000"
+        },
+        {
+          "name": "sysex_end_1",
+          "cable": 0,
+          "midi_hex": "f04101f7",
+          "usb_hex": "04f0410105f70000"
+        },
+        {
+          "name": "sysex_end_2",
+          "cable": 0,
+          "midi_hex": "f0f7",
+          "usb_hex": "06f0f700"
+        },
+        {
+          "name": "sysex_end_3",
+          "cable": 0,
+          "midi_hex": "f041f7",
+          "usb_hex": "07f041f7"
+        },
+        {
+          "name": "sysex_multiframe",
+          "cable": 0,
+          "midi_hex": "f041010203040506f7",
+          "usb_hex": "04f0410104020304070506f7"
+        },
+        {
+          "name": "note_on",
+          "cable": 1,
+          "midi_hex": "903c64",
+          "usb_hex": "19903c64"
+        },
+        {
+          "name": "note_off",
+          "cable": 1,
+          "midi_hex": "803c00",
+          "usb_hex": "18803c00"
+        },
+        {
+          "name": "poly_pressure",
+          "cable": 1,
+          "midi_hex": "a03c40",
+          "usb_hex": "1aa03c40"
+        },
+        {
+          "name": "cc",
+          "cable": 1,
+          "midi_hex": "b00764",
+          "usb_hex": "1bb00764"
+        },
+        {
+          "name": "program",
+          "cable": 1,
+          "midi_hex": "c005",
+          "usb_hex": "1cc00500"
+        },
+        {
+          "name": "pressure",
+          "cable": 1,
+          "midi_hex": "d040",
+          "usb_hex": "1dd04000"
+        },
+        {
+          "name": "bend",
+          "cable": 1,
+          "midi_hex": "e00040",
+          "usb_hex": "1ee00040"
+        },
+        {
+          "name": "quarter_frame",
+          "cable": 1,
+          "midi_hex": "f110",
+          "usb_hex": "12f11000"
+        },
+        {
+          "name": "song_position",
+          "cable": 1,
+          "midi_hex": "f20102",
+          "usb_hex": "13f20102"
+        },
+        {
+          "name": "song_select",
+          "cable": 1,
+          "midi_hex": "f301",
+          "usb_hex": "12f30100"
+        },
+        {
+          "name": "tune",
+          "cable": 1,
+          "midi_hex": "f6",
+          "usb_hex": "15f60000"
+        },
+        {
+          "name": "clock",
+          "cable": 1,
+          "midi_hex": "f8",
+          "usb_hex": "1ff80000"
+        },
+        {
+          "name": "start",
+          "cable": 1,
+          "midi_hex": "fa",
+          "usb_hex": "1ffa0000"
+        },
+        {
+          "name": "continue",
+          "cable": 1,
+          "midi_hex": "fb",
+          "usb_hex": "1ffb0000"
+        },
+        {
+          "name": "stop",
+          "cable": 1,
+          "midi_hex": "fc",
+          "usb_hex": "1ffc0000"
+        },
+        {
+          "name": "active_sensing_filtered_by_stock_packetizer",
+          "cable": 1,
+          "midi_hex": "fe",
+          "usb_hex": ""
+        },
+        {
+          "name": "reset",
+          "cable": 1,
+          "midi_hex": "ff",
+          "usb_hex": "1fff0000"
+        },
+        {
+          "name": "sysex_end_1",
+          "cable": 1,
+          "midi_hex": "f04101f7",
+          "usb_hex": "14f0410115f70000"
+        },
+        {
+          "name": "sysex_end_2",
+          "cable": 1,
+          "midi_hex": "f0f7",
+          "usb_hex": "16f0f700"
+        },
+        {
+          "name": "sysex_end_3",
+          "cable": 1,
+          "midi_hex": "f041f7",
+          "usb_hex": "17f041f7"
+        },
+        {
+          "name": "sysex_multiframe",
+          "cable": 1,
+          "midi_hex": "f041010203040506f7",
+          "usb_hex": "14f0410114020304170506f7"
+        }
+      ]
+    },
+    {
+      "name": "Finite bulk FIFO words pass unchanged in both directions",
+      "status": "pass",
+      "cases": [
+        {
+          "image": "stock",
+          "bytes": 0,
+          "rx_words": 0,
+          "tx_words": 0
+        },
+        {
+          "image": "candidate",
+          "bytes": 0,
+          "rx_words": 0,
+          "tx_words": 0
+        },
+        {
+          "image": "stock",
+          "bytes": 4,
+          "rx_words": 1,
+          "tx_words": 1
+        },
+        {
+          "image": "candidate",
+          "bytes": 4,
+          "rx_words": 1,
+          "tx_words": 1
+        },
+        {
+          "image": "stock",
+          "bytes": 8,
+          "rx_words": 2,
+          "tx_words": 2
+        },
+        {
+          "image": "candidate",
+          "bytes": 8,
+          "rx_words": 2,
+          "tx_words": 2
+        },
+        {
+          "image": "stock",
+          "bytes": 64,
+          "rx_words": 16,
+          "tx_words": 16
+        },
+        {
+          "image": "candidate",
+          "bytes": 64,
+          "rx_words": 16,
+          "tx_words": 16
+        },
+        {
+          "image": "stock",
+          "bytes": 508,
+          "rx_words": 127,
+          "tx_words": 127
+        },
+        {
+          "image": "candidate",
+          "bytes": 508,
+          "rx_words": 127,
+          "tx_words": 127
+        },
+        {
+          "image": "stock",
+          "bytes": 512,
+          "rx_words": 128,
+          "tx_words": 128
+        },
+        {
+          "image": "candidate",
+          "bytes": 512,
+          "rx_words": 128,
+          "tx_words": 128
+        }
+      ]
+    },
+    {
+      "name": "Single and batch bulk sends remain independent of audio alternates",
+      "status": "pass",
+      "audio_alternates": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          1
+        ],
+        [
+          0,
+          2
+        ],
+        [
+          1,
+          0
+        ],
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "midi_alternates": "IF3/IF4 both zero; removed vendor interrupt alternate is never selected"
+    },
+    {
+      "name": "Original USB-B cable dispatcher selects the existing two destinations",
+      "status": "pass",
+      "cable_0": "0x2000671c (source ID 1)",
+      "cable_1": "0x20006938 (source ID 2)",
+      "records": 46
+    },
+    {
+      "name": "Separate USB-MIDI descriptor graph has two connected cable pairs",
+      "status": "pass",
+      "interfaces": [
+        3,
+        4
+      ],
+      "ports_per_direction": 2,
+      "bulk_endpoints": [
+        "0x03",
+        "0x84"
+      ],
+      "configuration_bytes": 435,
+      "midi_class_bytes": 67
+    },
+    {
       "name": "USB clock requests and routing edits coexist in the same protected-memory machine",
       "status": "pass",
       "rates": [
@@ -1284,6 +1784,7 @@
     "ui": "ui-verification.json",
     "audio": "audio-verification.json",
     "usb_packets": "packet-verification.json",
+    "usb_midi": "midi-verification.json",
     "hardware_initialization": "hardware-audit.json"
   },
   "limits": [

@@ -56,7 +56,7 @@
       "code_protection": "0x01001000..0x0100ffff enforced in all UI/audio instruction cases",
       "state_interval": [
         "0x1017264",
-        "0x1017480"
+        "0x10174d0"
       ]
     },
     {
@@ -70,8 +70,8 @@
         "0x01020000",
         "0x01028000"
       ],
-      "state_reservation_bytes": 540,
-      "descriptor_initialized_bytes": 356,
+      "state_reservation_bytes": 620,
+      "descriptor_initialized_bytes": 436,
       "patterns": [
         85,
         170

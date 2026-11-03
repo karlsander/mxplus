@@ -1,4 +1,4 @@
-/* MX-1 normal USB-B UAC2 enumeration/control/stream-start experiment.
+/* MX-1 normal USB-B UAC2 and USB-MIDI enumeration experiment.
  * Newly written source. Not hardware validated; see docs/DEVICE_PROBE.md.
  */
 #include <stdint.h>
@@ -7,7 +7,7 @@
 extern void mx1_uac2_set_rate(uint32_t rate);
 extern int mx1_uac2_start(void);
 
-/* Generated from a checked UAC2 descriptor graph. Stored in the writable mainline reservation
+/* Generated from checked UAC2 and USB-MIDI descriptor graphs. Stored in the writable mainline reservation
  * and writable so endpoint packet sizes can follow the existing boot setting. */
 __attribute__((section(".usb_data")))
 uint8_t mx1_uac2_configuration[] = MX1_UAC2_CONFIGURATION_BYTES;

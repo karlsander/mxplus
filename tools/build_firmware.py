@@ -70,8 +70,8 @@ def build(firmware: Path, out: Path) -> dict:
                ZIG_LOCAL_CACHE_DIR=str(cache.resolve()))
     sources = [ROOT / "patches" / p for p in (
         "channel_routing_audio.c", "channel_routing_ui.c", "channel_routing_ui.S", "usb_audio.c", "usb_playback.S", "mastering_ui.c", "mastering_ui.S")]
-    from uac2_design import prototype_configuration
-    config = prototype_configuration(preserve_modes=True)
+    from usb_midi_descriptors import mainline_configuration, validate_configuration
+    config = mainline_configuration()
     (out / "uac2_configuration.h").write_text("#define MX1_UAC2_CONFIGURATION_BYTES {" +
         ",".join(hex(b) for b in config) + "}\n")
     sources.append(ROOT / "sources/hardware/uac2_adapter.c")
@@ -116,9 +116,9 @@ def build(firmware: Path, out: Path) -> dict:
             raise FormatError("Unexpected writable routing state reservation")
         usb_data = ef.get_section_by_name(".usb_data")
         usb_state = ef.get_section_by_name(".usb_state")
-        if (usb_data["sh_addr"] != 0x0101727c or usb_data["sh_size"] != 356 or
+        if (usb_data["sh_addr"] != 0x0101727c or usb_data["sh_size"] != 436 or
             usb_data["sh_type"] != "SHT_PROGBITS" or usb_data["sh_flags"] & 7 != 3 or usb_data.data() != config + b'\0' or
-            usb_state["sh_addr"] != 0x010173e0 or usb_state["sh_size"] != 20 or
+            usb_state["sh_addr"] != 0x01017430 or usb_state["sh_size"] != 20 or
             usb_state["sh_type"] != "SHT_NOBITS" or usb_state["sh_flags"] & 7 != 3):
             raise FormatError("Unexpected USB writable sections")
         descriptor_blob = usb_data.data()
@@ -140,7 +140,7 @@ def build(firmware: Path, out: Path) -> dict:
                 raise FormatError("Unexpected mastering code section: " + name)
             master_sections[name] = section.data()
         master_state = ef.get_section_by_name('.master_state')
-        if (master_state['sh_addr'] != 0x010173f4 or master_state['sh_size'] != 140 or
+        if (master_state['sh_addr'] != 0x01017444 or master_state['sh_size'] != 140 or
             master_state['sh_type'] != 'SHT_NOBITS' or master_state['sh_flags'] & 7 != 3):
             raise FormatError('Unexpected mastering state')
         for name in required:
@@ -164,10 +164,10 @@ def build(firmware: Path, out: Path) -> dict:
                 raise FormatError("Unexpected routing state object: " + name)
         for name, address, length, section in (
             ("route_ready", 0x0101727a, 1, ".route_state"),
-            ("mx1_uac2_rate", 0x010173e0, 4, ".usb_state"),
-            ("mx1_uac2_reply", 0x010173e4, 14, ".usb_state"),
-            ("mx1_usb_playback_alt", 0x010173f2, 1, ".usb_state"),
-            ("mx1_uac2_configuration", 0x0101727c, 355, ".usb_data")):
+            ("mx1_uac2_rate", 0x01017430, 4, ".usb_state"),
+            ("mx1_uac2_reply", 0x01017434, 14, ".usb_state"),
+            ("mx1_usb_playback_alt", 0x01017442, 1, ".usb_state"),
+            ("mx1_uac2_configuration", 0x0101727c, 435, ".usb_data")):
             objects = table.get_symbol_by_name(name) or []
             if (len(objects) != 1 or objects[0]["st_value"] != address or
                 objects[0]["st_size"] != length or
@@ -199,12 +199,12 @@ def build(firmware: Path, out: Path) -> dict:
                "length": 0x71dc}:
         raise FormatError("Unexpected original writable SRAM BSS")
     exact_patch(modified, 0x108, struct.pack("<I", 0x71dc),
-                struct.pack("<I", 0x73f8), changes,
-                "Zero 540-byte mainline writable state reservation after original writable SRAM BSS")
+                struct.pack("<I", 0x7448), changes,
+                "Zero 620-byte mainline writable state reservation after original writable SRAM BSS")
     exact_patch(modified, 0x10c, struct.pack('<I', 0x01020000), struct.pack('<I', 0x0101727c), changes,
                 "Repurpose zero-length startup copy for writable USB descriptor")
-    exact_patch(modified, 0x110, bytes(4), struct.pack('<I', 356), changes,
-                "Initialize 356-byte USB descriptor storage after writable BSS clear")
+    exact_patch(modified, 0x110, bytes(4), struct.pack('<I', 436), changes,
+                "Initialize 436-byte USB descriptor storage after writable BSS clear")
     exact_patch(modified, 0xd980, bytes.fromhex('10b500f01ff80d48'),
                 absolute_jump(0x6000d980, symbols['mx1_uac2_initialize']), changes, "USB-B UAC2 initializer")
     exact_patch(modified, 0xb4afc, struct.pack('<I', 0x600b499c),
@@ -247,15 +247,24 @@ def build(firmware: Path, out: Path) -> dict:
         "sources": {str(p.relative_to(ROOT)): sha256(p.read_bytes()) for p in [
             *sources, ROOT / "patches/channel_routing.h", ROOT / "patches/mainline.ld", ROOT / "patches/mastering_sites.json",
             Path(__file__).resolve(), ROOT / "tools/routing_audio_patch.py",
-            ROOT / "tools/firmware_patch.py", ROOT / "tools/uac2_design.py", ROOT / "tools/usb_playback_patch.py"]},
+            ROOT / "tools/firmware_patch.py", ROOT / "tools/uac2_design.py", ROOT / "tools/usb_midi_descriptors.py", ROOT / "tools/usb_playback_patch.py"]},
         "scatter_extension": scatter, "patches": changes,
-        "writable_state": {"start": 0x01017264, "size": 540, "end_exclusive": 0x01017480, "startup_zero_length_offset": 0x108},
+        "writable_state": {"start": 0x01017264, "size": 620, "end_exclusive": 0x010174d0, "startup_zero_length_offset": 0x108},
         "mastering_ui": {"placement": "Reclaimed original mixer lookup; no heap or additional code-memory reservation",
             "sections": {name: {"runtime": 0x60000000+site['offset'], "capacity": site['size'],
                 "used": len(master_sections[name])} for name, site in sites.items()},
             "preserved_literal": "0x6001de08", "preserved_shared_return": "0x6001e5ec",
-            "state_start": 0x010173f4, "state_size": 140},
-        "audio_routing": audio, "usb_playback": playback_evidence, "container": container,
+            "state_start": 0x01017444, "state_size": 140},
+        "audio_routing": audio, "usb_playback": playback_evidence,
+        "usb_midi": {**validate_configuration(config),
+            "original_descriptor_component": "app_main", "original_descriptor_offset": "0xb4a6a",
+            "original_descriptor_runtime": "0x600b4a6a",
+            "original_descriptor_hex": original[0xb4a6a:0xb4a9e].hex(),
+            "new_configuration_runtime": hex(symbols['mx1_uac2_configuration']),
+            "new_midi_offset_in_configuration": 303, "new_midi_descriptor_hex": config[303:].hex(),
+            "transport": "Original bulk MIDI instructions unchanged; no new callback or ABI",
+            "full_speed": "Unchanged empty vendor configuration; high-speed MIDI only"},
+        "container": container,
         "sram_bytes_remaining": LIMIT - ENTRY - scatter['code_length'],
         "hardware_access": False,
         "limits": [

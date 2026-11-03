@@ -209,19 +209,29 @@ def verify(original, patched, build):
                 assert len(actual) == 10 and actual[4:7] == bytes.fromhex('ef0201')
             else:
                 expect_new = (kind == 2 and speed == 'high') or (kind == 7 and speed == 'full')
-                total = 355 if expect_new else 45
+                total = 435 if expect_new else 45
                 assert len(actual) == min(length, total)
                 assert actual[1] == kind
                 assert struct.unpack_from('<H', actual, 2)[0] == total
-                assert actual[4] == 4
+                assert actual[4] == (5 if expect_new else 4)
+                if expect_new and len(actual) == total:
+                    from usb_midi_descriptors import validate_configuration
+                    validate_configuration(actual)
             descriptor_cases.append({'speed': speed, 'descriptor_type': kind,
                                      'requested_length': length, 'returned_length': len(actual)})
     passed('Original GET_DESCRIPTOR and other-speed paths use new live descriptor',
            cases=descriptor_cases,
            full_speed_limit='The unchanged full-speed configuration has no audio endpoints')
 
-    # Hardware table writes should be identical despite new UAC2/IAD blocks.
+    # Compare complete tables; enumerate the four intentional MIDI changes.
+    # All audio entries and every other register write must remain identical.
     tables = []
+    midi_changes = {
+        0x40010208: (0x100018c3, 0x100020c3), # EP3 bulk OUT: IF3 -> IF4
+        0x4001020c: (0x100098e3, 0),          # Retire EP3 interrupt alternate
+        0x40010210: (0x100018d4, 0x100020d4), # EP4 bulk IN: IF3 -> IF4
+        0x40010218: (0x100098f5, 0),          # Retire EP5 interrupt alternate
+    }
     for rate in (44100, 48000, 96000):
         for speed in ('high', 'full'):
             old = DeviceMachine(original)
@@ -230,14 +240,25 @@ def verify(original, patched, build):
             for m in (old, new):
                 m.write(USBF + 8, u32(0 if speed == 'high' else 0x10000))
                 m.call(0x6003d026)
-            assert old.descriptor_writes == new.descriptor_writes
-            assert old.read(USBF + 0x200, 0x80) == new.read(USBF + 0x200, 0x80)
-            assert old.read(USBF + 0xfc, 4) == new.read(USBF + 0xfc, 4)
+            expected = bytearray(old.read(USBF + 0x200, 0x80))
+            changes = midi_changes if speed == 'high' else {}
+            for address, (before, after) in changes.items():
+                assert old.read(address, 4) == u32(before)
+                expected[address - USBF - 0x200:address - USBF - 0x200 + 4] = u32(after)
+            assert new.read(USBF + 0x200, 0x80) == expected
+            assert [w for w in old.descriptor_writes if w[0] not in changes] == [
+                w for w in new.descriptor_writes if w[0] not in changes]
+            if speed == 'high':
+                assert old.read(USBF + 0xfc, 4) == u32(0x04002334)
+                assert new.read(USBF + 0xfc, 4) == u32(0x05005334)
+            else:
+                assert old.descriptor_writes == new.descriptor_writes
+                assert old.read(USBF + 0xfc, 4) == new.read(USBF + 0xfc, 4)
             tables.append({'rate': rate, 'speed': speed,
                            'table_sha256': sha256(new.read(USBF + 0x200, 0x80)),
                            'interface_register_hex': new.read(USBF + 0xfc, 4).hex(),
-                           'register_writes_compared': len(new.descriptor_writes)})
-    passed('Original descriptor walker produces identical endpoint hardware tables', cases=tables)
+                           'reviewed_midi_changes': {hex(a): [hex(v) for v in pair] for a,pair in changes.items()}})
+    passed('Original descriptor walker preserves audio tables and applies only reviewed MIDI changes', cases=tables)
 
     failure_cases = []
     for label, failures, rate in (

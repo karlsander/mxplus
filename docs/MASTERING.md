@@ -89,7 +89,7 @@ startup map are documented in [MAINLINE.md](MAINLINE.md).
 | `0xf5d8` | `0x6000f5d8` | Registered event callback wraps the existing routing callback |
 | `0xf5dc` | `0x6000f5dc` | Registered periodic callback wraps original `0x60010b76` |
 | `0x1484a` | `0x6001484a` | Full-redraw entry veneer; trampoline reproduces displaced prologue and both conditional destinations |
-| `0x108` | `0x60000108` | Extend startup BSS clear for 140 bytes of state at `0x010173f4..0x01017480` |
+| `0x108` | `0x60000108` | Extend startup BSS clear for 140 bytes of state at `0x01017444..0x010174d0` |
 
 Original mixer lookup inputs `0..0x106` yield `n + 0x10f` below `0x73`, then
 `n + 0x114`. The verifier executes the original and replacement for all 263
@@ -136,8 +136,9 @@ blink rendering is `0x60014488` (decoded offsets subtract `0x60000000`).
 [The build report](../build/mainline/build-report.json) records exact old/new
 bytes, veneers, exported targets, section usage, relocation literals and all
 component checksums. [The guarded sites](../patches/mastering_sites.json) contain
-the exact original lookup bytes. The existing SRAM code/load block is unchanged;
-total writable reservation grows from 400 to 540 bytes inside stock MPU region 2.
+the exact original lookup bytes. Mastering uses the reclaimed resident lookup
+space and adds 140 bytes of writable state. With the [MIDI descriptor](USB_MIDI.md),
+the total reservation is now 620 bytes inside stock MPU region 2.
 No heap, MPU, USB application, boot program, updater or panel payload changes.
 
 ## Verification and limits

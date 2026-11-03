@@ -19,7 +19,7 @@
     "Original request dispatch reaches compiled UAC2 handler with correct replies",
     "Compiled rejection path executes original EP0 stall routine",
     "Original GET_DESCRIPTOR and other-speed paths use new live descriptor",
-    "Original descriptor walker produces identical endpoint hardware tables",
+    "Original descriptor walker preserves audio tables and applies only reviewed MIDI changes",
     "Initializer returns failure for invalid rates and failed stock stages",
     "Original backup initializer retains descriptor and callback tables",
     "Finite stereo/18-channel packets of 1..14 complete frames preserve samples and re-arm",
@@ -29,6 +29,12 @@
     "Cold startup, capture without OUT, and playback restart preserve priming and sample order",
     "Stop/restart and 2/18-channel switches discard old FIFO/tail format without overreading",
     "Zero/partial-frame packet lengths fail silent before FIFO access",
+    "Original MIDI routines remain byte-identical after startup relocation",
+    "Original packetizer emits USB-MIDI 1.0 CIN/cable records",
+    "Finite bulk FIFO words pass unchanged in both directions",
+    "Single and batch bulk sends remain independent of audio alternates",
+    "Original USB-B cable dispatcher selects the existing two destinations",
+    "Separate USB-MIDI descriptor graph has two connected cable pairs",
     "USB clock requests and routing edits coexist in the same protected-memory machine",
     "Original storage registration remains identical; existing reserved fields only",
     "All 64 scene saves/recalls retain routes and all unrelated scene bytes",
@@ -70,5 +76,5 @@
     "Independent factory graph audit matches all 18 raw PC and 18 serial read bindings",
     "Original native input gates and connection callbacks distinguish native and PC paths"
   ],
-  "patched_app_sha256": "56d7b7c8a3259e37c6e1a276c377e3dcecbed4a4fa84088754f7426d52a7c1b6"
+  "patched_app_sha256": "d122894dd8448e943dabe0e5c740f9c34571d6af7ffa766056a2e944295af14d"
 }

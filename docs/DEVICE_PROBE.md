@@ -14,7 +14,7 @@ mainline uses separate writable descriptor/rate/reply storage. Historical build
 identities are in `evidence/retired-probes-20261102/`.
 
 The [adversarial review](ADVERSARIAL_REVIEW.md) reproduced a stereo playback
-accounting defect in that image. The current `dacb12ae…` candidate contains
+accounting defect in that image. Mainline contains
 the [packet fix](USB_PACKET_FIX.md), with finite-packet and alternate-transition
 instruction tests. This changed image has not been tested on hardware.
 
@@ -40,8 +40,9 @@ shared fixed clock, plus the existing two audio streaming interfaces:
 
 The original four-byte sample containers, 24-bit resolution, endpoint
 addresses, alternate numbers, and high-speed service interval remain. The
-original vendor MIDI interface 3 is retained byte for byte. This candidate
-does not make MIDI class compliant.
+current mainline adds a separate USB-MIDI 1.0 control/streaming collection on
+interfaces 3/4, retaining the bulk endpoints and two cables. This has offline
+evidence only; see [USB MIDI](USB_MIDI.md).
 
 The new read-only clock entity reports 44,100, 48,000, or 96,000 Hz according
 to the existing mixer setting. It handles CUR, RANGE, the two-byte RANGE
@@ -79,10 +80,9 @@ normal initializer entry point. Eight groups pass:
    routine, reset the control state, and clear the setup packet.
 5. The original descriptor dispatcher returns the new device/configuration
    data and correctly follows high-speed/full-speed and other-speed pointers.
-6. The original descriptor walker produces **identical endpoint hardware
-   table writes** for the stock configuration and new UAC2 configuration at
-   three rates and both bus-speed selections. This includes the retained MIDI
-   endpoints and alternate settings.
+6. The original descriptor walker preserves all audio endpoint table writes at
+   three rates. High-speed MIDI changes are enumerated in [USB MIDI](USB_MIDI.md);
+   full-speed tables remain identical.
 7. The compiled initializer reports failure for invalid rates and injected
    failures in each stock initialization stage.
 8. The original backup initializer produces the same descriptor and callback

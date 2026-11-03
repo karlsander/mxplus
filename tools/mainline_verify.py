@@ -29,7 +29,7 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
     assert cut == 0xdff30 and scatter['runtime_address'] == 0x0100f6a4
     code_size = scatter['code_length']
     assert 0 < code_size <= 0x95c and code_size % 4 == 0
-    assert size == code_size + 356
+    assert size == code_size + 436
     assert len(patched) == len(original) + size
     extension = patched[cut:cut + size]
     assert sha256(extension) == build['extension_sha256']
@@ -68,10 +68,10 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
     for index, (old, new) in enumerate(zip(old_map, new_map)):
         if index == 4:
             assert old['length'] == 0 and old['destination'] == 0x01020000
-            assert new == dict(old, destination=0x0101727c, length=356, source=BASE + cut + code_size)
+            assert new == dict(old, destination=0x0101727c, length=436, source=BASE + cut + code_size)
             continue
         assert old['kind'] == new['kind'] and old['destination'] == new['destination']
-        assert new['length'] == old['length'] + (code_size if index == 0 else 540 if index == 3 else 0)
+        assert new['length'] == old['length'] + (code_size if index == 0 else 620 if index == 3 else 0)
         if old['kind'] == 'copy':
             assert new['source'] == old['source'] + (size if old['source'] >= BASE + cut else 0)
 
@@ -89,7 +89,7 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
             contents = (image[operation['source'] - BASE:operation['source'] - BASE + length]
                         if operation['kind'] == 'copy' else bytes(length))
             if image is patched and index == 3:
-                contents = bytes(length - 516) + extension[code_size:] + bytes(160)
+                contents = bytes(length - 596) + extension[code_size:] + bytes(160)
             assert machine.read(operation['destination'], length) == contents
         started.append(machine)
     for operation in old_map:
@@ -97,7 +97,7 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
             address, length = operation['destination'], operation['length']
             assert started[0].read(address, length) == started[1].read(address, length)
     assert started[1].read(0x0100f6a4, code_size) == extension[:code_size]
-    assert started[1].read(0x0101727c, 356) == extension[code_size:]
+    assert started[1].read(0x0101727c, 436) == extension[code_size:]
     return [
         {'name': 'Every application change matches recorded guarded patches and scatter insertion',
          'status': 'pass', 'patch_sites': len(build['patches']), 'extension_bytes': size,
@@ -144,6 +144,9 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
     packets = verify_packets(original, patched, build)
     assert packets['status'] == 'pass'
     groups.extend(packets['groups'])
+    from usb_midi_verify import verify as verify_midi
+    midi = verify_midi(original, patched, build)
+    groups.extend(midi["groups"])
     groups.extend(verify_shared_state(patched, build))
     from routing_storage_verify import verify as verify_storage
     storage = verify_storage(original, patched, build)
@@ -176,7 +179,7 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
         'hardware_access': False,
         'scope': 'Integrated candidate ARM instructions with explicit DSP and peripheral models',
         'details': {'mastering': 'mastering-verification.json', 'storage': 'storage-verification.json', 'ui': 'ui-verification.json', 'audio': 'audio-verification.json',
-                    'usb_packets': 'packet-verification.json',
+                    'usb_packets': 'packet-verification.json', 'usb_midi': 'midi-verification.json',
                     'hardware_initialization': 'hardware-audit.json'},
         'limits': [
             'The playback fix has offline evidence only; prior baseline hardware observations do not validate the changed image',
@@ -184,7 +187,7 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
             'Instruction counts do not measure real-time deadline margin or CPU cycles',
         ],
     }
-    return report, {'mastering-verification.json': mastering, 'usb-verification.json': usb, 'packet-verification.json': packets, 'mpu-verification.json': mpu, 'storage-verification.json': storage, 'ui-verification.json': ui, 'audio-verification.json': audio,
+    return report, {'midi-verification.json': midi, 'mastering-verification.json': mastering, 'usb-verification.json': usb, 'packet-verification.json': packets, 'mpu-verification.json': mpu, 'storage-verification.json': storage, 'ui-verification.json': ui, 'audio-verification.json': audio,
                     'hardware-audit.json': hardware}
 
 
@@ -198,7 +201,7 @@ def verify_shared_state(patched, build):
     for rate in (44100, 48000, 96000):
         machine = CombinedMachine(patched, symbols, stub_routes=False)
         assert machine.call(0x6000d980, rate)[0] == 0
-        descriptor = machine.read(symbols['mx1_uac2_configuration'], 355)
+        descriptor = machine.read(symbols['mx1_uac2_configuration'], 435)
         machine.write(symbols['mx1_usb_playback_alt'], b'\x02')
         for strip in range(11):
             machine.packet(2, strip + 0x29, patched=True)
@@ -209,7 +212,7 @@ def verify_shared_state(patched, build):
             machine.setup(request(0xa1, 1, 0x100, 0x1000, 4))
             expect_reply(machine, struct.pack('<I', rate))
             assert machine.read(symbols['mx1_usb_playback_alt'], 1) == b'\x02'
-            assert machine.read(symbols['mx1_uac2_configuration'], 355) == descriptor
+            assert machine.read(symbols['mx1_uac2_configuration'], 435) == descriptor
             assert machine.read(symbols['mx1_route_state'], 11) == bytes(
                 1 if i <= strip else 0 for i in range(11))
     return [{'name': 'USB clock requests and routing edits coexist in the same protected-memory machine',

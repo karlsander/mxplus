@@ -6,9 +6,9 @@ for this candidate.** A user reported no visible MIDI on an FM-1 after selecting
 INT and restarting both devices. The parser rejected that monitor build's
 MIDI descriptor length; the [compatibility fix and exact built-image fixture](../evidence/fm1-host-midi-20261103/README.md)
 now have ARM regression coverage. This fixture is not a live USB capture.
-Generic USB audio remains disabled.
+The latest user test still reported RX=0 after the descriptor fix. Mainline now adds [main-side display diagnostics](DISPLAY_DIAGNOSTICS.md); USB transport bytes are unchanged from that fix. Generic USB audio remains disabled.
 
-Candidate SHA-256: `a21259c0c896fa06db18e87f8a3d997fe1661c7e9ee14ad7c8077fdf6446292b`.
+Candidate SHA-256: `72050c85919774c40cad920a97b6a31bf03571380a71e0885f7052f4f5f7a695`.
 
 ## Behavior and scope
 
@@ -107,7 +107,7 @@ table at decoded `0x2820c` also reserves `0x0100d000`, `0x0100e000` and
 These are USB-processor addresses, not additional space in the main processor.
 Mastering reclaimed 2,548 bytes of resident main code footprint and consumed
 140 bytes of writable main SRAM; it did not free main SRAM. The main executable
-extension still has only 20 bytes unused.
+extension still has only 4 bytes unused after diagnostic display constants.
 
 | app_usb decoded offset | Runtime | Purpose |
 | --- | --- | --- |

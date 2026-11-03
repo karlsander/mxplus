@@ -29,7 +29,8 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
     assert cut == 0xdff30 and scatter['runtime_address'] == 0x0100f6a4
     code_size = scatter['code_length']
     assert 0 < code_size <= 0x95c and code_size % 4 == 0
-    assert size == code_size + 436
+    diag_size = build['diagnostics']['code_bytes']
+    assert size == code_size + 436 + diag_size
     assert len(patched) == len(original) + size
     extension = patched[cut:cut + size]
     assert sha256(extension) == build['extension_sha256']
@@ -45,7 +46,8 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
         off = update['offset']
         assert struct.unpack_from('<I', expected, off)[0] == update['before']
         expected_after = (update['before'] + code_size if off == 0xe8 else
-                          BASE + cut + code_size if off == 0x114 else update['before'] + size)
+                          BASE + cut + code_size if off == 0x114 else
+                          BASE + cut + code_size + 436 if off == 0x13c else update['before'] + size)
         assert update['after'] == expected_after
         struct.pack_into('<I', expected, off, update['after'])
         modified.update(range(off, off + 4))
@@ -70,8 +72,12 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
             assert old['length'] == 0 and old['destination'] == 0x01020000
             assert new == dict(old, destination=0x0101727c, length=436, source=BASE + cut + code_size)
             continue
+        if index == 8:
+            assert old['length'] == 0 and old['destination'] == 0x40008000
+            assert new == dict(old, destination=0x60664000, length=diag_size, source=BASE+cut+code_size+436)
+            continue
         assert old['kind'] == new['kind'] and old['destination'] == new['destination']
-        assert new['length'] == old['length'] + (code_size if index == 0 else 620 if index == 3 else 0)
+        assert new['length'] == old['length'] + (code_size if index == 0 else 656 if index == 3 else 0)
         if old['kind'] == 'copy':
             assert new['source'] == old['source'] + (size if old['source'] >= BASE + cut else 0)
 
@@ -89,7 +95,7 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
             contents = (image[operation['source'] - BASE:operation['source'] - BASE + length]
                         if operation['kind'] == 'copy' else bytes(length))
             if image is patched and index == 3:
-                contents = bytes(length - 596) + extension[code_size:] + bytes(160)
+                contents = bytes(length - 632) + extension[code_size:code_size+436] + bytes(196)
             assert machine.read(operation['destination'], length) == contents
         started.append(machine)
     for operation in old_map:
@@ -97,7 +103,8 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
             address, length = operation['destination'], operation['length']
             assert started[0].read(address, length) == started[1].read(address, length)
     assert started[1].read(0x0100f6a4, code_size) == extension[:code_size]
-    assert started[1].read(0x0101727c, 436) == extension[code_size:]
+    assert started[1].read(0x0101727c, 436) == extension[code_size:code_size+436]
+    assert started[1].read(0x60664000, diag_size) == extension[code_size+436:]
     return [
         {'name': 'Every application change matches recorded guarded patches and scatter insertion',
          'status': 'pass', 'patch_sites': len(build['patches']), 'extension_bytes': size,
@@ -117,22 +124,26 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
     groups = verify_layout(original, patched, build)
     # Guard the retirement independently of source removal. Main-app offsets
     # below precede insertion; the USB sample callback, transport, SELECT/step
-    # actions, and stock heap literal must be byte-identical to the original.
+    # actions must be byte-identical to the original. The diagnostic heap
+    # reservation is separately verified against the original allocator.
     retired_sites = ((0x168c, 4), (0xa7dc, 8), (0xa810, 8), (0xa894, 8),
         (0x14692, 10), (0x10516, 12), (0x10538, 8), (0x140c2, 10),
-        (0x13740, 8), (0xd76c, 4))
+        (0x13740, 8))
     for offset, length in retired_sites:
         assert patched[offset:offset+length] == original[offset:offset+length], hex(offset)
     assert not any(name.startswith(('mx1_internal_', 'mx1_sources_', 'mx1_bd_',
         'mxkick_', 'mxnoise_')) for name in build['symbols'])
-    groups.append({'name': 'Generator callback, transport, extra SELECT UI and SDRAM heap patches are absent',
+    groups.append({'name': 'Generator callback, transport, extra SELECT UI patches are absent',
         'status': 'pass', 'component': 'app_main',
         'unchanged_sites': [{'decoded_offset': hex(offset), 'runtime_address': hex(BASE+offset),
                             'length': length} for offset, length in retired_sites],
-        'callback_target': '0x01009841', 'stock_heap_start': '0x606634d0'})
+        'callback_target': '0x01009841', 'diagnostic_heap_start': '0x60665000'})
     from routing_mpu_verify import verify as verify_mpu
     mpu = verify_mpu(original, patched, build)
     groups.extend(mpu['groups'])
+    from display_diagnostics_verify import verify as verify_diagnostics
+    diagnostics = verify_diagnostics(original, patched, build)
+    groups.extend(diagnostics['groups'])
     from mastering_verify import verify as verify_mastering
     mastering = verify_mastering(original, patched, build)
     groups.extend(mastering['groups'])
@@ -187,7 +198,7 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
             'Instruction counts do not measure real-time deadline margin or CPU cycles',
         ],
     }
-    return report, {'midi-verification.json': midi, 'mastering-verification.json': mastering, 'usb-verification.json': usb, 'packet-verification.json': packets, 'mpu-verification.json': mpu, 'storage-verification.json': storage, 'ui-verification.json': ui, 'audio-verification.json': audio,
+    return report, {'diagnostics-verification.json': diagnostics, 'midi-verification.json': midi, 'mastering-verification.json': mastering, 'usb-verification.json': usb, 'packet-verification.json': packets, 'mpu-verification.json': mpu, 'storage-verification.json': storage, 'ui-verification.json': ui, 'audio-verification.json': audio,
                     'hardware-audit.json': hardware}
 
 

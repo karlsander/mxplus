@@ -1,5 +1,9 @@
 # Mastering mode
 
+The user still cannot enter with MASTERING + TAP. The current candidate adds
+[display diagnostics d001](DISPLAY_DIAGNOSTICS.md) to capture the button IDs and
+entry guards; the behavior below describes the implementation and offline tests.
+
 Hold **MASTERING**, press **TAP**, then release both buttons. Entry is immediate;
 there is no timed hold. MASTERING must be pressed first. Press MASTERING once
 while editing to save and return to the mixer.
@@ -150,7 +154,7 @@ bytes, veneers, exported targets, section usage, relocation literals and all
 component checksums. [The guarded sites](../patches/mastering_sites.json) contain
 the exact original lookup bytes. Mastering uses the reclaimed resident lookup
 space and adds 140 bytes of writable state. With the [MIDI descriptor](USB_MIDI.md),
-the total reservation is now 620 bytes inside stock MPU region 2.
+the total reservation including diagnostic state is now 656 bytes inside stock MPU region 2.
 This mastering change adds no heap, MPU, USB-application, boot-program, updater
 or panel-payload changes.
 

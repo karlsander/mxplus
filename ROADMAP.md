@@ -21,9 +21,9 @@ not sustained or comprehensive validation.
 4. Physically validate [USB-MIDI](docs/USB_MIDI.md) on class-only hosts: both
    ports, clock/transport, SysEx, reconnect and simultaneous audio.
 5. Consider small control/routing improvements individually. The internal code
-   slot has only 20 bytes free; measure compiled size before claiming capacity.
-   An explicitly reserved SDRAM design is possible research, not enabled in
-   the current candidate. [Memory and DSP findings](docs/GENERATOR_RESEARCH.md).
+   slot has only 4 bytes free; measure compiled size before claiming capacity.
+   The current [display diagnostic](docs/DISPLAY_DIAGNOSTICS.md) reserves a small
+   SDRAM page for control-task code; larger features remain separate research. [Memory and DSP findings](docs/GENERATOR_RESEARCH.md).
 6. Keep exact image identities and scoped hardware results. TAP rollback worked
    for the observed application failures; other recovery classes are unverified.
 

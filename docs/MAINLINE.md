@@ -4,12 +4,12 @@ The only maintained custom firmware combines channel routing, mastering editing,
 USB-host MIDI is an offline experiment with sync output prioritized and incoming host sync blocked; see [host MIDI](USB_HOST_MIDI.md). Generic host audio remains excluded.
 Generators and their SELECT editor are removed; their findings are in
 [the DSP handoff](GENERATOR_RESEARCH.md).
-The display-marker diagnostic is not part of mainline. Routing now uses scene
+The current mainline includes temporary [display diagnostics d001](DISPLAY_DIAGNOSTICS.md) for the unresolved mastering/host-MIDI failures. Routing now uses scene
 and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`a21259c0c896fa06db18e87f8a3d997fe1661c7e9ee14ad7c8077fdf6446292b`.
+`72050c85919774c40cad920a97b6a31bf03571380a71e0885f7052f4f5f7a695`.
 It replaces timed mastering entry with the [MASTERING + TAP combination](../evidence/mastering-chord-20261103/README.md)
 and fixes [FM-1 host-MIDI descriptor rejection](../evidence/fm1-host-midi-20261103/README.md).
 It adds [USB-B MIDI](USB_MIDI.md) and [USB-host MIDI](USB_HOST_MIDI.md) to the existing
@@ -22,40 +22,41 @@ require physical acceptance.
 ## Memory and binary integration
 
 The intervals below describe the **main processor**. The independent USB processor
-adds 2,624 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
+adds 2,640 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
 see [host placement and allocator evidence](USB_HOST_MIDI.md#integration-and-memory).
 
-USB-host MIDI additionally modifies the USB application. Boot programs, updater and panel-controller payload remain byte-identical to stock. The USB application is byte-identical to host-MIDI PR #14; this follow-up changes mastering entry in the main application.
+USB-host MIDI additionally modifies the USB application. Boot programs, updater and panel-controller payload remain byte-identical to stock. The USB application is byte-identical to host-MIDI PR #16; this follow-up adds main-processor display diagnostics.
 The descriptor, rate and reply buffer in the retired USB-B build occupied
 read-only code SRAM; the combined build fixes that placement before testing.
 
 | Runtime interval (end exclusive) | Contents | Initialization |
 | --- | --- | --- |
 | `0x01009860..0x01009a16` | Replacement playback instructions within the original callback | Existing first startup copy, no growth |
-| `0x0100f6a4..0x0100ffec` | 2,376 bytes of code/constants, read-only after MPU setup | Extended original first startup copy |
+| `0x0100f6a4..0x0100fffc` | 2,392 bytes of code/constants, read-only after MPU setup | Extended original first startup copy |
 | `0x01017264..0x0101727c` | Desired/applied routing cache and startup-ready flag, padded to 24 bytes | Extended original writable BSS clear |
 | `0x0101727c..0x01017430` | 435-byte mutable USB descriptor plus padding | Repurposed formerly zero-length startup copy |
 | `0x01017430..0x01017444` | USB rate, 14-byte reply buffer and one-byte OUT alternate at `0x01017442`, padded to 20 bytes | Extended original writable BSS clear |
 | `0x01017444..0x010174d0` | 140-byte mastering UI state | Extended original writable BSS clear |
+| `0x010174d0..0x010174f4` | 36-byte diagnostic state | Extended original writable BSS clear |
+| `0x60664000..0x60664434` | 1,076-byte diagnostic code | Repurposed empty startup copy 8 |
 | `0x6001dbd6..0x6001e5ec` (split slots) | Reclaimed stock mixer lookup: compressed lookup, mastering UI, redraw trampoline; shared literal retained | Existing resident main image, no new copy |
 
-The SRAM code slot has 20 bytes remaining before `0x01010000`. The 620-byte writable
+The SRAM code slot has 4 bytes remaining before `0x01010000`. The 656-byte writable
 reservation begins exactly at the original BSS end, stays inside stock MPU
 region 2 (`0x01010000..0x01018000`), and overlaps neither RTOS pool. General
 allocation remains `0x01013e18..0x01014e18`; stacks remain
-`0x01020000..0x01028000`. No MPU or allocator configuration is changed. Mastering code uses the original
+`0x01020000..0x01028000`. The MPU and RTOS pools are unchanged. The SDRAM heap starts at `0x60665000`, reserving 6,960 bytes for diagnostic code/alignment; original allocation through exhaustion is verified. Mastering code uses the original
 resident lookup footprint, not a newly allocated executable region.
 [Mastering evidence](MASTERING.md#placement-and-original-instruction-evidence)
 records exact slots and preserved cross-references.
 
-The load-image insertion is 2,812 bytes at main decoded offset `0xdff30`:
-2,376 code bytes followed by 436 descriptor bytes. Only code is copied into the
-executable slot. Main decoded literal `0xe8` extends the first copy accordingly;
-`0x100`, `0x128`, `0x13c`, `0x150` shift existing initialized-data sources.
-`0x108` extends writable BSS clearing from `0x71dc` to `0x7448` bytes.
+The load-image insertion is 3,904 bytes at main decoded offset `0xdff30`:
+2,392 internal code bytes, 436 descriptor bytes and 1,076 diagnostic code bytes. Only internal code is copied into the SRAM executable slot. Main decoded literal `0xe8` extends the first copy accordingly;
+`0x100`, `0x128`, `0x150` shift existing initialized-data sources; `0x13c` addresses the diagnostic load bytes.
+`0x108` extends writable BSS clearing from `0x71dc` to `0x746c` bytes.
 The originally zero-length copy described by `0x10c/0x110/0x114` now loads the
 USB descriptor to `0x0101727c`. The following original stack-pool zero is
-unchanged. These startup literals are resident at `0x60000000 + decoded offset`.
+unchanged. Empty copy 8 (`0x134/138/13c`) now loads the reserved diagnostic page. These startup literals are resident at `0x60000000 + decoded offset`.
 Existing nonempty copy/zero regions retain their destinations. The playback
 patch replaces instructions within the original first copy; other original
 initialized data remains unchanged.
@@ -89,7 +90,7 @@ USB timing or deadline margin.
 ## Bench sequence
 
 1. Identify this exact image and keep monitoring muted for the first boot.
-2. Confirm MASTERING + TAP entry and MASTERING exit, all mapped controls and ten slot pads, pickup and original shortcuts;
+2. Begin with [display diagnostics](DISPLAY_DIAGNOSTICS.md) to record the unresolved failures. Confirm MASTERING + TAP entry and MASTERING exit, all mapped controls and ten slot pads, pickup and original shortcuts;
    the [mastering procedure](MASTERING.md#verification-and-limits) scopes this new check.
 3. Confirm SELECT labels, end stops and routing still work; save/recall differing
    snapshots and restart after allowing several seconds for autosave.
@@ -109,7 +110,7 @@ The filename retains `UNTESTED` because acceptance is incomplete. The
 iPhone/AUM result; it does not establish every channel, rate or stream mode.
 
 A separate retirement guard verifies the original sample callback pointer, transport,
-SELECT/pad handlers and SDRAM heap start. Saved retired source IDs 53/54 fall
+SELECT/pad handlers. Diagnostic heap exclusion is verified separately. Saved retired source IDs 53/54 fall
 back to Auto on normal boot and recall; remaining routes keep their IDs.
 
 ## USB-processor MIDI extension

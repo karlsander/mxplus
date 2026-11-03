@@ -3,9 +3,16 @@
   "groups": [
     "Every application change matches recorded guarded patches and scatter insertion",
     "Actual original startup installs routing code and preserves existing initialized data and BSS",
-    "Generator callback, transport, extra SELECT UI and SDRAM heap patches are absent",
+    "Generator callback, transport, extra SELECT UI patches are absent",
     "Original MPU makes injected code read-only and new route state read-write",
     "Dirty cold startup clears state; original RTOS pools cannot allocate its reservation",
+    "Original main host notification decoder and MIDI-ready reader establish displayed bits",
+    "SELECT 1 plus TAP toggles diagnostic display; TEMPO pages wrap without changing tempo/routes; releases preserved",
+    "Diagnostic entry bypasses mastering page/lock/modal guards but excludes boot/setup",
+    "Captured button IDs, every entry guard including key 87, before/after chord state and event/tick cancellation",
+    "All four live host flag bytes and both per-port clock gates render independently; tick updates changed values",
+    "Original MIDI sender independently rejects each host destination when either displayed clock gate is zero",
+    "Stock SDRAM heap creation and allocation exclude reserved code through exhaustion",
     "Reclaimed stock mixer lookup agrees for all 263 valid IDs and invalid boundaries; external literal/shared returns preserved",
     "All 65 mastering names and ranges linked to actual original index instructions",
     "Original GAIN/PAN/TONE/AUX/BFX/FADER key actions identify all six supported mixer pages",
@@ -91,5 +98,5 @@
     "Notes, controllers and SysEx survive RX unchanged",
     "Background queue overload leaves sync output running"
   ],
-  "patched_app_sha256": "f79bdad226afeabcb4b6bde9c13ac3cc9f990879a56e6cb750c59b83484dcbdc"
+  "patched_app_sha256": "b3e82df469ef75446c380991cbb9c63ab9a647e890cf6c2c2c4fa74d5d67655a"
 }

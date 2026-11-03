@@ -73,6 +73,8 @@ class ReproductionIdentityTests(unittest.TestCase):
                 "status": "pass", "patched_app_sha256": hashes["patched_usb_sha256"]})
             self.write_json(prefix + "midi-verification.json", {
                 "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"]})
+            self.write_json(prefix + "diagnostics-verification.json", {
+                "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"]})
             self.write_json(prefix + "mastering-verification.json", {
                 "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"]})
             self.write_json(prefix + "boot-verification.json", {
@@ -205,6 +207,12 @@ class ReproductionIdentityTests(unittest.TestCase):
         self.edit_json("build/mainline/storage-verification.json",
                        lambda report: report.update(patched_app_sha256="0" * 64))
         with self.assertRaisesRegex(ValueError, "storage evidence"):
+            CHECK.audit()
+
+    def test_diagnostics_report_must_match_candidate(self):
+        self.edit_json("build/mainline/diagnostics-verification.json",
+                       lambda report: report.update(patched_app_sha256="0" * 64))
+        with self.assertRaisesRegex(ValueError, "diagnostics evidence"):
             CHECK.audit()
 
     def test_mastering_report_must_match_candidate(self):

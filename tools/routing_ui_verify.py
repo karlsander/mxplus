@@ -141,7 +141,7 @@ class UIMachine(Machine):
 
     def packet(self, kind, control, value=0, patched=False):
         self.write(PACKET, struct.pack('<BBh', kind, control, value))
-        entry = self.symbols.get('mx1_master_ui_event', self.symbols['mx1_route_ui_event']) if patched else 0x60010B48
+        entry = self.symbols.get('mx1_diag_event', self.symbols.get('mx1_master_ui_event', self.symbols['mx1_route_ui_event'])) if patched else 0x60010B48
         return self.checked(entry, PACKET)
 
     def held(self, *keys):
@@ -224,7 +224,7 @@ def verify(original: bytes, patched: bytes, build: dict) -> dict:
 
     # Independent callback-register and renderer-prologue guards.
     assert original[0xf5d8:0xf5dc] == u32(0x60010b49)
-    assert patched[0xf5d8:0xf5dc] == u32(symbols.get('mx1_master_ui_event', symbols['mx1_route_ui_event']) | 1)
+    assert patched[0xf5d8:0xf5dc] == u32(symbols.get('mx1_diag_event', symbols.get('mx1_master_ui_event', symbols['mx1_route_ui_event'])) | 1)
     assert original[0x13356:0x13360] == bytes.fromhex('feb50446c54804f07cff')
     assert patched[0x13356:0x1335c] == bytes.fromhex('00bfdff800f0')
     assert patched[0x1335c:0x13360] == u32(symbols['mx1_route_ui_display'] | 1)

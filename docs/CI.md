@@ -8,7 +8,7 @@ enumeration, or working audio on a physical MX-1.
 
 ## When and where it runs
 
-There is one job on GitHub's Ubuntu 24.04 x64 runner, using CPython **3.12.14**
+The verification job uses GitHub's Ubuntu 24.04 x64 runner and CPython **3.12.14**
 and the exact package versions in `requirements.txt`. It runs on pushes to
 `main`, pull requests, and manual dispatch from the Actions tab. A newer run
 for the same branch or pull request cancels the older one. The job has a
@@ -16,9 +16,11 @@ for the same branch or pull request cancels the older one. The job has a
 
 The workflow grants only `contents: read`, does not retain checkout credentials,
 and uses the normal `pull_request` event. It does not request repository secrets
-or publish releases. There is no schedule, matrix, firmware flashing, USB access,
-configfs setup, package-manager system configuration, or automatic artifact
-upload. A pip download cache is keyed by `requirements.txt`; compiled firmware
+or publish firmware releases. There is no schedule, matrix, firmware flashing,
+USB access, configfs setup or package-manager system configuration. After
+verification, main-branch runs upload only the static browser patcher and a
+separate, dependent job deploys it to GitHub Pages. PRs test without deploying.
+A pip download cache is keyed by `requirements.txt`; compiled firmware
 and verification outputs are regenerated on the runner.
 
 “Offline” describes the reproduction and verification stages. GitHub needs
@@ -108,11 +110,26 @@ new candidates and matching evidence in the change, then rerun
 `--check-committed` against that commit. An unexpected mismatch should be
 investigated instead of accepted merely to make CI pass.
 
-The workflow does not upload new firmware artifacts. The tracked experimental
+The workflow does not upload complete firmware to Pages. The tracked experimental
 images remain reviewable in the repository, and CI logs are available in the
 Actions run. A passing badge is an offline verification result, not a hardware
 compatibility certification. Physical testing follows
 [the hardware validation plan](HARDWARE_VALIDATION.md).
+
+## Browser patcher and Pages
+
+After the firmware gate passes, Node 24 runs `web/patcher.test.mjs` against the
+site exported by `tools/build_web_patcher.py`. Tests require byte-for-byte
+equality to the maintained candidate and reject wrong input, corrupt patches,
+wrong output hashes, malformed ranges/encoding and invalid manifests. An
+allowlist check ensures the Pages directory contains no full firmware or
+repository files. These are file-processing tests, not hardware tests.
+
+Only main-branch push/manual runs upload `build/web-patcher/`. The separate
+deploy job has `pages: write` and `id-token: write`, uses the `github-pages`
+environment and depends on the verification job. It has a five-minute timeout.
+One-time Pages configuration and local preview are in
+[WEB_PATCHER.md](WEB_PATCHER.md).
 
 ## Verified action pins
 
@@ -124,8 +141,12 @@ each pinned commit was also read through GitHub's repository API.
 |---|---|---|
 | `actions/checkout` | [v7.0.1](https://github.com/actions/checkout/releases/tag/v7.0.1) | [`3d3c42e5aac5ba805825da76410c181273ba90b1`](https://github.com/actions/checkout/commit/3d3c42e5aac5ba805825da76410c181273ba90b1) |
 | `actions/setup-python` | [v7.0.0](https://github.com/actions/setup-python/releases/tag/v7.0.0) | [`5fda3b95a4ea91299a34e894583c3862153e4b97`](https://github.com/actions/setup-python/commit/5fda3b95a4ea91299a34e894583c3862153e4b97) |
+| `actions/setup-node` | [v6](https://github.com/actions/setup-node/tree/v6) | `249970729cb0ef3589644e2896645e5dc5ba9c38` |
+| `actions/configure-pages` | [v5](https://github.com/actions/configure-pages/tree/v5) | `983d7736d9b0ae728b81ab479565c72886d7745b` |
+| `actions/upload-pages-artifact` | [v4](https://github.com/actions/upload-pages-artifact/tree/v4) | `7b1f4a764d45c48632c6b24a0339c27f5614fb0b` |
+| `actions/deploy-pages` | [v4](https://github.com/actions/deploy-pages/tree/v4) | `d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e` |
 
-Both actions use Node 24, supplied by GitHub's hosted runner. The official
+Checkout and setup-python use Node 24, supplied by GitHub's hosted runner. The official
 [Python distribution manifest](https://github.com/actions/python-versions/blob/main/versions-manifest.json)
 lists the stable [3.12.14 distribution](https://github.com/actions/python-versions/releases/tag/3.12.14-31661455385)
 for Ubuntu 24.04 x64. When updating these pins, verify the new official release

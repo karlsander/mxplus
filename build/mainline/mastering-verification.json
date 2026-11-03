@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "11f33ccb62ea14a266a69c35323a1be78c874d6bc1f133484a1917540259c1d4",
+  "patched_app_sha256": "3202b16852109da6217d0790abd9dec5142633729782a5158cc539ace8e4079f",
   "parameters": [
     {
       "n": 1,
@@ -927,7 +927,11 @@
       "status": "pass"
     },
     {
-      "name": "All 16 assigned EQ controls execute stock transactions with bounded ranges and no mixer changes",
+      "name": "All 22 assigned controls and eight switches execute stock transactions, correct display/LED selection, and preserve unmapped parameters",
+      "status": "pass"
+    },
+    {
+      "name": "Ten step-pad slots use original copy/save preparation; all 65 values survive slot round trips; pickup resets and same-slot presses are inert",
       "status": "pass"
     },
     {
@@ -935,14 +939,14 @@
       "status": "pass"
     },
     {
-      "name": "EQ entry pickup and forced mixer-return pickup in Jump and Pass modes; stock fader blink encoding",
+      "name": "Mastering entry pickup and forced mixer-return pickup in Jump and Pass modes; stock fader blink encoding",
       "status": "pass"
     }
   ],
   "boundaries": [
     "Original parameter lookup, getters, clamping setters, group storage and formatter execute unchanged except compressed mixer ID lookup",
     "Original fader handlers and blink renderer execute; physical ADC/LED protocol and timing are not modeled",
-    "Object vtables and parameter defaults are initialized fixtures; RTOS time, periodic callback body, mutex, notifications, MIDI send and final panel I/O are stubbed",
+    "Object vtables and parameter defaults are initialized fixtures; RTOS time, periodic callback body, mutex, notifications, MIDI send, storage singleton/submission and final panel I/O are stubbed",
     "No hardware, audio measurements or physical save/restart acceptance; no new sample callback, MPU region or heap reservation"
   ]
 }

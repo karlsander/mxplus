@@ -7,6 +7,7 @@ typedef unsigned short u16;
 typedef unsigned int u32;
 #define FN(a,t) ((t)(a))
 #define MASTER ((void *)0x600b53b8u)
+#define SYSTEM ((void *)0x600b5390u)
 #define MIX ((void *)0x600b53acu)
 #define SETUP ((void *)0x60514504u)
 #define CONTEXT ((void *)0x605141ccu)
@@ -18,15 +19,28 @@ typedef unsigned int u32;
 extern void mx1_route_ui_event(const u8 *event);
 extern void mx1_master_redraw_original(void *context);
 
-/* Each entry is a zero-based hidden EQ index, or -1. Odd ADC IDs are
+/* ADC IDs 6..27: zero-based mastering indices. Odd ADC IDs are
  * faders, even IDs are the TONE/FILTER knobs above them. */
-static const signed char assignments[28] = {
-    -1,-1,-1,-1,-1,-1, 1,16, -1,-1, 4,3, 2,5, 7,6,
-    -1,8, 10,9, -1,11, 14,13, 12,15, -1,-1
+__attribute__((section(".master_labels")))
+static const u8 assignments[22] = {
+    4,3, 7,6, 10,9, 14,13,
+    29,28, 33,32, 37,36, 42,41, 46,45, 50,49, 56,57
 };
-static const char labels[17][4] = {
-    "EQ "," In","Lty","Lgn","LFr","L Q","LMg","LMf","LMq",
-    "HMg","HMf","HMq","Hty","Hgn","HFr","H Q","Out"
+/* Physical key, logical LED, zero-based mastering parameter. Key and LED
+ * numbering differ: SELECT 0x29/0x34, BFX 0x34/0x3f, MFX 0x3f/0x4a. */
+static const u8 switches[8][3] = {
+    {0x29,0x34,0}, {0x34,0x3f,2}, {0x37,0x42,12},
+    {0x2d,0x38,27}, {0x30,0x3b,40}, {0x33,0x3e,17},
+    {0x3e,0x49,19}, {0x49,0x54,58}
+};
+/* Display 0 consumes exactly three characters; keep these constants in the
+ * second reclaimed slot to leave room for the switch LED redraw loop. */
+__attribute__((section(".master_labels")))
+static const char labels[30][3] = {
+    "LFr","Lgn","LMf","LMg","HMf","HMg","HFr","Hgn",
+    "ELr","ELt","EMr","EMt","EHr","EHt","CLr","CLt",
+    "CMr","CMt","CHr","CHt","Mid","Sid",
+    "EQ ","Lty","Hty","EXP","CMP","LCt","Enh","LIM"
 };
 struct master_state {
     u32 started, acquired, restore;
@@ -53,6 +67,7 @@ static int eligible(void) {
         (page == 5 || page == 15) &&
         !FN(0x60018259u,int (*)(void *))((void *)0x605144ccu);
 }
+__attribute__((section(".master_head"),noinline))
 static int no_keys(void) {
     for (unsigned i=0;i<11;++i) if (KEYS[i]) return 0;
     return 1;
@@ -60,7 +75,22 @@ static int no_keys(void) {
 static void led(unsigned id,unsigned mode) {
     FN(0x60014a79u,void (*)(unsigned,unsigned,unsigned))(id,mode,9);
 }
-static int eq(unsigned id) { return get(MASTER,id,0x6001fa49u); }
+static int parameter_value(unsigned id) { return get(MASTER,id,0x6001fa49u); }
+__attribute__((section(".master_head"),noinline))
+static unsigned slot(void) { return get(SYSTEM,1,0x6001a897u); }
+__attribute__((section(".master_head")))
+static __attribute__((noinline)) void save(void) {
+    FN(0x6001fafbu,void (*)(void *,unsigned))(MASTER,slot());
+}
+static void select_slot(unsigned next) {
+    if (next==slot()) return;
+    save();
+    set(SETUP,0x24,1); /* Same temporary mute as the stock preset shortcut. */
+    set(SYSTEM,1,(int)next);
+    FN(0x6001fb4du,void (*)(void *,unsigned))(MASTER,next);
+    set(SETUP,0x24,0);
+    S.acquired=0; S.redraw=1;
+}
 static unsigned maximum(unsigned id) {
     return ((const u32 *)0x600686d8u)[(0x476u+id)*4u+1u];
 }
@@ -88,7 +118,7 @@ static void clear_stock_pickup(unsigned adc) {
     if (adc>=6) set(SETUP,(adc-6)/2+((adc&1)?0x2d:0x38),-1);
 }
 static void enter(void) {
-    S.pending=0; S.active=1; S.selected=0; S.acquired=0; S.restore=0;
+    S.pending=0; S.active=1; S.selected=22; S.acquired=0; S.restore=0;
     for (unsigned i=0;i<28;++i) {
         S.last[i]=ANALOG[i*4]; S.before[i]=(u16)target(i);
     }
@@ -96,6 +126,7 @@ static void enter(void) {
     S.redraw=1; DIRTY=0xffff;
 }
 static void leave(void) {
+    save();
     S.active=0; S.pending=0; S.restore=0;
     for (unsigned i=0;i<28;++i) {
         /* Channel targets may have changed through MIDI during editing. */
@@ -112,13 +143,16 @@ __attribute__((section(".master_head")))
 void mx1_master_redraw(void *context) {
     if (!S.active) { mx1_master_redraw_original(context); return; }
     led(6,3); /* Stock MASTERING blink mode. */
-    led(0x19,eq(0)?1:0);
+    unsigned current=slot();
+    for (unsigned i=0;i<10;++i) led(0x19+i,i==current?1:0);
+    for (unsigned i=0;i<8;++i) led(switches[i][1],parameter_value(switches[i][2])?1:0);
     for (unsigned strip=0;strip<11;++strip) {
         unsigned adc=7+2*strip;
-        led(0x29+strip,assignments[adc]<0?0:(S.acquired&(1u<<adc)?1:3));
+        led(0x29+strip,S.acquired&(1u<<adc)?1:3);
     }
+    unsigned parameter=S.selected<22?(unsigned)assignments[S.selected]:switches[S.selected-22][2];
     char value[16]={0};
-    FN(0x6001faddu,void (*)(void *,char *,unsigned,int))(MASTER,value,S.selected,eq(S.selected));
+    FN(0x6001faddu,void (*)(void *,char *,unsigned,int))(MASTER,value,parameter,parameter_value(parameter));
     for (unsigned i=0;i<4;++i) if (!value[i]) {
         for (;i<4;++i) value[i]=' ';
         break;
@@ -172,20 +206,27 @@ void mx1_master_ui_event(const u8 *event) {
                 int already=S.swallowed[id/8]&bit;
                 S.swallowed[id/8]|=bit;
                 if (!already && id==MASTER_KEY) { leave(); return; }
-                if (!already && id==1) { set(MASTER,0,!eq(0)); S.selected=0; S.redraw=1; }
+                if (!already && id>=1 && id<=10) select_slot(id-1);
+                if (!already) for (unsigned i=0;i<8;++i) if (id==switches[i][0]) {
+                    unsigned parameter=switches[i][2];
+                    set(MASTER,parameter,!parameter_value(parameter));
+                    S.selected=(u8)(22+i); S.redraw=1;
+                }
             } else if (type==1) S.swallowed[id/8]&=(u8)~bit;
         } else if (type==0xb && id<28) {
             unsigned raw=event[2]|((unsigned)event[3]<<8);
             if (raw<=127) {
                 unsigned old=S.last[id]; S.last[id]=(u16)raw;
                 ANALOG[id*4]=(u16)raw;
-                int parameter=assignments[id];
-                if (parameter>=0) {
+                if (id>=6) {
+                    unsigned parameter=assignments[id-6];
                     unsigned value=scaled((unsigned)parameter,raw);
-                    S.selected=(u8)parameter; S.redraw=1;
-                    if (crossed((int)scaled((unsigned)parameter,old),(int)value,eq((unsigned)parameter)))
+                    S.selected=(u8)(id-6); S.redraw=1;
+                    if (crossed((int)scaled((unsigned)parameter,old),(int)value,parameter_value((unsigned)parameter)))
                         S.acquired|=1u<<id;
-                    if (S.acquired&(1u<<id)) set(MASTER,(unsigned)parameter,(int)value);
+                    if (S.acquired&(1u<<id)) {
+                        set(MASTER,(unsigned)parameter,(int)value);
+                    }
                 }
             }
         }

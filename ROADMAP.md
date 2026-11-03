@@ -1,7 +1,7 @@
 # Mainline roadmap
 
 Maintain one mixer-focused firmware: channel routing with end stops, stock
-snapshot/restart route storage, mastering EQ editing and USB-B UAC2. The restored pre-generator image
+snapshot/restart route storage, mastering editing and USB-B UAC2. The restored pre-generator image
 boots and passed a user-reported iPhone/AUM duplex audio path. The routing
 predecessor passed routing/end-stop tests. These are bounded observations,
 not sustained or comprehensive validation.
@@ -13,7 +13,7 @@ not sustained or comprehensive validation.
    rates, channel maps and duration. Verify capture-only, stereo/18-channel
    and mixed alternates, stop/restart, reconnect and sustained audio at all
    three rates.
-3. Physically validate [mastering EQ mode](docs/MASTERING.md), including
+3. Physically validate [mastering mode](docs/MASTERING.md), including
    gesture isolation, all parameter assignments, pickup/blink, save/recall and
    sustained audio. The new UI reclaims an existing stock lookup footprint;
    its offline checks do not establish hardware stability.

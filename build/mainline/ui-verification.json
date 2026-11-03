@@ -1,7 +1,7 @@
 {
   "status": "OFFLINE UI INSTRUCTION TESTS; NO PHYSICAL PANEL OR AUDIO CLAIM",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "11f33ccb62ea14a266a69c35323a1be78c874d6bc1f133484a1917540259c1d4",
+  "patched_app_sha256": "3202b16852109da6217d0790abd9dec5142633729782a5158cc539ace8e4079f",
   "ui_only_fixture": false,
   "symbols": {
     "mx1_uac2_rate": 16872416,
@@ -13,7 +13,7 @@
     "mx1_route_label": 16840883,
     "mx1_route_recall": 16840545,
     "mx1_uac2_initialize": 16840357,
-    "mx1_master_ui_event": 1610735627,
+    "mx1_master_ui_event": 1610735611,
     "mx1_master_tick": 1610735117,
     "mx1_master_redraw": 1610734581,
     "mx1_mixer_parameter_id": 1610734551,
@@ -28,7 +28,7 @@
     "mx1_usb_playback_patch": 16816225,
     "mx1_usb_playback_alt": 16872434,
     "mx1_master_state": 16872436,
-    "mx1_master_redraw_original": 1610734861,
+    "mx1_master_redraw_original": 1610735033,
     "mx1_original_mix_invalid": 1610737232
   },
   "sources": {

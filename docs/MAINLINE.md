@@ -1,6 +1,6 @@
 # Mainline integration
 
-The only maintained custom firmware combines channel routing, mastering EQ editing and USB-B UAC2.
+The only maintained custom firmware combines channel routing, mastering editing and USB-B UAC2.
 The USB-host unlock is excluded, with its evidence retained as documentation.
 Generators and their SELECT editor are removed; their findings are in
 [the DSP handoff](GENERATOR_RESEARCH.md).
@@ -9,8 +9,8 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`1ed8ada183fbe768262f7ccaae299fb80a6ec6fd993423d1be84c0bf524f8534`.
-It adds [mastering EQ mode](MASTERING.md) on top of the
+`f9e91cdc5fa2b2aa73cfc75671e570651893484bd35d09a8d7c2d23192d81133`.
+It adds [mastering mode](MASTERING.md) on top of the
 [stereo packet fix](USB_PACKET_FIX.md). The pre-generator image
 `88457445…` was confirmed by the user to boot and pass one iPhone/AUM duplex
 path. The changed image, snapshot persistence and broader USB operation still
@@ -80,7 +80,7 @@ USB timing or deadline margin.
 ## Bench sequence
 
 1. Identify this exact image and keep monitoring muted for the first boot.
-2. Confirm MASTERING hold/exit, all EQ controls, pickup and original shortcuts;
+2. Confirm MASTERING hold/exit, all mapped controls and ten slot pads, pickup and original shortcuts;
    the [mastering procedure](MASTERING.md#verification-and-limits) scopes this new check.
 3. Confirm SELECT labels, end stops and routing still work; save/recall differing
    snapshots and restart after allowing several seconds for autosave.

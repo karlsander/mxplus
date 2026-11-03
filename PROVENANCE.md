@@ -70,7 +70,7 @@ hardware activation failures. Current mainline contains no generator/editor
 source or alternate build. Findings and source-history pointers remain in
 [GENERATOR_RESEARCH.md](docs/GENERATOR_RESEARCH.md).
 
-## Mastering EQ controls (3 November 2026)
+## Mastering controls (3 November 2026)
 
 `patches/mastering_ui.c` and `patches/mastering_ui.S` are independently written
 control-surface code. The compressed mixer lookup is derived from the observed
@@ -80,3 +80,11 @@ extracted parameter names/format strings remain Roland-derived evidence.
 links the exact extraction. This mode edits the existing DSP parameters; it
 does not import or reinstate the retired generator code. There is still one
 maintained mainline candidate and no new licensing grant.
+
+The [mastering overlay](docs/images/mastering-overlay.png) was generated with
+the built-in image generator from the user-defined mapping, using Roland's
+[official product top view](https://cdn.roland.com/assets/images/products/gallery/mx-1_top_gal.jpg)
+as a geometry reference. It is an annotated concept, not an official panel
+or a print-to-scale template. The [prompt](docs/images/mastering-overlay-prompt.txt)
+records the generation and slot-selector revision. Product imagery and marks
+remain attributable to Roland.

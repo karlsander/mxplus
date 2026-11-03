@@ -34,6 +34,6 @@ test_reject_configuration_lengths (test_usb_descriptors.USBDescriptorTests.test_
 test_reject_truncated_rate_list (test_usb_descriptors.USBDescriptorTests.test_reject_truncated_rate_list) ... ok
 
 ----------------------------------------------------------------------
-Ran 34 tests in 0.542s
+Ran 34 tests in 0.544s
 
 OK

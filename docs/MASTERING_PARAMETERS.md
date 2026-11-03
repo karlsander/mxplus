@@ -168,5 +168,6 @@ Ratio choices, in order: **1.00, 1.12, 1.25, 1.40, 1.60, 1.80, 2.00,
 consistent with the parameter names. Dither's numeric settings likely denote
 bit depth; neither its algorithm nor noise shaping has been established here.
 
-The new [mastering mode](MASTERING.md) exposes N1–N17. It does not change the
-stock parameter definitions or synthesize additional EQ processing.
+The new [mastering mode](MASTERING.md) maps 30 of these parameters to the surface
+and selects the ten slots with step pads 1–10. It does not change the stock
+parameter definitions or synthesize additional DSP processing.

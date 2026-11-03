@@ -3,43 +3,68 @@ import json
 import struct
 from pathlib import Path
 from unicorn import UC_HOOK_CODE
-from unicorn.arm_const import UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_R2, UC_ARM_REG_R3, UC_ARM_REG_PC
+from unicorn.arm_const import UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_R2, UC_ARM_REG_R3, UC_ARM_REG_PC, UC_ARM_REG_SP
 from arm_machine import Machine
 from routing_ui_verify import UIMachine, PACKET, PAGE, MODAL, u32, signed
 from container_tool import sha256
 
+SYSTEM = 0x600b5390
 MASTER, MIX, SETUP = 0x600b53b8, 0x600b53ac, 0x60514504
 ADC = 0x605129b4
 STATE = 0x010173f4
-ASSIGN = {6:1,7:16,10:4,11:3,12:2,13:5,14:7,15:6,17:8,
-          18:10,19:9,21:11,22:14,23:13,24:12,25:15}
+ASSIGN = {6:4,7:3,8:7,9:6,10:10,11:9,12:14,13:13,
+          14:29,15:28,16:33,17:32,18:37,19:36,20:42,21:41,
+          22:46,23:45,24:50,25:49,26:56,27:57}
+SWITCHES = {0x29:(0,0x34),0x34:(2,0x3f),0x37:(12,0x42),
+            0x2d:(27,0x38),0x30:(40,0x3b),0x33:(17,0x3e),
+            0x3e:(19,0x49),0x49:(58,0x54)}
+LABELS = {0:'EQ ',2:'Lty',3:'Lgn',4:'LFr',6:'LMg',7:'LMf',9:'HMg',10:'HMf',
+          12:'Hty',13:'Hgn',14:'HFr',17:'LCt',19:'Enh',27:'EXP',28:'ELt',29:'ELr',
+          32:'EMt',33:'EMr',36:'EHt',37:'EHr',40:'CMP',41:'CLt',42:'CLr',45:'CMt',
+          46:'CMr',49:'CHt',50:'CHr',56:'Mid',57:'Sid',58:'LIM'}
+
 
 class MasterMachine(UIMachine):
     def __init__(self,image,symbols):
         self.clock=10000; self.tick_calls=0; self.redraw_calls=0
         self.leds={}; self.notices=[]; self.real_redraw=False
+        self.saves=[]; self.loads=[]; self.transactions=[]
         super().__init__(image,symbols)
         # Normal operating state after stock 0x6001649c clears the UI lock.
         self.write(0x600b537c,u32(0))
         locale = self.checked(0x6005ce38,0,0)[0]
         self.write(0x6064c0cc,u32(locale+1))  # Same ctype pointer as stock 0x6000020e..0x60000214.
         # Model the object constructors by installing the original vtables.
-        for ctx,vt in ((MASTER,0x600a9174),(MIX,0x600a8804),(SETUP,0x600a9488)):
+        for ctx,vt in ((SYSTEM,0x600a9970),(MASTER,0x600a9174),(MIX,0x600a8804),(SETUP,0x600a9488)):
             self.write(ctx,u32(vt))
+        self.set(SYSTEM,1,0)
         for i in range(28): self.write(ADC+i*8,struct.pack('<H',64))
         for i in range(11):
             self.set(MIX,0x58+i,64); self.set(MIX,0x63+i,64)
             self.set(SETUP,0x2d+i,-1); self.set(SETUP,0x38+i,-1)
         for i in range(5): self.set(SETUP,0x1e+i,64)
         self.set(MIX,0xe2,64)
-        for i in range(17):
+        for i in range(65):
             default=struct.unpack_from('<I',image,0x686d8+(0x476+i)*16+8)[0]
             self.set(MASTER,i,default)
         self.parameters.clear(); self.notices.clear()
 
     def instruction(self,uc,address,size,user):
         args=tuple(uc.reg_read(r) for r in (UC_ARM_REG_R0,UC_ARM_REG_R1,UC_ARM_REG_R2,UC_ARM_REG_R3))
-        if address in (0x6001a1ce,0x600161f6):
+        if address == 0x600161f6:
+            self.transactions.append(args)
+            return
+        if address == 0x6001a896 and args[1]==1:
+            return  # Actual selected-slot getter; other system controls modeled by base.
+        if address in (0x6005664c,0x600596d8):
+            self.ret()  # Storage singleton boundary; copied slot data remains actual.
+        elif address == 0x6000e1c2:
+            size=struct.unpack('<I',self.read(uc.reg_read(UC_ARM_REG_SP),4))[0]
+            self.saves.append((args[1],args[2],args[3],self.read(args[3],size)))
+            self.ret()  # Final nonvolatile storage submission, not hardware writing.
+        elif address == 0x6001fb4c:
+            self.loads.append(args[1]); return
+        elif address == 0x6001a1ce:
             return  # Execute the actual stock getter/clamping setter.
         if address in (0x6000becc,0x6005a034,0x60057ebc,0x010093d6,0x60012340):
             self.ret()  # Mutex, singleton, outgoing parameter/MIDI notifications.
@@ -63,7 +88,7 @@ class MasterMachine(UIMachine):
     def set(self,ctx,id,value):
         return self.checked(0x600161f6,ctx,id,value&0xffffffff,0)
     def get(self,ctx,id):
-        entry={MASTER:0x6001fa48,MIX:0x6001e65e,SETUP:0x6001a1ce}[ctx]
+        entry={SYSTEM:0x6001a896,MASTER:0x6001fa48,MIX:0x6001e65e,SETUP:0x6001a1ce}[ctx]
         return signed(self.checked(entry,ctx,id,0)[0])
     def event(self,kind,id,value=0):
         self.write(PACKET,struct.pack('<BBh',kind,id,value))
@@ -152,35 +177,81 @@ def verify(original,patched,build):
     m.key_actions.clear();m.original_events.clear();m.enter()
     assert not m.key_actions and not m.original_events
     assert m.leds[6]==3
-    m.event(2,1);m.event(1,1);assert m.get(MASTER,0)==1
-    before=m.get(MASTER,0);m.event(3,1);assert m.get(MASTER,0)==before
-    m.event(2,1);m.event(1,1);assert m.get(MASTER,0)==0
-    # All sixteen controls reach both stored endpoints, with no mixer change.
+    # Eight SELECT/BFX/MFX controls toggle only their assigned parameter.
+    # Auto-repeat, duplicate down and release cannot toggle a second time.
+    for key,(index,led) in SWITCHES.items():
+        before=[m.get(MASTER,i) for i in range(65)]
+        m.event(2,key)
+        expected=before[:];expected[index]=int(not before[index])
+        assert [m.get(MASTER,i) for i in range(65)]==expected
+        assert m.leds[led]==expected[index]
+        assert ''.join(chr(c[2]) for c in m.characters[-7:-4])==LABELS[index]
+        m.event(3,key);m.event(2,key);m.event(1,key)
+        assert [m.get(MASTER,i) for i in range(65)]==expected
+        m.event(2,key);m.event(1,key)
+        assert m.get(MASTER,index)==before[index]
+        assert m.leds[led]==before[index]
+    # All 22 knobs/faders reach both stored endpoints without mixer changes.
+    unmapped={i:m.get(MASTER,i) for i in range(65) if i not in ASSIGN.values()}
     mixer=m.read(0x604f4014,1072)
     for adc,index in ASSIGN.items():
         m.event(0xb,adc,0);m.event(0xb,adc,127);m.event(0xb,adc,0)
         assert m.get(MASTER,index)==0,(adc,index)
         m.event(0xb,adc,127)
         assert m.get(MASTER,index)==parameters[index]['stored_range'][1]
+        assert ''.join(chr(c[2]) for c in m.characters[-7:-4])==LABELS[index]
     assert m.read(0x604f4014,1072)==mixer
+    assert all(m.get(MASTER,i)==v for i,v in unmapped.items())
     assert m.notices, 'Original transaction notifications did not run'
     # All other buttons/encoders and unused analogue controls are consumed.
-    eq=[m.get(MASTER,i) for i in range(17)]
+    eq=[m.get(MASTER,i) for i in range(65)]
     for id in range(0x55):
-        if id in (1,0x17):continue
+        if id in SWITCHES or id==0x17 or 1<=id<=10:continue
         m.event(2,id);m.event(3,id);m.event(1,id)
     for kind in (4,5):
         for id in (0,1):m.event(kind,id,1)
     for adc in set(range(28))-ASSIGN.keys():m.event(0xb,adc,100)
-    assert eq==[m.get(MASTER,i) for i in range(17)]
+    assert eq==[m.get(MASTER,i) for i in range(65)]
     assert m.read(0x604f4014,1072)==mixer
     assert not m.original_events
     # Button held across exit: release must not invoke scene/store actions.
     m.event(2,0x19);m.exit();m.event(1,0x19);assert not m.original_events
+    # Original slot copies and save preparation run unchanged. Storage worker
+    # submission is captured, so this establishes RAM retention and correct
+    # save payloads, not flash completion or power-cycle survival.
+    m=MasterMachine(patched,symbols);m.enter()
+    assert m.leds[0x19]==1 and all(m.leds[0x19+i]==0 for i in range(1,10))
+    expected=[]
+    for slot in range(10):
+        m.event(2,slot+1);m.event(1,slot+1)
+        assert m.get(SYSTEM,1)==slot and m.get(SETUP,0x24)==0
+        assert m.leds[0x19+slot]==1
+        assert all(m.leds[0x19+i]==0 for i in range(10) if i!=slot)
+        for i in range(65): m.set(MASTER,i,(slot+i)%(parameters[i]['stored_range'][1]+1))
+        expected.append([m.get(MASTER,i) for i in range(65)])
+    for slot in range(10):
+        m.event(2,slot+1);m.event(1,slot+1)
+        assert [m.get(MASTER,i) for i in range(65)]==expected[slot]
+        assert struct.unpack('<I',m.read(STATE+4,4))[0]==0
+        assert all(m.leds[0x29+i]==3 for i in range(11))
+        loads=len(m.loads); saves=len(m.saves)
+        m.event(2,slot+1);m.event(3,slot+1);m.event(2,slot+1);m.event(1,slot+1)
+        assert len(m.loads)==loads and len(m.saves)==saves
+    m.exit()
+    assert len(m.saves)==20
+    assert all(area==0 and group==6 and len(data)==260 for area,group,ptr,data in m.saves)
+    assert list(struct.unpack('<65I',m.saves[-1][3]))==expected[9]
+    assert [t[2] for t in m.transactions if t[0]==SETUP and t[1]==0x24]==[1,0]*19
+    # A displaced control must catch the NEW slot value before editing it.
+    m=MasterMachine(patched,symbols);m.enter()
+    m.event(0xb,7,0);m.event(0xb,7,127)
+    m.event(2,2);m.event(1,2)  # untouched slot contains zero in this fixture
+    m.event(0xb,7,120);assert m.get(MASTER,3)==0
+    m.event(0xb,7,0);m.event(0xb,7,127);assert m.get(MASTER,3)==24
     # Forced pickup with stock global Jump AND Pass; logical levels are held
     # until crossing, then the unchanged stock fader function applies the move.
     for mode in (0,1):
-        for adc in (7,11,15,19,23,25):
+        for adc in range(7,28,2):
             m=MasterMachine(patched,symbols);m.system_values[5]=mode
             m.enter();m.event(0xb,adc,127);m.exit()
             strip=(adc-7)//2
@@ -193,7 +264,7 @@ def verify(original,patched,build):
     m.set(MIX,0x63,40);m.exit()
     m.event(0xb,6,50);assert m.get(MIX,0x63)==40
     m.event(0xb,6,39);assert m.get(MIX,0x63)==39
-    # Entering EQ uses pickup too, including coarse filter-type choices.
+    # Entering mastering uses pickup for every fader/knob, including ratios.
     for adc,index in ASSIGN.items():
         m=MasterMachine(patched,symbols)
         maximum=parameters[index]['stored_range'][1]
@@ -231,12 +302,13 @@ def verify(original,patched,build):
           'Reclaimed stock mixer lookup agrees for all 263 valid IDs and invalid boundaries; external literal/shared returns preserved',
           'All 65 mastering names and ranges linked to actual original index instructions',
           'Long hold, short tap, exit and stock modifier gestures; guards and timer wrap',
-          'All 16 assigned EQ controls execute stock transactions with bounded ranges and no mixer changes',
+          'All 22 assigned controls and eight switches execute stock transactions, correct display/LED selection, and preserve unmapped parameters',
+          'Ten step-pad slots use original copy/save preparation; all 65 values survive slot round trips; pickup resets and same-slot presses are inert',
           'Entire edit surface isolated; held-button releases cannot leak after exit',
-          'EQ entry pickup and forced mixer-return pickup in Jump and Pass modes; stock fader blink encoding')],
+          'Mastering entry pickup and forced mixer-return pickup in Jump and Pass modes; stock fader blink encoding')],
         'boundaries':['Original parameter lookup, getters, clamping setters, group storage and formatter execute unchanged except compressed mixer ID lookup',
           'Original fader handlers and blink renderer execute; physical ADC/LED protocol and timing are not modeled',
-          'Object vtables and parameter defaults are initialized fixtures; RTOS time, periodic callback body, mutex, notifications, MIDI send and final panel I/O are stubbed',
+          'Object vtables and parameter defaults are initialized fixtures; RTOS time, periodic callback body, mutex, notifications, MIDI send, storage singleton/submission and final panel I/O are stubbed',
           'No hardware, audio measurements or physical save/restart acceptance; no new sample callback, MPU region or heap reservation']}
 
 if __name__=='__main__':

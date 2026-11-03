@@ -25,7 +25,7 @@ SECTIONS {
     ASSERT(ADDR(.usb_state) + SIZEOF(.usb_state) <= 0x01018000, "Writable state overflow")
     .master_lookup 0x6001dbd6 : { KEEP(*(.master_lookup)) }
     .master_head 0x6001dbf4 : { *(.master_head) *(.master_rodata) . = ALIGN(4); }
-    .master_text 0x6001de0c : { *(.master_text) . = ALIGN(4); }
+    .master_text 0x6001de0c : { *(.master_text) *(.master_labels) . = ALIGN(4); }
     ASSERT(SIZEOF(.master_lookup) <= 30, "Mixer lookup replacement overflow")
     ASSERT(SIZEOF(.master_head) <= 532, "Mastering head overlaps shared literal")
     ASSERT(SIZEOF(.master_text) <= 2016, "Mastering code overlaps shared return")

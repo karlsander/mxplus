@@ -19,11 +19,21 @@ prerequisite for a hardware experiment.
 2. Open the patcher in a current browser over HTTPS. Choose or drop the
    extracted `MX-1_UPD.BIN`. The original remains on the computer.
 3. After the exact original hash is verified, select **Create patched firmware**.
-4. Download `MXPLUS_MAINLINE_UNTESTED.bin`.
+4. Download `MX1_UPD_mxplus.bin`.
    The output must match the maintained mainline candidate's SHA-256.
 5. Read the site's installation instructions before any device operation.
-   Keep the labelled experimental file. Only the separate copy prepared for
+   Keep the downloaded file. Only the separate copy prepared for
    the updater is named `MX-1_UPD.BIN`; keep the stock file elsewhere.
+
+The download name is `MX1_UPD_mxplus.bin`. The sole maintained artifact remains
+`build/mainline/MXPLUS_MAINLINE_UNTESTED.bin`; the release manifest still records
+`UNTESTED`. Renaming the browser download changes no firmware bytes or validation
+status.
+
+The first installation step uses Roland's documented parameter backup procedure:
+pad 1 at power-on, copy all 95 files from `BACKUP`, eject, disconnect and power
+off. These files cover MIX, MASTER FX and MASTER FX COMBI, not the firmware or
+factory calibration. Source: [MX-1 supplementary manual, Parameter Backup/Restore](https://cdn.roland.com/assets/media/pdf/MX-1_Supplementary_Manual_e01_W.pdf).
 
 The page does not use WebUSB or perform a hardware update. It rejects other
 revisions, corrupt or truncated files, ZIP archives and already patched images.
@@ -45,7 +55,7 @@ not decoded-image or runtime addresses. Firmware patch sites, relocation,
 ABI and component checksums remain in the mainline build report; XOR distribution
 adds no new firmware patch sites or runtime memory use.
 
-`manifest.json` records input/output hashes and sizes, experimental filename,
+`manifest.json` records input/output hashes and sizes, download filename,
 source commit, and a hash-named patch asset. The browser validates the manifest,
 hashes the input, verifies the patch asset, checks range bounds/encoding, applies
 XOR to a copy, and checks the whole output hash before offering a download.

@@ -24,21 +24,20 @@
       <p id="status" role="status" aria-live="polite">Loading release details…</p>
       <noscript><p>JavaScript is required to patch the file.</p></noscript>
       <div id="result" hidden>
-        <a id="download">Download UNTESTED firmware</a>
+        <a id="download">Download patched firmware</a>
       </div>
     </section>
 
     <section id="installation" aria-labelledby="installation-title">
       <h2 id="installation-title">Installation</h2>
-      <p>Back up settings, establish a stock baseline and arrange a device-specific recovery route first. Previous TAP rollback results do not guarantee recovery. Read the <a href="https://github.com/karlsander/mxplus/blob/main/docs/HARDWARE_VALIDATION.md">hardware preparation guide</a>.</p>
       <ol>
-        <li>Keep the downloaded <code>MXPLUS_MAINLINE_UNTESTED.bin</code>. Make a separate copy named <code>MX-1_UPD.BIN</code> for installation. Keep the stock file elsewhere.</li>
-        <li>With the MX-1 off, hold <strong>TAP</strong> while switching it on. Connect the computer to USB-B and open the MX-1 drive.</li>
+        <li><strong>Back up data.</strong> With the MX-1 off, hold pad <strong>1</strong> while switching it on. Connect USB-B to the computer and open the MX-1 drive. Copy all 95 files from its <code>BACKUP</code> folder into a folder on the computer. These contain MIX, MASTER FX and MASTER FX COMBI settings. Eject the drive, disconnect USB, then switch off.</li>
+        <li>Keep the downloaded <code>MX1_UPD_mxplus.bin</code>. Make a separate copy named <code>MX-1_UPD.BIN</code> for installation. Keep the stock file elsewhere.</li>
+        <li>Enter update mode as described in <a href="https://www.roland.com/uk/support/by_product/mx-1/updates_drivers/82415302-0466-4c5c-be4e-138a8946d4a7/">Roland’s update procedure</a>: hold <strong>TAP</strong> while switching on the MX-1. Connect USB-B to the computer and open the MX-1 drive.</li>
         <li>Copy only the prepared <code>MX-1_UPD.BIN</code> to the drive’s top level. Wait for copying to finish, eject the drive, then disconnect USB.</li>
-        <li>Press <strong>TAP</strong> to update. Keep power connected until <strong>Fin</strong> appears, then switch off. If the expected sequence fails, use the established recovery plan.</li>
-        <li>Restart with monitoring muted and follow the <a href="https://github.com/karlsander/mxplus/blob/main/docs/MAINLINE.md#bench-sequence">bench checks</a>. The displayed Roland version does not identify mxplus.</li>
+        <li>Press <strong>TAP</strong> to update. Keep power connected until <strong>Fin</strong> appears, then switch off.</li>
+        <li>Restart with monitoring muted. Check normal mixer operation before connecting other equipment.</li>
       </ol>
-      <p class="note">Transfer steps follow <a href="https://www.roland.com/uk/support/by_product/mx-1/updates_drivers/82415302-0466-4c5c-be4e-138a8946d4a7/">Roland’s update procedure</a>. The renamed experimental file is an mxplus step, not a Roland-supported update.</p>
     </section>
 
     <footer>

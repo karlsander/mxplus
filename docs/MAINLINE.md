@@ -9,8 +9,13 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`f9e91cdc5fa2b2aa73cfc75671e570651893484bd35d09a8d7c2d23192d81133`.
-It adds [mastering mode](MASTERING.md) on top of the
+`1ed56e3569df508f8d099eb9d162ff9c37d8915a895ef7d2cc64696662e221cf`.
+It fixes mastering-hold cancellation by background panel traffic, following a
+user report that the previous `f9e91cdc…` image booted and routed channels but
+did not enter mastering mode. The new hold behavior has offline evidence only;
+the physical event responsible on that unit was not captured. See the
+[failure and regression record](../evidence/mastering-hold-20261103/README.md).
+It includes [mastering mode](MASTERING.md) on top of the
 [stereo packet fix](USB_PACKET_FIX.md). The pre-generator image
 `88457445…` was confirmed by the user to boot and pass one iPhone/AUM duplex
 path. The changed image, snapshot persistence and broader USB operation still

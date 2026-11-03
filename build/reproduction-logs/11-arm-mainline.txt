@@ -9,6 +9,7 @@
     "Reclaimed stock mixer lookup agrees for all 263 valid IDs and invalid boundaries; external literal/shared returns preserved",
     "All 65 mastering names and ranges linked to actual original index instructions",
     "Long hold, short tap, exit and stock modifier gestures; guards and timer wrap",
+    "Mastering hold survives continuous ADC samples and unrelated panel notifications; short taps retain the stock action",
     "All 22 assigned controls and eight switches execute stock transactions, correct display/LED selection, and preserve unmapped parameters",
     "Ten step-pad slots use original copy/save preparation; all 65 values survive slot round trips; pickup resets and same-slot presses are inert",
     "Entire edit surface isolated; held-button releases cannot leak after exit",
@@ -69,5 +70,5 @@
     "Independent factory graph audit matches all 18 raw PC and 18 serial read bindings",
     "Original native input gates and connection callbacks distinguish native and PC paths"
   ],
-  "patched_app_sha256": "3202b16852109da6217d0790abd9dec5142633729782a5158cc539ace8e4079f"
+  "patched_app_sha256": "56d7b7c8a3259e37c6e1a276c377e3dcecbed4a4fa84088754f7426d52a7c1b6"
 }

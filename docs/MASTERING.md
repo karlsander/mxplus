@@ -6,6 +6,12 @@ operation. MASTERING + TEMPO still selects the stock preset when the encoder
 is turned before the hold completes. Entry is limited to the stock operational pages (IDs 5 and 15), outside
 boot, lock and modal states.
 
+Knob/fader samples and unrelated panel notifications continue through their
+ordinary handlers while the hold is pending. Another button or an encoder
+movement cancels the hold and preserves the stock modified gesture. The
+[hold regression record](../evidence/mastering-hold-20261103/README.md) documents
+the previous cancellation bug and the limits of its offline reproduction.
+
 The mode takes over panel buttons, encoders, faders and scanned knobs. Step
 pads **1–10** select the ten built-in mastering slots; the current slot lights.
 Pressing the current pad does nothing. Pads 11–16 and other unassigned controls
@@ -139,7 +145,7 @@ No heap, MPU, USB application, boot program, updater or panel payload changes.
 [mastering-verification.json](../build/mainline/mastering-verification.json)
 executes the compiled registered callbacks, original parameter storage/getters/
 clamping transactions and value formatter. It covers short/long gestures, timer
-wrap, page/modal/lock guards, all 22 analog assignments, eight switches and ranges, isolated controls,
+wrap, interleaved ADC/background traffic, page/modal/lock guards, all 22 analog assignments, eight switches and ranges, isolated controls,
 held releases, return pickup in Jump and Pass modes, externally changed targets,
 original tone/fader handling, blink encoding and the displaced redraw branches.
 It also checks all ten slots, 65-value round trips, outgoing save payloads,

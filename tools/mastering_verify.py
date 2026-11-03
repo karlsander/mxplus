@@ -165,10 +165,44 @@ def verify_lookup(original,patched):
             assert 0x1dbd6<=off<0x1e65e, ('unexpected interior pointer',hex(off),hex(value))
 
 
+def verify_hold_traffic(patched,symbols):
+    # Physical control packets share this callback with ADC samples and other
+    # panel notifications. The clock/periodic boundary remains modeled here.
+    m=MasterMachine(patched,symbols)
+    m.event(2,0x17)
+    for step in range(12):
+        m.event(0xb,6,64+(step&1))
+        m.event(0x1d,0,0)
+        m.tick(100)
+        assert m.active()==(step==11), 'Background panel traffic cancelled mastering hold'
+    assert '02170000' not in m.original_events, 'Background traffic synthesized a stock MASTERING press'
+    assert m.original_events.count('1d000000')==12
+    m.event(1,0x17)
+    assert m.active()
+    m.exit()
+
+    # Background traffic must not turn a short tap into an editor entry or
+    # swallow the original bypass action on release.
+    m=MasterMachine(patched,symbols)
+    m.event(2,0x17);m.event(0xb,6,65);m.tick(300);m.event(1,0x17)
+    assert not m.active()
+    assert m.original_events[-2:]==['02170000','01170000']
+
+    # Other buttons and either encoder event still cancel the hold and replay
+    # the deferred MASTERING press before the stock modified gesture.
+    for kind,control in ((2,0x29),(4,0),(4,1),(5,0)):
+        m=MasterMachine(patched,symbols)
+        m.event(2,0x17);m.event(0xb,6,65);m.event(kind,control,1)
+        assert m.original_events[1:3]==['02170000',struct.pack('<BBh',kind,control,1).hex()]
+        m.tick(2000)
+        assert not m.active()
+
+
 def verify(original,patched,build):
     verify_lookup(original,patched)
     parameters=extract_parameters(original)
     symbols=build['symbols']
+    verify_hold_traffic(patched,symbols)
     m=MasterMachine(patched,symbols)
     # Short tap passes the exact stock down/up pair; long hold has no key
     # actions and does not change master bypass or load another preset.
@@ -302,6 +336,7 @@ def verify(original,patched,build):
           'Reclaimed stock mixer lookup agrees for all 263 valid IDs and invalid boundaries; external literal/shared returns preserved',
           'All 65 mastering names and ranges linked to actual original index instructions',
           'Long hold, short tap, exit and stock modifier gestures; guards and timer wrap',
+          'Mastering hold survives continuous ADC samples and unrelated panel notifications; short taps retain the stock action',
           'All 22 assigned controls and eight switches execute stock transactions, correct display/LED selection, and preserve unmapped parameters',
           'Ten step-pad slots use original copy/save preparation; all 65 values survive slot round trips; pickup resets and same-slot presses are inert',
           'Entire edit surface isolated; held-button releases cannot leak after exit',

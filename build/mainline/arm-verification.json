@@ -1,8 +1,8 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "3202b16852109da6217d0790abd9dec5142633729782a5158cc539ace8e4079f",
-  "candidate_container_sha256": "f9e91cdc5fa2b2aa73cfc75671e570651893484bd35d09a8d7c2d23192d81133",
+  "patched_app_sha256": "56d7b7c8a3259e37c6e1a276c377e3dcecbed4a4fa84088754f7426d52a7c1b6",
+  "candidate_container_sha256": "1ed56e3569df508f8d099eb9d162ff9c37d8915a895ef7d2cc64696662e221cf",
   "extension_sha256": "859b0ffc16473fcefcce41c53029821f1013c206f8b00d32203fbbc0e166be68",
   "groups": [
     {
@@ -118,6 +118,10 @@
     },
     {
       "name": "Long hold, short tap, exit and stock modifier gestures; guards and timer wrap",
+      "status": "pass"
+    },
+    {
+      "name": "Mastering hold survives continuous ADC samples and unrelated panel notifications; short taps retain the stock action",
       "status": "pass"
     },
     {

@@ -1,7 +1,7 @@
 {
   "status": "pass",
   "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
-  "candidate_sha256": "f9e91cdc5fa2b2aa73cfc75671e570651893484bd35d09a8d7c2d23192d81133",
+  "candidate_sha256": "1ed56e3569df508f8d099eb9d162ff9c37d8915a895ef7d2cc64696662e221cf",
   "hardware_access": false,
   "hardware_recovery_verified": false,
   "checks": [
@@ -147,7 +147,7 @@
         },
         {
           "image": "routing",
-          "decoded_main_sha256": "3202b16852109da6217d0790abd9dec5142633729782a5158cc539ace8e4079f",
+          "decoded_main_sha256": "56d7b7c8a3259e37c6e1a276c377e3dcecbed4a4fa84088754f7426d52a7c1b6",
           "loads": [
             "0x3200000",
             "0x3080000"

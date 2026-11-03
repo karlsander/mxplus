@@ -192,10 +192,13 @@ void mx1_master_ui_event(const u8 *event) {
             mx1_route_ui_event(down); mx1_route_ui_event(event); return;
         }
         if (key && id==MASTER_KEY) return;
-        /* Retain stock MASTERING+encoder gestures, without a delayed entry. */
-        S.pending=0; S.swallowed[MASTER_KEY/8]&=(u8)~(1u<<(MASTER_KEY&7));
-        const u8 down[4]={2,MASTER_KEY,0,0};
-        mx1_route_ui_event(down);
+        /* Only a button or encoder cancels the hold. ADC samples and other
+         * panel notifications keep flowing without fabricating a stock press. */
+        if (type-1u<5u) {
+            S.pending=0; S.swallowed[MASTER_KEY/8]&=(u8)~(1u<<(MASTER_KEY&7));
+            const u8 down[4]={2,MASTER_KEY,0,0};
+            mx1_route_ui_event(down);
+        }
     }
     if (!S.active && key && type==2 && id==MASTER_KEY && eligible() && no_keys()) {
         S.pending=1; S.started=now(); S.swallowed[id/8]|=bit; return;

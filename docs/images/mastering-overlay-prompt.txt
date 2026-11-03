@@ -1,0 +1,27 @@
+Use case: infographic-diagram.
+Create a precise high-resolution landscape overlay-style control mapping image for the Roland MX-1, based on the provided top-down product photograph. Reference image role: physical geometry reference. Preserve the exact eleven channel strips, knobs, SELECT/BFX/MFX rows and faders. Darken unrelated controls and layer clear, professional colored labels over the channel area. This is an explanatory concept overlay, not a print-to-scale template.
+
+Title: "MXPLUS · MASTERING MODE". Subtitle: "Hold MASTERING to enter · Press once to exit".
+Number the eleven physical strips LEFT TO RIGHT 1 through 11, and show their stock names: 1, 2, 3, 4, 5/6, DIGITAL, USB 1, USB 2, USB 3, USB 4, PC.
+Group headers with subtle color zones: EQ over strips 1–4 (cyan); EXPANDER over 5–7 (amber); COMPRESSOR over 8–10 (violet); MID / SIDE over 11 (green).
+Exactly one knob label and one fader label for EACH column:
+1 knob L FREQ; fader L GAIN.
+2 knob LM FREQ; fader LM GAIN.
+3 knob HM FREQ; fader HM GAIN.
+4 knob H FREQ; fader H GAIN.
+5 knob L RATIO; fader L THRESH.
+6 knob M RATIO; fader M THRESH.
+7 knob H RATIO; fader H THRESH.
+8 knob L RATIO; fader L THRESH.
+9 knob M RATIO; fader M THRESH.
+10 knob H RATIO; fader H THRESH.
+11 knob MID LEVEL; fader SIDE LEVEL.
+
+Button overlays must align with their physical rows and columns, using these EXACT assignments only:
+SELECT row: strip1 "EQ ON/OFF", strip5 "EXP ON/OFF", strip8 "COMP ON/OFF", strip11 "LOW CUT".
+BFX row: strip1 "L TYPE", strip4 "H TYPE", strip11 "ENHANCER".
+MFX row: strip11 "LIMITER".
+All other buttons remain dark and unassigned. Do not merge knob labels with button labels. Reserve sufficient space with small callouts if needed, keeping connectors unambiguous. Use a clean sans-serif, very legible bright lettering on dark translucent panels. Unassigned top step pads dimmed; no parameters on pads.
+Footer: "Type: shelf / peak · Switch lights show enabled · Faders blink until pickup" and "Sketch mapping · Unassigned controls retain their parameter values".
+Avoid additional controls, Q assignments, input/output level assignments, invented buttons, perspective distortion or duplicated columns. Readable accurate diagram over photographic instrument, high detail.
+REVISION: Step pads 1–10 are now assigned to mastering preset slots 1–10. Illuminate precisely the first ten top-row pads subtly, show pad 1 distinctly selected, and label the row 'MASTERING SLOTS 1–10'. Pads 11–16 stay dim and unassigned. Preserve every channel knob, fader and switch mapping from the supplied overlay. Replace footer's last sentence with 'Edits saved on exit or slot change'. Keep geometry and all remaining labels unchanged.

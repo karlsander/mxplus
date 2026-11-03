@@ -123,6 +123,9 @@ def audit(check_committed: bool = False) -> dict:
         require(arm.get("status") == "pass", kind + " ARM integration check failed")
         require(arm.get("patched_app_sha256") == actual["patched_app_sha256"],
                 kind + " ARM report belongs to another application")
+        mastering = read(prefix + "mastering-verification.json")
+        require(mastering.get("status") == "pass" and mastering.get("patched_app_sha256") == actual["patched_app_sha256"],
+                "Mainline mastering evidence missing or belongs to another candidate")
         storage = read(prefix + "storage-verification.json")
         require(storage.get("status") == "pass" and storage.get("patched_app_sha256") == actual["patched_app_sha256"],
                 "Mainline storage evidence missing or belongs to another candidate")

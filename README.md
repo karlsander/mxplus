@@ -1,10 +1,11 @@
 # mxplus
 
 One Roland MX-1 firmware build: channel source routing, routing snapshots and
-restart persistence, and experimental USB-B UAC2 audio. USB1–4 stay stock.
+restart persistence, mastering editing, and experimental USB-B UAC2 audio. USB1–4 stay stock.
 
-The maintained image (`dacb12ae…`) adds the [stereo USB packet fix](docs/USB_PACKET_FIX.md)
-to the pre-generator baseline and awaits hardware acceptance. On the preceding
+The maintained image (`f9e91cdc…`) adds [mastering mode](docs/MASTERING.md)
+on top of the [stereo USB packet fix](docs/USB_PACKET_FIX.md). Both changes
+await hardware acceptance. On the preceding
 image (`88457445…`), the user confirmed normal boot and an analog-input →
 iPhone/AUM effect → another MX-1 channel audio round trip with a direct
 USB-B–USB-C cable. Routing and
@@ -14,6 +15,13 @@ This is experimental firmware, not a certified safe or universally compatible
 upgrade. Snapshot/restart persistence still needs its physical acceptance test.
 
 ## Controls
+
+Hold **MASTERING** until it blinks to edit mastering across the faders and knobs.
+Pads **1–10** select mastering slots; SELECT **1** toggles EQ. Press MASTERING
+once to save and exit. Controls pick up their
+previous mixer values on return, with the stock fader blink indication.
+See the [control layout](docs/MASTERING.md) and
+[full mastering parameter tables](docs/MASTERING_PARAMETERS.md).
 
 Hold a destination strip's **SELECT** and turn **TEMPO** to choose its source.
 The menu stops at **Auto** and **P9 R**. Release SELECT to return to ordinary

@@ -10,6 +10,6 @@
     "First and repeated Auto drains produce no routing DSP writes or event posts",
     "Original and routing empty-handler stack depth measured under stated stubs"
   ],
-  "candidate_sha256": "dacb12ae966da96176a4c40c8fb736a021ff0a5091d06c800192bcb547474211",
+  "candidate_sha256": "f9e91cdc5fa2b2aa73cfc75671e570651893484bd35d09a8d7c2d23192d81133",
   "hardware_recovery_verified": false
 }

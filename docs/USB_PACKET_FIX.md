@@ -1,10 +1,12 @@
 # Stereo USB playback packet fix
 
 The current mainline corrects the [stereo accounting defect](ADVERSARIAL_REVIEW.md)
-in the original playback pump. Candidate SHA-256:
+in the original playback pump. The first candidate containing this fix was:
 `dacb12ae966da96176a4c40c8fb736a021ff0a5091d06c800192bcb547474211`.
 This image has offline validation only. The preceding `88457445…` image's
 boot and iPhone/AUM result do not constitute acceptance of this change.
+The current image also contains mastering EQ editing; its identity and expanded
+writable-state reservation are recorded in [MAINLINE.md](MAINLINE.md).
 
 ## Behavior
 

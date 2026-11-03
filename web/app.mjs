@@ -88,6 +88,7 @@ zone.addEventListener("drop", (e) => {
         report("Choose one firmware file at a time.", "error");
         return;
     }
+    fileInput.files = e.dataTransfer.files;
     choose(e.dataTransfer.files[0]);
 });
 

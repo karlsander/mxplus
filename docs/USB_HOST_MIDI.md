@@ -6,9 +6,11 @@ for this candidate.** A user reported no visible MIDI on an FM-1 after selecting
 INT and restarting both devices. The parser rejected that monitor build's
 MIDI descriptor length; the [compatibility fix and exact built-image fixture](../evidence/fm1-host-midi-20261103/README.md)
 now have ARM regression coverage. This fixture is not a live USB capture.
-Generic USB audio remains disabled.
+The subsequent d001 display test reported connection without MIDI readiness
+for the FM-1; see [bench readings](../evidence/mastering-key-range-20261104/README.md#separate-host-midi-observation).
+The current mastering-only fix retains that USB application unchanged. Generic USB audio remains disabled.
 
-Candidate SHA-256: `a21259c0c896fa06db18e87f8a3d997fe1661c7e9ee14ad7c8077fdf6446292b`.
+Candidate SHA-256: `9f6da91f9aaaedfb406ed1fa2d6af1a51900b44ecc950d4294cc6a513d5d8d38`.
 
 ## Behavior and scope
 

@@ -1,65 +1,18 @@
 # mxplus
 
-One Roland MX-1 firmware build: channel source routing, routing snapshots and
-restart persistence, mastering editing, and experimental USB-B UAC2 audio. USB1–4 stay stock.
+mxplus is a a firmware hack for the Roland MX-1. Unsurprisingly, everything except for this README is vibe-coded. Patching your firmware with mxplus adds these features:
 
-The maintained image (`f9e91cdc…`) adds [mastering mode](docs/MASTERING.md)
-on top of the [stereo USB packet fix](docs/USB_PACKET_FIX.md). Both changes
-await hardware acceptance. On the preceding
-image (`88457445…`), the user confirmed normal boot and an analog-input →
-iPhone/AUM effect → another MX-1 channel audio round trip with a direct
-USB-B–USB-C cable. Routing and
-encoder end stops were also tested in its predecessor. See the
-[hardware record](evidence/iphone-aum-20261102/README.md) for limitations.
-This is experimental firmware, not a certified safe or universally compatible
-upgrade. Snapshot/restart persistence still needs its physical acceptance test.
+- **Driverless USB audio** I wouldn’t call it class compliant, but it works. Plugged straight into an iOS device, you can record any input and send to any mixer channel. This is for the USB-B port, not the AIRA host ports.
+- **Channel Source Mapping** On any channel, select a source by holding down Select and rotating the Tempo encoder. Use any analog input, including 5 and 6 separately, Effect Return Stereo/L/R and digital/USB/PC channels as stereo, L or R.
+- **Mastering Mode** Hold down the mastering button to enter mastering mode, where the whole control surface is taken over to offer control over the quite comprehensive hidden mastering chain (Parametric EQ > Low Cut > Enhancer > 3-Band Expander and Compressor, with adjustable crossover > Mid/Side Processor > Limiter > Clipper). You can use any of the the 10 built-in slots to store configs.
 
-## Controls
+The channel remapping makes it possible to use all 11 channels even without much Roland gear, either by spreading mono / return channels or duplicating inputs for parallel processing.
 
-Hold **MASTERING** until it blinks to edit mastering across the faders and knobs.
-Pads **1–10** select mastering slots; SELECT **1** toggles EQ. Press MASTERING
-once to save and exit. Controls pick up their
-previous mixer values on return, with the stock fader blink indication.
-See the [control layout](docs/MASTERING.md) and
-[full mastering parameter tables](docs/MASTERING_PARAMETERS.md).
+To make better use of the channels, I want to explore unlocking the USB host ports for other devices and maybe adding internal sound generators, but most importantly I want a stable, better version of the MX-1 we love, not turn it into different instrument, so we’ll see.
 
-Hold a destination strip's **SELECT** and turn **TEMPO** to choose its source.
-The menu stops at **Auto** and **P9 R**. Release SELECT to return to ordinary
-controls. SELECT taps and the no-channel-selected view retain Roland behavior.
-Routes use the stock snapshot and delayed system-save paths; no extra autosave
-routine is added. [Routing instructions](docs/CHANNEL_ROUTING.md) include the
-analog 5/6 split and [storage details](docs/ROUTING_STORAGE.md) explain persistence.
+## Install
 
-USB-B advertises stereo and 18-channel UAC2 alternates at the mixer-selected
-sample rate. The stereo playback accounting fix passes finite-packet instruction
-tests; physical stereo acceptance remains open. MIDI remains proprietary.
-See [USB audio](docs/DEVICE_PROBE.md).
+Download the original Roland firmware and use the [web patcher](https://karlsander.github.io/mxplus/) to modify it. The patcher also explains how to install the resulting file.
 
-Generators, the blinking SELECT edit mode and generic USB-host unlocking are
-retired. Their findings are documentation only:
-[generator/DSP handoff](docs/GENERATOR_RESEARCH.md), [host research](docs/HOST_PROBE.md).
-
-## Build and verify
-
-```sh
-python3 -m venv .venv
-.venv/bin/python -m pip install -r requirements.txt
-.venv/bin/python tools/reproduce.py
-.venv/bin/python tools/check_reproduction.py --check-committed
-```
-
-The sole update artifact is
-[`build/mainline/MXPLUS_MAINLINE_UNTESTED.bin`](build/mainline/MXPLUS_MAINLINE_UNTESTED.bin).
-`tools/build_firmware.py` and `patches/mainline.ld` define the only maintained
-build. The adjacent build report records input/output identities, exact patch
-bytes and placement. There are no feature-selection flags or parallel builds.
-
-Keep `inputs/MX1_UPD.original.bin` unchanged. Its SHA-256 is
-`26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e`.
-
-[Integration](docs/MAINLINE.md), [review](docs/MAINLINE_REVIEW.md),
-[CI](docs/CI.md), [contributing](CONTRIBUTING.md), [roadmap](ROADMAP.md) and
-[hardware validation](docs/HARDWARE_VALIDATION.md) describe evidence and limits.
-Historical reports remain in `evidence/`; retired source/artifacts are in Git
-history. This is independent research with no Roland endorsement or
-repository-wide license; see [provenance](PROVENANCE.md).
+Of course there is always some risk of bricking your device if you flash non-manufacturer firmware.
+However, during development, I flashed a few problematic versions that left the device not turning on at all, and also accidentally interrupted the flashing process, and I was always able to return normally to firmware install mode (so far) and install a good version.

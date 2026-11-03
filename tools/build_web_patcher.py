@@ -69,7 +69,7 @@ def main() -> None:
         "sourceCommit": commit,
         "input": {"size": len(original), "sha256": ORIGINAL_SHA256},
         "output": {"size": len(candidate), "sha256": sha256(candidate),
-                   "filename": "MXPLUS_MAINLINE_UNTESTED.bin"},
+                   "filename": "MX1_UPD_mxplus.bin"},
         "patch": {"file": f"patch-{patch_hash}.json", "sha256": patch_hash},
     }
     if OUTPUT.exists():

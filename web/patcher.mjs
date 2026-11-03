@@ -21,7 +21,7 @@ export function validateManifest(m) {
         m.output?.size !== INPUT_SIZE ||
         !HASH.test(m.output.sha256) ||
         m.output.sha256 === INPUT_SHA256 ||
-        m.output.filename !== "MXPLUS_MAINLINE_UNTESTED.bin" ||
+        m.output.filename !== "MX1_UPD_mxplus.bin" ||
         !HASH.test(m.patch?.sha256) ||
         m.patch.file !== `patch-${m.patch.sha256}.json`
     ) {

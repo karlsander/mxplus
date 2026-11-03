@@ -4,12 +4,13 @@ The only maintained custom firmware combines channel routing, mastering editing,
 USB-host MIDI is an offline experiment with sync output prioritized and incoming host sync blocked; see [host MIDI](USB_HOST_MIDI.md). Generic host audio remains excluded.
 Generators and their SELECT editor are removed; their findings are in
 [the DSP handoff](GENERATOR_RESEARCH.md).
-The display-marker diagnostic is not part of mainline. Routing now uses scene
+The temporary d001 diagnostic menu and SDRAM reservation are absent from this build. Routing now uses scene
 and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`a21259c0c896fa06db18e87f8a3d997fe1661c7e9ee14ad7c8077fdf6446292b`.
+`9f6da91f9aaaedfb406ed1fa2d6af1a51900b44ecc950d4294cc6a513d5d8d38`.
+It fixes the [held-key range that blocked mastering entry](../evidence/mastering-key-range-20261104/README.md).
 It replaces timed mastering entry with the [MASTERING + TAP combination](../evidence/mastering-chord-20261103/README.md)
 and fixes [FM-1 host-MIDI descriptor rejection](../evidence/fm1-host-midi-20261103/README.md).
 It adds [USB-B MIDI](USB_MIDI.md) and [USB-host MIDI](USB_HOST_MIDI.md) to the existing
@@ -22,10 +23,10 @@ require physical acceptance.
 ## Memory and binary integration
 
 The intervals below describe the **main processor**. The independent USB processor
-adds 2,624 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
+adds 2,640 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
 see [host placement and allocator evidence](USB_HOST_MIDI.md#integration-and-memory).
 
-USB-host MIDI additionally modifies the USB application. Boot programs, updater and panel-controller payload remain byte-identical to stock. The USB application is byte-identical to host-MIDI PR #14; this follow-up changes mastering entry in the main application.
+USB-host MIDI additionally modifies the USB application. Boot programs, updater and panel-controller payload remain byte-identical to stock. The USB application is byte-identical to host-MIDI PR #16; this follow-up corrects the mastering held-key guard in the main application.
 The descriptor, rate and reply buffer in the retired USB-B build occupied
 read-only code SRAM; the combined build fixes that placement before testing.
 

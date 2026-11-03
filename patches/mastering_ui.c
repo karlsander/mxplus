@@ -64,8 +64,10 @@ static __attribute__((noinline)) int eligible(void) {
 }
 __attribute__((section(".master_head"),noinline))
 static int no_keys(void) {
-    for (unsigned i=0;i<11;++i) if (KEYS[i]) return 0;
-    return 1;
+    /* Only IDs 0..0x54 are panel keys, as in routing and the event classifier.
+     * The user's mixer keeps bit 0x55 set; bits 85..87 are outside this range. */
+    for (unsigned i=0;i<10;++i) if (KEYS[i]) return 0;
+    return !(KEYS[10] & 0x1fu);
 }
 static void led(unsigned id,unsigned mode) {
     FN(0x60014a79u,void (*)(unsigned,unsigned,unsigned))(id,mode,9);

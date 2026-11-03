@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "f79bdad226afeabcb4b6bde9c13ac3cc9f990879a56e6cb750c59b83484dcbdc",
+  "patched_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
   "parameters": [
     {
       "n": 1,
@@ -924,6 +924,10 @@
   "groups": [
     {
       "name": "Reclaimed stock mixer lookup agrees for all 263 valid IDs and invalid boundaries; external literal/shared returns preserved",
+      "status": "pass"
+    },
+    {
+      "name": "All 85 physical held keys block entry; all mixtures of bits 85..87 allow the chord and survive unchanged",
       "status": "pass"
     },
     {

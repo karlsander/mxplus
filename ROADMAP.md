@@ -15,6 +15,7 @@ not sustained or comprehensive validation.
    three rates.
 3. Physically validate [mastering mode](docs/MASTERING.md), now entered with
    MASTERING then TAP after the previous timed hold failed on hardware. Check
+   the [held-key range fix](evidence/mastering-key-range-20261104/README.md),
    gesture isolation, all parameter assignments, pickup/blink, save/recall and
    sustained audio. The new UI reclaims an existing stock lookup footprint;
    its offline checks do not establish hardware stability.

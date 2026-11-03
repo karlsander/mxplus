@@ -241,10 +241,38 @@ def verify_chord_pages(original,patched,symbols):
     return pages
 
 
+def verify_key_range(patched,symbols):
+    # Reproduce the observed 0x20 final bitmap byte and all upper-bit mixtures.
+    # Execute both event and periodic paths; retain every real held-key guard.
+    m=MasterMachine(patched,symbols)
+    for high in range(8):
+        m.held(*[bit for bit in range(85,88) if high & (1 << (bit-85))])
+        m.event(2,0x17);m.tick(1)
+        assert m.read(STATE+136,1)==b'\x01', ('not pending',high)
+        m.event(2,0);assert m.active(), high
+        m.event(1,0);m.event(1,0x17);m.exit()
+        assert m.read(0x605129a4+10,1)==bytes([high<<5]), 'Non-panel bits were modified'
+    m=MasterMachine(patched,symbols)
+    for key in range(85):
+        m.held(key,85,86,87)
+        m.event(2,0x17);m.tick(1);m.event(2,0)
+        assert not m.active() and m.read(STATE+136,1)==b'\0', key
+        m.event(1,0);m.event(1,0x17)
+    # A real key appearing after MASTERING still cancels a pending modifier.
+    m=MasterMachine(patched,symbols);m.held(85);m.event(2,0x17)
+    m.held(0x54,85);m.tick(1)
+    assert not m.active() and m.read(STATE+136,1)==b'\0'
+    # The observed upper bit must not swallow ordinary MASTERING or TAP actions.
+    m=MasterMachine(patched,symbols);m.held(85)
+    m.event(2,0x17);m.event(1,0x17);m.event(2,0);m.event(1,0)
+    assert m.original_events==['02170000','01170000','02000000','01000000']
+
+
 def verify(original,patched,build):
     verify_lookup(original,patched)
     parameters=extract_parameters(original)
     symbols=build['symbols']
+    verify_key_range(patched,symbols)
     verify_chord_traffic(patched,symbols)
     pages=verify_chord_pages(original,patched,symbols)
     m=MasterMachine(patched,symbols)
@@ -379,6 +407,7 @@ def verify(original,patched,build):
         'channel_setting_pages_from_original_keys':pages,
         'groups':[{'name':name,'status':'pass'} for name in (
           'Reclaimed stock mixer lookup agrees for all 263 valid IDs and invalid boundaries; external literal/shared returns preserved',
+          'All 85 physical held keys block entry; all mixtures of bits 85..87 allow the chord and survive unchanged',
           'All 65 mastering names and ranges linked to actual original index instructions',
           'Original GAIN/PAN/TONE/AUX/BFX/FADER key actions identify all six supported mixer pages',
           'MASTERING then TAP enters immediately without clock or periodic callbacks; exit, stock taps and modifier guards',

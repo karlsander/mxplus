@@ -9,6 +9,11 @@ still selects the stock preset. TAP alone reaches the original tap-tempo handler
 immediately; the entry combination consumes TAP and both releases, so it does
 not tap a new tempo. Pressing TAP first remains an ordinary tap-tempo action.
 
+The held-key guard checks physical IDs `0..0x54` only, matching routing. The
+user's mixer reported bit 85 set, which blocked the previous 88-bit check; the
+[diagnostic observation and fix](../evidence/mastering-key-range-20261104/README.md)
+are documented separately. This fix still awaits physical acceptance.
+
 Entry is allowed from all six channel-setting pages: GAIN, PAN, TONE, AUX, BFX
 and FADER (IDs 5–10), plus the existing control-surface page 15. Boot, lock,
 modal and other pages remain excluded. Knob/fader samples and unrelated panel

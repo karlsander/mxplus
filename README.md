@@ -10,6 +10,10 @@ The channel remapping makes it possible to use all 11 channels even without much
 
 To make better use of the channels, I want to explore unlocking the USB host ports for other devices and maybe adding internal sound generators, but most importantly I want a stable, better version of the MX-1 we love, not turn it into different instrument, so we’ll see.
 
+USB-B MIDI class support is now an offline-tested experiment: the build advertises
+two USB-MIDI 1.0 ports alongside audio. It still needs testing with a real host.
+See [MIDI status and test procedure](docs/USB_MIDI.md).
+
 ## Install
 
 Download the original Roland firmware and use the [web patcher](https://karlsander.github.io/mxplus/) to modify it. The patcher also explains how to install the resulting file.

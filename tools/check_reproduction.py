@@ -132,6 +132,9 @@ def audit(check_committed: bool = False) -> dict:
         packets = read(prefix + "packet-verification.json")
         require(packets.get("status") == "pass" and packets.get("patched_app_sha256") == actual["patched_app_sha256"],
                 "Mainline USB packet evidence missing or belongs to another candidate")
+        midi = read(prefix + "midi-verification.json")
+        require(midi.get("status") == "pass" and midi.get("patched_app_sha256") == actual["patched_app_sha256"],
+                "Mainline MIDI evidence missing or belongs to another candidate")
         boot = read(prefix + "boot-verification.json")
         require(boot.get("status") == "pass" and boot.get("candidate_sha256") == actual["container_sha256"],
                 "Mainline boot evidence missing or belongs to another candidate")

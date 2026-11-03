@@ -1,13 +1,13 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "56d7b7c8a3259e37c6e1a276c377e3dcecbed4a4fa84088754f7426d52a7c1b6",
-  "candidate_container_sha256": "1ed56e3569df508f8d099eb9d162ff9c37d8915a895ef7d2cc64696662e221cf",
+  "patched_app_sha256": "d122894dd8448e943dabe0e5c740f9c34571d6af7ffa766056a2e944295af14d",
+  "candidate_container_sha256": "049273122cc94de5970429d33cefbe8083e3cf455dcecbada17ecc5ecc841284",
   "groups": [
     {
       "name": "Actual startup copies extension and preserves existing initialized data",
       "status": "pass",
-      "extension_bytes": 2732
+      "extension_bytes": 2812
     },
     {
       "name": "Patched initializer veneer, original registration, and live rate descriptors",
@@ -21,7 +21,7 @@
             504,
             56
           ],
-          "instructions": 1551
+          "instructions": 1645
         },
         {
           "rate": 48000,
@@ -31,7 +31,7 @@
             576,
             64
           ],
-          "instructions": 1558
+          "instructions": 1652
         },
         {
           "rate": 96000,
@@ -41,7 +41,7 @@
             1008,
             112
           ],
-          "instructions": 1555
+          "instructions": 1649
         }
       ]
     },
@@ -89,7 +89,7 @@
           "speed": "high",
           "descriptor_type": 2,
           "requested_length": 1000,
-          "returned_length": 355
+          "returned_length": 435
         },
         {
           "speed": "high",
@@ -131,56 +131,107 @@
           "speed": "full",
           "descriptor_type": 7,
           "requested_length": 1000,
-          "returned_length": 355
+          "returned_length": 435
         }
       ],
       "full_speed_limit": "The unchanged full-speed configuration has no audio endpoints"
     },
     {
-      "name": "Original descriptor walker produces identical endpoint hardware tables",
+      "name": "Original descriptor walker preserves audio tables and applies only reviewed MIDI changes",
       "status": "pass",
       "cases": [
         {
           "rate": 44100,
           "speed": "high",
-          "table_sha256": "db195904df55d2e2bf8fca03558735a1d51bffe1f46cd34dfe2ac9c4bf7ec9c4",
-          "interface_register_hex": "34230004",
-          "register_writes_compared": 38
+          "table_sha256": "5c44beed56363f555d09072568c2be297d3bed749e2c76880c7c7d910e2f952c",
+          "interface_register_hex": "34530005",
+          "reviewed_midi_changes": {
+            "0x40010208": [
+              "0x100018c3",
+              "0x100020c3"
+            ],
+            "0x4001020c": [
+              "0x100098e3",
+              "0x0"
+            ],
+            "0x40010210": [
+              "0x100018d4",
+              "0x100020d4"
+            ],
+            "0x40010218": [
+              "0x100098f5",
+              "0x0"
+            ]
+          }
         },
         {
           "rate": 44100,
           "speed": "full",
           "table_sha256": "38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca",
           "interface_register_hex": "14110004",
-          "register_writes_compared": 30
+          "reviewed_midi_changes": {}
         },
         {
           "rate": 48000,
           "speed": "high",
-          "table_sha256": "bea96fc6daed235b9d0b76b0b7fc6a4c9f7d4d72e16e04509b6bf2cce064d182",
-          "interface_register_hex": "34230004",
-          "register_writes_compared": 38
+          "table_sha256": "cfd912160e96b9cc34d5d8a6df0577cedcfdf1debb6ba2ffe82d5a183d7350eb",
+          "interface_register_hex": "34530005",
+          "reviewed_midi_changes": {
+            "0x40010208": [
+              "0x100018c3",
+              "0x100020c3"
+            ],
+            "0x4001020c": [
+              "0x100098e3",
+              "0x0"
+            ],
+            "0x40010210": [
+              "0x100018d4",
+              "0x100020d4"
+            ],
+            "0x40010218": [
+              "0x100098f5",
+              "0x0"
+            ]
+          }
         },
         {
           "rate": 48000,
           "speed": "full",
           "table_sha256": "38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca",
           "interface_register_hex": "14110004",
-          "register_writes_compared": 30
+          "reviewed_midi_changes": {}
         },
         {
           "rate": 96000,
           "speed": "high",
-          "table_sha256": "c6b5321b2b2c0f8202bef36110959c1f45bacd6644ccce662913939dfd30f594",
-          "interface_register_hex": "34230004",
-          "register_writes_compared": 38
+          "table_sha256": "b3087c696882baf66c0d68a51ebfb535c10912d390820108f1538b633fe2964f",
+          "interface_register_hex": "34530005",
+          "reviewed_midi_changes": {
+            "0x40010208": [
+              "0x100018c3",
+              "0x100020c3"
+            ],
+            "0x4001020c": [
+              "0x100098e3",
+              "0x0"
+            ],
+            "0x40010210": [
+              "0x100018d4",
+              "0x100020d4"
+            ],
+            "0x40010218": [
+              "0x100098f5",
+              "0x0"
+            ]
+          }
         },
         {
           "rate": 96000,
           "speed": "full",
           "table_sha256": "38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca",
           "interface_register_hex": "14110004",
-          "register_writes_compared": 30
+          "reviewed_midi_changes": {}
         }
       ]
     },

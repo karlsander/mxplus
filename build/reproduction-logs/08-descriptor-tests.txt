@@ -32,8 +32,11 @@ test_endpoint_usage_and_period (test_usb_descriptors.USBDescriptorTests.test_end
 test_exact_mx1_evidence (test_usb_descriptors.USBDescriptorTests.test_exact_mx1_evidence) ... ok
 test_reject_configuration_lengths (test_usb_descriptors.USBDescriptorTests.test_reject_configuration_lengths) ... ok
 test_reject_truncated_rate_list (test_usb_descriptors.USBDescriptorTests.test_reject_truncated_rate_list) ... ok
+test_audio_descriptors_unchanged (test_usb_midi.MIDIConfigurationTests.test_audio_descriptors_unchanged) ... ok
+test_reject_broken_graph (test_usb_midi.MIDIConfigurationTests.test_reject_broken_graph) ... ok
+test_reject_truncated_or_zero_length (test_usb_midi.MIDIConfigurationTests.test_reject_truncated_or_zero_length) ... ok
 
 ----------------------------------------------------------------------
-Ran 34 tests in 0.544s
+Ran 37 tests in 0.558s
 
 OK

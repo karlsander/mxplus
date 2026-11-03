@@ -132,16 +132,17 @@ device-specific update procedure only after this preparation; this plan does
 not replace it. Keep the original filename/candidate identity unambiguous, and
 do not place raw-ROM or other competing image files on the update disk.
 
-## 5. Test the USB-B UAC2 candidate in small steps
+## 5. Test mainline USB-B audio and MIDI in small steps
 
-Candidate: `build/device-probe/MX1_UAC2_DEVICE_PROBE_UNTESTED.bin`.
+Candidate: `build/mainline/MXPLUS_MAINLINE_UNTESTED.bin`.
 After an authorized installation with the established recovery route:
 
 1. Check normal mixer startup and analog audio before attaching USB. Set 48 kHz.
 2. Attach to a class-driver test host and capture its descriptors. Expect
-   `EF/02/01` device/qualifier fields, a 355-byte high-speed configuration,
-   audio interfaces 0–2, stereo/18-channel modes, and the original vendor MIDI
-   interface 3. MIDI is not newly class compliant. Inspect which driver binds
+   `EF/02/01` device/qualifier fields, a 435-byte high-speed configuration,
+   audio interfaces 0–2, stereo/18-channel modes, and MIDI interfaces 3/4
+   with two bulk MIDI ports. Follow [MIDI acceptance](USB_MIDI.md#hardware-acceptance);
+   class-driver operation is not yet established. Inspect which driver binds
    on a Mac; retained Roland VID/PID may match an installed vendor driver.
 3. Verify the clock reports the actual current rate and a single fixed range.
    A class-only host must not depend on a Roland driver to interpret these

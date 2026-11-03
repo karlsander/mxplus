@@ -50,7 +50,9 @@ are checked at its entry in every new pump test. Keeping `r12=1` preserves
 capture-first priming; the former isolated patch at `0x01009a06` is superseded
 by the complete guarded playback window.
 
-The alternate byte is at `0x010173f2`, formerly padding after the 14-byte EP0
+The alternate byte was at `0x010173f2` in this packet-fix image. Current
+mainline relocates it to `0x01017442` for the [MIDI descriptor](USB_MIDI.md).
+It uses padding after the 14-byte EP0
 reply buffer. It remains inside the existing 400-byte writable reservation
 and is cleared by the existing startup BSS clear. Descriptor, reply and
 routing addresses do not move. Clock replies are tested for leaving this byte

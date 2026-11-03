@@ -1,7 +1,7 @@
 # Mainline roadmap
 
 Maintain one mixer-focused firmware: channel routing with end stops, stock
-snapshot/restart route storage, mastering editing and USB-B UAC2. The restored pre-generator image
+snapshot/restart route storage, mastering editing, USB-B UAC2 and experimental USB-MIDI 1.0. The restored pre-generator image
 boots and passed a user-reported iPhone/AUM duplex audio path. The routing
 predecessor passed routing/end-stop tests. These are bounded observations,
 not sustained or comprehensive validation.
@@ -17,11 +17,13 @@ not sustained or comprehensive validation.
    gesture isolation, all parameter assignments, pickup/blink, save/recall and
    sustained audio. The new UI reclaims an existing stock lookup footprint;
    its offline checks do not establish hardware stability.
-4. Consider small control/routing improvements individually. The internal code
+4. Physically validate [USB-MIDI](docs/USB_MIDI.md) on class-only hosts: both
+   ports, clock/transport, SysEx, reconnect and simultaneous audio.
+5. Consider small control/routing improvements individually. The internal code
    slot has only 20 bytes free; measure compiled size before claiming capacity.
    An explicitly reserved SDRAM design is possible research, not enabled in
    the current candidate. [Memory and DSP findings](docs/GENERATOR_RESEARCH.md).
-5. Keep exact image identities and scoped hardware results. TAP rollback worked
+6. Keep exact image identities and scoped hardware results. TAP rollback worked
    for the observed application failures; other recovery classes are unverified.
 
 Generators, extra SELECT editing and generic USB-host unlocking are excluded.
@@ -30,5 +32,5 @@ interrupt timing, memory placement and sample transport before reintegration.
 No alternate generator or host-unlock firmware is maintained.
 
 Known USB limits remain: fixed read-only rate, validity based on configuration
-rather than PLL lock, implicit feedback, proprietary MIDI, high-speed audio
+rather than PLL lock, implicit feedback, unverified USB-MIDI host compatibility, high-speed audio/MIDI
 only, and incomplete physical stereo/mixed-alternate and sustained testing.

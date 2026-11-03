@@ -19,8 +19,8 @@ SECTIONS {
     ASSERT(ADDR(.text) + SIZEOF(.text) <= 0x01010000, "Routing code overflow")
     ASSERT(ADDR(.route_state) + SIZEOF(.route_state) <= 0x01018000, "Routing state overflow")
     .usb_data 0x0101727c : { KEEP(*(.usb_data)) . = ALIGN(4); }
-    .usb_state 0x010173e0 (NOLOAD) : { KEEP(*(.usb_state)) KEEP(*(.usb_stream_state)) . = ALIGN(4); }
-    ASSERT(SIZEOF(.usb_data) == 356, "Unexpected USB descriptor storage")
+    .usb_state 0x01017430 (NOLOAD) : { KEEP(*(.usb_state)) KEEP(*(.usb_stream_state)) . = ALIGN(4); }
+    ASSERT(SIZEOF(.usb_data) == 436, "Unexpected USB descriptor storage")
     ASSERT(SIZEOF(.usb_state) == 20, "Unexpected USB control state")
     ASSERT(ADDR(.usb_state) + SIZEOF(.usb_state) <= 0x01018000, "Writable state overflow")
     .master_lookup 0x6001dbd6 : { KEEP(*(.master_lookup)) }
@@ -29,7 +29,7 @@ SECTIONS {
     ASSERT(SIZEOF(.master_lookup) <= 30, "Mixer lookup replacement overflow")
     ASSERT(SIZEOF(.master_head) <= 532, "Mastering head overlaps shared literal")
     ASSERT(SIZEOF(.master_text) <= 2016, "Mastering code overlaps shared return")
-    .master_state 0x010173f4 (NOLOAD) : {
+    .master_state 0x01017444 (NOLOAD) : {
         *(.master_state) . = ALIGN(4);
     }
     ASSERT(ADDR(.master_state) + SIZEOF(.master_state) <= 0x01018000, "Mastering state overflow")

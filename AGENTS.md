@@ -1,6 +1,6 @@
 # Working on mxplus
 
-mxplus maintains one Roland MX-1 mainline build combining channel routing, mastering editing and USB-B UAC2. The USB-host unlock is documented only. Read [README.md](README.md), the relevant candidate report, and [CONTRIBUTING.md](CONTRIBUTING.md) before changing a build or interpreting its evidence. Use [ROADMAP.md](ROADMAP.md) to distinguish the present result from future work.
+mxplus maintains one Roland MX-1 mainline build combining channel routing, mastering editing, USB-B UAC2 and experimental USB-MIDI 1.0. The USB-host unlock is documented only. Read [README.md](README.md), the relevant candidate report, and [CONTRIBUTING.md](CONTRIBUTING.md) before changing a build or interpreting its evidence. Use [ROADMAP.md](ROADMAP.md) to distinguish the present result from future work.
 
 ## Scope and current boundary
 
@@ -39,7 +39,7 @@ Separate observations, inferences and unknowns. Cite local evidence with paths a
 
 For actual-instruction tests, document what runs unchanged and what is stubbed or modeled. Calling-convention, byte-boundary, malformed-descriptor, startup-relocation and before/after regression checks are valuable when they address a concrete failure mode. Instruction counts are not timing measurements. Mocked MMIO readiness does not establish real FIFO, DMA, PLL, packet or USB-PHY behavior.
 
-Retain the present limitations when discussing the device probe: fixed read-only sample rate, validity based on configuration rather than PLL lock, implicit feedback, proprietary MIDI, high-speed audio only, and unverified real stereo/mixed-alternate packet boundaries. For the host probe, retain its narrow UAC1 format/profile and lack of established generic clock/feedback handling. Consult the candidate reports for exact constraints.
+Retain the present limitations when discussing the device probe: fixed read-only sample rate, validity based on configuration rather than PLL lock, implicit feedback, unverified USB-MIDI host compatibility, high-speed audio/MIDI only, and unverified real stereo/mixed-alternate packet boundaries. For the host probe, retain its narrow UAC1 format/profile and lack of established generic clock/feedback handling. Consult the candidate reports for exact constraints.
 
 ## Verification workflow
 

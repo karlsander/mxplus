@@ -31,7 +31,7 @@ def patch_playback(image, replacement, changes):
         "length": 438, "original_sha256": sha256(ORIGINAL),
         "replacement_sha256": sha256(replacement),
         "capture_continuation": 0x01009a16,
-        "alternate_state": {"address": 0x010173f2, "size": 1,
+        "alternate_state": {"address": 0x01017442, "size": 1,
                             "reservation_growth": 0, "initialization": "Existing BSS clear"},
         "abi": "Original callback frame and phase prefix retained; no calls/extra stack; r12=1 preserved; original capture and epilogue retained",
         "buffer": {"start": 0x20000a10, "end_exclusive": 0x20000aa0,

@@ -22,8 +22,8 @@ prerequisite for a hardware experiment.
 4. Download `MX1_UPD_mxplus.bin`.
    The output must match the maintained mainline candidate's SHA-256.
 5. Read the site's installation instructions before any device operation.
-   Keep the downloaded file. Only the separate copy prepared for
-   the updater is named `MX-1_UPD.BIN`; keep the stock file elsewhere.
+   Rename the download to `MX-1_UPD.BIN` for the updater and keep a copy of
+   the original Roland file in another folder.
 
 The download name is `MX1_UPD_mxplus.bin`. The sole maintained artifact remains
 `build/mainline/MXPLUS_MAINLINE_UNTESTED.bin`; the release manifest still records

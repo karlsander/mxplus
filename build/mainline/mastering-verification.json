@@ -1,0 +1,948 @@
+{
+  "status": "pass",
+  "patched_app_sha256": "11f33ccb62ea14a266a69c35323a1be78c874d6bc1f133484a1917540259c1d4",
+  "parameters": [
+    {
+      "n": 1,
+      "id": "0x476",
+      "name": "EQ_SW",
+      "name_decoded_offset": "0x748c0",
+      "name_runtime": "0x600748c0",
+      "stored_range": [
+        0,
+        1
+      ],
+      "descriptor_default": 0,
+      "display_format": " OFF\u0001  ON",
+      "display_decoded_offset": "0xb0637"
+    },
+    {
+      "n": 2,
+      "id": "0x477",
+      "name": "EQ_IN_LEV",
+      "name_decoded_offset": "0x748dc",
+      "name_runtime": "0x600748dc",
+      "stored_range": [
+        0,
+        36
+      ],
+      "descriptor_default": 24,
+      "display_format": "-24\u0002+12",
+      "display_decoded_offset": "0xaf9a5"
+    },
+    {
+      "n": 3,
+      "id": "0x478",
+      "name": "EQ_L_TYPE",
+      "name_decoded_offset": "0x748f8",
+      "name_runtime": "0x600748f8",
+      "stored_range": [
+        0,
+        1
+      ],
+      "descriptor_default": 0,
+      "display_format": "SHLV\u0001PEAK",
+      "display_decoded_offset": "0xb03ec"
+    },
+    {
+      "n": 4,
+      "id": "0x479",
+      "name": "EQ_L_GAIN",
+      "name_decoded_offset": "0x74914",
+      "name_runtime": "0x60074914",
+      "stored_range": [
+        0,
+        24
+      ],
+      "descriptor_default": 13,
+      "display_format": "-12\u0002+12",
+      "display_decoded_offset": "0xaf99d"
+    },
+    {
+      "n": 5,
+      "id": "0x47a",
+      "name": "EQ_L_FREQ",
+      "name_decoded_offset": "0x74930",
+      "name_runtime": "0x60074930",
+      "stored_range": [
+        0,
+        63
+      ],
+      "descriptor_default": 16,
+      "display_format": "  16\u0001  18\u0001  20\u0001  22\u0001  25\u0001  28\u0001  32\u0001  36\u0001  40\u0001  45\u0001  50\u0001  56\u0001  63\u0001  71\u0001  80\u0001  90\u0001 100\u0001 112\u0001 125\u0001 140\u0001 160\u0001 180\u0001 200\u0001 224\u0001 250\u0001 280\u0001 315\u0001 355\u0001 400\u0001 450\u0001 500\u0001 560\u0001 630\u0001 710\u0001 800\u0001 900\u00011.0k\u00011.2k\u00011.3k\u00011.4k\u00011.6k\u00011.8k\u00012.0k\u00012.3k\u00012.5k\u00012.8k\u00013.2k\u00013.6k\u00014.0k\u00014.5k\u00015.0k\u00015.6k\u00016.3k\u00017.1k\u00018.0k\u00019.0k\u0001 10k\u0001 11k\u0001 12k\u0001 14k\u0001 16k\u0001 18k\u0001 20k\u0001 22k",
+      "display_decoded_offset": "0xb0e59"
+    },
+    {
+      "n": 6,
+      "id": "0x47b",
+      "name": "EQ_L_Q",
+      "name_decoded_offset": "0x7494c",
+      "name_runtime": "0x6007494c",
+      "stored_range": [
+        0,
+        31
+      ],
+      "descriptor_default": 7,
+      "display_format": "0\u000232",
+      "display_decoded_offset": "0xaf9ad"
+    },
+    {
+      "n": 7,
+      "id": "0x47c",
+      "name": "EQ_LM_GAIN",
+      "name_decoded_offset": "0x74968",
+      "name_runtime": "0x60074968",
+      "stored_range": [
+        0,
+        24
+      ],
+      "descriptor_default": 12,
+      "display_format": "-12\u0002+12",
+      "display_decoded_offset": "0xaf99d"
+    },
+    {
+      "n": 8,
+      "id": "0x47d",
+      "name": "EQ_LM_FREQ",
+      "name_decoded_offset": "0x74984",
+      "name_runtime": "0x60074984",
+      "stored_range": [
+        0,
+        63
+      ],
+      "descriptor_default": 30,
+      "display_format": "  16\u0001  18\u0001  20\u0001  22\u0001  25\u0001  28\u0001  32\u0001  36\u0001  40\u0001  45\u0001  50\u0001  56\u0001  63\u0001  71\u0001  80\u0001  90\u0001 100\u0001 112\u0001 125\u0001 140\u0001 160\u0001 180\u0001 200\u0001 224\u0001 250\u0001 280\u0001 315\u0001 355\u0001 400\u0001 450\u0001 500\u0001 560\u0001 630\u0001 710\u0001 800\u0001 900\u00011.0k\u00011.2k\u00011.3k\u00011.4k\u00011.6k\u00011.8k\u00012.0k\u00012.3k\u00012.5k\u00012.8k\u00013.2k\u00013.6k\u00014.0k\u00014.5k\u00015.0k\u00015.6k\u00016.3k\u00017.1k\u00018.0k\u00019.0k\u0001 10k\u0001 11k\u0001 12k\u0001 14k\u0001 16k\u0001 18k\u0001 20k\u0001 22k",
+      "display_decoded_offset": "0xb0e59"
+    },
+    {
+      "n": 9,
+      "id": "0x47e",
+      "name": "EQ_LM_Q",
+      "name_decoded_offset": "0x749a0",
+      "name_runtime": "0x600749a0",
+      "stored_range": [
+        0,
+        31
+      ],
+      "descriptor_default": 7,
+      "display_format": "0\u000232",
+      "display_decoded_offset": "0xaf9ad"
+    },
+    {
+      "n": 10,
+      "id": "0x47f",
+      "name": "EQ_HM_GAIN",
+      "name_decoded_offset": "0x749bc",
+      "name_runtime": "0x600749bc",
+      "stored_range": [
+        0,
+        24
+      ],
+      "descriptor_default": 12,
+      "display_format": "-12\u0002+12",
+      "display_decoded_offset": "0xaf99d"
+    },
+    {
+      "n": 11,
+      "id": "0x480",
+      "name": "EQ_HM_FREQ",
+      "name_decoded_offset": "0x749d8",
+      "name_runtime": "0x600749d8",
+      "stored_range": [
+        0,
+        63
+      ],
+      "descriptor_default": 36,
+      "display_format": "  16\u0001  18\u0001  20\u0001  22\u0001  25\u0001  28\u0001  32\u0001  36\u0001  40\u0001  45\u0001  50\u0001  56\u0001  63\u0001  71\u0001  80\u0001  90\u0001 100\u0001 112\u0001 125\u0001 140\u0001 160\u0001 180\u0001 200\u0001 224\u0001 250\u0001 280\u0001 315\u0001 355\u0001 400\u0001 450\u0001 500\u0001 560\u0001 630\u0001 710\u0001 800\u0001 900\u00011.0k\u00011.2k\u00011.3k\u00011.4k\u00011.6k\u00011.8k\u00012.0k\u00012.3k\u00012.5k\u00012.8k\u00013.2k\u00013.6k\u00014.0k\u00014.5k\u00015.0k\u00015.6k\u00016.3k\u00017.1k\u00018.0k\u00019.0k\u0001 10k\u0001 11k\u0001 12k\u0001 14k\u0001 16k\u0001 18k\u0001 20k\u0001 22k",
+      "display_decoded_offset": "0xb0e59"
+    },
+    {
+      "n": 12,
+      "id": "0x481",
+      "name": "EQ_HM_Q",
+      "name_decoded_offset": "0x749f4",
+      "name_runtime": "0x600749f4",
+      "stored_range": [
+        0,
+        31
+      ],
+      "descriptor_default": 7,
+      "display_format": "0\u000232",
+      "display_decoded_offset": "0xaf9ad"
+    },
+    {
+      "n": 13,
+      "id": "0x482",
+      "name": "EQ_H_TYPE",
+      "name_decoded_offset": "0x74a10",
+      "name_runtime": "0x60074a10",
+      "stored_range": [
+        0,
+        1
+      ],
+      "descriptor_default": 0,
+      "display_format": "SHLV\u0001PEAK",
+      "display_decoded_offset": "0xb03ec"
+    },
+    {
+      "n": 14,
+      "id": "0x483",
+      "name": "EQ_H_GAIN",
+      "name_decoded_offset": "0x74a2c",
+      "name_runtime": "0x60074a2c",
+      "stored_range": [
+        0,
+        24
+      ],
+      "descriptor_default": 14,
+      "display_format": "-12\u0002+12",
+      "display_decoded_offset": "0xaf99d"
+    },
+    {
+      "n": 15,
+      "id": "0x484",
+      "name": "EQ_H_FREQ",
+      "name_decoded_offset": "0x74a48",
+      "name_runtime": "0x60074a48",
+      "stored_range": [
+        0,
+        63
+      ],
+      "descriptor_default": 56,
+      "display_format": "  16\u0001  18\u0001  20\u0001  22\u0001  25\u0001  28\u0001  32\u0001  36\u0001  40\u0001  45\u0001  50\u0001  56\u0001  63\u0001  71\u0001  80\u0001  90\u0001 100\u0001 112\u0001 125\u0001 140\u0001 160\u0001 180\u0001 200\u0001 224\u0001 250\u0001 280\u0001 315\u0001 355\u0001 400\u0001 450\u0001 500\u0001 560\u0001 630\u0001 710\u0001 800\u0001 900\u00011.0k\u00011.2k\u00011.3k\u00011.4k\u00011.6k\u00011.8k\u00012.0k\u00012.3k\u00012.5k\u00012.8k\u00013.2k\u00013.6k\u00014.0k\u00014.5k\u00015.0k\u00015.6k\u00016.3k\u00017.1k\u00018.0k\u00019.0k\u0001 10k\u0001 11k\u0001 12k\u0001 14k\u0001 16k\u0001 18k\u0001 20k\u0001 22k",
+      "display_decoded_offset": "0xb0e59"
+    },
+    {
+      "n": 16,
+      "id": "0x485",
+      "name": "EQ_H_Q",
+      "name_decoded_offset": "0x74a64",
+      "name_runtime": "0x60074a64",
+      "stored_range": [
+        0,
+        31
+      ],
+      "descriptor_default": 7,
+      "display_format": "0\u000232",
+      "display_decoded_offset": "0xaf9ad"
+    },
+    {
+      "n": 17,
+      "id": "0x486",
+      "name": "EQ_OUT_LEV",
+      "name_decoded_offset": "0x74a80",
+      "name_runtime": "0x60074a80",
+      "stored_range": [
+        0,
+        36
+      ],
+      "descriptor_default": 26,
+      "display_format": "-24\u0002+12",
+      "display_decoded_offset": "0xaf9a5"
+    },
+    {
+      "n": 18,
+      "id": "0x487",
+      "name": "LCUT_SW",
+      "name_decoded_offset": "0x74a9c",
+      "name_runtime": "0x60074a9c",
+      "stored_range": [
+        0,
+        1
+      ],
+      "descriptor_default": 2,
+      "display_format": " OFF\u0001  ON",
+      "display_decoded_offset": "0xb0637"
+    },
+    {
+      "n": 19,
+      "id": "0x488",
+      "name": "LCUT_FREQ",
+      "name_decoded_offset": "0x74ab8",
+      "name_runtime": "0x60074ab8",
+      "stored_range": [
+        0,
+        63
+      ],
+      "descriptor_default": 0,
+      "display_format": "  16\u0001  18\u0001  20\u0001  22\u0001  25\u0001  28\u0001  32\u0001  36\u0001  40\u0001  45\u0001  50\u0001  56\u0001  63\u0001  71\u0001  80\u0001  90\u0001 100\u0001 112\u0001 125\u0001 140\u0001 160\u0001 180\u0001 200\u0001 224\u0001 250\u0001 280\u0001 315\u0001 355\u0001 400\u0001 450\u0001 500\u0001 560\u0001 630\u0001 710\u0001 800\u0001 900\u00011.0k\u00011.2k\u00011.3k\u00011.4k\u00011.6k\u00011.8k\u00012.0k\u00012.3k\u00012.5k\u00012.8k\u00013.2k\u00013.6k\u00014.0k\u00014.5k\u00015.0k\u00015.6k\u00016.3k\u00017.1k\u00018.0k\u00019.0k\u0001 10k\u0001 11k\u0001 12k\u0001 14k\u0001 16k\u0001 18k\u0001 20k\u0001 22k",
+      "display_decoded_offset": "0xb0e59"
+    },
+    {
+      "n": 20,
+      "id": "0x489",
+      "name": "EH_SW",
+      "name_decoded_offset": "0x74ad4",
+      "name_runtime": "0x60074ad4",
+      "stored_range": [
+        0,
+        1
+      ],
+      "descriptor_default": 0,
+      "display_format": " OFF\u0001  ON",
+      "display_decoded_offset": "0xb0637"
+    },
+    {
+      "n": 21,
+      "id": "0x48a",
+      "name": "EH_SENS",
+      "name_decoded_offset": "0x74af0",
+      "name_runtime": "0x60074af0",
+      "stored_range": [
+        0,
+        100
+      ],
+      "descriptor_default": 0,
+      "display_format": "0\u0002100",
+      "display_decoded_offset": "0xaf6bd"
+    },
+    {
+      "n": 22,
+      "id": "0x48b",
+      "name": "EH_FREQ",
+      "name_decoded_offset": "0x74b0c",
+      "name_runtime": "0x60074b0c",
+      "stored_range": [
+        0,
+        63
+      ],
+      "descriptor_default": 36,
+      "display_format": "0\u000264",
+      "display_decoded_offset": "0xafade"
+    },
+    {
+      "n": 23,
+      "id": "0x48c",
+      "name": "EH_LEV",
+      "name_decoded_offset": "0x74b28",
+      "name_runtime": "0x60074b28",
+      "stored_range": [
+        0,
+        36
+      ],
+      "descriptor_default": 24,
+      "display_format": "-24\u0002+12",
+      "display_decoded_offset": "0xaf9a5"
+    },
+    {
+      "n": 24,
+      "id": "0x48d",
+      "name": "SPL_IN_LEV",
+      "name_decoded_offset": "0x74b44",
+      "name_runtime": "0x60074b44",
+      "stored_range": [
+        0,
+        36
+      ],
+      "descriptor_default": 27,
+      "display_format": "-24\u0002+12",
+      "display_decoded_offset": "0xaf9a5"
+    },
+    {
+      "n": 25,
+      "id": "0x48e",
+      "name": "SPL_DLY",
+      "name_decoded_offset": "0x74b60",
+      "name_runtime": "0x60074b60",
+      "stored_range": [
+        0,
+        10
+      ],
+      "descriptor_default": 10,
+      "display_format": "0\u000210",
+      "display_decoded_offset": "0xaf705"
+    },
+    {
+      "n": 26,
+      "id": "0x48f",
+      "name": "SPL_FREQ_L",
+      "name_decoded_offset": "0x74b7c",
+      "name_runtime": "0x60074b7c",
+      "stored_range": [
+        0,
+        63
+      ],
+      "descriptor_default": 26,
+      "display_format": "  16\u0001  18\u0001  20\u0001  22\u0001  25\u0001  28\u0001  32\u0001  36\u0001  40\u0001  45\u0001  50\u0001  56\u0001  63\u0001  71\u0001  80\u0001  90\u0001 100\u0001 112\u0001 125\u0001 140\u0001 160\u0001 180\u0001 200\u0001 224\u0001 250\u0001 280\u0001 315\u0001 355\u0001 400\u0001 450\u0001 500\u0001 560\u0001 630\u0001 710\u0001 800\u0001 900\u00011.0k\u00011.2k\u00011.3k\u00011.4k\u00011.6k\u00011.8k\u00012.0k\u00012.3k\u00012.5k\u00012.8k\u00013.2k\u00013.6k\u00014.0k\u00014.5k\u00015.0k\u00015.6k\u00016.3k\u00017.1k\u00018.0k\u00019.0k\u0001 10k\u0001 11k\u0001 12k\u0001 14k\u0001 16k\u0001 18k\u0001 20k\u0001 22k",
+      "display_decoded_offset": "0xb0e59"
+    },
+    {
+      "n": 27,
+      "id": "0x490",
+      "name": "SPL_FREQ_H",
+      "name_decoded_offset": "0x74b98",
+      "name_runtime": "0x60074b98",
+      "stored_range": [
+        0,
+        63
+      ],
+      "descriptor_default": 46,
+      "display_format": "  16\u0001  18\u0001  20\u0001  22\u0001  25\u0001  28\u0001  32\u0001  36\u0001  40\u0001  45\u0001  50\u0001  56\u0001  63\u0001  71\u0001  80\u0001  90\u0001 100\u0001 112\u0001 125\u0001 140\u0001 160\u0001 180\u0001 200\u0001 224\u0001 250\u0001 280\u0001 315\u0001 355\u0001 400\u0001 450\u0001 500\u0001 560\u0001 630\u0001 710\u0001 800\u0001 900\u00011.0k\u00011.2k\u00011.3k\u00011.4k\u00011.6k\u00011.8k\u00012.0k\u00012.3k\u00012.5k\u00012.8k\u00013.2k\u00013.6k\u00014.0k\u00014.5k\u00015.0k\u00015.6k\u00016.3k\u00017.1k\u00018.0k\u00019.0k\u0001 10k\u0001 11k\u0001 12k\u0001 14k\u0001 16k\u0001 18k\u0001 20k\u0001 22k",
+      "display_decoded_offset": "0xb0e59"
+    },
+    {
+      "n": 28,
+      "id": "0x491",
+      "name": "EXP_SW",
+      "name_decoded_offset": "0x74bb4",
+      "name_runtime": "0x60074bb4",
+      "stored_range": [
+        0,
+        1
+      ],
+      "descriptor_default": 0,
+      "display_format": " OFF\u0001  ON",
+      "display_decoded_offset": "0xb0637"
+    },
+    {
+      "n": 29,
+      "id": "0x492",
+      "name": "EXP_L_THRE",
+      "name_decoded_offset": "0x74bd0",
+      "name_runtime": "0x60074bd0",
+      "stored_range": [
+        0,
+        80
+      ],
+      "descriptor_default": 30,
+      "display_format": "-80\u00020",
+      "display_decoded_offset": "0xaf482"
+    },
+    {
+      "n": 30,
+      "id": "0x493",
+      "name": "EXP_L_RATIO",
+      "name_decoded_offset": "0x74bec",
+      "name_runtime": "0x60074bec",
+      "stored_range": [
+        0,
+        13
+      ],
+      "descriptor_default": 9,
+      "display_format": "1.00\u00011.12\u00011.25\u00011.40\u00011.60\u00011.80\u00012.00\u00012.50\u00013.20\u00014.00\u00015.60\u00018.00\u000116.0\u0001 INF",
+      "display_decoded_offset": "0xb01cf"
+    },
+    {
+      "n": 31,
+      "id": "0x494",
+      "name": "EXP_L_ATK",
+      "name_decoded_offset": "0x74c08",
+      "name_runtime": "0x60074c08",
+      "stored_range": [
+        0,
+        100
+      ],
+      "descriptor_default": 2,
+      "display_format": "0\u0002100",
+      "display_decoded_offset": "0xaf6bd"
+    },
+    {
+      "n": 32,
+      "id": "0x495",
+      "name": "EXP_L_REL",
+      "name_decoded_offset": "0x74c24",
+      "name_runtime": "0x60074c24",
+      "stored_range": [
+        0,
+        100
+      ],
+      "descriptor_default": 22,
+      "display_format": "  50\u0001  52\u0001  54\u0001  57\u0001  60\u0001  62\u0001  65\u0001  69\u0001  72\u0001  75\u0001  79\u0001  82\u0001  86\u0001  90\u0001  95\u0001  99\u0001 104\u0001 109\u0001 114\u0001 119\u0001 125\u0001 131\u0001 137\u0001 144\u0001 150\u0001 158\u0001 165\u0001 173\u0001 181\u0001 190\u0001 199\u0001 208\u0001 218\u0001 228\u0001 239\u0001 250\u0001 262\u0001 274\u0001 287\u0001 301\u0001 315\u0001 330\u0001 345\u0001 362\u0001 379\u0001 397\u0001 415\u0001 435\u0001 456\u0001 477\u0001 500\u0001 523\u0001 548\u0001 574\u0001 601\u0001 629\u0001 659\u0001 690\u0001 722\u0001 756\u0001 792\u0001 829\u0001 868\u0001 909\u0001 952\u0001 997\u00011044\u00011093\u00011145\u00011199\u00011255\u00011315\u00011377\u00011442\u00011509\u00011581\u00011655\u00011733\u00011815\u00011900\u00011990\u00012084\u00012182\u00012285\u00012393\u00012505\u00012624\u00012747\u00012877\u00013012\u00013154\u00013303\u00013459\u00013622\u00013792\u00013971\u00014158\u00014354\u00014560\u00014774\u00015000",
+      "display_decoded_offset": "0xaf4b5"
+    },
+    {
+      "n": 33,
+      "id": "0x496",
+      "name": "EXP_M_THRE",
+      "name_decoded_offset": "0x74c40",
+      "name_runtime": "0x60074c40",
+      "stored_range": [
+        0,
+        80
+      ],
+      "descriptor_default": 30,
+      "display_format": "-80\u00020",
+      "display_decoded_offset": "0xaf482"
+    },
+    {
+      "n": 34,
+      "id": "0x497",
+      "name": "EXP_M_RATIO",
+      "name_decoded_offset": "0x74c5c",
+      "name_runtime": "0x60074c5c",
+      "stored_range": [
+        0,
+        13
+      ],
+      "descriptor_default": 9,
+      "display_format": "1.00\u00011.12\u00011.25\u00011.40\u00011.60\u00011.80\u00012.00\u00012.50\u00013.20\u00014.00\u00015.60\u00018.00\u000116.0\u0001 INF",
+      "display_decoded_offset": "0xb01cf"
+    },
+    {
+      "n": 35,
+      "id": "0x498",
+      "name": "EXP_M_ATK",
+      "name_decoded_offset": "0x74c78",
+      "name_runtime": "0x60074c78",
+      "stored_range": [
+        0,
+        100
+      ],
+      "descriptor_default": 2,
+      "display_format": "0\u0002100",
+      "display_decoded_offset": "0xaf6bd"
+    },
+    {
+      "n": 36,
+      "id": "0x499",
+      "name": "EXP_M_REL",
+      "name_decoded_offset": "0x74c94",
+      "name_runtime": "0x60074c94",
+      "stored_range": [
+        0,
+        100
+      ],
+      "descriptor_default": 65,
+      "display_format": "  50\u0001  52\u0001  54\u0001  57\u0001  60\u0001  62\u0001  65\u0001  69\u0001  72\u0001  75\u0001  79\u0001  82\u0001  86\u0001  90\u0001  95\u0001  99\u0001 104\u0001 109\u0001 114\u0001 119\u0001 125\u0001 131\u0001 137\u0001 144\u0001 150\u0001 158\u0001 165\u0001 173\u0001 181\u0001 190\u0001 199\u0001 208\u0001 218\u0001 228\u0001 239\u0001 250\u0001 262\u0001 274\u0001 287\u0001 301\u0001 315\u0001 330\u0001 345\u0001 362\u0001 379\u0001 397\u0001 415\u0001 435\u0001 456\u0001 477\u0001 500\u0001 523\u0001 548\u0001 574\u0001 601\u0001 629\u0001 659\u0001 690\u0001 722\u0001 756\u0001 792\u0001 829\u0001 868\u0001 909\u0001 952\u0001 997\u00011044\u00011093\u00011145\u00011199\u00011255\u00011315\u00011377\u00011442\u00011509\u00011581\u00011655\u00011733\u00011815\u00011900\u00011990\u00012084\u00012182\u00012285\u00012393\u00012505\u00012624\u00012747\u00012877\u00013012\u00013154\u00013303\u00013459\u00013622\u00013792\u00013971\u00014158\u00014354\u00014560\u00014774\u00015000",
+      "display_decoded_offset": "0xaf4b5"
+    },
+    {
+      "n": 37,
+      "id": "0x49a",
+      "name": "EXP_H_THRE",
+      "name_decoded_offset": "0x74cb0",
+      "name_runtime": "0x60074cb0",
+      "stored_range": [
+        0,
+        80
+      ],
+      "descriptor_default": 30,
+      "display_format": "-80\u00020",
+      "display_decoded_offset": "0xaf482"
+    },
+    {
+      "n": 38,
+      "id": "0x49b",
+      "name": "EXP_H_RATIO",
+      "name_decoded_offset": "0x74ccc",
+      "name_runtime": "0x60074ccc",
+      "stored_range": [
+        0,
+        13
+      ],
+      "descriptor_default": 9,
+      "display_format": "1.00\u00011.12\u00011.25\u00011.40\u00011.60\u00011.80\u00012.00\u00012.50\u00013.20\u00014.00\u00015.60\u00018.00\u000116.0\u0001 INF",
+      "display_decoded_offset": "0xb01cf"
+    },
+    {
+      "n": 39,
+      "id": "0x49c",
+      "name": "EXP_H_ATK",
+      "name_decoded_offset": "0x74ce8",
+      "name_runtime": "0x60074ce8",
+      "stored_range": [
+        0,
+        100
+      ],
+      "descriptor_default": 2,
+      "display_format": "0\u0002100",
+      "display_decoded_offset": "0xaf6bd"
+    },
+    {
+      "n": 40,
+      "id": "0x49d",
+      "name": "EXP_H_REL",
+      "name_decoded_offset": "0x74d04",
+      "name_runtime": "0x60074d04",
+      "stored_range": [
+        0,
+        100
+      ],
+      "descriptor_default": 65,
+      "display_format": "  50\u0001  52\u0001  54\u0001  57\u0001  60\u0001  62\u0001  65\u0001  69\u0001  72\u0001  75\u0001  79\u0001  82\u0001  86\u0001  90\u0001  95\u0001  99\u0001 104\u0001 109\u0001 114\u0001 119\u0001 125\u0001 131\u0001 137\u0001 144\u0001 150\u0001 158\u0001 165\u0001 173\u0001 181\u0001 190\u0001 199\u0001 208\u0001 218\u0001 228\u0001 239\u0001 250\u0001 262\u0001 274\u0001 287\u0001 301\u0001 315\u0001 330\u0001 345\u0001 362\u0001 379\u0001 397\u0001 415\u0001 435\u0001 456\u0001 477\u0001 500\u0001 523\u0001 548\u0001 574\u0001 601\u0001 629\u0001 659\u0001 690\u0001 722\u0001 756\u0001 792\u0001 829\u0001 868\u0001 909\u0001 952\u0001 997\u00011044\u00011093\u00011145\u00011199\u00011255\u00011315\u00011377\u00011442\u00011509\u00011581\u00011655\u00011733\u00011815\u00011900\u00011990\u00012084\u00012182\u00012285\u00012393\u00012505\u00012624\u00012747\u00012877\u00013012\u00013154\u00013303\u00013459\u00013622\u00013792\u00013971\u00014158\u00014354\u00014560\u00014774\u00015000",
+      "display_decoded_offset": "0xaf4b5"
+    },
+    {
+      "n": 41,
+      "id": "0x49e",
+      "name": "CMP_SW",
+      "name_decoded_offset": "0x74d20",
+      "name_runtime": "0x60074d20",
+      "stored_range": [
+        0,
+        1
+      ],
+      "descriptor_default": 1,
+      "display_format": " OFF\u0001  ON",
+      "display_decoded_offset": "0xb0637"
+    },
+    {
+      "n": 42,
+      "id": "0x49f",
+      "name": "CMP_L_THRE",
+      "name_decoded_offset": "0x74d3c",
+      "name_runtime": "0x60074d3c",
+      "stored_range": [
+        0,
+        24
+      ],
+      "descriptor_default": 15,
+      "display_format": "-24\u00020",
+      "display_decoded_offset": "0xaf488"
+    },
+    {
+      "n": 43,
+      "id": "0x4a0",
+      "name": "CMP_L_RATIO",
+      "name_decoded_offset": "0x74d58",
+      "name_runtime": "0x60074d58",
+      "stored_range": [
+        0,
+        13
+      ],
+      "descriptor_default": 8,
+      "display_format": "1.00\u00011.12\u00011.25\u00011.40\u00011.60\u00011.80\u00012.00\u00012.50\u00013.20\u00014.00\u00015.60\u00018.00\u000116.0\u0001 INF",
+      "display_decoded_offset": "0xb01cf"
+    },
+    {
+      "n": 44,
+      "id": "0x4a1",
+      "name": "CMP_L_ATK",
+      "name_decoded_offset": "0x74d74",
+      "name_runtime": "0x60074d74",
+      "stored_range": [
+        0,
+        100
+      ],
+      "descriptor_default": 30,
+      "display_format": "0\u0002100",
+      "display_decoded_offset": "0xaf6bd"
+    },
+    {
+      "n": 45,
+      "id": "0x4a2",
+      "name": "CMP_L_REL",
+      "name_decoded_offset": "0x74d90",
+      "name_runtime": "0x60074d90",
+      "stored_range": [
+        0,
+        100
+      ],
+      "descriptor_default": 57,
+      "display_format": "  50\u0001  52\u0001  54\u0001  57\u0001  60\u0001  62\u0001  65\u0001  69\u0001  72\u0001  75\u0001  79\u0001  82\u0001  86\u0001  90\u0001  95\u0001  99\u0001 104\u0001 109\u0001 114\u0001 119\u0001 125\u0001 131\u0001 137\u0001 144\u0001 150\u0001 158\u0001 165\u0001 173\u0001 181\u0001 190\u0001 199\u0001 208\u0001 218\u0001 228\u0001 239\u0001 250\u0001 262\u0001 274\u0001 287\u0001 301\u0001 315\u0001 330\u0001 345\u0001 362\u0001 379\u0001 397\u0001 415\u0001 435\u0001 456\u0001 477\u0001 500\u0001 523\u0001 548\u0001 574\u0001 601\u0001 629\u0001 659\u0001 690\u0001 722\u0001 756\u0001 792\u0001 829\u0001 868\u0001 909\u0001 952\u0001 997\u00011044\u00011093\u00011145\u00011199\u00011255\u00011315\u00011377\u00011442\u00011509\u00011581\u00011655\u00011733\u00011815\u00011900\u00011990\u00012084\u00012182\u00012285\u00012393\u00012505\u00012624\u00012747\u00012877\u00013012\u00013154\u00013303\u00013459\u00013622\u00013792\u00013971\u00014158\u00014354\u00014560\u00014774\u00015000",
+      "display_decoded_offset": "0xaf4b5"
+    },
+    {
+      "n": 46,
+      "id": "0x4a3",
+      "name": "CMP_M_THRE",
+      "name_decoded_offset": "0x74dac",
+      "name_runtime": "0x60074dac",
+      "stored_range": [
+        0,
+        24
+      ],
+      "descriptor_default": 15,
+      "display_format": "-24\u00020",
+      "display_decoded_offset": "0xaf488"
+    },
+    {
+      "n": 47,
+      "id": "0x4a4",
+      "name": "CMP_M_RATIO",
+      "name_decoded_offset": "0x74dc8",
+      "name_runtime": "0x60074dc8",
+      "stored_range": [
+        0,
+        13
+      ],
+      "descriptor_default": 6,
+      "display_format": "1.00\u00011.12\u00011.25\u00011.40\u00011.60\u00011.80\u00012.00\u00012.50\u00013.20\u00014.00\u00015.60\u00018.00\u000116.0\u0001 INF",
+      "display_decoded_offset": "0xb01cf"
+    },
+    {
+      "n": 48,
+      "id": "0x4a5",
+      "name": "CMP_M_ATK",
+      "name_decoded_offset": "0x74de4",
+      "name_runtime": "0x60074de4",
+      "stored_range": [
+        0,
+        100
+      ],
+      "descriptor_default": 20,
+      "display_format": "0\u0002100",
+      "display_decoded_offset": "0xaf6bd"
+    },
+    {
+      "n": 49,
+      "id": "0x4a6",
+      "name": "CMP_M_REL",
+      "name_decoded_offset": "0x74e00",
+      "name_runtime": "0x60074e00",
+      "stored_range": [
+        0,
+        100
+      ],
+      "descriptor_default": 50,
+      "display_format": "  50\u0001  52\u0001  54\u0001  57\u0001  60\u0001  62\u0001  65\u0001  69\u0001  72\u0001  75\u0001  79\u0001  82\u0001  86\u0001  90\u0001  95\u0001  99\u0001 104\u0001 109\u0001 114\u0001 119\u0001 125\u0001 131\u0001 137\u0001 144\u0001 150\u0001 158\u0001 165\u0001 173\u0001 181\u0001 190\u0001 199\u0001 208\u0001 218\u0001 228\u0001 239\u0001 250\u0001 262\u0001 274\u0001 287\u0001 301\u0001 315\u0001 330\u0001 345\u0001 362\u0001 379\u0001 397\u0001 415\u0001 435\u0001 456\u0001 477\u0001 500\u0001 523\u0001 548\u0001 574\u0001 601\u0001 629\u0001 659\u0001 690\u0001 722\u0001 756\u0001 792\u0001 829\u0001 868\u0001 909\u0001 952\u0001 997\u00011044\u00011093\u00011145\u00011199\u00011255\u00011315\u00011377\u00011442\u00011509\u00011581\u00011655\u00011733\u00011815\u00011900\u00011990\u00012084\u00012182\u00012285\u00012393\u00012505\u00012624\u00012747\u00012877\u00013012\u00013154\u00013303\u00013459\u00013622\u00013792\u00013971\u00014158\u00014354\u00014560\u00014774\u00015000",
+      "display_decoded_offset": "0xaf4b5"
+    },
+    {
+      "n": 50,
+      "id": "0x4a7",
+      "name": "CMP_H_THRE",
+      "name_decoded_offset": "0x74e1c",
+      "name_runtime": "0x60074e1c",
+      "stored_range": [
+        0,
+        24
+      ],
+      "descriptor_default": 9,
+      "display_format": "-24\u00020",
+      "display_decoded_offset": "0xaf488"
+    },
+    {
+      "n": 51,
+      "id": "0x4a8",
+      "name": "CMP_H_RATIO",
+      "name_decoded_offset": "0x74e38",
+      "name_runtime": "0x60074e38",
+      "stored_range": [
+        0,
+        13
+      ],
+      "descriptor_default": 6,
+      "display_format": "1.00\u00011.12\u00011.25\u00011.40\u00011.60\u00011.80\u00012.00\u00012.50\u00013.20\u00014.00\u00015.60\u00018.00\u000116.0\u0001 INF",
+      "display_decoded_offset": "0xb01cf"
+    },
+    {
+      "n": 52,
+      "id": "0x4a9",
+      "name": "CMP_H_ATK",
+      "name_decoded_offset": "0x74e54",
+      "name_runtime": "0x60074e54",
+      "stored_range": [
+        0,
+        100
+      ],
+      "descriptor_default": 20,
+      "display_format": "0\u0002100",
+      "display_decoded_offset": "0xaf6bd"
+    },
+    {
+      "n": 53,
+      "id": "0x4aa",
+      "name": "CMP_H_REL",
+      "name_decoded_offset": "0x74e70",
+      "name_runtime": "0x60074e70",
+      "stored_range": [
+        0,
+        100
+      ],
+      "descriptor_default": 39,
+      "display_format": "  50\u0001  52\u0001  54\u0001  57\u0001  60\u0001  62\u0001  65\u0001  69\u0001  72\u0001  75\u0001  79\u0001  82\u0001  86\u0001  90\u0001  95\u0001  99\u0001 104\u0001 109\u0001 114\u0001 119\u0001 125\u0001 131\u0001 137\u0001 144\u0001 150\u0001 158\u0001 165\u0001 173\u0001 181\u0001 190\u0001 199\u0001 208\u0001 218\u0001 228\u0001 239\u0001 250\u0001 262\u0001 274\u0001 287\u0001 301\u0001 315\u0001 330\u0001 345\u0001 362\u0001 379\u0001 397\u0001 415\u0001 435\u0001 456\u0001 477\u0001 500\u0001 523\u0001 548\u0001 574\u0001 601\u0001 629\u0001 659\u0001 690\u0001 722\u0001 756\u0001 792\u0001 829\u0001 868\u0001 909\u0001 952\u0001 997\u00011044\u00011093\u00011145\u00011199\u00011255\u00011315\u00011377\u00011442\u00011509\u00011581\u00011655\u00011733\u00011815\u00011900\u00011990\u00012084\u00012182\u00012285\u00012393\u00012505\u00012624\u00012747\u00012877\u00013012\u00013154\u00013303\u00013459\u00013622\u00013792\u00013971\u00014158\u00014354\u00014560\u00014774\u00015000",
+      "display_decoded_offset": "0xaf4b5"
+    },
+    {
+      "n": 54,
+      "id": "0x4ab",
+      "name": "MIX_L_LEV",
+      "name_decoded_offset": "0x74e8c",
+      "name_runtime": "0x60074e8c",
+      "stored_range": [
+        0,
+        86
+      ],
+      "descriptor_default": 80,
+      "display_format": "-80\u0002+6",
+      "display_decoded_offset": "0xafb7a"
+    },
+    {
+      "n": 55,
+      "id": "0x4ac",
+      "name": "MIX_M_LEV",
+      "name_decoded_offset": "0x74ea8",
+      "name_runtime": "0x60074ea8",
+      "stored_range": [
+        0,
+        86
+      ],
+      "descriptor_default": 80,
+      "display_format": "-80\u0002+6",
+      "display_decoded_offset": "0xafb7a"
+    },
+    {
+      "n": 56,
+      "id": "0x4ad",
+      "name": "MIX_H_LEV",
+      "name_decoded_offset": "0x74ec4",
+      "name_runtime": "0x60074ec4",
+      "stored_range": [
+        0,
+        86
+      ],
+      "descriptor_default": 80,
+      "display_format": "-80\u0002+6",
+      "display_decoded_offset": "0xafb7a"
+    },
+    {
+      "n": 57,
+      "id": "0x4ae",
+      "name": "STR_M_LEV",
+      "name_decoded_offset": "0x74ee0",
+      "name_runtime": "0x60074ee0",
+      "stored_range": [
+        0,
+        36
+      ],
+      "descriptor_default": 24,
+      "display_format": "-24\u0002+12",
+      "display_decoded_offset": "0xaf9a5"
+    },
+    {
+      "n": 58,
+      "id": "0x4af",
+      "name": "STR_S_LEV",
+      "name_decoded_offset": "0x74efc",
+      "name_runtime": "0x60074efc",
+      "stored_range": [
+        0,
+        36
+      ],
+      "descriptor_default": 24,
+      "display_format": "-24\u0002+12",
+      "display_decoded_offset": "0xaf9a5"
+    },
+    {
+      "n": 59,
+      "id": "0x4b0",
+      "name": "LMT_SW",
+      "name_decoded_offset": "0x74f18",
+      "name_runtime": "0x60074f18",
+      "stored_range": [
+        0,
+        1
+      ],
+      "descriptor_default": 0,
+      "display_format": " OFF\u0001  ON",
+      "display_decoded_offset": "0xb0637"
+    },
+    {
+      "n": 60,
+      "id": "0x4b1",
+      "name": "LMT_THRE",
+      "name_decoded_offset": "0x74f34",
+      "name_runtime": "0x60074f34",
+      "stored_range": [
+        0,
+        24
+      ],
+      "descriptor_default": 23,
+      "display_format": "-24\u00020",
+      "display_decoded_offset": "0xaf488"
+    },
+    {
+      "n": 61,
+      "id": "0x4b2",
+      "name": "LMT_ATK",
+      "name_decoded_offset": "0x74f50",
+      "name_runtime": "0x60074f50",
+      "stored_range": [
+        0,
+        100
+      ],
+      "descriptor_default": 2,
+      "display_format": "0\u0002100",
+      "display_decoded_offset": "0xaf6bd"
+    },
+    {
+      "n": 62,
+      "id": "0x4b3",
+      "name": "LMT_REL",
+      "name_decoded_offset": "0x74f6c",
+      "name_runtime": "0x60074f6c",
+      "stored_range": [
+        0,
+        100
+      ],
+      "descriptor_default": 72,
+      "display_format": "  50\u0001  52\u0001  54\u0001  57\u0001  60\u0001  62\u0001  65\u0001  69\u0001  72\u0001  75\u0001  79\u0001  82\u0001  86\u0001  90\u0001  95\u0001  99\u0001 104\u0001 109\u0001 114\u0001 119\u0001 125\u0001 131\u0001 137\u0001 144\u0001 150\u0001 158\u0001 165\u0001 173\u0001 181\u0001 190\u0001 199\u0001 208\u0001 218\u0001 228\u0001 239\u0001 250\u0001 262\u0001 274\u0001 287\u0001 301\u0001 315\u0001 330\u0001 345\u0001 362\u0001 379\u0001 397\u0001 415\u0001 435\u0001 456\u0001 477\u0001 500\u0001 523\u0001 548\u0001 574\u0001 601\u0001 629\u0001 659\u0001 690\u0001 722\u0001 756\u0001 792\u0001 829\u0001 868\u0001 909\u0001 952\u0001 997\u00011044\u00011093\u00011145\u00011199\u00011255\u00011315\u00011377\u00011442\u00011509\u00011581\u00011655\u00011733\u00011815\u00011900\u00011990\u00012084\u00012182\u00012285\u00012393\u00012505\u00012624\u00012747\u00012877\u00013012\u00013154\u00013303\u00013459\u00013622\u00013792\u00013971\u00014158\u00014354\u00014560\u00014774\u00015000",
+      "display_decoded_offset": "0xaf4b5"
+    },
+    {
+      "n": 63,
+      "id": "0x4b4",
+      "name": "OUT_LEV",
+      "name_decoded_offset": "0x74f88",
+      "name_runtime": "0x60074f88",
+      "stored_range": [
+        0,
+        86
+      ],
+      "descriptor_default": 0,
+      "display_format": "-80\u0002+6",
+      "display_decoded_offset": "0xafb7a"
+    },
+    {
+      "n": 64,
+      "id": "0x4b5",
+      "name": "CLIP_SW",
+      "name_decoded_offset": "0x74fa4",
+      "name_runtime": "0x60074fa4",
+      "stored_range": [
+        0,
+        1
+      ],
+      "descriptor_default": 1,
+      "display_format": " OFF\u0001  ON",
+      "display_decoded_offset": "0xb0637"
+    },
+    {
+      "n": 65,
+      "id": "0x4b6",
+      "name": "DITHER",
+      "name_decoded_offset": "0x74fc0",
+      "name_runtime": "0x60074fc0",
+      "stored_range": [
+        0,
+        17
+      ],
+      "descriptor_default": 0,
+      "display_format": " OFF\u0001  24\u00028",
+      "display_decoded_offset": "0xafc6e"
+    }
+  ],
+  "groups": [
+    {
+      "name": "Reclaimed stock mixer lookup agrees for all 263 valid IDs and invalid boundaries; external literal/shared returns preserved",
+      "status": "pass"
+    },
+    {
+      "name": "All 65 mastering names and ranges linked to actual original index instructions",
+      "status": "pass"
+    },
+    {
+      "name": "Long hold, short tap, exit and stock modifier gestures; guards and timer wrap",
+      "status": "pass"
+    },
+    {
+      "name": "All 16 assigned EQ controls execute stock transactions with bounded ranges and no mixer changes",
+      "status": "pass"
+    },
+    {
+      "name": "Entire edit surface isolated; held-button releases cannot leak after exit",
+      "status": "pass"
+    },
+    {
+      "name": "EQ entry pickup and forced mixer-return pickup in Jump and Pass modes; stock fader blink encoding",
+      "status": "pass"
+    }
+  ],
+  "boundaries": [
+    "Original parameter lookup, getters, clamping setters, group storage and formatter execute unchanged except compressed mixer ID lookup",
+    "Original fader handlers and blink renderer execute; physical ADC/LED protocol and timing are not modeled",
+    "Object vtables and parameter defaults are initialized fixtures; RTOS time, periodic callback body, mutex, notifications, MIDI send and final panel I/O are stubbed",
+    "No hardware, audio measurements or physical save/restart acceptance; no new sample callback, MPU region or heap reservation"
+  ]
+}

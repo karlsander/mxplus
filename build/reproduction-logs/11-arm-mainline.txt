@@ -6,6 +6,12 @@
     "Generator callback, transport, extra SELECT UI and SDRAM heap patches are absent",
     "Original MPU makes injected code read-only and new route state read-write",
     "Dirty cold startup clears state; original RTOS pools cannot allocate its reservation",
+    "Reclaimed stock mixer lookup agrees for all 263 valid IDs and invalid boundaries; external literal/shared returns preserved",
+    "All 65 mastering names and ranges linked to actual original index instructions",
+    "Long hold, short tap, exit and stock modifier gestures; guards and timer wrap",
+    "All 16 assigned EQ controls execute stock transactions with bounded ranges and no mixer changes",
+    "Entire edit surface isolated; held-button releases cannot leak after exit",
+    "EQ entry pickup and forced mixer-return pickup in Jump and Pass modes; stock fader blink encoding",
     "Actual startup copies extension and preserves existing initialized data",
     "Patched initializer veneer, original registration, and live rate descriptors",
     "Original request dispatch reaches compiled UAC2 handler with correct replies",
@@ -62,5 +68,5 @@
     "Independent factory graph audit matches all 18 raw PC and 18 serial read bindings",
     "Original native input gates and connection callbacks distinguish native and PC paths"
   ],
-  "patched_app_sha256": "8f771499a3ce93ab6f2f26242b75f80e46ca6b273b538900b04a68bb207a4890"
+  "patched_app_sha256": "11f33ccb62ea14a266a69c35323a1be78c874d6bc1f133484a1917540259c1d4"
 }

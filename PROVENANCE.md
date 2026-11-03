@@ -69,3 +69,14 @@ The generator integration was subsequently retired at the user's request after
 hardware activation failures. Current mainline contains no generator/editor
 source or alternate build. Findings and source-history pointers remain in
 [GENERATOR_RESEARCH.md](docs/GENERATOR_RESEARCH.md).
+
+## Mastering EQ controls (3 November 2026)
+
+`patches/mastering_ui.c` and `patches/mastering_ui.S` are independently written
+control-surface code. The compressed mixer lookup is derived from the observed
+mapping of the supplied original instructions; guarded original bytes and
+extracted parameter names/format strings remain Roland-derived evidence.
+[Mastering documentation](docs/MASTERING.md) identifies these boundaries and
+links the exact extraction. This mode edits the existing DSP parameters; it
+does not import or reinstate the retired generator code. There is still one
+maintained mainline candidate and no new licensing grant.

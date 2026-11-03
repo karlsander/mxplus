@@ -1,14 +1,14 @@
 {
   "status": "passed",
   "original_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
-  "candidate_sha256": "dacb12ae966da96176a4c40c8fb736a021ff0a5091d06c800192bcb547474211",
+  "candidate_sha256": "1ed8ada183fbe768262f7ccaae299fb80a6ec6fd993423d1be84c0bf524f8534",
   "candidate_bytes": 4194320,
   "changed_decoded_components": [
     {
       "component": "app_main",
       "original_decoded_bytes": 918600,
       "candidate_decoded_bytes": 921332,
-      "candidate_decoded_sha256": "8f771499a3ce93ab6f2f26242b75f80e46ca6b273b538900b04a68bb207a4890",
+      "candidate_decoded_sha256": "11f33ccb62ea14a266a69c35323a1be78c874d6bc1f133484a1917540259c1d4",
       "original_decoder_matches": true
     }
   ],
@@ -32,7 +32,7 @@
     },
     {
       "component": "app_main",
-      "checksum": 98925290,
+      "checksum": 98930108,
       "passed": true
     },
     {

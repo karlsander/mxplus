@@ -67,6 +67,8 @@ class ReproductionIdentityTests(unittest.TestCase):
                 "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"]})
             self.write_json(prefix + "packet-verification.json", {
                 "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"]})
+            self.write_json(prefix + "mastering-verification.json", {
+                "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"]})
             self.write_json(prefix + "boot-verification.json", {
                 "status": "pass", "candidate_sha256": hashes["container_sha256"]})
             self.reproduction["candidate_sha256"][kind] = hashes["container_sha256"]
@@ -197,6 +199,12 @@ class ReproductionIdentityTests(unittest.TestCase):
         self.edit_json("build/mainline/storage-verification.json",
                        lambda report: report.update(patched_app_sha256="0" * 64))
         with self.assertRaisesRegex(ValueError, "storage evidence"):
+            CHECK.audit()
+
+    def test_mastering_report_must_match_candidate(self):
+        self.edit_json("build/mainline/mastering-verification.json",
+                       lambda report: report.update(patched_app_sha256="0" * 64))
+        with self.assertRaisesRegex(ValueError, "mastering evidence"):
             CHECK.audit()
 
     def test_current_evidence_mode_does_not_read_git(self):

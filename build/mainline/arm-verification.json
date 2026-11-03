@@ -1,14 +1,14 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "8f771499a3ce93ab6f2f26242b75f80e46ca6b273b538900b04a68bb207a4890",
-  "candidate_container_sha256": "dacb12ae966da96176a4c40c8fb736a021ff0a5091d06c800192bcb547474211",
+  "patched_app_sha256": "11f33ccb62ea14a266a69c35323a1be78c874d6bc1f133484a1917540259c1d4",
+  "candidate_container_sha256": "1ed8ada183fbe768262f7ccaae299fb80a6ec6fd993423d1be84c0bf524f8534",
   "extension_sha256": "859b0ffc16473fcefcce41c53029821f1013c206f8b00d32203fbbc0e166be68",
   "groups": [
     {
       "name": "Every application change matches recorded guarded patches and scatter insertion",
       "status": "pass",
-      "patch_sites": 12,
+      "patch_sites": 17,
       "extension_bytes": 2732,
       "sram_bytes_remaining": 20
     },
@@ -87,7 +87,7 @@
       "code_protection": "0x01001000..0x0100ffff enforced in all UI/audio instruction cases",
       "state_interval": [
         "0x1017264",
-        "0x10173f4"
+        "0x1017480"
       ]
     },
     {
@@ -101,12 +101,36 @@
         "0x01020000",
         "0x01028000"
       ],
-      "state_reservation_bytes": 400,
+      "state_reservation_bytes": 540,
       "descriptor_initialized_bytes": 356,
       "patterns": [
         85,
         170
       ]
+    },
+    {
+      "name": "Reclaimed stock mixer lookup agrees for all 263 valid IDs and invalid boundaries; external literal/shared returns preserved",
+      "status": "pass"
+    },
+    {
+      "name": "All 65 mastering names and ranges linked to actual original index instructions",
+      "status": "pass"
+    },
+    {
+      "name": "Long hold, short tap, exit and stock modifier gestures; guards and timer wrap",
+      "status": "pass"
+    },
+    {
+      "name": "All 16 assigned EQ controls execute stock transactions with bounded ranges and no mixer changes",
+      "status": "pass"
+    },
+    {
+      "name": "Entire edit surface isolated; held-button releases cannot leak after exit",
+      "status": "pass"
+    },
+    {
+      "name": "EQ entry pickup and forced mixer-return pickup in Jump and Pass modes; stock fader blink encoding",
+      "status": "pass"
     },
     {
       "name": "Actual startup copies extension and preserves existing initialized data",
@@ -1247,6 +1271,7 @@
   "hardware_access": false,
   "scope": "Integrated candidate ARM instructions with explicit DSP and peripheral models",
   "details": {
+    "mastering": "mastering-verification.json",
     "storage": "storage-verification.json",
     "ui": "ui-verification.json",
     "audio": "audio-verification.json",

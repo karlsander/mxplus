@@ -1,8 +1,8 @@
 {
   "status": "passed",
   "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
-  "started_utc": "2026-11-02T22:25:50.413736+00:00",
-  "python": "3.12.13",
+  "started_utc": "2026-11-03T11:26:12.564305+00:00",
+  "python": "3.14.6",
   "dependencies": {
     "capstone": "5.0.6",
     "unicorn": "2.1.4",
@@ -13,10 +13,10 @@
     {
       "name": "map-main",
       "passed": true,
-      "elapsed_seconds": 0.209,
+      "elapsed_seconds": 0.076,
       "log": "build/reproduction-logs/01-map-main.txt",
       "command": [
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/.venv/bin/python",
+        "/Users/kall/code/mxplus/.venv/bin/python",
         "tools/memory_map.py",
         "analysis/container_app_main.bin",
         "--output",
@@ -26,10 +26,10 @@
     {
       "name": "map-usb",
       "passed": true,
-      "elapsed_seconds": 0.154,
+      "elapsed_seconds": 0.072,
       "log": "build/reproduction-logs/02-map-usb.txt",
       "command": [
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/.venv/bin/python",
+        "/Users/kall/code/mxplus/.venv/bin/python",
         "tools/memory_map.py",
         "analysis/container_app_usb.bin",
         "--output",
@@ -39,10 +39,10 @@
     {
       "name": "map-updater",
       "passed": true,
-      "elapsed_seconds": 0.133,
+      "elapsed_seconds": 0.073,
       "log": "build/reproduction-logs/03-map-updater.txt",
       "command": [
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/.venv/bin/python",
+        "/Users/kall/code/mxplus/.venv/bin/python",
         "tools/memory_map.py",
         "analysis/container_updater.bin",
         "--output",
@@ -52,12 +52,12 @@
     {
       "name": "container_verify",
       "passed": true,
-      "elapsed_seconds": 12.236,
+      "elapsed_seconds": 7.026,
       "log": "build/reproduction-logs/04-container_verify.txt",
       "command": [
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/.venv/bin/python",
+        "/Users/kall/code/mxplus/.venv/bin/python",
         "tools/container_verify.py",
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/inputs/MX1_UPD.original.bin",
+        "/Users/kall/code/mxplus/inputs/MX1_UPD.original.bin",
         "--output",
         "analysis/container_verification.json"
       ]
@@ -65,12 +65,12 @@
     {
       "name": "container_updater_verify",
       "passed": true,
-      "elapsed_seconds": 5.371,
+      "elapsed_seconds": 2.702,
       "log": "build/reproduction-logs/05-container_updater_verify.txt",
       "command": [
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/.venv/bin/python",
+        "/Users/kall/code/mxplus/.venv/bin/python",
         "tools/container_updater_verify.py",
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/inputs/MX1_UPD.original.bin",
+        "/Users/kall/code/mxplus/inputs/MX1_UPD.original.bin",
         "--output",
         "analysis/container_updater_verification.json"
       ]
@@ -78,12 +78,12 @@
     {
       "name": "container_binding_verify",
       "passed": true,
-      "elapsed_seconds": 0.31,
+      "elapsed_seconds": 0.148,
       "log": "build/reproduction-logs/06-container_binding_verify.txt",
       "command": [
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/.venv/bin/python",
+        "/Users/kall/code/mxplus/.venv/bin/python",
         "tools/container_binding_verify.py",
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/inputs/MX1_UPD.original.bin",
+        "/Users/kall/code/mxplus/inputs/MX1_UPD.original.bin",
         "--output",
         "analysis/container_binding_verification.json"
       ]
@@ -91,10 +91,10 @@
     {
       "name": "usb-descriptor-scan",
       "passed": true,
-      "elapsed_seconds": 0.841,
+      "elapsed_seconds": 0.498,
       "log": "build/reproduction-logs/07-usb-descriptor-scan.txt",
       "command": [
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/.venv/bin/python",
+        "/Users/kall/code/mxplus/.venv/bin/python",
         "tools/usb_descriptors.py",
         "analysis/container_app_main.bin",
         "--output",
@@ -104,10 +104,10 @@
     {
       "name": "descriptor-tests",
       "passed": true,
-      "elapsed_seconds": 1.103,
+      "elapsed_seconds": 0.681,
       "log": "build/reproduction-logs/08-descriptor-tests.txt",
       "command": [
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/.venv/bin/python",
+        "/Users/kall/code/mxplus/.venv/bin/python",
         "-m",
         "unittest",
         "discover",
@@ -119,10 +119,10 @@
     {
       "name": "bridge-plan-tests",
       "passed": true,
-      "elapsed_seconds": 0.114,
+      "elapsed_seconds": 0.073,
       "log": "build/reproduction-logs/09-bridge-plan-tests.txt",
       "command": [
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/.venv/bin/python",
+        "/Users/kall/code/mxplus/.venv/bin/python",
         "tools/linux_bridge_test.py",
         "-v"
       ]
@@ -130,12 +130,12 @@
     {
       "name": "build-mainline",
       "passed": true,
-      "elapsed_seconds": 2.816,
+      "elapsed_seconds": 1.565,
       "log": "build/reproduction-logs/10-build-mainline.txt",
       "command": [
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/.venv/bin/python",
+        "/Users/kall/code/mxplus/.venv/bin/python",
         "tools/build_firmware.py",
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/inputs/MX1_UPD.original.bin",
+        "/Users/kall/code/mxplus/inputs/MX1_UPD.original.bin",
         "--output",
         "build/mainline"
       ]
@@ -143,12 +143,12 @@
     {
       "name": "arm-mainline",
       "passed": true,
-      "elapsed_seconds": 75.88,
+      "elapsed_seconds": 90.282,
       "log": "build/reproduction-logs/11-arm-mainline.txt",
       "command": [
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/.venv/bin/python",
+        "/Users/kall/code/mxplus/.venv/bin/python",
         "tools/mainline_verify.py",
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/inputs/MX1_UPD.original.bin",
+        "/Users/kall/code/mxplus/inputs/MX1_UPD.original.bin",
         "--build",
         "build/mainline",
         "--output",
@@ -158,12 +158,12 @@
     {
       "name": "container-mainline-candidate",
       "passed": true,
-      "elapsed_seconds": 5.519,
+      "elapsed_seconds": 3.108,
       "log": "build/reproduction-logs/12-container-mainline-candidate.txt",
       "command": [
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/.venv/bin/python",
+        "/Users/kall/code/mxplus/.venv/bin/python",
         "tools/container_candidate_verify.py",
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/inputs/MX1_UPD.original.bin",
+        "/Users/kall/code/mxplus/inputs/MX1_UPD.original.bin",
         "build/mainline/MXPLUS_MAINLINE_UNTESTED.bin",
         "--output",
         "analysis/container_mainline_candidate_verification.json"
@@ -172,13 +172,13 @@
     {
       "name": "boot-mainline",
       "passed": true,
-      "elapsed_seconds": 10.778,
+      "elapsed_seconds": 8.027,
       "log": "build/reproduction-logs/13-boot-mainline.txt",
       "command": [
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/.venv/bin/python",
+        "/Users/kall/code/mxplus/.venv/bin/python",
         "tools/boot_path_verify.py",
         "--firmware",
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/inputs/MX1_UPD.original.bin",
+        "/Users/kall/code/mxplus/inputs/MX1_UPD.original.bin",
         "--build",
         "build/mainline",
         "--output",
@@ -188,17 +188,17 @@
     {
       "name": "original-audio-pump",
       "passed": true,
-      "elapsed_seconds": 0.175,
+      "elapsed_seconds": 0.195,
       "log": "build/reproduction-logs/14-original-audio-pump.txt",
       "command": [
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/.venv/bin/python",
+        "/Users/kall/code/mxplus/.venv/bin/python",
         "sources/hardware/uac2_pump_harness.py"
       ]
     },
     {
       "name": "compile-native-controls",
       "passed": true,
-      "elapsed_seconds": 0.641,
+      "elapsed_seconds": 0.139,
       "log": "build/reproduction-logs/15-compile-native-controls.txt",
       "command": [
         "/usr/bin/gcc",
@@ -211,27 +211,27 @@
         "sources/hardware/uac2_adapter.c",
         "sources/hardware/uac2_adapter_native_test.c",
         "-o",
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/build/mainline/uac2_adapter_native_test"
+        "/Users/kall/code/mxplus/build/mainline/uac2_adapter_native_test"
       ]
     },
     {
       "name": "native-controls",
       "passed": true,
-      "elapsed_seconds": 0.262,
+      "elapsed_seconds": 0.24,
       "log": "build/reproduction-logs/16-native-controls.txt",
       "command": [
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/build/mainline/uac2_adapter_native_test"
+        "/Users/kall/code/mxplus/build/mainline/uac2_adapter_native_test"
       ]
     },
     {
       "name": "subcpu-evidence",
       "passed": true,
-      "elapsed_seconds": 0.073,
+      "elapsed_seconds": 0.101,
       "log": "build/reproduction-logs/17-subcpu-evidence.txt",
       "command": [
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/.venv/bin/python",
+        "/Users/kall/code/mxplus/.venv/bin/python",
         "sources/hardware/inspect_subcpu.py",
-        "/Users/kall/.codex/worktrees/mxplus-adversarial-review/mxplus/inputs/MX1_UPD.original.bin",
+        "/Users/kall/code/mxplus/inputs/MX1_UPD.original.bin",
         "sources/hardware",
         "--disassemble"
       ]
@@ -239,8 +239,8 @@
   ],
   "hardware_access": false,
   "limits": "CPU instruction tests use explicit I/O stubs; no physical USB, flash or audio validation.",
-  "finished_utc": "2026-11-02T22:27:48.596097+00:00",
+  "finished_utc": "2026-11-03T11:28:08.205420+00:00",
   "candidate_sha256": {
-    "mainline": "dacb12ae966da96176a4c40c8fb736a021ff0a5091d06c800192bcb547474211"
+    "mainline": "1ed8ada183fbe768262f7ccaae299fb80a6ec6fd993423d1be84c0bf524f8534"
   }
 }

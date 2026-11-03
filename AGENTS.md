@@ -1,6 +1,6 @@
 # Working on mxplus
 
-mxplus maintains one Roland MX-1 mainline build combining channel routing and USB-B UAC2. The USB-host unlock is documented only. Read [README.md](README.md), the relevant candidate report, and [CONTRIBUTING.md](CONTRIBUTING.md) before changing a build or interpreting its evidence. Use [ROADMAP.md](ROADMAP.md) to distinguish the present result from future work.
+mxplus maintains one Roland MX-1 mainline build combining channel routing, mastering EQ editing and USB-B UAC2. The USB-host unlock is documented only. Read [README.md](README.md), the relevant candidate report, and [CONTRIBUTING.md](CONTRIBUTING.md) before changing a build or interpreting its evidence. Use [ROADMAP.md](ROADMAP.md) to distinguish the present result from future work.
 
 ## Scope and current boundary
 
@@ -9,8 +9,8 @@ The restored pre-generator image boots and passed one user-reported iPhone/AUM
 duplex path; full USB validation and physical snapshot/restart acceptance remain open. Do not claim
 safe upgrades, broad interoperability or verified failed-application recovery.
 A hardware experiment requires user authorization.
-The current stereo USB packet fix has offline evidence only; do not transfer
-the preceding image's hardware result to this changed playback routine.
+The mastering EQ mode and current stereo USB packet fix have offline evidence only; do not transfer
+the preceding image's hardware result to these changed routines.
 
 Maintain only `tools/build_firmware.py`, `patches/mainline.ld` and
 `build/mainline/MXPLUS_MAINLINE_UNTESTED.bin` as the active firmware build.

@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "8f771499a3ce93ab6f2f26242b75f80e46ca6b273b538900b04a68bb207a4890",
+  "patched_app_sha256": "11f33ccb62ea14a266a69c35323a1be78c874d6bc1f133484a1917540259c1d4",
   "groups": [
     {
       "name": "Original storage registration remains identical; existing reserved fields only",

@@ -20,7 +20,7 @@ HOOKS = [
 ]
 
 def integrate(original,root,out,env,jump):
-    exports=[h[3] for h in HOOKS]+['mx1_host_select','mx1_host_receive','mx1_host_done']
+    exports=[h[3] for h in HOOKS]+['mx1_host_select','mx1_host_receive','mx1_host_done','mx1_host_setup']
     sources=[root/'patches/usb_host_midi.c',root/'patches/usb_host_midi.S']
     elf=out/'usb-host.elf'
     command=[sys.executable,'-m','ziglang','build-exe','-target','thumb-freestanding-eabi',
@@ -79,8 +79,9 @@ def integrate(original,root,out,env,jump):
         else: data=jump(runtime,symbols[name])
         if len(data)<len(expected): data+=bytes.fromhex('00bf')*((len(expected)-len(data))//2)
         patch(off,expected,data,name,runtime)
-    for off,old,name in [(0x7848,0x60007bf9,'mx1_host_select'),(0x7844,0x01008257,'mx1_host_receive')]:
-        patch(off,struct.pack('<I',old),struct.pack('<I',symbols[name]),name)
+    for off,old,name in [(0x7848,0x60007bf9,'mx1_host_select'),(0x7844,0x01008257,'mx1_host_receive'),
+                         (0x28288,0x6000865d,'mx1_host_setup')]:
+        patch(off,struct.pack('<I',old),struct.pack('<I',symbols[name]),name,0x60000000+off)
     report={'original_app_sha256':sha256(original),'patched_app_sha256':sha256(patched),
             'extension_sha256':sha256(blob),'symbols':symbols,'patches':changes,
             'code_start':0x0100bee4,'code_bytes':len(blob),'code_limit':0x0100d000,

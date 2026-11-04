@@ -9,8 +9,9 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`9f6da91f9aaaedfb406ed1fa2d6af1a51900b44ecc950d4294cc6a513d5d8d38`.
-It fixes the [held-key range that blocked mastering entry](../evidence/mastering-key-range-20261104/README.md).
+`253645edb92a09c7b0d100da01f57d5127834c109b2ad499332645487a7a1d14`.
+It fixes [host MIDI startup on an already-active alternate zero](../evidence/host-midi-alt-zero-20261104/README.md).
+It retains the fix for the [held-key range that blocked mastering entry](../evidence/mastering-key-range-20261104/README.md).
 It replaces timed mastering entry with the [MASTERING + TAP combination](../evidence/mastering-chord-20261103/README.md)
 and fixes [FM-1 host-MIDI descriptor rejection](../evidence/fm1-host-midi-20261103/README.md).
 It adds [USB-B MIDI](USB_MIDI.md) and [USB-host MIDI](USB_HOST_MIDI.md) to the existing
@@ -23,10 +24,10 @@ require physical acceptance.
 ## Memory and binary integration
 
 The intervals below describe the **main processor**. The independent USB processor
-adds 2,640 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
+adds 2,772 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
 see [host placement and allocator evidence](USB_HOST_MIDI.md#integration-and-memory).
 
-USB-host MIDI additionally modifies the USB application. Boot programs, updater and panel-controller payload remain byte-identical to stock. The USB application is byte-identical to host-MIDI PR #16; this follow-up corrects the mastering held-key guard in the main application.
+USB-host MIDI additionally modifies the USB application. Boot programs, updater and panel-controller payload remain byte-identical to stock. This follow-up fixes alternate-zero host-MIDI startup in the USB application; the main application is byte-identical to the mastering held-key fix in PR #18.
 The descriptor, rate and reply buffer in the retired USB-B build occupied
 read-only code SRAM; the combined build fixes that placement before testing.
 

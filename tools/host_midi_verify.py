@@ -208,6 +208,9 @@ def verify(original,patched,main,report):
     passed('Standard MIDI-only/composite descriptors through original ABI; Roland unchanged',cases=samples)
     passed('FM-1 descriptor and both bounded MIDI header length conventions',
            **verify_descriptor_lengths(patched,report))
+    from host_midi_setup_verify import verify_setup
+    passed('Original bind/setup/completion opens alternate-zero MIDI without a rebind',
+           **verify_setup(patched,report,main))
     cfg=configuration();malformed=[]
     for n in range(9,len(cfg)):
         c=bytearray(cfg[:n]);c[2:4]=H(n);malformed.append(bytes(c))

@@ -1,11 +1,11 @@
 {
   "status": "pass",
-  "patched_app_sha256": "d01abbe0142470cf990147aef59698c0a36a541b8bfd113479aeb84319946ae3",
+  "patched_app_sha256": "7086bed11d109cd1ca72a54784d3246086a3997ff31b89a107433b5e8ebd360f",
   "groups": [
     {
       "name": "Original USB startup copies code, zeroes state, preserves existing initialized data",
       "status": "pass",
-      "code_bytes": 2640,
+      "code_bytes": 2772,
       "state_bytes": 1472
     },
     {
@@ -285,6 +285,86 @@
       "source": "FM-1 monitor built descriptor, not a live USB capture"
     },
     {
+      "name": "Original bind/setup/completion opens alternate-zero MIDI without a rebind",
+      "status": "pass",
+      "before_state": 1,
+      "before_midi_opens": 0,
+      "ports": [
+        {
+          "port": 0,
+          "state": 5,
+          "notifications": [
+            [
+              0,
+              0
+            ],
+            [
+              0,
+              4
+            ]
+          ],
+          "tx": "0ffa00000ff800000ffc0000"
+        },
+        {
+          "port": 1,
+          "state": 5,
+          "notifications": [
+            [
+              1,
+              0
+            ],
+            [
+              1,
+              4
+            ]
+          ],
+          "tx": "0ffa00000ff800000ffc0000"
+        },
+        {
+          "port": 2,
+          "state": 5,
+          "notifications": [
+            [
+              2,
+              0
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "tx": "0ffa00000ff800000ffc0000"
+        },
+        {
+          "port": 3,
+          "state": 5,
+          "notifications": [
+            [
+              3,
+              0
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "tx": "0ffa00000ff800000ffc0000"
+        }
+      ],
+      "midi_interface_zero": [
+        "both",
+        "in",
+        "out"
+      ],
+      "roland_original_sequence_equal": true,
+      "manager_disconnect_reconnect_with_pending_rx": true,
+      "original_control_wait": [
+        0,
+        -7
+      ],
+      "boundary": "Successful control I/O, descriptor/list/endpoint lookup and RTOS delivery are modeled; original completion and handlers execute"
+    },
+    {
       "name": "Malformed/truncated descriptor chains remain unselected",
       "status": "pass",
       "rejected_cases": 111
@@ -297,7 +377,7 @@
           "ep": 536936528,
           "buffer": 536872960,
           "size": 16,
-          "callback": 16827283,
+          "callback": 16827415,
           "token": 1,
           "timeout": 100,
           "flags": 0,
@@ -307,7 +387,7 @@
           "ep": 536936784,
           "buffer": 536873472,
           "size": 16,
-          "callback": 16827283,
+          "callback": 16827415,
           "token": 3,
           "timeout": 100,
           "flags": 0,
@@ -317,7 +397,7 @@
           "ep": 536937040,
           "buffer": 536873984,
           "size": 16,
-          "callback": 16827283,
+          "callback": 16827415,
           "token": 5,
           "timeout": 100,
           "flags": 0,
@@ -327,7 +407,7 @@
           "ep": 536937296,
           "buffer": 536874496,
           "size": 16,
-          "callback": 16827283,
+          "callback": 16827415,
           "token": 7,
           "timeout": 100,
           "flags": 0,
@@ -337,7 +417,7 @@
           "ep": 536936528,
           "buffer": 536872960,
           "size": 16,
-          "callback": 16827283,
+          "callback": 16827415,
           "token": 1,
           "timeout": 100,
           "flags": 0,
@@ -347,7 +427,7 @@
           "ep": 536936784,
           "buffer": 536873472,
           "size": 16,
-          "callback": 16827283,
+          "callback": 16827415,
           "token": 3,
           "timeout": 100,
           "flags": 0,
@@ -357,7 +437,7 @@
           "ep": 536937040,
           "buffer": 536873984,
           "size": 16,
-          "callback": 16827283,
+          "callback": 16827415,
           "token": 5,
           "timeout": 100,
           "flags": 0,
@@ -367,7 +447,7 @@
           "ep": 536937296,
           "buffer": 536874496,
           "size": 16,
-          "callback": 16827283,
+          "callback": 16827415,
           "token": 7,
           "timeout": 100,
           "flags": 0,

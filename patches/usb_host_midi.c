@@ -25,6 +25,8 @@ static void zero(uint8_t *p, unsigned n) { while(n--) *p++=0; }
 int mx1_host_config(uint8_t *r, const uint8_t *cfg) {
     if (U16(r,2)==0x0582) return host_config_original(r,cfg);
     zero(r+8,0x13c-8);
+    /* Absent audio interfaces must not alias a MIDI-only interface zero. */
+    r[13]=r[14]=0xff;
     if (!cfg || cfg[0]!=9 || cfg[1]!=2) return -1;
     unsigned total=le16(cfg+2), niface=cfg[4], seen=0, ms=0, iface=0;
     const uint8_t *start=0,*end=0;
@@ -93,6 +95,25 @@ void mx1_host_select(const uint8_t *info, uint16_t *out) {
     if(U32(info,0x64)==1 && (info[0x68] || info[0x69]) &&
        (!info[0x68] || info[0x6a]==2) && (!info[0x69] || info[0x6b]==2)) {
         out[6]=1; out[7]=0;
+    }
+}
+
+/* The stock setup callback waits for a rebind to open MIDI. SET_INTERFACE
+ * to the already-active alt0 succeeds without that callback (6000ef38).
+ * Finish that case in the same manager task using the stock open dispatcher;
+ * its queue acceptance and status notification still own MIDI readiness. */
+void mx1_host_setup(uint8_t *event) {
+    FN(0x6000865d,void(*)(void*))(event);
+    uint8_t *dev=(uint8_t *)U32(event,4);
+    uint8_t *r=FN(0x60008d4b,uint8_t *(*)(void*))(dev);
+    if(!r || U16(dev,0x10)==0x0582 || U32(r,4) || (r[0]&5)!=1 ||
+       r[14] || !(r[0x1c] || r[0x1d]) || U16(r,0x20)>8) return;
+    for(unsigned i=0;i<U16(r,0x20);i++) {
+        uint8_t *interface=(uint8_t *)U32(r,0x28+i*8);
+        if(r[0x24+i*8]==3 && interface && !interface[0x14] && interface[0x15]==1) {
+            FN(0x01008dcb,void(*)(void*))(event);
+            return;
+        }
     }
 }
 

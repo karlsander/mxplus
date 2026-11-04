@@ -2,7 +2,7 @@
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
   "patched_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
-  "candidate_container_sha256": "9f6da91f9aaaedfb406ed1fa2d6af1a51900b44ecc950d4294cc6a513d5d8d38",
+  "candidate_container_sha256": "253645edb92a09c7b0d100da01f57d5127834c109b2ad499332645487a7a1d14",
   "groups": [
     {
       "name": "Original MIDI routines remain byte-identical after startup relocation",

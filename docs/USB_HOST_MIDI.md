@@ -13,7 +13,7 @@ The subsequent d001 display test reported connection without MIDI readiness
 for the FM-1; see [bench readings](../evidence/mastering-key-range-20261104/README.md#separate-host-midi-observation).
 The current mastering-only fix retains that USB application unchanged. Generic USB audio remains disabled.
 
-Candidate SHA-256: `253645edb92a09c7b0d100da01f57d5127834c109b2ad499332645487a7a1d14`.
+Candidate SHA-256: `54d59222e51b44c3583e60c52400f06fc8e3d66e44ecb47e861f2333000250e1`.
 
 ## Behavior and scope
 
@@ -93,9 +93,10 @@ application components in one container. There is no separate host firmware.
 Boot programs, updater, panel payload, update range and container boundaries
 remain unchanged. The host-MIDI addition in PR #14 changed **app_usb** while retaining PR #13
 main-application bytes. Later mastering changes are documented in
-[mainline integration](MAINLINE.md). The current startup fix changes only the USB parser/setup callback and regenerated
-extension placement/patch accounting; the main application remains identical
-to the mastering held-key fix in PR #18.
+[mainline integration](MAINLINE.md). The alternate-zero startup fix changed only the USB parser/setup callback and
+regenerated extension placement/patch accounting. The current USB application
+is identical to PR #19; the main application additionally restores mastering
+hold entry and corrects the selected preset light, as described in MAINLINE.md.
 
 USB startup originally copies decoded `0x2b1f4..0x36dd8` to
 `0x01000300..0x0100bee4`. The new USB code is inserted at decoded `0x36dd8`,

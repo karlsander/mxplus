@@ -26,8 +26,8 @@ LABELS = {0:'EQ ',2:'Lty',3:'Lgn',4:'LFr',6:'LMg',7:'LMf',9:'HMg',10:'HMf',
 
 class MasterMachine(UIMachine):
     def __init__(self,image,symbols):
-        self.tick_calls=0; self.redraw_calls=0
-        self.leds={}; self.notices=[]; self.real_redraw=False
+        self.clock=10000; self.tick_calls=0; self.redraw_calls=0
+        self.leds={}; self.led_styles={}; self.notices=[]; self.real_redraw=False
         self.saves=[]; self.loads=[]; self.transactions=[]
         super().__init__(image,symbols)
         # Normal operating state after stock 0x6001649c clears the UI lock.
@@ -66,18 +66,24 @@ class MasterMachine(UIMachine):
             self.loads.append(args[1]); return
         elif address == 0x6001a1ce:
             return  # Execute the actual stock getter/clamping setter.
-        if address in (0x6000becc,0x6005a034,0x60057ebc,0x010093d6,0x60012340):
+        if address in (0x6000becc,0x6005a034,0x60057ebc,0x010093d6,0x60012340,
+                       0x0100d0fa,0x0100d10a):
             self.ret()  # Mutex, singleton, outgoing parameter/MIDI notifications.
         elif address in (0x6000d400,0x6000d3e2):
             self.notices.append((address,args)); self.ret()
         elif address == 0x010037e8:
-            raise AssertionError('Mastering gesture must not read the hold timer')
+            # Execute the actual clock API; only the advancing RTOS counter is modeled.
+            self.write(0x01015304,struct.pack('<II',0,self.clock&0xffffffff))
+            return
         elif address == 0x60010b76:
             self.tick_calls+=1; self.ret()  # Registered stock periodic boundary.
         elif address == self.symbols.get('mx1_master_redraw_original') and not self.real_redraw:
             self.redraw_calls+=1; self.ret()
         elif address == 0x60014a78:
             self.leds[args[0]]=args[1]; self.ret()
+        elif address == 0x60014a8e:
+            self.leds[args[0]]=args[1]; self.led_styles[args[0]]=args[1:]
+            return  # Execute original RGB-capable helper and LED record writer.
         elif address == 0x60014a18:
             self.leds.clear(); self.ret()
         elif address == 0x60054b38:
@@ -96,13 +102,13 @@ class MasterMachine(UIMachine):
         entry=struct.unpack('<I',self.read(0x6000f5d8,4))[0]
         return self.checked(entry,PACKET)
     def tick(self,delta):
+        self.clock=(self.clock+delta)&0xffffffff
         entry=struct.unpack('<I',self.read(0x6000f5dc,4))[0]
         return self.checked(entry)
     def active(self): return self.read(STATE+135,1)==b'\x01'
     def enter(self):
-        self.event(2,0x17); assert not self.active()
-        self.event(2,0); assert self.active()  # No timer or periodic callback.
-        self.event(1,0); self.event(1,0x17)
+        self.event(2,0x17); self.tick(1199); assert not self.active()
+        self.tick(1); assert self.active(); self.event(1,0x17)
     def exit(self):
         self.event(2,0x17); assert not self.active(); self.event(1,0x17)
 
@@ -165,42 +171,35 @@ def verify_lookup(original,patched):
             assert 0x1dbd6<=off<0x1e65e, ('unexpected interior pointer',hex(off),hex(value))
 
 
-def verify_chord_traffic(patched,symbols):
-    # MASTERING is a deferred modifier; background traffic and arbitrary
-    # delays must never enter the editor without an explicit TAP press.
+def verify_hold_traffic(patched,symbols):
     m=MasterMachine(patched,symbols)
     m.event(2,0x17)
-    for step in range(12):
-        m.event(0xb,6,64+(step&1))
-        m.event(0x1d,0,0)
-        m.tick(100)
-        assert not m.active(), 'Time alone must not enter mastering'
-    assert '02170000' not in m.original_events, 'Background traffic synthesized a stock MASTERING press'
-    assert m.original_events.count('1d000000')==12
-    m.event(2,0); assert m.active()
-    m.event(1,0x17); m.event(1,0)
-    assert m.active()
-    m.exit()
-
-    # Background traffic must not turn a short tap into an editor entry or
-    # swallow the original bypass action on release.
+    for step in range(11):
+        m.event(0xb,6,64+(step&1));m.event(0x1d,0,0);m.event(3,0x17)
+        m.tick(100);assert not m.active()
+    assert '02170000' not in m.original_events
+    assert m.original_events.count('1d000000')==11
+    m.tick(99);assert not m.active()
+    m.tick(1);assert m.active()
+    m.event(3,0x17);m.event(2,0x17);assert m.active()  # Held repeats cannot exit.
+    m.event(1,0x17);m.exit()
+    # Timer subtraction must work across the low-word rollover.
+    m=MasterMachine(patched,symbols);m.clock=0xffffff00;m.enter();m.exit()
+    # Short release after background activity preserves the original bypass.
     m=MasterMachine(patched,symbols)
     m.event(2,0x17);m.event(0xb,6,65);m.tick(300);m.event(1,0x17)
-    assert not m.active()
+    m.tick(2000);assert not m.active()
     assert m.original_events[-2:]==['02170000','01170000']
-
-    # Other buttons and either encoder event cancel the modifier and replay
-    # the deferred MASTERING press before the stock modified gesture.
-    for kind,control in ((2,0x29),(4,0),(4,1),(5,0)):
+    # Another button/encoder, including TAP, cancels the hold and replays the
+    # deferred MASTERING press before the stock modified gesture.
+    for kind,control in ((2,0),(2,0x29),(4,0),(4,1),(5,0)):
         m=MasterMachine(patched,symbols)
         m.event(2,0x17);m.event(0xb,6,65);m.event(kind,control,1)
         assert m.original_events[1:3]==['02170000',struct.pack('<BBh',kind,control,1).hex()]
-        m.tick(2000)
-        assert not m.active()
+        m.tick(2000);assert not m.active()
 
 
-
-def verify_chord_pages(original,patched,symbols):
+def verify_hold_pages(original,patched,symbols):
     class PageKeys(UIMachine):
         def instruction(self,uc,address,size,user):
             if address==0x60010516:return  # Execute the original key action.
@@ -223,21 +222,15 @@ def verify_chord_pages(original,patched,symbols):
     m=MasterMachine(patched,symbols)
     m.event(2,0);assert m.original_events==['02000000']
     m.event(1,0);assert m.original_events==['02000000','01000000']
-    # Both release orders, repeats, and a held TAP across editor exit are inert.
-    for first,second in ((0,0x17),(0x17,0)):
-        m=MasterMachine(patched,symbols);m.event(2,0x17);m.event(2,0)
-        m.event(3,0);m.event(3,0x17);m.event(2,0)
-        m.event(1,first);m.event(1,second)
-        assert m.active() and not m.original_events and not m.key_actions
-    m=MasterMachine(patched,symbols);m.event(2,0x17);m.event(2,0)
-    m.event(1,0x17);m.event(2,0x17);assert not m.active()
-    m.event(1,0);m.event(1,0x17)
+    # Long hold consumes press/repeats/release; only a fresh press exits.
+    m=MasterMachine(patched,symbols);m.event(2,0x17);m.tick(1200)
+    m.event(3,0x17);m.event(2,0x17);assert m.active()
+    m.event(1,0x17);m.exit()
     assert not m.original_events and not m.key_actions
-    # The gesture is ordered: TAP first is ordinary tap tempo, and unrelated
-    # held keys preserve the stock chord rather than opening the editor.
+    # Other held keys prevent starting a hold.
     for key in (0,0x29):
         m=MasterMachine(patched,symbols);m.event(2,key);m.event(2,0x17)
-        m.event(2,0);assert not m.active()
+        m.tick(2000);assert not m.active()
     return pages
 
 
@@ -249,23 +242,58 @@ def verify_key_range(patched,symbols):
         m.held(*[bit for bit in range(85,88) if high & (1 << (bit-85))])
         m.event(2,0x17);m.tick(1)
         assert m.read(STATE+136,1)==b'\x01', ('not pending',high)
-        m.event(2,0);assert m.active(), high
-        m.event(1,0);m.event(1,0x17);m.exit()
+        m.tick(1199);assert m.active(), high
+        m.event(1,0x17);m.exit()
         assert m.read(0x605129a4+10,1)==bytes([high<<5]), 'Non-panel bits were modified'
     m=MasterMachine(patched,symbols)
     for key in range(85):
         m.held(key,85,86,87)
-        m.event(2,0x17);m.tick(1);m.event(2,0)
+        m.event(2,0x17);m.tick(1200)
         assert not m.active() and m.read(STATE+136,1)==b'\0', key
-        m.event(1,0);m.event(1,0x17)
+        m.event(1,0x17)
     # A real key appearing after MASTERING still cancels a pending modifier.
     m=MasterMachine(patched,symbols);m.held(85);m.event(2,0x17)
     m.held(0x54,85);m.tick(1)
     assert not m.active() and m.read(STATE+136,1)==b'\0'
+    # Pending entry must stop if a modal/page/lock opens during the hold.
+    for address,value in ((PAGE,struct.pack('<H',12)),(MODAL,u32(1)),(0x600b537c,u32(1))):
+        m=MasterMachine(patched,symbols);m.held(85);m.event(2,0x17)
+        m.write(address,value);m.tick(1200)
+        assert not m.active() and m.read(STATE+136,1)==b'\0'
     # The observed upper bit must not swallow ordinary MASTERING or TAP actions.
     m=MasterMachine(patched,symbols);m.held(85)
     m.event(2,0x17);m.event(1,0x17);m.event(2,0);m.event(1,0)
     assert m.original_events==['02170000','01170000','02000000','01000000']
+
+
+def verify_pad_lights(patched,symbols):
+    m=MasterMachine(patched,symbols);m.enter();rgb=[]
+    def panel_boundary(uc,address,size,user):
+        if address==0x60002da6:
+            rgb.append(uc.reg_read(UC_ARM_REG_R2));m.ret()
+    m.uc.hook_add(UC_HOOK_CODE,panel_boundary)
+    base=struct.unpack('<I',m.read(0x600022cc,4))[0]
+    mapping=struct.unpack('<I',m.read(0x01002b78,4))[0]
+    # The former mono helper supplies palette index zero: actual RGB encoding
+    # outputs three zero channels even when mode is ON and brightness is nine.
+    m.checked(0x01009b40,0,1,9,0);assert rgb==[0,0,0]
+    for slot in range(10):
+        m.event(2,slot+1);m.event(1,slot+1)
+        for pad in range(16):
+            physical=struct.unpack('<I',m.read(mapping+(0x19+pad)*4,4))[0]
+            assert physical==0xa2+pad
+            record=base+physical*0x28
+            mode=struct.unpack('<I',m.read(record+4,4))[0]
+            brightness=struct.unpack('<I',m.read(record+0x1c,4))[0]
+            color=struct.unpack('<I',m.read(record+0x24,4))[0]
+            assert (mode,brightness,color)==(int(pad==slot),9,4)
+            assert m.led_styles[0x19+pad]==(mode,brightness,color)
+            # Steady on/off input to the original RGB encoder; the blink task
+            # and final panel submission are not a simulated hardware device.
+            rgb.clear();m.checked(0x01009b40,pad,mode,brightness,color)
+            assert rgb==([1,0,0] if pad==slot else [0,0,0])
+    return {'slots':10,'pads':16,'selected_palette_index':4,
+            'selected_rgb_bytes':[1,0,0],'previous_palette_zero_rgb':[0,0,0]}
 
 
 def verify(original,patched,build):
@@ -273,11 +301,12 @@ def verify(original,patched,build):
     parameters=extract_parameters(original)
     symbols=build['symbols']
     verify_key_range(patched,symbols)
-    verify_chord_traffic(patched,symbols)
-    pages=verify_chord_pages(original,patched,symbols)
+    verify_hold_traffic(patched,symbols)
+    pages=verify_hold_pages(original,patched,symbols)
+    pad_lights=verify_pad_lights(patched,symbols)
     m=MasterMachine(patched,symbols)
-    # MASTERING alone passes the exact stock down/up pair; the chord has no
-    # stock key actions and never reaches tap tempo or preset selection.
+    # A short MASTERING press passes the exact stock down/up pair; a long hold
+    # has no stock key actions and never toggles bypass or changes presets.
     m.event(2,0x17);m.tick(300);m.event(1,0x17)
     assert [p[:4] for p in m.original_events[-2:]]==['0217','0117']
     m.key_actions.clear();m.original_events.clear();m.enter()
@@ -381,15 +410,15 @@ def verify(original,patched,build):
     m=MasterMachine(patched,symbols);m.enter();m.exit()
     for page in (0,1,11,12,13,14,16):
         m=MasterMachine(patched,symbols);m.write(PAGE,struct.pack('<H',page))
-        m.event(2,0x17);m.event(2,0);assert not m.active();m.event(1,0);m.event(1,0x17)
-        assert len(m.original_events)==4
+        m.event(2,0x17);m.tick(2000);assert not m.active();m.event(1,0x17)
+        assert m.original_events==['02170000','01170000']
     m=MasterMachine(patched,symbols);m.event(2,0x17);m.event(4,1,1);m.tick(2000)
     assert not m.active() and m.original_events[:2]==['02170000','04010100']
     m.event(1,0x17)
     m=MasterMachine(patched,symbols);m.enter();m.write(MODAL,u32(1));m.tick(1)
     assert not m.active()
     m=MasterMachine(patched,symbols);m.write(0x600b537c,u32(1))
-    m.event(2,0x17);m.event(2,0);assert not m.active()
+    m.event(2,0x17);m.tick(2000);assert not m.active()
     # Exercise the displaced full-redraw prologue, both branch outcomes, with
     # an empty dirty mask and the fader-only dirty mask.
     m=MasterMachine(patched,symbols);m.real_redraw=True
@@ -404,21 +433,22 @@ def verify(original,patched,build):
         m.enter();m.event(0xb,7,127);m.exit();m.checked(0x60014488)
         assert m.leds[0x29]==3
     return {'status':'pass','patched_app_sha256':sha256(patched),'parameters':parameters,
-        'channel_setting_pages_from_original_keys':pages,
+        'channel_setting_pages_from_original_keys':pages,'preset_pad_lights':pad_lights,
         'groups':[{'name':name,'status':'pass'} for name in (
           'Reclaimed stock mixer lookup agrees for all 263 valid IDs and invalid boundaries; external literal/shared returns preserved',
-          'All 85 physical held keys block entry; all mixtures of bits 85..87 allow the chord and survive unchanged',
+          'All 85 physical held keys block entry; all mixtures of bits 85..87 allow a long hold and survive unchanged',
           'All 65 mastering names and ranges linked to actual original index instructions',
           'Original GAIN/PAN/TONE/AUX/BFX/FADER key actions identify all six supported mixer pages',
-          'MASTERING then TAP enters immediately without clock or periodic callbacks; exit, stock taps and modifier guards',
-          'Mastering chord survives ADC/background traffic; elapsed time alone never enters; TAP alone preserves the stock action',
+          'MASTERING hold enters at 1200 ticks using original clock API; exit, short taps and modifier guards',
+          'Mastering hold survives ADC/background traffic and timer rollover; threshold/release/cancel behavior and TAP remain isolated',
           'All 22 assigned controls and eight switches execute stock transactions, correct display/LED selection, and preserve unmapped parameters',
           'Ten step-pad slots use original copy/save preparation; all 65 values survive slot round trips; pickup resets and same-slot presses are inert',
+          'All ten selected presets reach original LED records and RGB encoder with a nonzero color; other pads are off',
           'Entire edit surface isolated; held-button releases cannot leak after exit',
           'Mastering entry pickup and forced mixer-return pickup in Jump and Pass modes; stock fader blink encoding')],
         'boundaries':['Original parameter lookup, getters, clamping setters, group storage and formatter execute unchanged except compressed mixer ID lookup',
           'Original fader handlers and blink renderer execute; physical ADC/LED protocol and timing are not modeled',
-          'Object vtables and parameter defaults are initialized fixtures; periodic callback body, mutex, notifications, MIDI send, storage singleton/submission and final panel I/O are stubbed; any mastering clock call fails',
+          'Object vtables and parameter defaults are initialized fixtures; periodic callback body, mutex, notifications, MIDI send, storage singleton/submission and final panel I/O are stubbed; the original clock API and RGB LED record writer execute with modeled time',
           'No hardware, audio measurements or physical save/restart acceptance; no new sample callback, MPU region or heap reservation']}
 
 if __name__=='__main__':

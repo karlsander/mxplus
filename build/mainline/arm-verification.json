@@ -1,8 +1,8 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
-  "candidate_container_sha256": "253645edb92a09c7b0d100da01f57d5127834c109b2ad499332645487a7a1d14",
+  "patched_app_sha256": "cfab5a905d27497f74e40f8147346307a3aaae56497eac520324f6d0c0ab1281",
+  "candidate_container_sha256": "54d59222e51b44c3583e60c52400f06fc8e3d66e44ecb47e861f2333000250e1",
   "extension_sha256": "fc4ed00c31546c74a84dbaece0ac9fda8fad28a3c21f19038e123617b945bbeb",
   "groups": [
     {
@@ -113,7 +113,7 @@
       "status": "pass"
     },
     {
-      "name": "All 85 physical held keys block entry; all mixtures of bits 85..87 allow the chord and survive unchanged",
+      "name": "All 85 physical held keys block entry; all mixtures of bits 85..87 allow a long hold and survive unchanged",
       "status": "pass"
     },
     {
@@ -125,11 +125,11 @@
       "status": "pass"
     },
     {
-      "name": "MASTERING then TAP enters immediately without clock or periodic callbacks; exit, stock taps and modifier guards",
+      "name": "MASTERING hold enters at 1200 ticks using original clock API; exit, short taps and modifier guards",
       "status": "pass"
     },
     {
-      "name": "Mastering chord survives ADC/background traffic; elapsed time alone never enters; TAP alone preserves the stock action",
+      "name": "Mastering hold survives ADC/background traffic and timer rollover; threshold/release/cancel behavior and TAP remain isolated",
       "status": "pass"
     },
     {
@@ -138,6 +138,10 @@
     },
     {
       "name": "Ten step-pad slots use original copy/save preparation; all 65 values survive slot round trips; pickup resets and same-slot presses are inert",
+      "status": "pass"
+    },
+    {
+      "name": "All ten selected presets reach original LED records and RGB encoder with a nonzero color; other pads are off",
       "status": "pass"
     },
     {

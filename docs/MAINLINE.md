@@ -9,11 +9,11 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`253645edb92a09c7b0d100da01f57d5127834c109b2ad499332645487a7a1d14`.
+`54d59222e51b44c3583e60c52400f06fc8e3d66e44ecb47e861f2333000250e1`.
 It fixes [host MIDI startup on an already-active alternate zero](../evidence/host-midi-alt-zero-20261104/README.md).
 It retains the fix for the [held-key range that blocked mastering entry](../evidence/mastering-key-range-20261104/README.md).
-It replaces timed mastering entry with the [MASTERING + TAP combination](../evidence/mastering-chord-20261103/README.md)
-and fixes [FM-1 host-MIDI descriptor rejection](../evidence/fm1-host-midi-20261103/README.md).
+It restores [long MASTERING entry and a visible selected preset pad](../evidence/mastering-hold-light-20261104/README.md)
+after the user confirmed the held-key correction worked with the temporary chord. It also fixes [FM-1 host-MIDI descriptor rejection](../evidence/fm1-host-midi-20261103/README.md).
 It adds [USB-B MIDI](USB_MIDI.md) and [USB-host MIDI](USB_HOST_MIDI.md) to the existing
 [mastering mode](MASTERING.md) and
 [stereo packet fix](USB_PACKET_FIX.md). The pre-generator image
@@ -27,7 +27,7 @@ The intervals below describe the **main processor**. The independent USB process
 adds 2,772 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
 see [host placement and allocator evidence](USB_HOST_MIDI.md#integration-and-memory).
 
-USB-host MIDI additionally modifies the USB application. Boot programs, updater and panel-controller payload remain byte-identical to stock. This follow-up fixes alternate-zero host-MIDI startup in the USB application; the main application is byte-identical to the mastering held-key fix in PR #18.
+USB-host MIDI additionally modifies the USB application. Boot programs, updater and panel-controller payload remain byte-identical to stock. The USB application retains the alternate-zero host-MIDI startup fix in PR #19. The main application now restores timed mastering entry and corrects RGB preset-pad output; their hardware acceptance remains open.
 The descriptor, rate and reply buffer in the retired USB-B build occupied
 read-only code SRAM; the combined build fixes that placement before testing.
 
@@ -91,7 +91,7 @@ USB timing or deadline margin.
 ## Bench sequence
 
 1. Identify this exact image and keep monitoring muted for the first boot.
-2. Confirm MASTERING + TAP entry and MASTERING exit, all mapped controls and ten slot pads, pickup and original shortcuts;
+2. Confirm long MASTERING entry, selected preset-pad light and MASTERING exit, all mapped controls and ten slot pads, pickup and original shortcuts;
    the [mastering procedure](MASTERING.md#verification-and-limits) scopes this new check.
 3. Confirm SELECT labels, end stops and routing still work; save/recall differing
    snapshots and restart after allowing several seconds for autosave.

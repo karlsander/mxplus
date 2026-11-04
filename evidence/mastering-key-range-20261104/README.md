@@ -80,3 +80,13 @@ This mastering-only change does not claim to resolve that separate failure.
 Successful d001 displays establish SDRAM execution for those control-task
 callbacks on this mixer. They do not establish audio/DSP deadlines or sustained
 stability, and the present candidate does not use that diagnostic reservation.
+
+## User follow-up, 4 November 2026
+
+After the hash-verified copy of this record's `9f6da91f…` candidate, the user
+reported: “master mode is working great now.” This is a positive mastering
+entry/use report on the corrected chord build. No detailed control-by-control,
+storage/restart, timing or audio observations accompanied it. The user then
+requested returning to a long MASTERING hold and highlighting the selected
+preset pad. Those changed routines require separate validation; see the
+[follow-up](../mastering-hold-light-20261104/README.md).

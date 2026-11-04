@@ -15,7 +15,7 @@ typedef unsigned int u32;
 #define ANALOG ((volatile u16 *)0x605129b4u)
 #define DIRTY (*(volatile u16 *)0x605141ccu)
 #define MASTER_KEY 0x17u
-#define TAP_KEY 0u
+#define HOLD_TICKS 1200u
 extern void mx1_route_ui_event(const u8 *event);
 extern void mx1_master_redraw_original(void *context);
 
@@ -43,7 +43,7 @@ static const char labels[30][3] = {
     "EQ ","Lty","Hty","EXP","CMP","LCt","Enh","LIM"
 };
 struct master_state {
-    u32 reserved, acquired, restore; /* Preserve the reviewed 140-byte state layout. */
+    u32 started, acquired, restore;
     u16 before[28], last[28];
     u8 swallowed[11];
     u8 active, pending, selected, redraw;
@@ -55,6 +55,11 @@ static int get(void *ctx, unsigned id, unsigned addr) {
 }
 static void set(void *ctx, unsigned id, int value) {
     FN(0x600161f7u,void (*)(void *,unsigned,int,unsigned))(ctx,id,value,0);
+}
+static u32 now(void) {
+    u32 ticks[2];
+    FN(0x010037e9u,void (*)(u32 *))(ticks);
+    return ticks[1];
 }
 static __attribute__((noinline)) int eligible(void) {
     unsigned page = *(volatile u16 *)0x600b4b5eu;
@@ -141,7 +146,9 @@ void mx1_master_redraw(void *context) {
     if (!S.active) { mx1_master_redraw_original(context); return; }
     led(6,3); /* Stock MASTERING blink mode. */
     unsigned current=slot();
-    for (unsigned i=0;i<10;++i) led(0x19+i,i==current?1:0);
+    for (unsigned i=0;i<16;++i)
+        FN(0x60014a8fu,void (*)(unsigned,unsigned,unsigned,unsigned))
+            (0x19+i,i==current?1:0,9,4); /* Step pads need a nonzero color. */
     for (unsigned i=0;i<8;++i) led(switches[i][1],parameter_value(switches[i][2])?1:0);
     for (unsigned strip=0;strip<11;++strip) {
         unsigned adc=7+2*strip;
@@ -167,6 +174,7 @@ void mx1_master_tick(void) {
         /* Pending modifier must never take over a newly opened modal/page. */
         S.pending=0;
     }
+    if (S.pending && (u32)(now()-S.started)>=HOLD_TICKS) enter();
     if (S.active && !eligible()) leave();
     if (S.active && S.redraw) mx1_master_redraw(CONTEXT);
 }
@@ -188,10 +196,6 @@ void mx1_master_ui_event(const u8 *event) {
             mx1_route_ui_event(down); mx1_route_ui_event(event); return;
         }
         if (key && id==MASTER_KEY) return;
-        if (key && id==TAP_KEY && type==2 && eligible() && no_keys()) {
-            S.swallowed[id/8]|=bit;
-            enter(); mx1_master_redraw(CONTEXT); return;
-        }
         /* Only another button or encoder cancels the modifier. ADC samples and other
          * panel notifications keep flowing without fabricating a stock press. */
         if (type-1u<5u) {
@@ -201,7 +205,7 @@ void mx1_master_ui_event(const u8 *event) {
         }
     }
     if (!S.active && key && type==2 && id==MASTER_KEY && eligible() && no_keys()) {
-        S.pending=1; S.swallowed[id/8]|=bit; return;
+        S.pending=1; S.started=now(); S.swallowed[id/8]|=bit; return;
     }
     if (S.active) {
         if (key) {

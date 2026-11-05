@@ -42,3 +42,15 @@ continuity, full-note-transfer priority and replacement-device isolation.
 USB/DSP hardware and RTOS queue delivery are modeled boundaries.
 
 See [report decoding and bench controls](../../docs/USB_HOST_AUDIO.md#host-diagnostic-report).
+
+## Staged on the MX-1
+
+After the user confirmed update mode, the candidate was copied as `MX1_UPD.BIN`
+to the verified Roland USB updater volume, read back with matching SHA-256
+and ejected. [Copy receipt](copy.json). The prior `1087e725…` image is retained
+locally for rollback. The user was instructed to press TAP, wait for Fin and
+restart; this staging record does not establish completion of that update.
+
+The committed-artifact gate and all six browser-patcher tests also passed.
+The requested next observation is the five raw SysEx rows from the FM-1 MIDI
+monitor with CHAN ALL and TYPE SYSEX, after a note sent through the MX-1.

@@ -2,7 +2,7 @@
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
   "patched_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
-  "candidate_container_sha256": "1087e7256c0b76b512a5bf28f8264e6c5385e986bc45effb3a964c9a59e46db3",
+  "candidate_container_sha256": "4eb649c9c4a268674e1447b3bf1cec1fd6226f5e75c77f2ebaa5e9bcc51de05d",
   "extension_sha256": "fc4ed00c31546c74a84dbaece0ac9fda8fad28a3c21f19038e123617b945bbeb",
   "groups": [
     {
@@ -1786,7 +1786,7 @@
     {
       "name": "Original USB startup copies code, zeroes state, preserves existing initialized data",
       "status": "pass",
-      "code_bytes": 2872,
+      "code_bytes": 2892,
       "state_bytes": 1472
     },
     {
@@ -2321,7 +2321,7 @@
       "status": "pass",
       "details": {
         "status": "pass",
-        "patched_app_sha256": "2c5eb69ce88bf57dc1b9c46faca8b735ce95b3bfc028f8f2e1ccd4d54db22f3c",
+        "patched_app_sha256": "4a0598d8b5dff38af632331118586610ddab79dee0dd24a7a70d1ff033d52068",
         "hardware_access": false,
         "limits": "instruction checks only; USB/DSP/RTOS boundaries modeled",
         "setup": {
@@ -2401,11 +2401,30 @@
           "calls": 48,
           "boundary": "DSP reset/command/result, integer conversion MMIO and RTOS notify modeled; drift epoch seeded; no interpolation or timing claim"
         },
+        "worker_and_tree": {
+          "hcca_slots_reaching_audio_ed": 32,
+          "original_dummy_ed_allocations": 31,
+          "original_queue_and_worker": true,
+          "boundary": "heap allocation and RTOS queue delivery modeled; actual controller traversal and USB transactions untested"
+        },
+        "fm1_monitor": {
+          "format": "F0 7D 4D stage controller error phase control flags cc packets malformed frame_lo frame_hi F7",
+          "initial_waiting_rebind_payload": "f07d4d0300000000000000000000f7",
+          "cases": [
+            "state change and note-on trigger",
+            "no poll/clock flood",
+            "user SysEx continuity",
+            "full musical transfer retained",
+            "replacement device isolation",
+            "specific controller-start rejection"
+          ],
+          "boundary": "USB MIDI submission modeled; FM-1 display/protocol acceptance still requires hardware"
+        },
         "stock_endpoint_record_hex": "8480010004000100b800",
         "profile_negative_cases": 188,
         "heap_reservation_bytes": 65536,
         "iso_descriptors_per_port": 17,
-        "audio_state_bytes": 22656,
+        "audio_state_bytes": 22832,
         "cases": [
           "guarded complete USB patch accounting",
           "startup placement",

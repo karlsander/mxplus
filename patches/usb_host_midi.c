@@ -16,6 +16,7 @@ extern int host_enqueue_original(unsigned, uint32_t);
 extern void host_tx_poll_original(void);
 extern void host_rx_poll_original(void);
 extern void mx1_audio_setup(uint8_t *);
+extern unsigned mx1_audio_monitor(unsigned,void *,uint32_t *,unsigned);
 static uint16_t le16(const uint8_t *p) { return p[0] | (uint16_t)p[1]<<8; }
 static void zero(uint8_t *p, unsigned n) { while(n--) *p++=0; }
 
@@ -233,6 +234,7 @@ static void poll(unsigned tx) {
             while(n<16 && p->count) {
                 dst[n++]=p->queue[p->head]; p->head=(p->head+1)&31; p->count--;
             }
+            n=mx1_audio_monitor(port,(void *)(uintptr_t)p->ep[1],dst,n);
             if(!n) continue;
             n*=4;
         } else n=U16(p->ep[0],0x10);

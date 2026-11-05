@@ -73,6 +73,20 @@ typedef struct {
     int32_t samples[24], discard[24];
 } AudioPort;
 __attribute__((section(".host_audio_state"))) AudioPort mx1_audio_ports[4];
+/* Keep diagnostics AFTER the established DMA/sample layout. Only the OHCI
+ * worker reads controller state; the MIDI TX task reads these RAM snapshots. */
+typedef struct {
+    uint8_t *dev;
+    volatile uint32_t stage, result, controller, control, flags, cc, frame;
+    uint32_t sent, pending, sysex;
+} AudioDiagnostic;
+__attribute__((section(".host_audio_diagnostics"))) static AudioDiagnostic diagnostics[4];
+static AudioDiagnostic *diagnostic(AudioPort *p) { return &diagnostics[p-mx1_audio_ports]; }
+static void stage(AudioPort *p,unsigned value,int result) {
+    AudioDiagnostic *d=diagnostic(p);
+    d->result=result<0?(unsigned)-result:(unsigned)result;
+    barrier(); d->stage=value;
+}
 _Static_assert(sizeof(IsoTD)==224,"ITD stride/alignment");
 _Static_assert(sizeof(IsoED)==64,"ED software layout");
 static uint8_t *record(void *dev) { return FN(0x60008d4b,uint8_t *(*)(void*))(dev); }
@@ -94,7 +108,10 @@ static AudioPort *for_device(void *dev) {
 static void start_done(void *dev,void *ep,unsigned bytes,int status,uintptr_t token) {
     (void)dev; (void)ep; (void)bytes;
     AudioPort *p=(AudioPort *)token;
-    if(status) { p->wanted=0; p->claimed=0; return; }
+    if(status) {
+        if(diagnostic(p)->stage<0x40) stage(p,0x46,status);
+        p->wanted=0; p->claimed=0; return;
+    }
     if(p->wanted && p->phase==2) post(p,5);
 }
 static void try_open(uint8_t *dev,uint8_t *r) {
@@ -106,17 +123,22 @@ static void try_open(uint8_t *dev,uint8_t *r) {
     for(unsigned i=0;i<U16(r,0x20) && i<8;i++) {
         uint8_t *n=PTR(r,0x28+i*8);
         if(!n || n[0x13]!=1 || n[0x14]!=1 || n[0x15]!=1) continue;
+        stage(p,4,0);
         uint8_t *ep=0;
-        if(FN(0x600096c7,int(*)(void*,int,int,int,int,int,void*))(n,0,128,1,0,0,&ep) ||
-           !ep || ep[8]!=0x84 || ep[9]!=128 || ep[10]!=1 || U16(ep,0x10)!=184 || U16(ep,0xe)!=1) return;
+        int lookup=FN(0x600096c7,int(*)(void*,int,int,int,int,int,void*))(n,0,128,1,0,0,&ep);
+        if(lookup) { stage(p,0x44,lookup); return; }
+        if(!ep || ep[8]!=0x84 || ep[9]!=128 || ep[10]!=1 || U16(ep,0x10)!=184 || U16(ep,0xe)!=1) {
+            stage(p,0x45,0); return;
+        }
         p->dev=dev; p->ep=ep; p->interface=n; p->generation++;
         p->cancel_queued=0; p->wanted=1; p->claimed=1; barrier();
         /* Stock DSP initialization stays in manager task, before publication
          * to the audio task. Its serial interface is the original open path. */
         FN(0x600079ef,void(*)(unsigned,unsigned,unsigned))(port,1,44100);
+        stage(p,5,0);
         int e=FN(0x6000c277,int(*)(void*,void*,unsigned,unsigned,unsigned,void*,unsigned,void*,uintptr_t,unsigned))
             (dev,ep,0,0,0,0,0,(void*)start_done,(uintptr_t)p,0);
-        if(e) { p->wanted=0; p->claimed=0; }
+        if(e) { stage(p,0x45,e); p->wanted=0; p->claimed=0; }
         return;
     }
 }
@@ -126,13 +148,20 @@ void mx1_audio_setup(uint8_t *event) {
     if(for_device(dev)) return;
     const uint8_t *c=FN(0x60009d2d,const uint8_t *(*)(void*,unsigned))(dev,0);
     if(!mx1_audio_profile(c)) return;
+    unsigned port=U16(r,2); if(port>=4) return;
+    AudioPort *p=&mx1_audio_ports[port]; AudioDiagnostic *d=diagnostic(p);
+    zero(d,sizeof *d); d->dev=dev; d->controller=U16(dev,0x4a); stage(p,1,0);
     /* UAC1 endpoint sampling-frequency SET_CUR, followed by AS alt1.
      * Three little-endian bytes, fixed advertised rate. */
     uint8_t rate[3]={0x44,0xac,0};
-    if(FN(0x60009559,int(*)(void*,unsigned,unsigned,unsigned,unsigned,unsigned,void*,unsigned))
-       (dev,0x22,1,0x100,0x84,3,rate,0)) return;
-    if(FN(0x60009559,int(*)(void*,unsigned,unsigned,unsigned,unsigned,unsigned,void*,unsigned))
-       (dev,1,11,1,1,0,0,0)) return;
+    int e=FN(0x60009559,int(*)(void*,unsigned,unsigned,unsigned,unsigned,unsigned,void*,unsigned))
+       (dev,0x22,1,0x100,0x84,3,rate,0);
+    if(e) { stage(p,0x41,e); return; }
+    stage(p,2,0);
+    e=FN(0x60009559,int(*)(void*,unsigned,unsigned,unsigned,unsigned,unsigned,void*,unsigned))
+       (dev,1,11,1,1,0,0,0);
+    if(e) { stage(p,0x42,e); return; }
+    stage(p,3,0);
     try_open(dev,r);
 }
 void mx1_audio_bind(uint8_t *event) {
@@ -169,6 +198,18 @@ void mx1_audio_close(uint8_t *r) {
 }
 
 /* OHCI worker only below. No stock general-TD structure is used for ISO. */
+static void snapshot(AudioPort *p) {
+    AudioDiagnostic *d=diagnostic(p);
+    if(p->phase!=2) return;
+    uint8_t *regs=PTR(p->controller,8);
+    unsigned control=V32(regs,4), head=p->ed.head;
+    d->control=(control&0x3f)|((control&0xc0)==0x80?0x40:0);
+    d->flags=!!p->claimed | (!!p->wanted<<1) | (!!(p->ed.control&0x4000)<<2) |
+        (((head&~15u)==p->ed.tail)<<3) | ((head&1)<<4);
+    uintptr_t t=head&~31u, base=(uintptr_t)p->td;
+    d->cc=t>=base && t<base+sizeof p->td && (t-base)%sizeof(IsoTD)==0?U32((void*)t,0)>>28:127;
+    d->frame=frame(p);
+}
 static void prepare(AudioPort *p,unsigned i,unsigned next) {
     IsoTD *t=&p->td[i]; uintptr_t data=(uintptr_t)t->pcm;
     t->page=data&~4095u; t->end=data+183; t->next=(uintptr_t)&p->td[next];
@@ -191,18 +232,22 @@ static void unlink_ed(AudioPort *p) {
     barrier(); U16(p->controller,0x38)-=p->cost; bandwidth(p);
 }
 static int begin(AudioPort *p) {
-    if(!p->wanted || p->phase) return -9;
+    if(!p->wanted || p->phase) { stage(p,0x47,-9); return -9; }
     uint8_t *dev=p->dev, *ep=p->ep;
-    if(U16(dev,0x58) || U16(dev,0x4a)!=0) return -5;
+    if(U16(dev,0x58) || U16(dev,0x4a)!=0) { stage(p,0x48,-5); return -5; }
     p->controller=PTR(PTR((void*)0x6002b0e8,0),0x40);
     uint8_t *regs=PTR(p->controller,8);
-    if((V32(regs,4)&0xc0)!=0x80) return -5;
+    unsigned control=V32(regs,4);
+    diagnostic(p)->control=(control&0x3f)|((control&0xc0)==0x80?0x40:0);
+    if((control&0xc0)!=0x80) { stage(p,0x49,-5); return -5; }
     uint8_t wrapper[40]; zero(wrapper,sizeof wrapper);
-    if(FN(0x60013087,int(*)(void*,void*,void*,void*))(p->controller,dev,ep,wrapper)) return -5;
+    if(FN(0x60013087,int(*)(void*,void*,void*,void*))(p->controller,dev,ep,wrapper)) {
+        stage(p,0x4a,-5); return -5;
+    }
     p->cost=U32(wrapper,0x1c);
     U16(p->controller,0x38)+=p->cost;
     if(bandwidth(p)>((U32(regs,0x34)>>16)&0x7fff)) {
-        U16(p->controller,0x38)-=p->cost; bandwidth(p); return -5;
+        U16(p->controller,0x38)-=p->cost; bandwidth(p); stage(p,0x4b,-5); return -5;
     }
     zero(&p->ed,sizeof p->ed); zero(p->td,sizeof p->td);
     p->write_count=p->read_count=p->quarter=p->primed=0;
@@ -225,8 +270,9 @@ static int begin(AudioPort *p) {
 int mx1_ohci_request(void *dev,void *ep,unsigned flags,unsigned a,unsigned b,void *buf,unsigned len,void *callback,uintptr_t token) {
     AudioPort *p=for_device(dev);
     if(p && ep==p->ep && callback==(void*)start_done && token==(uintptr_t)p) {
+        stage(p,6,0);
         int result=begin(p);
-        if(!result) start_done(dev,ep,0,0,token);
+        if(!result) { stage(p,7,0); snapshot(p); start_done(dev,ep,0,0,token); }
         return result;
     }
     return FN(0x600132d7,int(*)(void*,void*,unsigned,unsigned,unsigned,void*,unsigned,void*,uintptr_t))
@@ -285,6 +331,7 @@ int mx1_ohci_done(uintptr_t head) {
     return normal?host_ohci_done_original(normal):0;
 }
 int mx1_ohci_event(unsigned controller,unsigned event) {
+    for(unsigned i=0;i<4;i++) snapshot(&mx1_audio_ports[i]);
     int result=FN(0x60013963,int(*)(unsigned,unsigned))(controller,event);
     for(unsigned i=0;i<4;i++) {
         AudioPort *p=&mx1_audio_ports[i]; if(p->phase!=3) continue;
@@ -295,6 +342,31 @@ int mx1_ohci_event(unsigned controller,unsigned event) {
         } else V32(regs,0x10)=4;
     }
     return result;
+}
+
+/* Experimental, non-commercial SysEx for the already installed FM-1 monitor.
+ * A report accompanies a changed start state and each transmitted note-on.
+ * All five packets fit in one MIDI transfer; never insert into user SysEx.
+ * No musical messages are generated and no queue capacity is consumed. */
+unsigned mx1_audio_monitor(unsigned port,void *ep,uint32_t *words,unsigned n) {
+    if(port>=4 || n>16 || !ep) return n;
+    AudioPort *p=&mx1_audio_ports[port]; AudioDiagnostic *d=diagnostic(p);
+    if(!d->stage || PTR(PTR(ep,0x20),8)!=d->dev) return n;
+    for(unsigned i=0;i<n;i++) {
+        unsigned w=words[i], cin=w&15, s=(w>>8)&255;
+        if(cin==4) d->sysex=1;
+        else if(cin==6 || cin==7 || (cin==5 && s==0xf7) || (s>=0x80 && s<0xf0)) d->sysex=0;
+        if(cin==9 && (s&0xf0)==0x90 && (w>>24)) d->pending=1;
+    }
+    unsigned signature=(d->stage&127)|((d->result&127)<<8)|(p->phase<<16);
+    if(n>11 || d->sysex || (!d->pending && d->sent==signature)) return n;
+    uint8_t bytes[15]={0xf0,0x7d,0x4d,d->stage&127,d->controller&127,d->result&127,
+        p->phase&127,d->control&127,d->flags&127,d->cc&127,
+        p->packets<127?p->packets:127,p->malformed<127?p->malformed:127,
+        d->frame&127,(d->frame>>7)&127,0xf7};
+    for(unsigned i=0;i<5;i++) words[n++]=(i==4?7:4)|((uint32_t)bytes[i*3]<<8)|
+        ((uint32_t)bytes[i*3+1]<<16)|((uint32_t)bytes[i*3+2]<<24);
+    d->sent=signature; d->pending=0; return n;
 }
 int mx1_ohci_reset(unsigned controller,unsigned operation) {
     /* Remove static EDs before the stock controller teardown frees its lists. */

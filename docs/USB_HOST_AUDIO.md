@@ -1,12 +1,14 @@
 # FM-1 USB-host audio experiment
 
 The mainline candidate adds **FM-1 stereo audio input alongside host MIDI**.
-Both tested candidates retained MIDI but produced no USB3 meter activity on
-the MX-1. The current revision corrects an endpoint-address rejection found
-after the first attempt, but a further failure remains; see
+Both audio candidates tested before the host diagnostic revision retained MIDI
+but produced no USB3 meter activity on the MX-1. The endpoint-address rejection
+found after the first attempt is corrected, but a further failure remains; see
 [the bench record](../evidence/fm1-host-audio-20261105/README.md#corrected-mx-1-audio-attempt).
 It has instruction-level checks and a live FM-1 computer baseline, but no
 successful physical MX-1 audio result yet.
+The current candidate adds an MX-1 startup report readable on the FM-1 MIDI
+monitor; it does not claim another audio fix. See [host diagnostics](#host-diagnostic-report).
 
 The accepted profile is VID `1209`, PID `0001`, full-speed USB, UAC1 interface 1
 alternate 1: stereo signed 16-bit PCM at 44,100 Hz, asynchronous IN endpoint
@@ -73,10 +75,11 @@ payload remain unchanged. Only `tools/build_firmware.py` produces firmware.
 
 | Runtime interval, end exclusive | Use |
 | --- | --- |
-| `0100bee4..0100ca1c` | 2,872-byte MIDI extension and original-function trampolines |
+| `0100bee4..0100ca30` | 2,892-byte MIDI extension and original-function trampolines |
 | `01017868..01017e28` | Existing 1,472-byte MIDI state |
-| `607f0000..607f0d80` | 3,456-byte audio extension |
-| `607f4000..607f9880` | 22,656-byte audio state, descriptors and packet buffers |
+| `607f0000..607f1258` | 4,696-byte audio extension and diagnostic reporting |
+| `607f4000..607f9880` | Unmoved 22,656-byte audio state, descriptors and packet buffers |
+| `607f9880..607f9930` | 176-byte diagnostic state |
 
 The USB processor's original general heap spans `604b1178..60800000`.
 The builder reduces its upper bound to `607f0000`, reserving 64 KiB in existing
@@ -118,6 +121,67 @@ audio-task dispatch and input conversion also execute with explicit DSP/MMIO
 models; checks cover sample order and buffer boundaries, not interpolation.
 The original startup loops and MPU setup also execute in the MIDI verifier.
 USB DMA, RTOS delivery and DSP hardware are explicit modeled boundaries.
+
+The diagnostic revision also executes original periodic-tree construction at
+USB decoded `12274` / runtime `60012274`, request packing at `c276` / `6000c276`,
+and the HCD worker at `bdc8` / `6000bdc8`. All 32 generated HCCA entries lead to
+the custom ED when followed by the verifier. Heap allocation and RTOS queues
+are modeled; this is not a controller DMA or on-wire test. Those checks pass
+without changing the transport, so they do not explain the physical failure.
+
+## Host diagnostic report
+
+The 6 November FM-1 DIAG A1 reading was WAITING FOR HOST, ALT 1, 44100 Hz,
+RATE SET 3, STARTS 3, PACKETS 0 and WAIT/FILL 255/0. This establishes that
+the control requests arrived while the first queued audio packet remained
+unconsumed. It does not distinguish an MX-1 start rejection from controller,
+schedule or wire behavior. [Exact bench record](../evidence/fm1-host-diagnostics-20261106/README.md).
+
+The MX-1 now emits a short experimental SysEx report on the existing FM-1 MIDI
+connection when startup state changes and after a transmitted note-on. It
+does not send notes, change controls or poll continuously. User MIDI packets
+keep priority, and reporting waits until any user SysEx message has ended.
+Five diagnostic event packets fit in the existing 64-byte MIDI transfer.
+Only the matching FM-1 device from the validated audio setup receives them.
+
+No new FM-1 firmware is required: on DIAG A1 press SEQ to return from USB AUDIO
+to MIDI, set CHAN to ALL and TYPE to SYSEX, and leave VIEW on LIVE. Trigger a
+note through the MX-1, then turn VIEW to HOLD to read the five raw USB rows.
+The display is newest first: `F0 7D 4D` is the bottom/header row.
+
+Wire order, hexadecimal bytes:
+
+| Row | Meaning |
+| --- | --- |
+| `F0 7D 4D` | Experimental host diagnostic header |
+| `ss hh ee` | Startup stage, controller index, absolute error code |
+| `pp cc ff` | Transport phase, summarized HcControl, flags |
+| `tt nn bb` | Head ITD condition code, accepted packets, malformed packets |
+| `ll hh F7` | Last sampled frame number modulo 16384: `ll + 128*hh` |
+
+Stage `03` means alternate selected, awaiting the active interface; `04` endpoint
+lookup; `05` start submitted; `06` OHCI worker entered; `07` transport started.
+Failures: `41` rate control, `42` alternate control, `44` endpoint lookup,
+`45` endpoint record (error zero) or queue submission, `46` lower-driver callback,
+`47` transport already owned/stopping, `48` speed/controller mismatch,
+`49` OHCI not operational, `4A` original endpoint helper, `4B` bandwidth admission.
+Controller index `00` is the original OHCI binding and `01` the EHCI binding.
+Phase `00` is inactive, `02` running and `03` retiring.
+
+The HcControl summary keeps bits 0–5 and sets bit `40` when operational. Thus
+`4C` includes operational plus periodic/ISO enable; other original scheduling
+bits may also be set. Flags are `01` claimed, `02` wanted, `04` ED skip,
+`08` queue empty and `10` ED halted. ITD code `0E` is the prepared/not-accessed
+value; `7F` means no owned head descriptor. Packet counters saturate at `7F`.
+Register/descriptor meanings follow OpenHCI 1.0a §§4.2, 4.3.2–4.3.3 and 7.1.2,
+[specification](https://dl.xkwy2018.com/downloads/documents/hcir1_0a.pdf).
+
+Only the OHCI worker samples controller registers and descriptors; the MIDI
+task reads cached RAM. Counters and startup state can advance between these
+reads, so this is a progress report, not an atomic trace. A rejected start has
+no running-controller snapshot. MIDI/reporting and physical audio acceptance
+remain bench checks. The extra state is explicitly linked after the existing
+audio ports to retain their addresses and buffer layout.
 The full reproduction gate checks this evidence against the actual USB image
 and both inserted USB code artifacts. No hardware probe runs in reproduction.
 

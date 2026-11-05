@@ -10,9 +10,10 @@ startup failures remain in their historical evidence records.
 
 The current candidate additionally enables the measured [FM-1 audio profile](USB_HOST_AUDIO.md).
 That changed image still requires physical MIDI/audio acceptance. Other generic
-audio profiles remain disabled.
+audio profiles remain disabled. The FM-1 experiment also emits a bounded
+[host diagnostic SysEx report](USB_HOST_AUDIO.md#host-diagnostic-report).
 
-Candidate SHA-256: `1087e7256c0b76b512a5bf28f8264e6c5385e986bc45effb3a964c9a59e46db3`.
+Candidate SHA-256: `4eb649c9c4a268674e1447b3bf1cec1fd6226f5e75c77f2ebaa5e9bcc51de05d`.
 
 ## Behavior and scope
 
@@ -100,8 +101,8 @@ to the mastering held-key fix in PR #18.
 USB startup originally copies decoded `0x2b1f4..0x36dd8` to
 `0x01000300..0x0100bee4`. The new USB code is inserted at decoded `0x36dd8`,
 runtime `0x0100bee4`, below the existing USB allocator at `0x0100d000`.
-The extension occupies 2,872 bytes (`0x0100bee4..0x0100ca1c`), leaving
-1,508 bytes before that allocator. State occupies 1,472 bytes
+The extension occupies 2,892 bytes (`0x0100bee4..0x0100ca30`), leaving
+1,488 bytes before that allocator. State occupies 1,472 bytes
 (`0x01017868..0x01017e28`), leaving 472 bytes before the writable-region limit.
 The five following initialized-data source literals move; their destinations
 do not. New zero-initialized state starts at the original USB BSS end,

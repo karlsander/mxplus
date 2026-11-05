@@ -9,7 +9,7 @@ from pathlib import Path
 from elftools.elf.elffile import ELFFile
 from unicorn import UC_HOOK_CODE, UC_HOOK_MEM_WRITE
 from unicorn.arm_const import *
-from arm_machine import Machine
+from arm_machine import Machine, RETURN
 from memory_map import recover
 from container_tool import sha256
 from host_midi_setup_verify import Setup, EVENT
@@ -211,12 +211,109 @@ def verify_converter_boundary(image,h,syms):
             'original_converter_input':True,'calls':48,
             'boundary':'DSP reset/command/result, integer conversion MMIO and RTOS notify modeled; drift epoch seeded; no interpolation or timing claim'}
 
+def verify_worker_and_tree(image,h,syms):
+    """Replace the former hand-built tree/direct request call at this boundary.
+
+    Original dummy ED construction, HCCA permutation, request allocation/packing
+    and worker dispatch execute. Heap allocation and RTOS queue operations are
+    modeled; walking HCCA in Python is not a model of actual USB DMA/timing.
+    """
+    q=Audio(image,h,syms);m=q.m;allocations=[];request=0x20018000
+    sent=[];received=[];freed=[]
+    def boundary(u,a,size,data):
+        r=[u.reg_read(x) for x in (UC_ARM_REG_R0,UC_ARM_REG_R1,UC_ARM_REG_R2,UC_ARM_REG_R3)]
+        if a==0x6000b330:
+            assert r[1]==0x3c
+            result=0x60470000+len(allocations)*64 if len(allocations)<31 else request
+            allocations.append(result)
+        elif a==0x6000b6c4:sent.append(r[1]);result=0
+        elif a==0x6000b724:
+            if received:
+                # Stop the infinite task when it waits for its next request.
+                u.reg_write(UC_ARM_REG_SP,0x2001ff80);u.reg_write(UC_ARM_REG_PC,RETURN|1);return
+            received.append(r);m.write(r[1],P(request));result=0
+        elif a==0x6000b388:freed.append(r[1]);result=0
+        else:return
+        u.reg_write(UC_ARM_REG_R0,result);u.reg_write(UC_ARM_REG_PC,u.reg_read(UC_ARM_REG_LR))
+    m.uc.hook_add(UC_HOOK_CODE,boundary)
+    assert m.call(0x60012274,HC)[0]==0 and len(allocations)==31
+    q.call('mx1_ohci_bind',0,DRIVER);m.write(DRIVER+0x40,P(HC))
+    m.write(q.u32(0x6000c500),P(1,0,1,2))
+    m.write(q.p,P(DEV,EP,0,0,1,1,0,0))
+    m.write(REGS+0x3c,P(100))
+    m.write(0x2001ff80,P(0,0,0,syms['start_done'],q.p,0))
+    assert m.call(0x6000c276,DEV,EP,0,0,stack=0x2001ff80)[0]==0
+    assert sent==[request]
+    m.call(0x6000bdc8,stack=0x2001ff80)
+    assert len(received)==1 and freed==[request] and len(q.events)==1
+    assert q.u32(q.p+24)==2
+    for slot in range(32):
+        ptr=q.u32(HCCA+slot*4);chain=[]
+        while ptr:
+            assert ptr not in chain
+            chain.append(ptr);ptr=q.u32(ptr+12)
+        assert len(chain)==6 and chain[-1]==q.p+ED
+    return {'hcca_slots_reaching_audio_ed':32,'original_dummy_ed_allocations':31,
+            'original_queue_and_worker':True,
+            'boundary':'heap allocation and RTOS queue delivery modeled; actual controller traversal and USB transactions untested'}
+
+def verify_monitor(image,h,syms,c):
+    t=CombinedSetup(image,h,c);t.bind_initial();t.setup()
+    port=t.port;p=h['audio_ports']+port*STRIDE
+    ep=t.endpoints[t.nodes[-1],0];out=0x2001c000
+    def monitor(words=()):
+        t.m.write(out,P(*words)+b'\xa5'*(64-4*len(words)))
+        n=t.checked(syms['mx1_audio_monitor'],port,ep,out,len(words))
+        assert n<=16 and t.m.read(out+n*4,64-n*4)==b'\xa5'*(64-n*4)
+        return list(struct.unpack('<'+'I'*n,t.m.read(out,n*4)))
+    def payload(words):
+        assert [w&15 for w in words]==[4,4,4,4,7]
+        return b''.join(w.to_bytes(4,'little')[1:] for w in words)
+    first=payload(monitor());assert first[:6]==bytes.fromhex('f07d4d030000')
+    assert not monitor() # no repeated reports merely for MIDI clock/polling
+    clock=0xf80f;note=0x643c9009
+    assert monitor([clock])==[clock]
+    refreshed=monitor([note]);assert refreshed[0]==note and payload(refreshed[1:])==first
+    # No diagnostic insertion while user SysEx spans transfers, including an
+    # intervening realtime packet. Deferred report follows the user's F7.
+    t.m.write(p+24,P(2))
+    begin=0x017df004;body=0x04030204;end=0x00f70506
+    assert monitor([begin,body])==[begin,body]
+    assert monitor([clock])==[clock]
+    assert not monitor()
+    ended=monitor([end]);assert ended[0]==end and payload(ended[1:])[6]==2
+    # Preserve a full musical transfer; the pending note-triggered report is
+    # delivered later, never by dropping notes or exceeding the 64-byte buffer.
+    assert monitor([note]*16)==[note]*16
+    assert len(monitor())==5 and not monitor()
+    # Never send the old device's report to a replacement endpoint.
+    t.m.write(ep+0x20,P(0x2001b000));t.m.write(0x2001b008,P(DEV+0x100))
+    assert monitor([note])==[note]
+    # The real lower-driver rejection callback retains the specific reason.
+    q=Audio(image,h,syms);q.m.write(REGS+4,P(0))
+    pp,rc=q.start();assert rc==0xfffffffb
+    diag=syms['diagnostics']
+    assert q.u32(diag+4)==0x49 and q.u32(diag+8)==5
+    # Exercise the real TX poll integration as well as the formatter above.
+    live=CombinedSetup(image,h,c);live.bind_initial();live.setup();live.drain()
+    live.enqueue(live.port,[note]);live.poll(1)
+    wire=bytes.fromhex(live.requests[-1]['data'])
+    assert len(wire)==24 and wire[:4]==P(note)
+    assert payload(struct.unpack('<5I',wire[4:]))==first
+    return {'format':'F0 7D 4D stage controller error phase control flags cc packets malformed frame_lo frame_hi F7',
+            'initial_waiting_rebind_payload':first.hex(),
+            'cases':['state change and note-on trigger','no poll/clock flood','user SysEx continuity',
+                     'full musical transfer retained','replacement device isolation','specific controller-start rejection'],
+            'boundary':'USB MIDI submission modeled; FM-1 display/protocol acceptance still requires hardware'}
+
 def verify(image,report,elf_path):
     h=report['host_midi']
     with elf_path.open('rb') as f:
         elf=ELFFile(f);tab=elf.get_section_by_name('.symtab')
         syms={s.name:s['st_value'] for s in tab.iter_symbols()}
         assert tab.get_symbol_by_name('mx1_audio_ports')[0]['st_size']==4*STRIDE
+        assert syms['mx1_audio_ports']==0x607f4000
+        assert syms['diagnostics']==syms['mx1_audio_ports']+4*STRIDE
     operations=recover(image)['operations']
     original=(ROOT/'analysis/container_app_usb.bin').read_bytes()
     hot=image[h['insert_offset']:h['insert_offset']+h['code_bytes']]
@@ -343,9 +440,12 @@ def verify(image,report,elf_path):
         assert q.u32(p+52)-q.u32(p+56)==1
         pacing.append({'source_frames_per_second':rate,'consumed_frames_in_200ms':consumed,'queued_packets':1})
     converter=verify_converter_boundary(image,h,syms)
+    worker=verify_worker_and_tree(image,h,syms)
+    monitor=verify_monitor(image,h,syms,c)
     return {'status':'pass','patched_app_sha256':sha256(image),'hardware_access':False,
             'limits':'instruction checks only; USB/DSP/RTOS boundaries modeled','setup':setup,'pacing':pacing,
             'converter_boundary':converter,
+            'worker_and_tree':worker,'fm1_monitor':monitor,
             'stock_endpoint_record_hex':endpoint_record.hex(),
             'profile_negative_cases':malformed,'heap_reservation_bytes':65536,
             'iso_descriptors_per_port':17,'audio_state_bytes':h['audio_state_bytes'],

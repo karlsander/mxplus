@@ -9,8 +9,9 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`1087e7256c0b76b512a5bf28f8264e6c5385e986bc45effb3a964c9a59e46db3`.
-It adds the measured FM-1 full-speed, stereo PCM16 input profile and reuses
+`4eb649c9c4a268674e1447b3bf1cec1fd6226f5e75c77f2ebaa5e9bcc51de05d`.
+This revision adds a host-startup diagnostic report for the FM-1 MIDI monitor.
+The experiment accepts the measured FM-1 full-speed, stereo PCM16 input profile and reuses
 the original 44.1-to-96-kHz conversion path. The preceding `253645ed…` image
 has a user-reported MIDI-output result with the FM-1; audio on the MX-1 remains unverified.
 It fixes [host MIDI startup on an already-active alternate zero](../evidence/host-midi-alt-zero-20261104/README.md).
@@ -27,7 +28,7 @@ require physical acceptance.
 ## Memory and binary integration
 
 The intervals below describe the **main processor**. The independent USB processor
-adds 2,872 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
+adds 2,892 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
 see [host placement and allocator evidence](USB_HOST_MIDI.md#integration-and-memory).
 
 USB-host MIDI and FM-1 audio modify the USB application. The audio extension reserves 64 KiB from the USB processor’s existing SDRAM heap; see [its placement and allocator evidence](USB_HOST_AUDIO.md#usb-processor-placement-and-binary-changes). Boot programs, updater and panel-controller payload remain byte-identical to stock. The main application is byte-identical to the mastering held-key fix in PR #18.

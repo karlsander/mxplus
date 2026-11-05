@@ -1,11 +1,11 @@
 {
   "status": "pass",
-  "patched_app_sha256": "2c5eb69ce88bf57dc1b9c46faca8b735ce95b3bfc028f8f2e1ccd4d54db22f3c",
+  "patched_app_sha256": "4a0598d8b5dff38af632331118586610ddab79dee0dd24a7a70d1ff033d52068",
   "groups": [
     {
       "name": "Original USB startup copies code, zeroes state, preserves existing initialized data",
       "status": "pass",
-      "code_bytes": 2872,
+      "code_bytes": 2892,
       "state_bytes": 1472
     },
     {

@@ -157,11 +157,14 @@ def verify(original,patched,main,report):
     for image in (original,patched):
         m=Machine(image,scatter=False)
         m.write(0x01017868,b'\xa5'*h['state_bytes'])
+        m.write(h['audio_state_start'],b'\xa5'*h['audio_state_bytes'])
         m.uc.reg_write(UC_ARM_REG_SP,0x2001fff0)
         m.uc.emu_start(BASE|1,BASE+0x7e,count=2000000,timeout=2000000)
         assert m.uc.reg_read(UC_ARM_REG_PC)==BASE+0x7e
         machines.append(m)
     assert machines[1].read(h['state_start'],h['state_bytes'])==bytes(h['state_bytes'])
+    assert machines[1].read(h['audio_state_start'],h['audio_state_bytes'])==bytes(h['audio_state_bytes'])
+    assert machines[1].read(h['audio_code_start'],h['audio_code_bytes'])==patched[h['audio_source']-BASE:]
     assert machines[1].read(h['code_start'],h['code_bytes'])==patched[h['insert_offset']:h['insert_offset']+h['code_bytes']]
     for op in recover(original)['operations']:
         if op['kind']=='copy' and op['length'] and op['destination']!=0x01000300:
@@ -179,6 +182,9 @@ def verify(original,patched,main,report):
     m.uc.hook_add(UC_HOOK_CODE,mpu_stub);m.call(0x60003760)
     assert regions[1]['base']==0x01000000 and regions[1]['attributes']==0x06000021
     assert regions[2]['base']==0x01010000 and regions[2]['attributes']==0x1300001d
+    # Original SDRAM MPU region permits execution and writes across the
+    # reserved [607f0000,60800000) range. No MPU protection is relaxed.
+    assert regions[6]=={'base':0x60000000,'attributes':0x03000035}
     m.write(h['state_start'],b'\xa5'*h['state_bytes'])
     m.call(0x01001b9c,count=500000)
     assert m.read(h['state_start'],h['state_bytes'])==b'\xa5'*h['state_bytes']

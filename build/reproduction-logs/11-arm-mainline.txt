@@ -91,7 +91,8 @@
     "Original USB request builder and completion dispatcher establish callback ABI",
     "Original main MIDI sender fans Clock/Start/Continue/Stop to all enabled host ports",
     "Notes, controllers and SysEx survive RX unchanged",
-    "Background queue overload leaves sync output running"
+    "Background queue overload leaves sync output running",
+    "FM-1 full-speed input transport and setup"
   ],
   "patched_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a"
 }

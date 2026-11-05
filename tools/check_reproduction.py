@@ -31,6 +31,7 @@ ARTIFACTS = {
         "extension_sha256": "mainline.load.bin",
         "patched_usb_sha256": "app_usb.mainline.bin",
         "host_extension_sha256": "usb-host.load.bin",
+        "host_audio_extension_sha256": "usb-host-audio.load.bin",
     },
 }
 
@@ -118,6 +119,16 @@ def audit(check_committed: bool = False) -> dict:
         usb = (ROOT / prefix / names["patched_usb_sha256"]).read_bytes()
         host_blob = (ROOT / prefix / names["host_extension_sha256"]).read_bytes()
         host_report = report["host_midi"]
+        host_audio = read(prefix + 'host-audio-verification.json')
+        audio_blob = (ROOT / prefix / names['host_audio_extension_sha256']).read_bytes()
+        require(host_audio.get('status') == 'pass' and
+                host_audio.get('patched_app_sha256') == actual['patched_usb_sha256'] and
+                host_audio.get('hardware_access') is False, 'Host audio evidence missing or stale')
+        audio_offset = host_report['audio_source'] - 0x60000000
+        require(host_report['audio_extension_sha256'] == actual['host_audio_extension_sha256'] and
+                host_report['audio_code_bytes'] == len(audio_blob) and
+                usb[audio_offset:audio_offset + len(audio_blob)] == audio_blob,
+                'Host audio artifact, insertion and build accounting disagree')
         require(host_report["patched_app_sha256"] == actual["patched_usb_sha256"] and
                 host_report["extension_sha256"] == actual["host_extension_sha256"] and
                 host_report["code_bytes"] == len(host_blob) and

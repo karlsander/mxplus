@@ -238,6 +238,12 @@ def main() -> None:
         (args.build / 'app_usb.mainline.bin').read_bytes(), original, build)
     details['host-midi-verification.json'] = host
     report['groups'].extend(host['groups'])
+    from host_audio_verify import verify as verify_host_audio
+    host_audio = verify_host_audio((args.build / 'app_usb.mainline.bin').read_bytes(), build,
+                                  args.build / 'usb-host.elf')
+    details['host-audio-verification.json'] = host_audio
+    report['groups'].append({'name':'FM-1 full-speed input transport and setup',
+                             'status':'pass','details':host_audio})
     for name, detail in details.items():
         (args.build / name).write_text(json.dumps(detail, indent=2) + '\n')
     args.output.parent.mkdir(parents=True, exist_ok=True)

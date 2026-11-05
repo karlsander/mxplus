@@ -1,5 +1,5 @@
 /* MX-1 USB-processor extension. USB-MIDI 1.0, one cable per direction.
- * No generic audio selection. All DMA buffers remain the stock per-port buffers.
+ * FM-1 audio is isolated in usb_host_audio.c. MIDI uses stock per-port buffers.
  * RTOS tasks own open/close/queues; USB completion callbacks only publish results.
  */
 #include <stdint.h>
@@ -15,6 +15,7 @@ extern void host_rx_close_original(void *);
 extern int host_enqueue_original(unsigned, uint32_t);
 extern void host_tx_poll_original(void);
 extern void host_rx_poll_original(void);
+extern void mx1_audio_setup(uint8_t *);
 static uint16_t le16(const uint8_t *p) { return p[0] | (uint16_t)p[1]<<8; }
 static void zero(uint8_t *p, unsigned n) { while(n--) *p++=0; }
 
@@ -104,6 +105,7 @@ void mx1_host_select(const uint8_t *info, uint16_t *out) {
  * its queue acceptance and status notification still own MIDI readiness. */
 void mx1_host_setup(uint8_t *event) {
     FN(0x6000865d,void(*)(void*))(event);
+    mx1_audio_setup(event);
     uint8_t *dev=(uint8_t *)U32(event,4);
     uint8_t *r=FN(0x60008d4b,uint8_t *(*)(void*))(dev);
     if(!r || U16(dev,0x10)==0x0582 || U32(r,4) || (r[0]&5)!=1 ||

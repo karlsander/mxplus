@@ -10,6 +10,7 @@ test_committed_report_mismatch_is_rejected (test_repository_integrity.Reproducti
 test_current_evidence_mode_does_not_read_git (test_repository_integrity.ReproductionIdentityTests.test_current_evidence_mode_does_not_read_git) ... ok
 test_current_report_mismatch_is_rejected (test_repository_integrity.ReproductionIdentityTests.test_current_report_mismatch_is_rejected) ... ok
 test_extension_hash_alone_does_not_establish_embedding (test_repository_integrity.ReproductionIdentityTests.test_extension_hash_alone_does_not_establish_embedding) ... ok
+test_host_audio_evidence_must_match_usb_candidate (test_repository_integrity.ReproductionIdentityTests.test_host_audio_evidence_must_match_usb_candidate) ... ok
 test_incomplete_reproduction_is_rejected (test_repository_integrity.ReproductionIdentityTests.test_incomplete_reproduction_is_rejected) ... ok
 test_mastering_report_must_match_candidate (test_repository_integrity.ReproductionIdentityTests.test_mastering_report_must_match_candidate) ... ok
 test_matching_working_artifacts_and_committed_bytes_pass (test_repository_integrity.ReproductionIdentityTests.test_matching_working_artifacts_and_committed_bytes_pass) ... ok
@@ -37,6 +38,6 @@ test_reject_broken_graph (test_usb_midi.MIDIConfigurationTests.test_reject_broke
 test_reject_truncated_or_zero_length (test_usb_midi.MIDIConfigurationTests.test_reject_truncated_or_zero_length) ... ok
 
 ----------------------------------------------------------------------
-Ran 37 tests in 0.555s
+Ran 38 tests in 0.571s
 
 OK

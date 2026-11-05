@@ -72,7 +72,7 @@
       "passed": true
     }
   ],
-  "host_wall_seconds": 7.061,
+  "host_wall_seconds": 6.985,
   "emulation_scope": "Unmodified Roland boot-USB LZSS decoder only",
   "hardware_emulated": false,
   "silicon_cycle_measurement": false,

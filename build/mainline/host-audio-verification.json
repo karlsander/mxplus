@@ -1,0 +1,106 @@
+{
+  "status": "pass",
+  "patched_app_sha256": "f90063558d2b7292bf9446ed497538e66372f8d753f6ef326b175e920ba27fa5",
+  "hardware_access": false,
+  "limits": "instruction checks only; USB/DSP/RTOS boundaries modeled",
+  "setup": {
+    "requests": [
+      [
+        536952832,
+        1,
+        11,
+        0,
+        2,
+        0,
+        0,
+        0
+      ],
+      [
+        536952832,
+        34,
+        1,
+        256,
+        132,
+        3,
+        "rate bytes",
+        0
+      ],
+      [
+        536952832,
+        1,
+        11,
+        1,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        536952832,
+        1,
+        11,
+        0,
+        2,
+        0,
+        0,
+        0
+      ]
+    ],
+    "midi_and_audio_state": 7,
+    "dsp_initialize": [
+      [
+        2,
+        1,
+        44100
+      ]
+    ],
+    "boundary": "wire controls, DSP initialization and RTOS queue submission modeled; original alternate switching and manager binding execute"
+  },
+  "pacing": [
+    {
+      "source_frames_per_second": 44080,
+      "consumed_frames_in_200ms": 8815,
+      "queued_packets": 1
+    },
+    {
+      "source_frames_per_second": 44100,
+      "consumed_frames_in_200ms": 8819,
+      "queued_packets": 1
+    },
+    {
+      "source_frames_per_second": 44118,
+      "consumed_frames_in_200ms": 8823,
+      "queued_packets": 1
+    }
+  ],
+  "converter_boundary": {
+    "original_initializer": true,
+    "original_audio_task": true,
+    "original_converter_input": true,
+    "calls": 48,
+    "boundary": "DSP reset/command/result, integer conversion MMIO and RTOS notify modeled; drift epoch seeded; no interpolation or timing claim"
+  },
+  "profile_negative_cases": 188,
+  "heap_reservation_bytes": 65536,
+  "iso_descriptors_per_port": 17,
+  "audio_state_bytes": 22656,
+  "cases": [
+    "guarded complete USB patch accounting",
+    "startup placement",
+    "original heap creation",
+    "OHCI binding ABI",
+    "periodic insertion and bandwidth",
+    "ITD alignment/page boundaries/frame wrap",
+    "short PCM16 packets",
+    "stereo sign and scaling",
+    "250-us packet distribution",
+    "errored packet rejection",
+    "mixed general/ISO done list",
+    "unlink/quiescence/reopen",
+    "DMA retirement barriers",
+    "multiple periodic EDs and middle unlink",
+    "manager stop intent and controller teardown",
+    "original general-TD handler ABI",
+    "source-clock packet pacing"
+  ]
+}

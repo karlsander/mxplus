@@ -48,7 +48,8 @@ class Setup(Transport):
                 m.write(node+0x13,bytes([d[2],d[3],int(d[3]==0)]))
             elif d[1]==5:
                 ep=0x20019000+len(self.endpoints)*0x100
-                m.write(ep+8,bytes([d[2]&15,d[2]&128,d[3]&3,0]))
+                m.write(ep+8,bytes([d[2],d[2]&128,d[3]&3,d[3]&0x30]))
+                m.write(ep+0xc,bytes([d[3]&0xc]))
                 m.write(ep+0xe,H(d[6]));m.write(ep+0x10,d[4:6]);m.write(ep+0x20,P(node))
                 self.endpoints[node,d[2]&128]=ep
     def stub(self,u,a,size,data):

@@ -12,7 +12,7 @@ The current candidate additionally enables the measured [FM-1 audio profile](USB
 That changed image still requires physical MIDI/audio acceptance. Other generic
 audio profiles remain disabled.
 
-Candidate SHA-256: `56b9fa0e3b9a6f1ebcbdcf278a2222da0aa46d5b0d2b3431ddebcf82c1c828ae`.
+Candidate SHA-256: `1087e7256c0b76b512a5bf28f8264e6c5385e986bc45effb3a964c9a59e46db3`.
 
 ## Behavior and scope
 

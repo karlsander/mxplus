@@ -108,7 +108,7 @@ static void try_open(uint8_t *dev,uint8_t *r) {
         if(!n || n[0x13]!=1 || n[0x14]!=1 || n[0x15]!=1) continue;
         uint8_t *ep=0;
         if(FN(0x600096c7,int(*)(void*,int,int,int,int,int,void*))(n,0,128,1,0,0,&ep) ||
-           !ep || ep[8]!=4 || ep[9]!=128 || ep[10]!=1 || U16(ep,0x10)!=184 || U16(ep,0xe)!=1) return;
+           !ep || ep[8]!=0x84 || ep[9]!=128 || ep[10]!=1 || U16(ep,0x10)!=184 || U16(ep,0xe)!=1) return;
         p->dev=dev; p->ep=ep; p->interface=n; p->generation++;
         p->cancel_queued=0; p->wanted=1; p->claimed=1; barrier();
         /* Stock DSP initialization stays in manager task, before publication

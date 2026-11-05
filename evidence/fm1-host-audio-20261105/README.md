@@ -59,3 +59,31 @@ placement, original-instruction boundaries and the pending bench sequence are
 in [the audio report](../../docs/USB_HOST_AUDIO.md). No physical MX-1 audio result
 has been recorded. The previous working MIDI image remains available in the
 main checkout and in Git at the base commit.
+
+## First MX-1 audio attempt
+
+Candidate `56b9fa0e3b9a6f1ebcbdcf278a2222da0aa46d5b0d2b3431ddebcf82c1c828ae`
+was copied as `MX1_UPD.BIN` to the Roland update volume, read back with the
+matching hash, and ejected. After the requested update/restart test, the user
+reported: “MIDI works, but no audio.” No packet trace or converter counters were
+available. The user then confirmed no USB3 meter activity with source mapping
+set to Auto/USB3. The exact system rate was not recorded.
+The candidate identity is retained in `first-candidate.json`.
+
+Investigation found an audio-open rejection before queue submission. Original
+USB endpoint construction at decoded `e040`, runtime `6000e040`, copies the
+complete endpoint address at `6000e0d0..6000e0d2` into record byte 8: `84` for
+this input. The new audio check incorrectly required `04`; its modeled fixture
+had also masked the direction bit. Re-running that first candidate with the
+original `84` address reproduced state `0005` (MIDI ready), zero audio requests
+and zero converter initializations. This is a concrete software fault consistent
+with the observed silence; it does not rule out later transport problems.
+
+The correction requires `84` and executes the original endpoint constructor
+and list helpers in the regression, with only allocation and critical-section
+entry/exit modeled. Combined setup now uses that exact endpoint record.
+
+The audio extension correction is `04 29` → `84 29` (`cmp r1, #0x84`) at
+USB runtime `607f034e`, decoded `37cea` in the extended component. It changes
+one executable byte without growing code or state; container checksums change
+accordingly. This location belongs to the appended extension, not stock code.

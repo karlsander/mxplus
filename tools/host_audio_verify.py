@@ -37,13 +37,33 @@ class CombinedSetup(Setup):
         else:return super().stub(u,a,size,data)
         u.reg_write(UC_ARM_REG_R0,result);u.reg_write(UC_ARM_REG_PC,u.reg_read(UC_ARM_REG_LR))
 
-def verify_setup(image,h,c):
+def verify_endpoint_constructor(image,c):
+    # Build the actual stock endpoint record, including the direction bit in
+    # ep[8]. A hand-built fixture formerly masked that bit and hid a rejection.
+    m=Machine(image);interface=0x20012000;allocation=0x20017000;descriptor=0x20010000
+    start=c.index(bytes.fromhex('090401010101020000'));d=c[start:]
+    m.write(descriptor,d)
+    def boundary(u,a,size,data):
+        if a==0x6000b330:
+            assert u.reg_read(UC_ARM_REG_R1)==0x5c
+            result=allocation
+        elif a in (0x60014ae4,0x010003b8):result=0 # critical-section entry/exit
+        else:return
+        u.reg_write(UC_ARM_REG_R0,result);u.reg_write(UC_ARM_REG_PC,u.reg_read(UC_ARM_REG_LR))
+    m.uc.hook_add(UC_HOOK_CODE,boundary)
+    m.call(0x6000e040,interface+0x18,interface,descriptor,len(d))
+    record=m.read(allocation+0xc+8,10)
+    assert record==bytes.fromhex('8480010004000100b800')
+    return record
+
+def verify_setup(image,h,c,endpoint_record):
     t=CombinedSetup(image,h,c);t.bind_initial();t.setup()
     assert t.state()==5 and len(t.opens)==2 and not t.audio_requests
     assert [x[:4] for x in t.controls]==[[DEV,1,11,0],[DEV,0x22,1,0x100],[DEV,1,11,1]]
     # Run the real manager bind handler through the patched callback after
     # modeled RTOS delivery of the alternate-one rebind.
     active=t.nodes[2];t.m.write(EVENT,P(0,active,0))
+    assert t.m.read(t.endpoints[active,128]+8,10)==endpoint_record
     t.checked(h['symbols']['mx1_audio_bind'],EVENT,0,0,0)
     assert t.initialized==[[2,1,44100]] and len(t.audio_requests)==1
     request=t.audio_requests[0]
@@ -73,7 +93,7 @@ class Audio:
         self.callbacks=elf
         m=self.m
         m.write(DEV+0x10,H(0x1209)+H(1)); m.write(DEV+0x4a,H(0)+H(3))
-        m.write(EP+8,bytes([4,128,1,0]));m.write(EP+0xe,H(1)+H(184))
+        m.write(EP+8,bytes([0x84,128,1,0,4]));m.write(EP+0xe,H(1)+H(184))
         m.write(0x6002b0e8,P(DRIVER));m.write(DRIVER+0x40,P(HC))
         m.write(HC+8,P(REGS,HCCA));m.write(REGS+4,P(0x80));m.write(REGS+0x34,P(0x2edf2edf))
         m.write(HC+0x28,P(HC+0x28,HC+0x28,HC+0x28,ANCHOR+12))
@@ -219,7 +239,8 @@ def verify(image,report,elf_path):
     heap.uc.hook_add(UC_HOOK_CODE,heap_call);heap.call(0x600036dc)
     assert heaps[0][1:]==(0x607f0000-0x604b1178,0x604b1178)
     t=Audio(image,h,syms);c=bytes.fromhex((ROOT/'evidence/fm1-host-midi-20261103/configuration.hex').read_text())
-    setup=verify_setup(image,h,c)
+    endpoint_record=verify_endpoint_constructor(image,c)
+    setup=verify_setup(image,h,c,endpoint_record)
     t.m.write(0x20010001,c);assert t.call('mx1_audio_profile',0x20010001)==1
     malformed=0
     for length in range(9,len(c)):
@@ -325,9 +346,11 @@ def verify(image,report,elf_path):
     return {'status':'pass','patched_app_sha256':sha256(image),'hardware_access':False,
             'limits':'instruction checks only; USB/DSP/RTOS boundaries modeled','setup':setup,'pacing':pacing,
             'converter_boundary':converter,
+            'stock_endpoint_record_hex':endpoint_record.hex(),
             'profile_negative_cases':malformed,'heap_reservation_bytes':65536,
             'iso_descriptors_per_port':17,'audio_state_bytes':h['audio_state_bytes'],
             'cases':['guarded complete USB patch accounting','startup placement','original heap creation',
+                     'original endpoint constructor preserves direction bit',
                      'OHCI binding ABI','periodic insertion and bandwidth',
                      'ITD alignment/page boundaries/frame wrap','short PCM16 packets',
                      'stereo sign and scaling','250-us packet distribution',

@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "f90063558d2b7292bf9446ed497538e66372f8d753f6ef326b175e920ba27fa5",
+  "patched_app_sha256": "2c5eb69ce88bf57dc1b9c46faca8b735ce95b3bfc028f8f2e1ccd4d54db22f3c",
   "hardware_access": false,
   "limits": "instruction checks only; USB/DSP/RTOS boundaries modeled",
   "setup": {
@@ -80,6 +80,7 @@
     "calls": 48,
     "boundary": "DSP reset/command/result, integer conversion MMIO and RTOS notify modeled; drift epoch seeded; no interpolation or timing claim"
   },
+  "stock_endpoint_record_hex": "8480010004000100b800",
   "profile_negative_cases": 188,
   "heap_reservation_bytes": 65536,
   "iso_descriptors_per_port": 17,
@@ -88,6 +89,7 @@
     "guarded complete USB patch accounting",
     "startup placement",
     "original heap creation",
+    "original endpoint constructor preserves direction bit",
     "OHCI binding ABI",
     "periodic insertion and bandwidth",
     "ITD alignment/page boundaries/frame wrap",

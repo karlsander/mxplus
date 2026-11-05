@@ -1,8 +1,11 @@
 # FM-1 USB-host audio experiment
 
 The mainline candidate adds **FM-1 stereo audio input alongside host MIDI**.
-This implementation has instruction-level checks and a live FM-1 computer
-baseline. It has not yet produced a physical MX-1 audio result.
+The first candidate retained MIDI but produced no audio on the MX-1. The
+current revision corrects an endpoint-address rejection found afterward; see
+[the bench record](../evidence/fm1-host-audio-20261105/README.md#first-mx-1-audio-attempt).
+It has instruction-level checks and a live FM-1 computer baseline, but no
+successful physical MX-1 audio result yet.
 
 The accepted profile is VID `1209`, PID `0001`, full-speed USB, UAC1 interface 1
 alternate 1: stereo signed 16-bit PCM at 44,100 Hz, asynchronous IN endpoint

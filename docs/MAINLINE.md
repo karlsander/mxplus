@@ -9,7 +9,7 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`56b9fa0e3b9a6f1ebcbdcf278a2222da0aa46d5b0d2b3431ddebcf82c1c828ae`.
+`1087e7256c0b76b512a5bf28f8264e6c5385e986bc45effb3a964c9a59e46db3`.
 It adds the measured FM-1 full-speed, stereo PCM16 input profile and reuses
 the original 44.1-to-96-kHz conversion path. The preceding `253645ed…` image
 has a user-reported MIDI-output result with the FM-1; audio on the MX-1 remains unverified.

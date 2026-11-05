@@ -5,10 +5,10 @@
   "candidate": "build/mainline/MXPLUS_MAINLINE_UNTESTED.bin",
   "updater_filename": "MX1_UPD.BIN",
   "previous_working_midi_container_sha256": "253645edb92a09c7b0d100da01f57d5127834c109b2ad499332645487a7a1d14",
-  "container_sha256": "56b9fa0e3b9a6f1ebcbdcf278a2222da0aa46d5b0d2b3431ddebcf82c1c828ae",
+  "container_sha256": "1087e7256c0b76b512a5bf28f8264e6c5385e986bc45effb3a964c9a59e46db3",
   "patched_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
-  "patched_usb_sha256": "f90063558d2b7292bf9446ed497538e66372f8d753f6ef326b175e920ba27fa5",
+  "patched_usb_sha256": "2c5eb69ce88bf57dc1b9c46faca8b735ce95b3bfc028f8f2e1ccd4d54db22f3c",
   "host_extension_sha256": "66704a08ccf4792be4a2fa706b15fe77b1f9b503bceca0b042153f46d74548e5",
-  "host_audio_extension_sha256": "d7b5bd5d9a65e3312bf5cb017b772a129b7b7c1fe4162bc1d7c1ccade33ae1e5",
-  "note": "Live FM-1 computer evidence is separate from MX-1 hardware acceptance."
+  "host_audio_extension_sha256": "6d677c7e02f79125a24bbeedbc2926afb042e7e9cc56a0cfe327b30e278f1d0d",
+  "note": "Corrected endpoint direction-bit check after the first MIDI-only bench result; physical audio remains unverified."
 }

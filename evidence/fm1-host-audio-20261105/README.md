@@ -56,8 +56,7 @@ runtime `600059c4`, independently identify `MX1_UPD.BIN` as the requested name.
 
 `candidate.json` records the new image and extension identities. Implementation,
 placement, original-instruction boundaries and the pending bench sequence are
-in [the audio report](../../docs/USB_HOST_AUDIO.md). No physical MX-1 audio result
-has been recorded. The previous working MIDI image remains available in the
+in [the audio report](../../docs/USB_HOST_AUDIO.md). Both MX-1 audio attempts below retained MIDI but produced no meter activity. The previous working MIDI image remains available in the
 main checkout and in Git at the base commit.
 
 ## First MX-1 audio attempt
@@ -87,3 +86,15 @@ The audio extension correction is `04 29` → `84 29` (`cmp r1, #0x84`) at
 USB runtime `607f034e`, decoded `37cea` in the extended component. It changes
 one executable byte without growing code or state; container checksums change
 accordingly. This location belongs to the appended extension, not stock code.
+
+## Corrected MX-1 audio attempt
+
+Candidate `1087e7256c0b76b512a5bf28f8264e6c5385e986bc45effb3a964c9a59e46db3`
+was copied with the required filename, read back with the matching SHA-256,
+and ejected. After the update/restart test, the user reported: “Still MIDI only,
+with no meter activity.” This leaves a further failure beyond the corrected
+endpoint-address guard. No actual control/packet trace or converter counter
+was available from this test; the system rate and duration were not recorded.
+
+The next investigation uses the FM-1's existing USB audio counters on its SEQ
+monitor, as requested by the user. No third MX-1 candidate was installed.

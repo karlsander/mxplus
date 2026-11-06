@@ -47,7 +47,7 @@ SECTIONS {
     /* app_usb: reserve the last 64 KiB of its ORIGINAL SDRAM heap. Its heap
        end and unused startup copy/zero operations are guarded by the builder. */
     .host_audio (DEFINED(mx1_host_image) ? 0x607f0000 : ADDR(.master_state) + SIZEOF(.master_state)) : { *(.host_audio) *(.host_audio_rodata) . = ALIGN(4); }
-    .host_audio_state (DEFINED(mx1_host_image) ? 0x607f4000 : ADDR(.host_audio) + SIZEOF(.host_audio)) (NOLOAD) : { *(.host_audio_state) *(.host_audio_diagnostics) }
+    .host_audio_state (DEFINED(mx1_host_image) ? 0x607f4000 : ADDR(.host_audio) + SIZEOF(.host_audio)) (NOLOAD) : { *(.host_audio_state) *(.host_audio_diagnostics) *(.host_debug_state) }
     ASSERT(ADDR(.host_audio) + SIZEOF(.host_audio) <= 0x607f4000, "Host audio code reservation overflow")
     ASSERT(ADDR(.host_audio_state) + SIZEOF(.host_audio_state) <= 0x60800000, "Host audio state reservation overflow")
     ASSERT(DEFINED(mx1_host_image) || (SIZEOF(.host_audio) + SIZEOF(.host_audio_state) == 0), "Host audio in main ELF")

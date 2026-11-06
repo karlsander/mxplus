@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "4a0598d8b5dff38af632331118586610ddab79dee0dd24a7a70d1ff033d52068",
+  "patched_app_sha256": "08d180f8d9088d1c25f20c34e605a31725029f44c35241db735133e7b972ba2e",
   "hardware_access": false,
   "limits": "instruction checks only; USB/DSP/RTOS boundaries modeled",
   "setup": {
@@ -99,11 +99,26 @@
     ],
     "boundary": "USB MIDI submission modeled; FM-1 display/protocol acceptance still requires hardware"
   },
+  "debug_bridge": {
+    "status": "pass",
+    "cases": [
+      "structured replies across multiple transfers",
+      "malformed checksum/target rejection",
+      "pending reply retention",
+      "user SysEx continuity",
+      "replacement device isolation",
+      "actual RX and TX poll integration",
+      "worker-owned register snapshots and bounded pages",
+      "normal/mute/test-tone converter modes",
+      "mode timeout"
+    ],
+    "boundary": "USB delivery, RTOS queue dispatch and DSP hardware modeled; actual compiled ARM code executes"
+  },
   "stock_endpoint_record_hex": "8480010004000100b800",
   "profile_negative_cases": 188,
   "heap_reservation_bytes": 65536,
   "iso_descriptors_per_port": 17,
-  "audio_state_bytes": 22832,
+  "audio_state_bytes": 25700,
   "cases": [
     "guarded complete USB patch accounting",
     "startup placement",

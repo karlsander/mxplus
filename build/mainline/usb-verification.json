@@ -2,7 +2,7 @@
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
   "patched_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
-  "candidate_container_sha256": "4eb649c9c4a268674e1447b3bf1cec1fd6226f5e75c77f2ebaa5e9bcc51de05d",
+  "candidate_container_sha256": "b6122583727323d36f227fccbcb58f70efb75921d083b4c5bfe4ba4359b15b36",
   "groups": [
     {
       "name": "Actual startup copies extension and preserves existing initialized data",

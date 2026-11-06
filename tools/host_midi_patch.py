@@ -26,7 +26,8 @@ HOOKS = [
 def integrate(original,root,out,env,jump):
     exports=[h[3] for h in HOOKS]+['mx1_host_select','mx1_host_receive','mx1_host_done','mx1_host_setup',
         'mx1_audio_profile','mx1_audio_setup','mx1_audio_bind','mx1_audio_remove','mx1_audio_ready',
-        'mx1_ohci_request','mx1_ohci_cancel','mx1_ohci_event','mx1_ohci_reset']
+        'mx1_ohci_request','mx1_ohci_cancel','mx1_ohci_event','mx1_ohci_reset',
+        'mx1_debug_receive','mx1_debug_transmit']
     sources=[root/'patches/usb_host_midi.c',root/'patches/usb_host_midi.S',root/'patches/usb_host_audio.c']
     elf=out/'usb-host.elf'
     command=[sys.executable,'-m','ziglang','build-exe','-target','thumb-freestanding-eabi',
@@ -122,7 +123,7 @@ def integrate(original,root,out,env,jump):
             'audio_ports':audio_state_address,'audio_extension_sha256':sha256(audio_blob),'audio_source':audio_source,
             'original_sdram_heap':[0x604b1178,0x60800000],'reserved_sdram_heap':[0x604b1178,0x607f0000],
             'insert_offset':cut,'allocator_table_offset':0x2820c,'allocator_table_hex':table.hex(),
-            'sources':{str(p.relative_to(root)):sha256(p.read_bytes()) for p in [*sources,root/'patches/mainline.ld',root/'tools/host_midi_patch.py']}}
+            'sources':{str(p.relative_to(root)):sha256(p.read_bytes()) for p in [*sources,root/'patches/usb_host_debug.inc',root/'patches/mainline.ld',root/'tools/host_midi_patch.py']}}
     (out/'usb-host.load.bin').write_bytes(blob)
     (out/'usb-host-audio.load.bin').write_bytes(audio_blob)
     (out/'app_usb.mainline.bin').write_bytes(patched)

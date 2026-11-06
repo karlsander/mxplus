@@ -2,7 +2,7 @@
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
   "patched_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
-  "candidate_container_sha256": "4eb649c9c4a268674e1447b3bf1cec1fd6226f5e75c77f2ebaa5e9bcc51de05d",
+  "candidate_container_sha256": "b6122583727323d36f227fccbcb58f70efb75921d083b4c5bfe4ba4359b15b36",
   "extension_sha256": "fc4ed00c31546c74a84dbaece0ac9fda8fad28a3c21f19038e123617b945bbeb",
   "groups": [
     {
@@ -1786,7 +1786,7 @@
     {
       "name": "Original USB startup copies code, zeroes state, preserves existing initialized data",
       "status": "pass",
-      "code_bytes": 2892,
+      "code_bytes": 2928,
       "state_bytes": 1472
     },
     {
@@ -2321,7 +2321,7 @@
       "status": "pass",
       "details": {
         "status": "pass",
-        "patched_app_sha256": "4a0598d8b5dff38af632331118586610ddab79dee0dd24a7a70d1ff033d52068",
+        "patched_app_sha256": "08d180f8d9088d1c25f20c34e605a31725029f44c35241db735133e7b972ba2e",
         "hardware_access": false,
         "limits": "instruction checks only; USB/DSP/RTOS boundaries modeled",
         "setup": {
@@ -2420,11 +2420,26 @@
           ],
           "boundary": "USB MIDI submission modeled; FM-1 display/protocol acceptance still requires hardware"
         },
+        "debug_bridge": {
+          "status": "pass",
+          "cases": [
+            "structured replies across multiple transfers",
+            "malformed checksum/target rejection",
+            "pending reply retention",
+            "user SysEx continuity",
+            "replacement device isolation",
+            "actual RX and TX poll integration",
+            "worker-owned register snapshots and bounded pages",
+            "normal/mute/test-tone converter modes",
+            "mode timeout"
+          ],
+          "boundary": "USB delivery, RTOS queue dispatch and DSP hardware modeled; actual compiled ARM code executes"
+        },
         "stock_endpoint_record_hex": "8480010004000100b800",
         "profile_negative_cases": 188,
         "heap_reservation_bytes": 65536,
         "iso_descriptors_per_port": 17,
-        "audio_state_bytes": 22832,
+        "audio_state_bytes": 25700,
         "cases": [
           "guarded complete USB patch accounting",
           "startup placement",

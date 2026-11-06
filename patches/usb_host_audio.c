@@ -81,6 +81,20 @@ typedef struct {
     uint32_t sent, pending, sysex;
 } AudioDiagnostic;
 __attribute__((section(".host_audio_diagnostics"))) static AudioDiagnostic diagnostics[4];
+/* Appended after established audio/DMA and A1 diagnostic layouts. */
+typedef struct {
+    uint8_t *dev;
+    uint8_t input[16], reply[240];
+    unsigned input_n, reply_pos;
+    volatile unsigned reply_n, busy, mode, mode_until;
+    unsigned sequence, errors, dropped, tone_phase, tone_tick;
+    volatile unsigned snapshot_seq;
+    uint32_t raw[102];
+} DebugPort;
+__attribute__((section(".host_debug_state"))) static DebugPort debug_ports[4];
+__attribute__((section(".host_debug_state"))) static volatile uint32_t debug_ticks;
+static void debug_capture(AudioPort *p);
+static void debug_done(void *,void *,unsigned,int,uintptr_t);
 static AudioDiagnostic *diagnostic(AudioPort *p) { return &diagnostics[p-mx1_audio_ports]; }
 static void stage(AudioPort *p,unsigned value,int result) {
     AudioDiagnostic *d=diagnostic(p);
@@ -150,6 +164,7 @@ void mx1_audio_setup(uint8_t *event) {
     if(!mx1_audio_profile(c)) return;
     unsigned port=U16(r,2); if(port>=4) return;
     AudioPort *p=&mx1_audio_ports[port]; AudioDiagnostic *d=diagnostic(p);
+    zero(&debug_ports[port],sizeof debug_ports[port]); debug_ports[port].dev=dev;
     zero(d,sizeof *d); d->dev=dev; d->controller=U16(dev,0x4a); stage(p,1,0);
     /* UAC1 endpoint sampling-frequency SET_CUR, followed by AS alt1.
      * Three little-endian bytes, fixed advertised rate. */
@@ -209,6 +224,7 @@ static void snapshot(AudioPort *p) {
     uintptr_t t=head&~31u, base=(uintptr_t)p->td;
     d->cc=t>=base && t<base+sizeof p->td && (t-base)%sizeof(IsoTD)==0?U32((void*)t,0)>>28:127;
     d->frame=frame(p);
+    debug_capture(p);
 }
 static void prepare(AudioPort *p,unsigned i,unsigned next) {
     IsoTD *t=&p->td[i]; uintptr_t data=(uintptr_t)t->pcm;
@@ -269,6 +285,11 @@ static int begin(AudioPort *p) {
 }
 int mx1_ohci_request(void *dev,void *ep,unsigned flags,unsigned a,unsigned b,void *buf,unsigned len,void *callback,uintptr_t token) {
     AudioPort *p=for_device(dev);
+    if(callback==(void*)debug_done) {
+        if(!p || ep!=p->ep || p->phase!=2 || (token&3)!=(unsigned)(p-mx1_audio_ports) ||
+           (token>>2)!=(p->generation&0x3fffffff)) return -9;
+        snapshot(p); debug_done(dev,ep,0,0,token); return 0;
+    }
     if(p && ep==p->ep && callback==(void*)start_done && token==(uintptr_t)p) {
         stage(p,6,0);
         int result=begin(p);
@@ -399,11 +420,14 @@ void mx1_ohci_bind(unsigned controller,uint8_t *driver) {
 extern void host_audio_tick_original(unsigned);
 void mx1_audio_tick(unsigned microframe) {
     host_audio_tick_original(microframe);
+    debug_ticks++;
     for(unsigned port=0;port<4;port++) {
         AudioPort *p=&mx1_audio_ports[port];
         if(!p->claimed) continue;
         if(!p->wanted) continue;
         if(p->phase!=2) continue;
+        DebugPort *d=&debug_ports[port];
+        if(d->mode && (int32_t)(debug_ticks-d->mode_until)>=0) d->mode=0;
         unsigned r=p->read_count, available=p->write_count-r;
         if(!p->primed && available>=2) { p->primed=1; p->quarter=0; }
         unsigned frames=11;
@@ -417,9 +441,23 @@ void mx1_audio_tick(unsigned microframe) {
             if(p->primed) { p->underrun++; p->primed=0; }
             zero(p->samples,sizeof p->samples);
         }
+        if(d->mode==1) zero(p->samples,sizeof p->samples);
+        else if(d->mode==2) {
+            /* Opt-in -24 dBFS triangle, bypassing USB sample arrival, through
+             * the same converter. 441 frames per 40 quarter-ms calls. */
+            frames=11+(++d->tone_tick%40==0);
+            for(unsigned j=0;j<frames;j++) {
+                d->tone_phase=(d->tone_phase+220)%44100;
+                int x=(int)(d->tone_phase<22050?d->tone_phase:44100-d->tone_phase);
+                int32_t sample=(x*4096/22050-2048)*65536;
+                p->samples[j*2]=p->samples[j*2+1]=sample;
+            }
+        }
         uint32_t block[12]={1,0x00020001,0,(uintptr_t)p->samples,0,frames*8,0,2,(uintptr_t)p->discard,0,0,0};
         if(FN(0x010088dd,int(*)(unsigned,void*))(port,block)) {
             p->dsp_errors++; cancel(p); post(p,6);
         }
     }
 }
+
+#include "usb_host_debug.inc"

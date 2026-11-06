@@ -17,6 +17,8 @@ extern void host_tx_poll_original(void);
 extern void host_rx_poll_original(void);
 extern void mx1_audio_setup(uint8_t *);
 extern unsigned mx1_audio_monitor(unsigned,void *,uint32_t *,unsigned);
+extern int mx1_debug_receive(unsigned,void *,uint32_t);
+extern unsigned mx1_debug_transmit(unsigned,void *,uint32_t *);
 static uint16_t le16(const uint8_t *p) { return p[0] | (uint16_t)p[1]<<8; }
 static void zero(uint8_t *p, unsigned n) { while(n--) *p++=0; }
 
@@ -220,14 +222,17 @@ static void poll(unsigned tx) {
                 } else if(!tx) {
                     uint32_t *words=(uint32_t *)buffer(port,0);
                     for(unsigned n=0;n<p->length[0]/4;n++)
-                        if(!(words[n]&0xf0)) mx1_host_receive(words[n] | (port<<5));
+                        if(!(words[n]&0xf0) && !mx1_debug_receive(port,(void *)(uintptr_t)p->ep[0],words[n]))
+                            mx1_host_receive(words[n] | (port<<5));
                 }
             }
         }
         if(!p->ep[tx] || (p->fault[tx]&1)) continue;
         unsigned n;
         if(tx) {
-            n=0; uint32_t *dst=(uint32_t *)buffer(port,1);
+            uint32_t *dst=(uint32_t *)buffer(port,1);
+            n=mx1_debug_transmit(port,(void *)(uintptr_t)p->ep[1],dst);
+            if(n) goto send;
             while(n<16 && p->urgent_count) {
                 dst[n++]=p->urgent[p->urgent_head]; p->urgent_head=(p->urgent_head+1)&31; p->urgent_count--;
             }
@@ -236,6 +241,7 @@ static void poll(unsigned tx) {
             }
             n=mx1_audio_monitor(port,(void *)(uintptr_t)p->ep[1],dst,n);
             if(!n) continue;
+send:
             n*=4;
         } else n=U16(p->ep[0],0x10);
         p->flight_ep[tx]=p->ep[tx]; p->flight_generation[tx]=p->generation[tx];

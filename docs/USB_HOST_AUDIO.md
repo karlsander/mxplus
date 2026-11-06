@@ -7,8 +7,9 @@ found after the first attempt is corrected, but a further failure remains; see
 [the bench record](../evidence/fm1-host-audio-20261105/README.md#corrected-mx-1-audio-attempt).
 It has instruction-level checks and a live FM-1 computer baseline, but no
 successful physical MX-1 audio result yet.
-The current candidate adds an MX-1 startup report readable on the FM-1 MIDI
-monitor; it does not claim another audio fix. See [host diagnostics](#host-diagnostic-report).
+The current candidate adds [two-way debug commands](DEBUG_BRIDGE.md) for a dedicated
+FM-1 Bluetooth bridge and retains the earlier startup report. It does not claim
+another audio fix.
 
 The accepted profile is VID `1209`, PID `0001`, full-speed USB, UAC1 interface 1
 alternate 1: stereo signed 16-bit PCM at 44,100 Hz, asynchronous IN endpoint
@@ -75,11 +76,12 @@ payload remain unchanged. Only `tools/build_firmware.py` produces firmware.
 
 | Runtime interval, end exclusive | Use |
 | --- | --- |
-| `0100bee4..0100ca30` | 2,892-byte MIDI extension and original-function trampolines |
+| `0100bee4..0100ca54` | 2,928-byte MIDI extension and original-function trampolines |
 | `01017868..01017e28` | Existing 1,472-byte MIDI state |
-| `607f0000..607f1258` | 4,696-byte audio extension and diagnostic reporting |
+| `607f0000..607f1b8c` | 7,052-byte audio extension and bridge commands |
 | `607f4000..607f9880` | Unmoved 22,656-byte audio state, descriptors and packet buffers |
 | `607f9880..607f9930` | 176-byte diagnostic state |
+| `607f9930..607fa464` | 2,868-byte bridge commands, replies and snapshots |
 
 The USB processor's original general heap spans `604b1178..60800000`.
 The builder reduces its upper bound to `607f0000`, reserving 64 KiB in existing
@@ -204,3 +206,9 @@ For the authorized first MX-1 test:
 Retain `UNTESTED` until these observations exist. A passing build or computer
 baseline does not establish MX-1 timing, sound quality, broad interoperability
 or failed-application recovery.
+
+## Bluetooth development bridge
+
+The current mainline includes [two-way MIDI debug commands](DEBUG_BRIDGE.md) for
+the dedicated FM-1 bridge. These add worker-owned snapshots and bounded converter
+test modes; they do not establish a fix for the missing MX-1 audio packets.

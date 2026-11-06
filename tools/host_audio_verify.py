@@ -306,6 +306,113 @@ def verify_monitor(image,h,syms,c):
                      'full musical transfer retained','replacement device isolation','specific controller-start rejection'],
             'boundary':'USB MIDI submission modeled; FM-1 display/protocol acceptance still requires hardware'}
 
+
+def verify_debug_bridge(image,h,syms,c):
+    # Actual compiled ARM protocol, RX/TX wrappers and audio mode selection.
+    # USB delivery/RTOS scheduling/DSP hardware are the explicit boundaries.
+    def frame(op,values=(),seq=12,target=1):
+        b=bytearray([0xf0,0x7d,0x44,0x42,1,target,seq,op])
+        for v in values:b.extend((v>>(j*7))&127 for j in range(5))
+        b.extend([(-sum(b[1:]))&127,0xf7]);return bytes(b)
+    def packets(b):
+        return [(4+len(b[i:i+3]) if i+3>=len(b) else 4) |
+                sum(v<<(8+8*j) for j,v in enumerate(b[i:i+3])) for i in range(0,len(b),3)]
+    def decode(words):
+        b=b''.join(w.to_bytes(4,'little')[1:1+(3 if w&15==4 else (w&15)-4)] for w in words)
+        assert b[:6]==bytes.fromhex('f07d44420101') and b[-1]==0xf7 and not sum(b[1:-1])&127
+        assert (len(b)-10)%5==0
+        return b[6],b[7],[sum(b[i+j]<<(7*j) for j in range(5)) for i in range(8,len(b)-2,5)]
+    t=CombinedSetup(image,h,c);t.bind_initial();t.setup();port=t.port
+    ep=t.endpoints[t.nodes[-1],128];tx=t.endpoints[t.nodes[-1],0];out=0x2001c000
+    def receive(b):
+        for w in packets(b): assert t.checked(syms['mx1_debug_receive'],port,ep,w)==1
+    def transmit():
+        words=[]
+        for _ in range(10):
+            t.m.write(out,b'\xa5'*64)
+            n=t.checked(syms['mx1_debug_transmit'],port,tx,out)
+            assert n<=16 and t.m.read(out+n*4,64-n*4)==b'\xa5'*(64-n*4)
+            if not n:return words
+            words.extend(struct.unpack('<'+'I'*n,t.m.read(out,n*4)))
+        raise AssertionError('unbounded reply')
+    receive(frame(1));seq,op,v=decode(transmit());assert (seq,op,v[:4])==(12,65,[0,0xb1,port,3])
+    receive(frame(2,[0]));assert decode(transmit())[2]==[2] # no controller snapshot yet
+    receive(frame(3,[2]));assert decode(transmit())[2]==[2] # no converter without owned transport
+    receive(frame(99));assert decode(transmit())[2]==[1]
+    bad=bytearray(frame(1));bad[-2]^=1;receive(bad);assert not transmit()
+    receive(frame(1,target=0));assert not transmit()
+    # Retry after an incomplete or oversized private frame resynchronizes on
+    # its F0. Oversized payload is consumed through F7, never stock MIDI data.
+    assert t.checked(syms['mx1_debug_receive'],port,ep,packets(frame(1))[0])==1
+    receive(frame(1));assert decode(transmit())[1]==65
+    for w in [packets(frame(1))[0]]+[0x01010104]*20+[0xf705]:
+        assert t.checked(syms['mx1_debug_receive'],port,ep,w)==1
+    assert not transmit()
+    receive(frame(1));assert decode(transmit())[1]==65
+    # A new command never overwrites a response waiting to be transmitted.
+    receive(frame(1,seq=21));receive(frame(1,seq=22));assert decode(transmit())[0]==21
+    receive(frame(1));assert decode(transmit())[2][-1]==1
+    # Keep the stock user SysEx intact before starting a debug response.
+    t.m.write(out,P(0x017df004));t.checked(syms['mx1_audio_monitor'],port,tx,out,1)
+    receive(frame(1));assert not transmit()
+    t.m.write(out,P(0xf705));t.checked(syms['mx1_audio_monitor'],port,tx,out,1)
+    assert decode(transmit())[1]==65
+    # Musical messages still flow, and a different device cannot read this state.
+    assert t.checked(syms['mx1_debug_receive'],port,ep,0x643c9009)==0
+    saved=t.m.read(ep+0x20,4);t.m.write(ep+0x20,P(0x2001b000));t.m.write(0x2001b008,P(DEV+0x100))
+    assert t.checked(syms['mx1_debug_receive'],port,ep,packets(frame(1))[0])==0
+    t.m.write(ep+0x20,saved)
+    # Entire RX callback/poll path consumes the private command before stock MIDI.
+    live=CombinedSetup(image,h,c);live.bind_initial();live.setup();live.drain();live.poll(0)
+    rx=[r for r in live.requests if not r['token']&1][-1]
+    live.done(rx,P(*packets(frame(1))));live.poll(0);assert not live.received
+    live.enqueue(live.port,[0x643c9009]);wire=[]
+    for _ in range(8):
+        start=len(live.requests);live.poll(1)
+        sends=[r for r in live.requests[start:] if r['token']&1]
+        for r in sends: wire.extend(struct.unpack('<'+'I'*(r['size']//4),bytes.fromhex(r['data'])));live.done(r)
+    # All response packets precede the queued note; no channel status splits SysEx.
+    note=wire.index(0x643c9009);assert decode(wire[:note])[1]==65
+    # Active endpoint: fresh snapshots only in the worker, read pages from RAM.
+    q=Audio(image,h,syms);p,rc=q.start();assert rc==0
+    q.m.write(syms['debug_ports'],P(DEV));q.m.write(EP+0x20,P(0x20018000));q.m.write(0x20018008,P(DEV))
+    def request(op,values=()):
+        for w in packets(frame(op,values)):assert q.call('mx1_debug_receive',0,EP,w)==1
+        words=[]
+        for _ in range(10):
+            n=q.call('mx1_debug_transmit',0,EP,out)
+            if not n:break
+            words.extend(struct.unpack('<'+'I'*n,q.m.read(out,n*4)))
+        return decode(words)[2] if words else None
+    raw=request(2,[0]);assert raw[:3]==[0,0,2] and raw[3:6]==[HC,p+ED,p+TD]
+    assert raw[6+1]==0x8c # raw HcControl, not compressed monitor bits
+    assert len(request(2,[1]))==37 and len(request(2,[2]))==35
+    queued=[]
+    def queue(u,a,size,data):
+        if a!=0x6000c276:return
+        regs=[u.reg_read(r) for r in (UC_ARM_REG_R0,UC_ARM_REG_R1,UC_ARM_REG_R2,UC_ARM_REG_R3)]
+        queued.append(regs+list(struct.unpack('<6I',q.m.read(u.reg_read(UC_ARM_REG_SP),24))))
+        u.reg_write(UC_ARM_REG_R0,0);u.reg_write(UC_ARM_REG_PC,u.reg_read(UC_ARM_REG_LR))
+    q.m.uc.hook_add(UC_HOOK_CODE,queue)
+    assert request(4) is None and len(queued)==1
+    q.m.write(REGS+0x3c,P(777));assert q.call('mx1_ohci_request',*queued[-1][:9])==0
+    n=q.call('mx1_debug_transmit',0,EP,out)
+    assert decode(struct.unpack('<'+'I'*n,q.m.read(out,n*4)))[2]==[0,4]
+    assert request(2,[0])[6+10]==777
+    # Three modes: stock consumption, mute, locally generated converter input.
+    assert request(3,[2])==[0,2]
+    for i in range(40):q.call('mx1_audio_tick',i%4*2)
+    assert sum(b[1][5]//8 for b in q.dsp)==441 and any(any(x for x in b[2]) for b in q.dsp)
+    assert max(abs(x) for b in q.dsp for x in b[2])<=2048*65536
+    assert request(3,[1])==[0,1];q.call('mx1_audio_tick',0);assert not any(q.dsp[-1][2])
+    assert request(3,[3])==[1]
+    q.m.write(syms['debug_ticks'],P(240100));q.call('mx1_audio_tick',0)
+    assert request(1)[26]==0 # watchdog restores normal mode
+    return {'status':'pass','cases':['structured replies across multiple transfers','malformed checksum/target rejection',
+        'pending reply retention','user SysEx continuity','replacement device isolation','actual RX and TX poll integration',
+        'worker-owned register snapshots and bounded pages','normal/mute/test-tone converter modes','mode timeout'],
+        'boundary':'USB delivery, RTOS queue dispatch and DSP hardware modeled; actual compiled ARM code executes'}
+
 def verify(image,report,elf_path):
     h=report['host_midi']
     with elf_path.open('rb') as f:
@@ -442,10 +549,11 @@ def verify(image,report,elf_path):
     converter=verify_converter_boundary(image,h,syms)
     worker=verify_worker_and_tree(image,h,syms)
     monitor=verify_monitor(image,h,syms,c)
+    debug=verify_debug_bridge(image,h,syms,c)
     return {'status':'pass','patched_app_sha256':sha256(image),'hardware_access':False,
             'limits':'instruction checks only; USB/DSP/RTOS boundaries modeled','setup':setup,'pacing':pacing,
             'converter_boundary':converter,
-            'worker_and_tree':worker,'fm1_monitor':monitor,
+            'worker_and_tree':worker,'fm1_monitor':monitor,'debug_bridge':debug,
             'stock_endpoint_record_hex':endpoint_record.hex(),
             'profile_negative_cases':malformed,'heap_reservation_bytes':65536,
             'iso_descriptors_per_port':17,'audio_state_bytes':h['audio_state_bytes'],

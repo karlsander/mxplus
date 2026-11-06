@@ -13,7 +13,7 @@ That changed image still requires physical MIDI/audio acceptance. Other generic
 audio profiles remain disabled. The FM-1 experiment also emits a bounded
 [host diagnostic SysEx report](USB_HOST_AUDIO.md#host-diagnostic-report).
 
-Candidate SHA-256: `4eb649c9c4a268674e1447b3bf1cec1fd6226f5e75c77f2ebaa5e9bcc51de05d`.
+Candidate SHA-256: `b6122583727323d36f227fccbcb58f70efb75921d083b4c5bfe4ba4359b15b36`.
 
 ## Behavior and scope
 
@@ -101,7 +101,7 @@ to the mastering held-key fix in PR #18.
 USB startup originally copies decoded `0x2b1f4..0x36dd8` to
 `0x01000300..0x0100bee4`. The new USB code is inserted at decoded `0x36dd8`,
 runtime `0x0100bee4`, below the existing USB allocator at `0x0100d000`.
-The extension occupies 2,892 bytes (`0x0100bee4..0x0100ca30`), leaving
+The extension occupies 2,928 bytes (`0x0100bee4..0x0100ca54`), leaving
 1,488 bytes before that allocator. State occupies 1,472 bytes
 (`0x01017868..0x01017e28`), leaving 472 bytes before the writable-region limit.
 The five following initialized-data source literals move; their destinations

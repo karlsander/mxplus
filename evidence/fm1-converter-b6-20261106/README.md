@@ -84,3 +84,42 @@ passed for commit `be505dda7082d8e8ea5802bbb5b918255cfe5ccc`.
 At 17:25 UTC, B6 was copied as `MX1_UPD.BIN` to the Roland updater, readback
 hash-verified, and ejected. [Copy receipt](copy.json). Update completion and
 normal boot were not yet observed at that point.
+
+## Observed on B6
+
+The user completed the update and restarted with only FM-1 on HOST3. Wire
+build 182 confirmed B6; FM bridge B1 remained build 177. The sanitized
+[bench summary](bench-summary.json) retains the counters, diagnostic words,
+environment and cleanup. Raw Bluetooth logs stay private.
+
+Probe 7 began the transport-only run, but its reply and subsequent MX commands
+timed out. FM Bluetooth stayed responsive and its packet counter advanced by
+52,640, representing 2,338,752 ring-fed frames, before plateauing around the
+nominal 60-second expiry. Tone remained zero throughout. FM underruns increased
+by 279 and overruns by 1,314. This is transfer progress with substantial gaps,
+not a clean audio stream or an audible result.
+
+Unplugging/reconnecting FM-1 without rebooting MX-1 restored MIDI. The retained
+MX counters showed 52,631 accepted packets, zero malformed packets/queue
+overflows, 3,619 queue underruns, 5,884 schedule corrections and zero converter
+errors. Page 8 retained zero converter calls in mode 3, as intended. The mixer
+was inactive/unclaimed after reconnect; FM was alt0 and muted. Page 4 reported
+one drop and one error, but no immediate pre-start page-4 baseline or first
+failure record exists. The early reconnect heartbeat's RX −7 may be unplug
+cancellation; it does not identify the streaming failure. Rebind cleared the
+EHCI page-5 cache, so the original stop reason is unavailable.
+
+A subsequent muted normal-converter test ran setup probes 1/2/3 before probe 5.
+Two converter calls succeeded; the third returned −1 with entry gate
+`38800000` at `401010c0` (context `20006028`, port 2). Original app_usb
+decoded `337d0`/runtime `010088dc` reads that gate through context +14 and
+rejects nonzero at `010088f8`. This identifies the failing branch, not the
+reason the gate remains nonzero. No new MX PCM packet was accepted before
+stop; FM advanced by one packet/44 frames. MIDI continued working and explicit
+mute, stop, retirement and alt0 cleanup succeeded. An earlier probe-5 attempt
+without setup returned −5 without opening a stream; it is retained separately.
+
+The bench helper now records exception types and collects FM status/trace
+independently when MX commands time out. An offline injected probe-7 timeout
+verified mute, FM counters/trace and six page-specific timeout records survive;
+the stubbed bridge did not access hardware. Firmware bytes are unchanged.

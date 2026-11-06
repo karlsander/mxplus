@@ -224,8 +224,10 @@ EHCI and converter state. Select mode 0 explicitly to test the converter, or
 mode 2 for its local tone. `mx-probe 5` starts normal conversion directly.
 Modes become available when phase is 2. `mx-probe 6` stops it;
 wait for retirement before `mx-probe 4` returns to alt0. Leave other host-audio
-devices disconnected for this experiment. B5 stopped before accepted PCM or
-sound; B6 has not yet been installed.
+devices disconnected for this experiment. B6 accepted 52,631 packets in its
+transport-only test, but MIDI replies stopped until reconnect. A separate
+muted converter test returned an entry-gate error on its third call.
+[B6 results and limitations](../evidence/fm1-converter-b6-20261106/README.md#observed-on-b6).
 
 
 B2's physical run retained alt0 but commands still timed out. B3 fixes two

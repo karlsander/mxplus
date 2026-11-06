@@ -26,7 +26,10 @@ not sustained or comprehensive validation.
    USB-B operation. B4 established the Bluetooth/MIDI command bridge; B5's
    explicitly started EHCI experiment advanced the FM-1 packet counter, then
    stopped on a converter error before accepted PCM. B6 adds transport-only
-   startup and converter snapshots to isolate it. Other host-audio
+   startup and converter snapshots: its long run accepted 52,631 packets with
+   scheduling gaps and MIDI loss until reconnect; a separate muted converter
+   run failed on a nonzero gate after two successful calls. Resolve these
+   before claiming audible or sustained audio. Other host-audio
    coexistence needs shared bandwidth/TT admission beyond B5. The computer
    probe and offline tests do not establish an MX-1 audio result.
 6. Consider small control/routing improvements individually. The internal code

@@ -12,8 +12,11 @@ bidirectional debug commands and all four setup probes. B5 added an explicitly
 started EHCI split-ISO input experiment, while keeping automatic startup off.
 B5 advanced the FM-1 packet counter by five after a clean boot, then stopped
 on one MX converter error before accepted PCM. B6 adds transport-only startup
-and converter telemetry; [bench evidence and next experiment](../evidence/fm1-converter-b6-20261106/README.md).
-Sustained MX-1 packet delivery and audible audio remain unverified.
+and converter telemetry. Its muted transport-only run accepted 52,631 MX
+packets, with scheduling gaps and loss of MIDI replies until reconnect.
+A separate normal-converter run succeeded twice, then rejected a nonzero DSP
+entry gate. [B6 bench evidence](../evidence/fm1-converter-b6-20261106/README.md#observed-on-b6).
+Clean sustained delivery and audible audio remain unverified.
 See [commands](DEBUG_BRIDGE.md) and [implementation](../research/fm1-ehci.md).
 
 The accepted profile is VID `1209`, PID `0001`, full-speed USB, UAC1 interface 1

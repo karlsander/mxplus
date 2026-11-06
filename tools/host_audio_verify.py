@@ -56,6 +56,23 @@ def verify_endpoint_constructor(image,c):
     assert record==bytes.fromhex('8480010004000100b800')
     return record
 
+def verify_controller_indices(original):
+    # Run original initialization/binding, modeling only IRQ priority setup.
+    # USB speed alone does not select a driver: HOST3 reported index 1.
+    m=Machine(original)
+    def boundary(u,a,size,data):
+        if a==0x010027e6:
+            u.reg_write(UC_ARM_REG_R0,0);u.reg_write(UC_ARM_REG_PC,u.reg_read(UC_ARM_REG_LR))
+    m.uc.hook_add(UC_HOOK_CODE,boundary)
+    assert m.call(0x60009f78)[0]==0
+    rows=[]
+    for i,a in enumerate(struct.unpack('<2I',m.read(0x6002b0e8,8))):
+        values=struct.unpack('<17I',m.read(a,68))
+        assert values[0]==i
+        assert values[3]==(0x600132d7 if i==0 else 0x600111ef)
+        rows.append({'index':i,'driver':'OHCI' if i==0 else 'EHCI','request':hex(values[3])})
+    return {'drivers':rows,'boundary':'Original initialization and binding execute; IRQ priority helper modeled'}
+
 def verify_setup(image,h,c,endpoint_record):
     t=CombinedSetup(image,h,c);t.bind_initial();t.setup()
     assert t.state()==5 and len(t.opens)==2 and not t.audio_requests
@@ -335,7 +352,7 @@ def verify_debug_bridge(image,h,syms,c):
             if not n:return words
             words.extend(struct.unpack('<'+'I'*n,t.m.read(out,n*4)))
         raise AssertionError('unbounded reply')
-    receive(frame(1));seq,op,v=decode(transmit());assert (seq,op,v[:4])==(12,65,[0,0xb1,port,3])
+    receive(frame(1));seq,op,v=decode(transmit());assert (seq,op,v[:4])==(12,65,[0,0xb2,port,3])
     receive(frame(2,[0]));assert decode(transmit())[2]==[2] # no controller snapshot yet
     receive(frame(3,[2]));assert decode(transmit())[2]==[2] # no converter without owned transport
     receive(frame(99));assert decode(transmit())[2]==[1]
@@ -351,7 +368,7 @@ def verify_debug_bridge(image,h,syms,c):
     receive(frame(1));assert decode(transmit())[1]==65
     # A new command never overwrites a response waiting to be transmitted.
     receive(frame(1,seq=21));receive(frame(1,seq=22));assert decode(transmit())[0]==21
-    receive(frame(1));assert decode(transmit())[2][-1]==1
+    receive(frame(1));assert decode(transmit())[2][-4]==1
     # Keep the stock user SysEx intact before starting a debug response.
     t.m.write(out,P(0x017df004));t.checked(syms['mx1_audio_monitor'],port,tx,out,1)
     receive(frame(1));assert not transmit()
@@ -408,9 +425,56 @@ def verify_debug_bridge(image,h,syms,c):
     assert request(3,[3])==[1]
     q.m.write(syms['debug_ticks'],P(240100));q.call('mx1_audio_tick',0)
     assert request(1)[26]==0 # watchdog restores normal mode
+    # The measured HOST3 connection uses controller 1 (EHCI). Do not hand the
+    # OHCI-only callback to that driver, initialize DSP or select AS alt1 at boot.
+    t=CombinedSetup(image,h,c);t.m.write(DEV+0x4a,H(1)+H(3))
+    parent=0x2001a000;t.m.write(0x20018004,P(parent))
+    t.m.write(parent+0x4a,H(1)+H(2));t.m.write(parent+0x58,H(0x400))
+    t.m.write(parent+0x10,H(0x1234)+H(0x5678))
+    t.bind_initial();t.setup();ep=t.endpoints[t.nodes[-1],128];tx=t.endpoints[t.nodes[-1],0]
+    assert t.state()==5 and not t.audio_requests and not t.initialized
+    assert [x[1:5] for x in t.controls]==[[1,11,0,2]]
+    receive(frame(1));v=decode(transmit())[2];assert v[1:7]==[0xb2,port,0x48,5,1,0]
+    receive(frame(2,[3]));topology=decode(transmit())[2]
+    assert topology==[0,3,1,3,0,0,0x20018000,parent,1,2,0x400,0x1234,0x5678,1]
+    t.drain();t.poll(0)
+    receive(frame(2,[4]));midi=decode(transmit())[2]
+    assert len(midi)==26 and midi[2:5]==[ep,1,0] and midi[8:10]==[1,0]
+    # Private controls are accepted in RX but only run on manager delivery.
+    for step in (1,2,3,4):
+        before=len(t.controls);receive(frame(5,[step]));assert decode(transmit())[2]==[0,step]
+        assert len(t.controls)==before
+        queued=t.events[-1];assert queued==P(5,DEV,0x3242444d)
+        receive(frame(5,[step]));assert decode(transmit())[2]==[2]
+        t.m.write(EVENT,queued);t.checked(syms['mx1_audio_ready'],EVENT)
+        receive(frame(1));v=decode(transmit())[2];assert v[-3:]==[0,step,0],v
+        if step==2:
+            # Stock probe callback posts event0 to the manager. It does NOT
+            # execute the bind handler on the USB core task. Check the real
+            # callback before modeled delivery; do not claim self-deadlock.
+            t.checked(0x6000837c,t.nodes[2],0,0,0)
+            assert t.events[-1][0]==0 and t.events[-1][4:8]==P(t.nodes[2])
+            t.m.write(EVENT,t.events[-1]);t.checked(syms['mx1_audio_bind'],EVENT)
+        assert not t.audio_requests and not t.initialized
+    assert [x[1:6] for x in t.controls[1:]]==[[0x22,1,0x100,0x84,3],[1,11,1,1,0],[1,11,0,1,0]]
+    # A control failure is visible in status, while MIDI/other readouts remain.
+    t.audio_control_error=-7;receive(frame(5,[1]));transmit()
+    t.m.write(EVENT,t.events[-1]);t.checked(syms['mx1_audio_ready'],EVENT)
+    receive(frame(1));v=decode(transmit())[2];assert v[-3:]==[0,1,0xfffffff9]
+    assert t.state()==5
+    # Unsolicited single-transfer telemetry does not need a USB IN command.
+    heartbeats=[]
+    for _ in range(512):
+        n=t.checked(syms['mx1_debug_transmit'],port,tx,out)
+        if n:heartbeats.append(decode(struct.unpack('<'+'I'*n,t.m.read(out,n*4))))
+    assert len(heartbeats)==1 and heartbeats[0][:2]==(0,0x7e)
+    assert heartbeats[0][2][:4]==[0,0xb2,0x39,1]
     return {'status':'pass','cases':['structured replies across multiple transfers','malformed checksum/target rejection',
         'pending reply retention','user SysEx continuity','replacement device isolation','actual RX and TX poll integration',
-        'worker-owned register snapshots and bounded pages','normal/mute/test-tone converter modes','mode timeout'],
+        'worker-owned register snapshots and bounded pages','normal/mute/test-tone converter modes','mode timeout',
+        'EHCI baseline avoids OHCI request and DSP submission','cached topology and MIDI software status',
+        'manager-only single-step controls/lookup and failure results','original bind callback queues manager event',
+        'one-transfer unsolicited MIDI telemetry'],
         'boundary':'USB delivery, RTOS queue dispatch and DSP hardware modeled; actual compiled ARM code executes'}
 
 def verify(image,report,elf_path):
@@ -423,6 +487,7 @@ def verify(image,report,elf_path):
         assert syms['diagnostics']==syms['mx1_audio_ports']+4*STRIDE
     operations=recover(image)['operations']
     original=(ROOT/'analysis/container_app_usb.bin').read_bytes()
+    controllers=verify_controller_indices(original)
     hot=image[h['insert_offset']:h['insert_offset']+h['code_bytes']]
     audio=image[h['audio_source']-0x60000000:]
     expected=bytearray(original[:h['insert_offset']]+hot+original[h['insert_offset']:]+audio)
@@ -552,7 +617,7 @@ def verify(image,report,elf_path):
     debug=verify_debug_bridge(image,h,syms,c)
     return {'status':'pass','patched_app_sha256':sha256(image),'hardware_access':False,
             'limits':'instruction checks only; USB/DSP/RTOS boundaries modeled','setup':setup,'pacing':pacing,
-            'converter_boundary':converter,
+            'converter_boundary':converter,'controller_indices':controllers,
             'worker_and_tree':worker,'fm1_monitor':monitor,'debug_bridge':debug,
             'stock_endpoint_record_hex':endpoint_record.hex(),
             'profile_negative_cases':malformed,'heap_reservation_bytes':65536,

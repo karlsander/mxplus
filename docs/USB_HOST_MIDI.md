@@ -13,7 +13,7 @@ That changed image still requires physical MIDI/audio acceptance. Other generic
 audio profiles remain disabled. The FM-1 experiment also emits a bounded
 [host diagnostic SysEx report](USB_HOST_AUDIO.md#host-diagnostic-report).
 
-Candidate SHA-256: `b6122583727323d36f227fccbcb58f70efb75921d083b4c5bfe4ba4359b15b36`.
+Candidate SHA-256: `360b316352e7f762d5752813dfa73a45ab13d7203676d16e232ffd29165077ee`.
 
 ## Behavior and scope
 

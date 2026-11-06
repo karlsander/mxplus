@@ -7,8 +7,10 @@ See [implementation, protocol and boundaries](../../docs/DEBUG_BRIDGE.md).
 
 The MX-1 candidate identity and offline checks are in [candidate.json](candidate.json).
 The candidate was copied as `MX1_UPD.BIN` with a matching readback hash and the
-volume was ejected; [copy receipt](copy.json). Updater completion, reboot and
-the complete HOST3/Bluetooth connection still await the user. No new MX-1 audio
+volume was ejected; [copy receipt](copy.json). The user subsequently confirmed
+installation and HOST3 connection. The [separate live record](../fm1-ehci-debug-20261106/README.md)
+shows EHCI controller 1, no new audio packets and timed-out MX-1 command replies.
+The original candidate.json records the pre-installation state. No MX-1 audio
 success is claimed.
 
 All 17 offline reproduction stages passed with hardware boundaries modeled.

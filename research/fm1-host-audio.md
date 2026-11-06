@@ -66,6 +66,16 @@ startup copy/zero operations initialize the new code/state. The actual startup
 and MPU instructions execute in the verifier; see `docs/USB_HOST_AUDIO.md`
 for the current placement and bounded test evidence.
 
+## Live controller correction (6 November)
+
+The dedicated bridge reports controller index 1 (EHCI) on HOST3. The initial
+OHCI-only transport does not cover this connection; full speed did not imply
+OHCI ownership. B2 pauses automatic audio startup there and provides manager
+setup probes plus cached topology. See [live evidence](../evidence/fm1-ehci-debug-20261106/README.md).
+The last received stage-4 report does not establish a particular deadlock.
+Original 6000837c queues binding to the manager; it is not the patched handler
+running synchronously on the USB core task. EHCI ISO support remains future work.
+
 ## Implemented transport and remaining hardware checks
 
 Keep interface 2 MIDI setup and its existing task ownership. Select only the

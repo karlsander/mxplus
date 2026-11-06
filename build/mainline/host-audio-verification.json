@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "08d180f8d9088d1c25f20c34e605a31725029f44c35241db735133e7b972ba2e",
+  "patched_app_sha256": "8c9902a149b5b9d1ead5afcb7d03c23e77d993eadeccf3a1580045cf2e5208ac",
   "hardware_access": false,
   "limits": "instruction checks only; USB/DSP/RTOS boundaries modeled",
   "setup": {
@@ -80,6 +80,21 @@
     "calls": 48,
     "boundary": "DSP reset/command/result, integer conversion MMIO and RTOS notify modeled; drift epoch seeded; no interpolation or timing claim"
   },
+  "controller_indices": {
+    "drivers": [
+      {
+        "index": 0,
+        "driver": "OHCI",
+        "request": "0x600132d7"
+      },
+      {
+        "index": 1,
+        "driver": "EHCI",
+        "request": "0x600111ef"
+      }
+    ],
+    "boundary": "Original initialization and binding execute; IRQ priority helper modeled"
+  },
   "worker_and_tree": {
     "hcca_slots_reaching_audio_ed": 32,
     "original_dummy_ed_allocations": 31,
@@ -110,7 +125,12 @@
       "actual RX and TX poll integration",
       "worker-owned register snapshots and bounded pages",
       "normal/mute/test-tone converter modes",
-      "mode timeout"
+      "mode timeout",
+      "EHCI baseline avoids OHCI request and DSP submission",
+      "cached topology and MIDI software status",
+      "manager-only single-step controls/lookup and failure results",
+      "original bind callback queues manager event",
+      "one-transfer unsolicited MIDI telemetry"
     ],
     "boundary": "USB delivery, RTOS queue dispatch and DSP hardware modeled; actual compiled ARM code executes"
   },
@@ -118,7 +138,7 @@
   "profile_negative_cases": 188,
   "heap_reservation_bytes": 65536,
   "iso_descriptors_per_port": 17,
-  "audio_state_bytes": 25700,
+  "audio_state_bytes": 25956,
   "cases": [
     "guarded complete USB patch accounting",
     "startup placement",

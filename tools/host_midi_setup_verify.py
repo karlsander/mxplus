@@ -65,7 +65,7 @@ class Setup(Transport):
         r=[u.reg_read(x) for x in (UC_ARM_REG_R0,UC_ARM_REG_R1,UC_ARM_REG_R2,UC_ARM_REG_R3)]
         result=0
         if a==0x60009d2c:result=BUF
-        elif a==0x60007e10:self.events.append(m.read(r[0],12))
+        elif a==0x60007e10:self.events.append(m.read(r[0],12));result=1
         elif a==NOTIFY:self.notices.append(r[:2])
         elif a==0x60009558:
             stack=struct.unpack('<4I',m.read(u.reg_read(UC_ARM_REG_SP),16))

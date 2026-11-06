@@ -15,6 +15,7 @@
 static void barrier(void) { __asm__ volatile("dmb" ::: "memory"); }
 static void zero(void *v,unsigned n) { uint8_t *p=v; while(n--) *p++=0; }
 static unsigned le16(const uint8_t *p) { return p[0]|(unsigned)p[1]<<8; }
+static const uint8_t fm1_rate[3]={0x44,0xac,0};
 
 /* Deliberately accept only the measured FM-1 streaming profile. The parser
  * checks descriptor boundaries first, then one PCM16 stereo alt and endpoint.
@@ -90,11 +91,15 @@ typedef struct {
     unsigned sequence, errors, dropped, tone_phase, tone_tick;
     volatile unsigned snapshot_seq;
     uint32_t raw[102];
+    uint32_t topology[12];
+    volatile unsigned probe, probe_done, probe_result;
+    unsigned heartbeat;
 } DebugPort;
 __attribute__((section(".host_debug_state"))) static DebugPort debug_ports[4];
 __attribute__((section(".host_debug_state"))) static volatile uint32_t debug_ticks;
 static void debug_capture(AudioPort *p);
 static void debug_done(void *,void *,unsigned,int,uintptr_t);
+static void debug_probe(uint8_t *event);
 static AudioDiagnostic *diagnostic(AudioPort *p) { return &diagnostics[p-mx1_audio_ports]; }
 static void stage(AudioPort *p,unsigned value,int result) {
     AudioDiagnostic *d=diagnostic(p);
@@ -134,6 +139,10 @@ static void try_open(uint8_t *dev,uint8_t *r) {
     if(p->claimed || U16(dev,0x10)!=0x1209 || U16(dev,0x12)!=1 || U16(dev,0x58)) return;
     const uint8_t *c=FN(0x60009d2d,const uint8_t *(*)(void*,unsigned))(dev,0);
     if(!mx1_audio_profile(c)) return;
+    /* Controller 1 is EHCI, including full-speed devices behind a hub.
+     * The custom request hook is installed ONLY on OHCI. Never submit its
+     * private start callback to the unmodified EHCI request handler. */
+    if(U16(dev,0x4a)!=0) { stage(p,0x48,-5); return; }
     for(unsigned i=0;i<U16(r,0x20) && i<8;i++) {
         uint8_t *n=PTR(r,0x28+i*8);
         if(!n || n[0x13]!=1 || n[0x14]!=1 || n[0x15]!=1) continue;
@@ -166,11 +175,27 @@ void mx1_audio_setup(uint8_t *event) {
     AudioPort *p=&mx1_audio_ports[port]; AudioDiagnostic *d=diagnostic(p);
     zero(&debug_ports[port],sizeof debug_ports[port]); debug_ports[port].dev=dev;
     zero(d,sizeof *d); d->dev=dev; d->controller=U16(dev,0x4a); stage(p,1,0);
+    DebugPort *db=&debug_ports[port];
+    /* Cached object fields, not controller MMIO. +ec is the parent hub
+     * object, whose +4 is the upstream USB device and +8..+20 its ports.
+     * Record raw identifiers; no inferred board/chip identity. */
+    uint8_t *hub=PTR(dev,0xec),*parent=hub?PTR(hub,4):0;
+    db->topology[0]=U16(dev,0x4a); db->topology[1]=U16(dev,0x4c);
+    db->topology[2]=U16(dev,0x58); db->topology[3]=U16(dev,0x48);
+    db->topology[4]=(uintptr_t)hub; db->topology[5]=(uintptr_t)parent;
+    if(parent) {
+        db->topology[6]=U16(parent,0x4a); db->topology[7]=U16(parent,0x4c);
+        db->topology[8]=U16(parent,0x58); db->topology[9]=U16(parent,0x10);
+        db->topology[10]=U16(parent,0x12);
+    }
+    if(hub) for(unsigned i=1;i<=7;i++) if(PTR(hub,4+i*4)==dev) db->topology[11]=i;
+    /* Keep a working MIDI/debug baseline on the observed controller. The
+     * bounded probe command can exercise each control/lookup separately. */
+    if(U16(dev,0x4a)!=0) { stage(p,0x48,-5); return; }
     /* UAC1 endpoint sampling-frequency SET_CUR, followed by AS alt1.
      * Three little-endian bytes, fixed advertised rate. */
-    uint8_t rate[3]={0x44,0xac,0};
     int e=FN(0x60009559,int(*)(void*,unsigned,unsigned,unsigned,unsigned,unsigned,void*,unsigned))
-       (dev,0x22,1,0x100,0x84,3,rate,0);
+       (dev,0x22,1,0x100,0x84,3,(void*)fm1_rate,0);
     if(e) { stage(p,0x41,e); return; }
     stage(p,2,0);
     e=FN(0x60009559,int(*)(void*,unsigned,unsigned,unsigned,unsigned,unsigned,void*,unsigned))
@@ -190,6 +215,7 @@ void mx1_audio_remove(uint8_t *event) {
     FN(0x6000852b,void(*)(void*))(event);
 }
 void mx1_audio_ready(uint8_t *event) {
+    if(U32(event,8)==0x3242444d) { debug_probe(event); return; }
     AudioPort *p=for_device(PTR(event,4));
     if(!p) { FN(0x600088d3,void(*)(void*))(event); return; }
     uint8_t *r=record(p->dev);

@@ -7,9 +7,10 @@ found after the first attempt is corrected, but a further failure remains; see
 [the bench record](../evidence/fm1-host-audio-20261105/README.md#corrected-mx-1-audio-attempt).
 It has instruction-level checks and a live FM-1 computer baseline, but no
 successful physical MX-1 audio result yet.
-The current candidate adds [two-way debug commands](DEBUG_BRIDGE.md) for a dedicated
-FM-1 Bluetooth bridge and retains the earlier startup report. It does not claim
-another audio fix.
+The bridge captured controller 1 (EHCI) on HOST3. The implemented ISO transport
+is OHCI-only and cannot serve that connection. The current candidate pauses
+automatic EHCI audio startup and adds [stepwise debug commands](DEBUG_BRIDGE.md).
+It does not claim another audio fix; [live evidence](../evidence/fm1-ehci-debug-20261106/README.md).
 
 The accepted profile is VID `1209`, PID `0001`, full-speed USB, UAC1 interface 1
 alternate 1: stereo signed 16-bit PCM at 44,100 Hz, asynchronous IN endpoint
@@ -36,6 +37,10 @@ The user had already confirmed MX-1 MIDI output to this FM-1 with candidate
 That result does not validate audio or the changed candidate.
 
 ## Transport and ownership
+
+The live FM-1 connection uses EHCI despite being full speed. Full-speed alone
+does not establish that OHCI owns a device. An EHCI audio transport remains to
+be implemented; B2 leaves its audio alternate at zero by default and retains MIDI.
 
 The stock full-speed OHCI driver has incomplete isochronous submission and
 completion paths. The extension supplies a bounded input transport; it does
@@ -78,10 +83,10 @@ payload remain unchanged. Only `tools/build_firmware.py` produces firmware.
 | --- | --- |
 | `0100bee4..0100ca54` | 2,928-byte MIDI extension and original-function trampolines |
 | `01017868..01017e28` | Existing 1,472-byte MIDI state |
-| `607f0000..607f1b8c` | 7,052-byte audio extension and bridge commands |
+| `607f0000..607f206c` | 8,300-byte audio extension and bridge commands |
 | `607f4000..607f9880` | Unmoved 22,656-byte audio state, descriptors and packet buffers |
 | `607f9880..607f9930` | 176-byte diagnostic state |
-| `607f9930..607fa464` | 2,868-byte bridge commands, replies and snapshots |
+| `607f9930..607fa564` | 3,124-byte bridge commands, replies and snapshots |
 
 The USB processor's original general heap spans `604b1178..60800000`.
 The builder reduces its upper bound to `607f0000`, reserving 64 KiB in existing

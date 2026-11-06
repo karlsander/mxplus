@@ -253,3 +253,18 @@ send:
 }
 void mx1_host_tx_poll(void) { host_tx_poll_original(); poll(1); }
 void mx1_host_rx_poll(void) { host_rx_poll_original(); poll(0); }
+
+/* Fixed readout only; the audio/debug extension calls this from MIDI RX.
+ * Tasks can advance between fields. These are software observations, not
+ * an atomic USB/controller snapshot. Keep the existing Port ABI unchanged. */
+#pragma clang section text=".host_audio" rodata=".host_audio_rodata"
+void mx1_host_debug_state(unsigned port,uint32_t *out) {
+    Port *p=&ports[port]; unsigned k=0;
+    for(unsigned t=0;t<2;t++) {
+        out[k++]=p->ep[t]; out[k++]=p->busy[t]; out[k++]=p->ready[t];
+        out[k++]=(uint32_t)p->result[t]; out[k++]=p->length[t];
+        out[k++]=p->flight_length[t]; out[k++]=p->managed[t]; out[k++]=p->fault[t];
+        out[k++]=p->generation[t]; out[k++]=p->flight_generation[t];
+    }
+    out[k++]=p->count; out[k++]=p->urgent_count; out[k++]=p->dropped; out[k]=p->errors;
+}

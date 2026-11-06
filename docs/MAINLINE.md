@@ -9,8 +9,8 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`b6122583727323d36f227fccbcb58f70efb75921d083b4c5bfe4ba4359b15b36`.
-This revision adds [two-way MIDI debug hooks](DEBUG_BRIDGE.md) for the dedicated FM-1 Bluetooth bridge. It has no new claim of working host audio.
+`360b316352e7f762d5752813dfa73a45ab13d7203676d16e232ffd29165077ee`.
+This revision adds [stepwise MIDI diagnostics](DEBUG_BRIDGE.md) and pauses automatic audio startup on the observed EHCI controller. The existing transport supports OHCI only. It has no new claim of working host audio.
 The experiment accepts the measured FM-1 full-speed, stereo PCM16 input profile and reuses
 the original 44.1-to-96-kHz conversion path. The preceding `253645ed…` image
 has a user-reported MIDI-output result with the FM-1; audio on the MX-1 remains unverified.

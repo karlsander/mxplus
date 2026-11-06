@@ -17,6 +17,8 @@ packets, with scheduling gaps and loss of MIDI replies until reconnect.
 A separate normal-converter run succeeded twice, then rejected a nonzero DSP
 entry gate. [B6 bench evidence](../evidence/fm1-converter-b6-20261106/README.md#observed-on-b6).
 Clean sustained delivery and audible audio remain unverified.
+B7 waits for received PCM before the first normal converter call and preserves
+diagnostics through MIDI queue overflow/reconnect; [candidate and checks](../evidence/fm1-startup-b7-20261106/README.md).
 See [commands](DEBUG_BRIDGE.md) and [implementation](../research/fm1-ehci.md).
 
 The accepted profile is VID `1209`, PID `0001`, full-speed USB, UAC1 interface 1
@@ -217,7 +219,7 @@ audio ports to retain their addresses and buffer layout.
 The full reproduction gate checks this evidence against the actual USB image
 and both inserted USB code artifacts. No hardware probe runs in reproduction.
 
-For the authorized B6 MX-1 test:
+For the authorized B7 MX-1 test:
 
 1. Retain the last working image and settings backup. Copy the candidate as
    **`MX1_UPD.BIN`**, without a hyphen, to the updater volume. The original
@@ -226,9 +228,9 @@ For the authorized B6 MX-1 test:
    monitoring down. Check normal analog mixing first.
 3. Connect the FM-1 directly to HOST 3, which supplies bus power. Record the
    exact wiring, power arrangement, system rate and candidate hash.
-4. Keep the FM-1 bridge near the Mac. Confirm build 182 and MIDI pages 3/4,
+4. Keep the FM-1 bridge near the Mac. Confirm build 183 and MIDI pages 3/4,
    then run probes 1, 2, 3 and 7 sequentially, waiting for each result. Inspect
-   pages 5–8 and packet/sample-peak counters in transport-only mode first.
+   pages 5–10 and packet/sample-peak counters in transport-only mode first.
 5. Select mode 0 to test conversion, then compare the FM-1's quiet stereo tone
    with MX converter mode 2. Keep USB3
    at Auto/USB3. Record meter activity, sound, stereo separation and failures.

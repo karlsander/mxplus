@@ -279,6 +279,13 @@ def verify(original,patched,main,report):
         t.enqueue(1,[0x0000f80f]);t.poll(1)
         assert t.requests[-1]['token']==3
         before=len(t.requests);t.enqueue(0,[0x0000f80f]);t.poll(1);assert len(t.requests)==before
+        first=h['midi_failure_state_start']+116 # port 0 TX; retained first-failure record
+        record=t.m.read(first,116)
+        assert struct.unpack_from('<II',record)==(2,{'submit':2,'completion':1,'short':1,'overflow':3}[failure])
+        assert struct.unpack_from('<I',record,16)[0]=={'submit':0xfffffff5,'completion':0xfffffff9,'short':0,'overflow':0}[failure]
+        # Later failure notifications and rebind cannot erase the witness.
+        t.call('mx1_debug_midi_failure',0,1,99,-99)
+        assert t.attach(0,1)[0]==0 and t.m.read(first,116)==record
     passed('Submission/completion/short-write/overflow failures isolate the affected output')
     # Original asynchronous USB API request packing and completion ABI. The
     # heap allocator/mailbox/free are stubbed; original struct construction,

@@ -106,7 +106,7 @@ static void debug_command(unsigned port) {
     uint32_t arg=0,v[40]; unsigned k=1; v[0]=0;
     if(n==15) for(unsigned j=0;j<5;j++) arg|=(uint32_t)b[8+j]<<(7*j);
     if(op==1 && n==10) {
-        uint32_t fields[]={0xb6,port,a->stage,a->result,a->controller,p->phase,a->control,a->flags,a->cc,a->frame,
+        uint32_t fields[]={0xb7,port,a->stage,a->result,a->controller,p->phase,a->control,a->flags,a->cc,a->frame,
             p->packets,p->malformed,p->overflow,p->underrun,p->missed,p->dsp_errors,p->wanted,p->claimed,p->generation,
             p->write_count,p->read_count,p->next_frame,p->close_frame,p->cost,p->tail_slot,d->mode,d->errors,d->dropped,
             d->probe,d->probe_done,d->probe_result};
@@ -125,6 +125,15 @@ static void debug_command(unsigned port) {
             v[k++]=s->gate; v[k++]=s->frames;
             for(unsigned i=0;i<30;i++) v[k++]=s->raw[i];
             barrier(); if(seq!=s->sequence) { v[0]=2; k=1; }
+        }
+    } else if(op==2 && n==15 && (arg==9 || arg==10)) {
+        MidiFailure *s=&mx1_midi_failures[port][arg-9];
+        unsigned seq=__atomic_load_n(&s->sequence,__ATOMIC_ACQUIRE);
+        if(seq!=2) v[0]=2;
+        else {
+            v[k++]=arg; v[k++]=seq; v[k++]=s->source; v[k++]=s->tick;
+            v[k++]=s->phase; v[k++]=s->result;
+            for(unsigned i=0;i<24;i++) v[k++]=s->midi[i];
         }
     } else if(op==2 && n==15 && (arg<3 || (arg>=5 && arg<=7))) {
         unsigned s=d->snapshot_seq;
@@ -192,7 +201,7 @@ unsigned mx1_debug_transmit(unsigned port,void *ep,uint32_t *out) {
         if((uint32_t)(debug_ticks-d->heartbeat)<4096) return 0;
         d->heartbeat=debug_ticks;
         uint32_t m[24]; mx1_host_debug_state(port,m);
-        uint32_t v[]={0,0xb6,diagnostics[port].stage,m[1]|(m[2]<<1)|(m[7]<<8),
+        uint32_t v[]={0,0xb7,diagnostics[port].stage,m[1]|(m[2]<<1)|(m[7]<<8),
             m[11]|(m[12]<<1)|(m[17]<<8),m[3],m[13]};
         volatile uint8_t b[45];
         b[0]=0xf0;b[1]=0x7d;b[2]=0x44;b[3]=0x42;b[4]=1;b[5]=1;b[6]=0;b[7]=0x7e;

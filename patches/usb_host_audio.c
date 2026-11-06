@@ -104,6 +104,21 @@ typedef struct {
     uint32_t calls, successes, result, gate, frames, raw[30];
 } DspDiagnostic;
 __attribute__((section(".host_dsp_state"))) static DspDiagnostic dsp_diagnostics[4];
+/* B7: first MIDI failure per direction survives USB rebind. Claim atomically:
+ * queue producers and transfer completion consumers may preempt each other. */
+typedef struct {
+    uint32_t sequence, source, tick, phase, result, midi[24];
+} MidiFailure;
+__attribute__((section(".host_failure_state"))) MidiFailure mx1_midi_failures[4][2];
+extern void mx1_host_debug_state(unsigned,uint32_t *);
+void mx1_debug_midi_failure(unsigned port,unsigned tx,unsigned source,int result) {
+    if(port>=4 || tx>1) return;
+    MidiFailure *s=&mx1_midi_failures[port][tx]; unsigned expected=0;
+    if(!__atomic_compare_exchange_n(&s->sequence,&expected,1,0,__ATOMIC_RELAXED,__ATOMIC_RELAXED)) return;
+    s->source=source; s->tick=debug_ticks; s->phase=mx1_audio_ports[port].phase;
+    s->result=(uint32_t)result; mx1_host_debug_state(port,s->midi);
+    __atomic_store_n(&s->sequence,2,__ATOMIC_RELEASE);
+}
 static uint32_t dsp_gate(unsigned port) {
     uintptr_t g=U32((void*)0x20005ee0,port*0xa4+0x14);
     /* Original 60007884 constructs this pointer from DSP data base 40101000.
@@ -207,9 +222,14 @@ void mx1_audio_setup(uint8_t *event) {
     if(!mx1_audio_profile(c)) return;
     unsigned port=U16(r,2); if(port>=4) return;
     AudioPort *p=&mx1_audio_ports[port]; AudioDiagnostic *d=diagnostic(p);
-    zero(&debug_ports[port],sizeof debug_ports[port]); debug_ports[port].dev=dev;
-    zero(d,sizeof *d); d->dev=dev; d->controller=U16(dev,0x4a); stage(p,1,0);
     DebugPort *db=&debug_ports[port];
+    /* Preserve the last controller snapshot for post-unplug inspection.
+     * Reset only protocol/session fields; the cached words are never followed
+     * as pointers. A later controller snapshot replaces them normally. */
+    zero(db,(uintptr_t)&db->snapshot_seq-(uintptr_t)db);
+    zero(db->topology,sizeof *db-((uintptr_t)db->topology-(uintptr_t)db));
+    db->dev=dev;
+    zero(d,sizeof *d); d->dev=dev; d->controller=U16(dev,0x4a); stage(p,1,0);
     /* Cached object fields, not controller MMIO. +ec is the parent hub
      * object, whose +4 is the upstream USB device and +8..+20 its ports.
      * Record raw identifiers; no inferred board/chip identity. */
@@ -524,12 +544,17 @@ void mx1_audio_tick(unsigned microframe) {
             }
         }
         DspDiagnostic *s=&dsp_diagnostics[port];
+        /* The stock path waits for completed input after its startup warmup.
+         * Do not submit invented zero blocks before our first two packets.
+         * Explicit local-tone mode remains independent of USB sample arrival.
+         * After the first call, keep the existing underrun/error policy. */
+        unsigned waiting=d->mode!=2 && d->mode!=3 && !s->calls && !p->primed;
         /* Mode 3 consumes the input queue without submitting converter work.
          * It is explicit, expires by stopping, and cannot silently unmute. */
-        if(d->mode==3 && (debug_ticks&31)) continue;
+        if((d->mode==3 || waiting) && (debug_ticks&31)) continue;
         s->sequence++; barrier(); s->frames=frames; s->gate=dsp_gate(port);
         int result=0;
-        if(d->mode!=3) {
+        if(d->mode!=3 && !waiting) {
             uint32_t block[12]={1,0x00020001,0,(uintptr_t)p->samples,0,frames*8,0,2,(uintptr_t)p->discard,0,0,0};
             s->calls++;
             result=FN(0x010088dd,int(*)(unsigned,void*))(port,block);

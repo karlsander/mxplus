@@ -9,6 +9,9 @@ no MX accepted PCM or audible result. [B6](../evidence/fm1-converter-b6-20261106
 adds transport-only probe 7, mode 3 and converter page 8, and delays running
 publication until the complete ring is initialized. The B5 topology, split
 masks, admission and DMA retirement below remain unchanged.
+[B7](../evidence/fm1-startup-b7-20261106/README.md) delays the first normal
+converter submission until input is primed and retains diagnostic evidence
+across reconnect; the split schedule itself is unchanged.
 
 ## Original instruction findings
 

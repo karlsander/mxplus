@@ -147,6 +147,7 @@ typedef struct {
     uint32_t queue[32], head, count, urgent[32], urgent_head, urgent_count, flight_length[2], managed[2], fault[2], dropped, errors;
 } Port;
 __attribute__((section(".host_state"))) static Port ports[4];
+extern void mx1_debug_midi_failure(unsigned,unsigned,unsigned,int);
 static uint8_t *buffer(unsigned port,unsigned tx) { return (uint8_t *)(0x20000000+tx*0x800+port*0x200); }
 static void wake(unsigned tx) {
     FN(0x01000877,int(*)(int,int))(*(int16_t *)(0x4000bc08+tx*2),1);
@@ -201,14 +202,22 @@ int mx1_host_enqueue(unsigned port,uint32_t word) {
     Port *p=&ports[port];
     if(!p->managed[1]) return host_enqueue_original(port,word);
     /* One advertised cable: stock's second cable must not leak into it. */
-    if(!p->ep[1] || (p->fault[1]&1) || (word&0xf0)) return 1;
+    if(!p->ep[1] || (p->fault[1]&5) || (word&0xf0)) return 1;
     unsigned status=(word>>8)&255;
     if(status==0xf8 || status==0xfa || status==0xfb || status==0xfc || status==0xf2) {
-        if(p->urgent_count==32) { p->dropped++; p->fault[1]=1; p->urgent_count=0; return 1; }
+        if(p->urgent_count==32) {
+            p->dropped++; p->fault[1]|=4;
+            mx1_debug_midi_failure(port,1,3,0);
+            p->urgent_count=0; wake(1); return 1;
+        }
         p->urgent[(p->urgent_head+p->urgent_count)&31]=word; p->urgent_count++; return 1;
     }
     if(p->fault[1]&2) return 1;
-    if(p->count==32) { p->dropped++; p->fault[1]|=2; p->count=0; return 1; }
+    if(p->count==32) {
+        p->dropped++; p->fault[1]|=2;
+        mx1_debug_midi_failure(port,1,4,0);
+        p->count=0; return 1;
+    }
     p->queue[(p->head+p->count)&31]=word; p->count++; return 1;
 }
 static void poll(unsigned tx) {
@@ -220,6 +229,7 @@ static void poll(unsigned tx) {
             if(p->flight_generation[tx]==p->generation[tx] && p->ep[tx]) {
                 if(p->result[tx] || (p->length[tx]&3) || p->length[tx]>p->flight_length[tx] || (tx && p->length[tx]!=p->flight_length[tx])) {
                     p->errors++; p->fault[tx]=1;
+                    mx1_debug_midi_failure(port,tx,1,p->result[tx]);
                 } else if(!tx) {
                     uint32_t *words=(uint32_t *)buffer(port,0);
                     for(unsigned n=0;n<p->length[0]/4;n++)
@@ -234,10 +244,13 @@ static void poll(unsigned tx) {
             uint32_t *dst=(uint32_t *)buffer(port,1);
             n=mx1_debug_transmit(port,(void *)(uintptr_t)p->ep[1],dst);
             if(n) goto send;
-            while(n<16 && p->urgent_count) {
+            /* Queue overflow stops musical output, but a healthy endpoint
+             * can still carry the separate diagnostic reply. USB completion
+             * or submission failures (bit 0) remain terminal until rebind. */
+            while(n<16 && p->urgent_count && !(p->fault[1]&4)) {
                 dst[n++]=p->urgent[p->urgent_head]; p->urgent_head=(p->urgent_head+1)&31; p->urgent_count--;
             }
-            while(n<16 && p->count) {
+            while(n<16 && p->count && !(p->fault[1]&6)) {
                 dst[n++]=p->queue[p->head]; p->head=(p->head+1)&31; p->count--;
             }
             n=mx1_audio_monitor(port,(void *)(uintptr_t)p->ep[1],dst,n);
@@ -253,7 +266,10 @@ send:
              * MIDI IN is variable length. OUT must still complete in full. */
             (p->ep[tx],buffer(port,tx),n,mx1_host_done,(port<<1)|tx,
              tx?mx1_debug_tx_timeout(port,(void *)(uintptr_t)p->ep[1]):-1,tx?0:0x2000);
-        if(rc) { p->busy[tx]=0; p->fault[tx]=1; p->errors++; }
+        if(rc) {
+            p->busy[tx]=0; p->fault[tx]=1; p->errors++;
+            mx1_debug_midi_failure(port,tx,2,rc);
+        }
     }
 }
 void mx1_host_tx_poll(void) { host_tx_poll_original(); poll(1); }

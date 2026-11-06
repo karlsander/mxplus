@@ -218,11 +218,11 @@ def verify_converter_boundary(image,h,syms):
         q.done(p,ms,frames,packet=packet)
         for phase in range(4):q.call('mx1_audio_tick',phase*2)
         expected.extend([32767*512,-32768*512]*frames)
-    # First four calls supply silence while priming; one packet stays queued.
-    assert integer_writes==[0]*88+expected[:-90]
-    assert len(commands)==44 and len(notifications)==44*4
-    assert q.u32(p+92)==0 and q.u32(context+0x28)==956
-    assert q.u32(smooth+0x60)==(100+44+440)%256
+    # First four ticks do not submit invented samples while priming.
+    assert integer_writes==expected[:-90]
+    assert len(commands)==40 and len(notifications)==44*4
+    assert q.u32(p+92)==0 and q.u32(context+0x28)==960
+    assert q.u32(smooth+0x60)==(100+440)%256
     # Neither the original input converter nor its silent OUT buffer writes
     # beyond the custom port. Guard the following port with nonzero bytes.
     guard=b'\xa5'*STRIDE;m.write(p+STRIDE,guard)
@@ -231,7 +231,7 @@ def verify_converter_boundary(image,h,syms):
     for phase in range(4):q.call('mx1_audio_tick',phase*2)
     assert m.read(p+STRIDE,STRIDE)==guard
     return {'original_initializer':True,'original_audio_task':True,
-            'original_converter_input':True,'calls':48,
+            'original_converter_input':True,'calls':44,'startup_waits_for_two_packets':True,
             'boundary':'DSP reset/command/result, integer conversion MMIO and RTOS notify modeled; drift epoch seeded; no interpolation or timing claim'}
 
 def verify_worker_and_tree(image,h,syms):
@@ -359,8 +359,13 @@ def verify_debug_bridge(image,h,syms,c):
             words.extend(struct.unpack('<'+'I'*n,t.m.read(out,n*4)))
         raise AssertionError('unbounded reply')
     wakes=len(t.wakes);receive(frame(1));assert t.wakes[wakes:]==[[2,1]]
-    seq,op,v=decode(transmit());assert (seq,op,v[:4])==(12,65,[0,0xb6,port,3])
+    seq,op,v=decode(transmit());assert (seq,op,v[:4])==(12,65,[0,0xb7,port,3])
     receive(frame(2,[0]));assert decode(transmit())[2]==[2] # no controller snapshot yet
+    receive(frame(2,[9]));assert decode(transmit())[2]==[2] # no RX failure
+    failure_seq=syms['mx1_midi_failures']+port*232
+    t.m.write(failure_seq,P(1))
+    receive(frame(2,[9]));assert decode(transmit())[2]==[2] # unfinished capture
+    t.m.write(failure_seq,P(0))
     receive(frame(3,[2]));assert decode(transmit())[2]==[2] # no converter without owned transport
     receive(frame(99));assert decode(transmit())[2]==[1]
     bad=bytearray(frame(1));bad[-2]^=1;receive(bad);assert not transmit()
@@ -419,6 +424,36 @@ def verify_debug_bridge(image,h,syms,c):
     live.close(live.port,1);assert live.cancels[-1]==pending['ep']
     live.poll(1);assert len(live.requests)==before
     live.done(pending,status=-9);live.poll(1);assert len(live.requests)==before
+    # B7 urgent queue overflow silences musical output while the separate
+    # diagnostic channel still uses a healthy USB endpoint. No transport retry.
+    ov=CombinedSetup(image,h,c);ov.bind_initial();ov.setup();ov.drain();ov.poll(0)
+    ov.enqueue(ov.port,[0x0000f80f]*33)
+    start=len(ov.requests);ov.poll(1)
+    for r in ov.requests[start:]:
+        if r['token']&1:ov.done(r)
+    first=syms['mx1_midi_failures']+(ov.port*2+1)*116
+    saved_failure=ov.m.read(first,116)
+    assert struct.unpack_from('<II',saved_failure)==(2,3)
+    rx=[r for r in ov.requests if not r['token']&1][-1]
+    ov.done(rx,P(*packets(frame(2,[10]))));ov.poll(0)
+    wire=[]
+    for _ in range(8):
+        start=len(ov.requests);ov.poll(1)
+        for r in ov.requests[start:]:
+            if r['token']&1:
+                wire.extend(struct.unpack('<'+'I'*(r['size']//4),bytes.fromhex(r['data'])))
+                ov.done(r)
+    failure=decode(wire)[2]
+    assert failure[:4]==[0,10,2,3] and failure[7+17]&4
+    assert all((w>>8&255)!=0xf8 for w in wire)
+    assert ov.m.read(first,116)==saved_failure
+    # Rebinding resets the protocol, not controller/failure evidence. No
+    # cached controller pointer is dereferenced by the page read itself.
+    db=syms['debug_ports']+ov.port*780
+    ov.m.write(db+304,P(2,*range(102)))
+    ov.setup()
+    assert ov.m.read(db+304,412)==P(2,*range(102))
+    assert ov.m.read(first,116)==saved_failure
     # Active endpoint: fresh snapshots only in the worker, read pages from RAM.
     q=Audio(image,h,syms);p,rc=q.start();assert rc==0
     q.m.write(syms['debug_ports'],P(DEV));q.m.write(EP+0x20,P(0x20018000));q.m.write(0x20018008,P(DEV))
@@ -463,7 +498,7 @@ def verify_debug_bridge(image,h,syms,c):
     t.bind_initial();t.setup();ep=t.endpoints[t.nodes[-1],128];tx=t.endpoints[t.nodes[-1],0]
     assert t.state()==5 and not t.audio_requests and not t.initialized
     assert [x[1:5] for x in t.controls]==[[1,11,0,2]]
-    receive(frame(1));v=decode(transmit())[2];assert v[1:7]==[0xb6,port,0x48,5,1,0]
+    receive(frame(1));v=decode(transmit())[2];assert v[1:7]==[0xb7,port,0x48,5,1,0]
     receive(frame(2,[3]));topology=decode(transmit())[2]
     assert topology==[0,3,1,3,0,0,0x20018000,parent,1,2,0x400,0x1234,0x5678,1]
     t.drain();t.poll(0)
@@ -533,7 +568,7 @@ def verify_debug_bridge(image,h,syms,c):
     n=t.checked(syms['mx1_debug_transmit'],port,tx,out)
     assert n==15
     heartbeat=decode(struct.unpack('<15I',t.m.read(out,60)))
-    assert heartbeat[:2]==(0,0x7e) and heartbeat[2][:4]==[0,0xb6,0x39,1]
+    assert heartbeat[:2]==(0,0x7e) and heartbeat[2][:4]==[0,0xb7,0x39,1]
     assert not t.checked(syms['mx1_debug_transmit'],port,tx,out)
     # User SysEx defers a due heartbeat, then the end marker releases it.
     t.m.write(out,P(0x017df004));t.checked(syms['mx1_audio_monitor'],port,tx,out,1)
@@ -544,6 +579,8 @@ def verify_debug_bridge(image,h,syms,c):
     return {'status':'pass','cases':['structured replies across multiple transfers','malformed checksum/target rejection',
         'pending reply retention','user SysEx continuity','replacement device isolation','actual RX and TX poll integration',
         'untimed OUT restricted to matching debug device; buffer ownership and cancellation retained',
+        'urgent queue overflow preserves diagnostic replies while musical output stays stopped',
+        'first MIDI failure and controller snapshots survive rebind; incomplete snapshots rejected',
         'worker-owned register snapshots and bounded pages','normal/mute/test-tone converter modes','mode timeout',
         'EHCI baseline avoids OHCI request and DSP submission','cached topology and MIDI software status',
         'manager-only single-step controls/lookup and failure results','original bind callback queues manager event',
@@ -681,7 +718,7 @@ def verify(image,report,elf_path):
             q.done(p,ms%17,frames)
             for phase in range(4):q.call('mx1_audio_tick',phase*2)
         consumed=sum(x[1][5]//8 for x in q.dsp)
-        assert consumed==44+(199*rate)//1000,(rate,consumed)
+        assert consumed==(199*rate)//1000,(rate,consumed)
         assert q.u32(p+80)==q.u32(p+84)==0
         assert q.u32(p+52)-q.u32(p+56)==1
         pacing.append({'source_frames_per_second':rate,'consumed_frames_in_200ms':consumed,'queued_packets':1})

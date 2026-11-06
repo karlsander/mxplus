@@ -2,7 +2,7 @@
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
   "patched_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
-  "candidate_container_sha256": "f9d900f6a17159b89bd59bdf690942fbaa3b6f97d07e66177d4422153de2ad1b",
+  "candidate_container_sha256": "d1fb3af7a5ec8016646b0b03c06c2fe9dde8a073e4affdb78a54d2ed443c8525",
   "extension_sha256": "fc4ed00c31546c74a84dbaece0ac9fda8fad28a3c21f19038e123617b945bbeb",
   "groups": [
     {
@@ -1871,7 +1871,7 @@
     {
       "name": "Original USB startup copies code, zeroes state, preserves existing initialized data",
       "status": "pass",
-      "code_bytes": 3056,
+      "code_bytes": 3180,
       "state_bytes": 1472
     },
     {
@@ -2406,7 +2406,7 @@
       "status": "pass",
       "details": {
         "status": "pass",
-        "patched_app_sha256": "edf71a9878c66569e25c2f2e9cbbb06661fd39d5dd7adc709c24cc4dc3bb2349",
+        "patched_app_sha256": "95517f8974476c6cc13c417140b1552f27a520fcd0173f02b44c2df07ebf2c5e",
         "hardware_access": false,
         "limits": "instruction checks only; USB/DSP/RTOS boundaries modeled",
         "setup": {
@@ -2465,17 +2465,17 @@
         "pacing": [
           {
             "source_frames_per_second": 44080,
-            "consumed_frames_in_200ms": 8815,
+            "consumed_frames_in_200ms": 8771,
             "queued_packets": 1
           },
           {
             "source_frames_per_second": 44100,
-            "consumed_frames_in_200ms": 8819,
+            "consumed_frames_in_200ms": 8775,
             "queued_packets": 1
           },
           {
             "source_frames_per_second": 44118,
-            "consumed_frames_in_200ms": 8823,
+            "consumed_frames_in_200ms": 8779,
             "queued_packets": 1
           }
         ],
@@ -2483,7 +2483,8 @@
           "original_initializer": true,
           "original_audio_task": true,
           "original_converter_input": true,
-          "calls": 48,
+          "calls": 44,
+          "startup_waits_for_two_packets": true,
           "boundary": "DSP reset/command/result, integer conversion MMIO and RTOS notify modeled; drift epoch seeded; no interpolation or timing claim"
         },
         "controller_indices": {
@@ -2530,6 +2531,8 @@
             "replacement device isolation",
             "actual RX and TX poll integration",
             "untimed OUT restricted to matching debug device; buffer ownership and cancellation retained",
+            "urgent queue overflow preserves diagnostic replies while musical output stays stopped",
+            "first MIDI failure and controller snapshots survive rebind; incomplete snapshots rejected",
             "worker-owned register snapshots and bounded pages",
             "normal/mute/test-tone converter modes",
             "mode timeout",
@@ -2616,7 +2619,7 @@
               2147483648
             ],
             [
-              "0x607f9c1c",
+              "0x607f9c20",
               0
             ],
             [
@@ -2647,7 +2650,7 @@
         "profile_negative_cases": 188,
         "heap_reservation_bytes": 65536,
         "iso_descriptors_per_port": 17,
-        "audio_state_bytes": 26796,
+        "audio_state_bytes": 27724,
         "cases": [
           "guarded complete USB patch accounting",
           "startup placement",

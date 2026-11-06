@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "edf71a9878c66569e25c2f2e9cbbb06661fd39d5dd7adc709c24cc4dc3bb2349",
+  "patched_app_sha256": "95517f8974476c6cc13c417140b1552f27a520fcd0173f02b44c2df07ebf2c5e",
   "hardware_access": false,
   "limits": "instruction checks only; USB/DSP/RTOS boundaries modeled",
   "setup": {
@@ -59,17 +59,17 @@
   "pacing": [
     {
       "source_frames_per_second": 44080,
-      "consumed_frames_in_200ms": 8815,
+      "consumed_frames_in_200ms": 8771,
       "queued_packets": 1
     },
     {
       "source_frames_per_second": 44100,
-      "consumed_frames_in_200ms": 8819,
+      "consumed_frames_in_200ms": 8775,
       "queued_packets": 1
     },
     {
       "source_frames_per_second": 44118,
-      "consumed_frames_in_200ms": 8823,
+      "consumed_frames_in_200ms": 8779,
       "queued_packets": 1
     }
   ],
@@ -77,7 +77,8 @@
     "original_initializer": true,
     "original_audio_task": true,
     "original_converter_input": true,
-    "calls": 48,
+    "calls": 44,
+    "startup_waits_for_two_packets": true,
     "boundary": "DSP reset/command/result, integer conversion MMIO and RTOS notify modeled; drift epoch seeded; no interpolation or timing claim"
   },
   "controller_indices": {
@@ -124,6 +125,8 @@
       "replacement device isolation",
       "actual RX and TX poll integration",
       "untimed OUT restricted to matching debug device; buffer ownership and cancellation retained",
+      "urgent queue overflow preserves diagnostic replies while musical output stays stopped",
+      "first MIDI failure and controller snapshots survive rebind; incomplete snapshots rejected",
       "worker-owned register snapshots and bounded pages",
       "normal/mute/test-tone converter modes",
       "mode timeout",
@@ -210,7 +213,7 @@
         2147483648
       ],
       [
-        "0x607f9c1c",
+        "0x607f9c20",
         0
       ],
       [
@@ -241,7 +244,7 @@
   "profile_negative_cases": 188,
   "heap_reservation_bytes": 65536,
   "iso_descriptors_per_port": 17,
-  "audio_state_bytes": 26796,
+  "audio_state_bytes": 27724,
   "cases": [
     "guarded complete USB patch accounting",
     "startup placement",

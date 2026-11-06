@@ -223,12 +223,16 @@ def verify(image,h,syms):
     q=Ehci(port=2);assert q.start()==0;q.real_dsp=True
     ctx=0x20005ee0+2*0xa4;gate=0x40101200;sd=syms['dsp_diagnostics']+2*144
     q.m.write(ctx+20,P(gate));q.m.write(gate,P(7))
+    # B7 waits for real input priming before entering that original gate.
+    for i in range(8):q.call('mx1_audio_tick',i*2)
+    assert q.u32(sd+4)==0 and q.u32(q.p+92)==0
+    q.complete(0);q.complete(1);q.advance(2047)
     q.call('mx1_audio_tick',0)
     assert q.u32(sd+4)==1 and q.u32(sd+8)==0 and q.u32(sd+12)==0xffffffff
     assert q.u32(sd+16)==7 and q.u32(sd+24+11*4)==gate
     assert q.u32(q.p+92)==1 and q.u32(q.p+16)==0 and q.u32(q.p+24)==2
-    q.advance(2041);assert q.u32(q.p+24)==3
-    q.advance(2043);assert q.u32(q.p+20)==0
+    q.advance(0);assert q.u32(q.p+24)==3
+    q.advance(2);assert q.u32(q.p+20)==0
     # Original controller-status queue and worker dispatch. No USB-object
     # pointer is enqueued. The callback runs in the worker even without IOC.
     q=Ehci();assert q.start()==0;q.real_poll=True;m=q.m

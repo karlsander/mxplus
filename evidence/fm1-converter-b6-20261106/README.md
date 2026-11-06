@@ -78,4 +78,9 @@ is introduced.
 
 All 17 offline reproduction stages, current and committed-artifact gates, and
 six browser patcher tests passed for the code/artifact commit recorded in
-[candidate.json](candidate.json). Hosted B6 verification is pending.
+[candidate.json](candidate.json). Hosted offline workflow [42241871889](https://github.com/karlsander/mxplus/actions/runs/42241871889)
+passed for commit `be505dda7082d8e8ea5802bbb5b918255cfe5ccc`.
+
+At 17:25 UTC, B6 was copied as `MX1_UPD.BIN` to the Roland updater, readback
+hash-verified, and ejected. [Copy receipt](copy.json). Update completion and
+normal boot were not yet observed at that point.

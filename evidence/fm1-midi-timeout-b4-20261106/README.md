@@ -84,4 +84,47 @@ short-input handling, queue failures, Roland behavior and audio regressions.
 All 17 offline reproduction stages, current/committed-artifact gates and six
 browser-patcher tests passed on code commit `b5347f1`. The
 [candidate record](candidate.json) retains exact hashes and targeted results.
-B4 has not been installed; hardware acceptance is pending.
+B4 was subsequently installed and the command bridge passed the bounded
+physical checks below. Audio transport and broader hardware acceptance remain pending.
+
+## Verified updater copy
+
+At 13:40 UTC on 6 November, all 4,194,320 bytes were copied to the identified
+Roland updater volume as `MX1_UPD.BIN`. Readback matched the candidate hash
+above and the volume was ejected successfully. [Receipt](copy.json).
+Updater completion/restart is not established by this copy. Bluetooth capture
+was connected before asking the user to apply B4 and reconnect HOST3.
+
+## Observed on B4
+
+The user confirmed the update/restart and HOST3 reconnection. The
+[live capture](live-b4.json) contains build **180**, successful status, topology
+and MIDI-page replies, and continuing periodic reports for approximately
+31 seconds. RX/TX completion results, faults, drops and errors in the MX-1
+MIDI page were zero. This is the first established Mac↔BLE↔FM-1↔USB↔MX-1
+command round trip. It supports the no-alarm experiment but does not measure
+which RTOS alarm condition produced B3's −20.
+
+Topology: FM-1 is full speed at device address 3, controller 1 (EHCI),
+configuration 1. Its parent is high speed at address 1, VID `0424`, PID
+`2514`, downstream port 1. These are live USB object identifiers, not a
+physical board/chip identification. The Mac used macOS 27.0.1 (26A434) and
+Bleak 3.0.2 over BLE; it was not the USB audio host.
+
+The subsequent [manager probes](setup-probes.json) all returned zero:
+
+1. Endpoint SET_CUR 44100: FM-1 rate-set count 8→9.
+2. IF1 alternate 1: FM-1 alt 0→1 and starts 7→8.
+3. Endpoint lookup: the validated IN/ISO EP84, packet size 184, was found.
+4. IF1 alternate 0: FM-1 returned to alt0.
+
+Status and MIDI readouts continued after each step. At alt1, FM-1 wait reached
+255 without any new audio packets, as expected with no EHCI ISO submission.
+MX-1 packets stayed zero; FM-1's old 18,216 packets remain the Mac baseline.
+No tone was enabled. FM-1's dropped counter was already 63 before these probes
+and stayed 63; it includes forwarding attempts while BLE was disconnected
+between sessions. This is not evidence of lossless continuous operation.
+
+B4 establishes the control path and measured-device setup. It does not yet
+provide audio: the next transport must handle full-speed ISO through this
+high-speed parent and EHCI controller.

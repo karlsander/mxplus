@@ -185,4 +185,8 @@ HCD submission; actual live exhaustion has not been established. Untimed writes
 retain their buffer until completion or stock disconnect cancellation, with no
 new watchdog or retry. Other generic MIDI OUT keeps timeout 100.
 [B4 experiment and actual-instruction tests](../evidence/fm1-midi-timeout-b4-20261106/README.md).
-The FM-1 firmware and Mac client are unchanged; a real MX-1 round trip is pending.
+The FM-1 firmware and Mac client are unchanged. B4 passed the first physical
+round trip: status, topology, MIDI state and all four manager setup probes.
+Continuous telemetry was captured for approximately 31 seconds, with zero
+MX-1 MIDI faults/errors. Audio stayed at zero packets; the test returned AS
+to alt0. [B4 bench results](../evidence/fm1-midi-timeout-b4-20261106/README.md#observed-on-b4).

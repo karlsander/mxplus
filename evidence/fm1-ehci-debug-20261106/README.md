@@ -69,3 +69,14 @@ patch bytes and targets remain in build/mainline/build-report.json. Existing
 sample/DMA state is unmoved; only appended debug state grows. Main app, original
 boot programs, updater and panel payload are unchanged. Physical B2 behavior
 and EHCI audio implementation remain pending.
+
+
+## Verified updater copy
+
+At 12:23 UTC on 6 November, B2 was copied to the identified MX-1 updater
+volume as `MX1_UPD.BIN`. All 4,194,320 bytes read back with the expected
+SHA-256 `360b316352e7f762d5752813dfa73a45ab13d7203676d16e232ffd29165077ee`.
+The volume was ejected successfully; [copy receipt](copy.json).
+Updater completion, normal restart and the B2 HOST3 diagnostic run remain
+pending user confirmation. Offline CI also passed for code commit `6ebed4a`
+([run 42215428754](https://github.com/karlsander/mxplus/actions/runs/42215428754)).

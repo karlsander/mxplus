@@ -8,12 +8,13 @@ Exact messages, duration and timing were not recorded; the result does not
 establish all MIDI directions or routing combinations. Earlier descriptor and
 startup failures remain in their historical evidence records.
 
-The current candidate additionally enables the measured [FM-1 audio profile](USB_HOST_AUDIO.md).
+The current candidate includes the measured [FM-1 audio profile](USB_HOST_AUDIO.md),
+but pauses audio startup on the observed EHCI connection.
 That changed image still requires physical MIDI/audio acceptance. Other generic
 audio profiles remain disabled. The FM-1 experiment also emits a bounded
 [host diagnostic SysEx report](USB_HOST_AUDIO.md#host-diagnostic-report).
 
-Candidate SHA-256: `360b316352e7f762d5752813dfa73a45ab13d7203676d16e232ffd29165077ee`.
+Candidate SHA-256: `44314acc16a88248b74e0a4dd315f976f6b03f0c6d37e130d27b986ca8573c6c`.
 
 ## Behavior and scope
 
@@ -73,7 +74,10 @@ old clock pulses. These limits matter for dense notes and large SysEx bursts:
 **this build does not establish lossless bulk patch transfer**. It is not a MIDI
 firmware-update transport with verified delivery.
 
-Input waits without a timeout, since a quiet MIDI device is normal. Output uses
+Input waits without a timeout, since a quiet MIDI device is normal. B3 requests
+the stock short-packet option (`2000` hex), so valid variable-length MIDI and
+zero-length packets complete successfully. Non-word lengths and controller errors
+still fault the direction. [Original EHCI evidence](../evidence/fm1-midi-bridge-b3-20261106/README.md). Output uses
 the stock API's timeout value 100; its wall-clock duration has not been measured.
 A blocked or failed generic port does not make the new dispatcher wait for that
 port. The existing Roland/cross-core paths retain their original behavior.
@@ -101,8 +105,8 @@ to the mastering held-key fix in PR #18.
 USB startup originally copies decoded `0x2b1f4..0x36dd8` to
 `0x01000300..0x0100bee4`. The new USB code is inserted at decoded `0x36dd8`,
 runtime `0x0100bee4`, below the existing USB allocator at `0x0100d000`.
-The extension occupies 2,928 bytes (`0x0100bee4..0x0100ca54`), leaving
-1,488 bytes before that allocator. State occupies 1,472 bytes
+The extension occupies 2,984 bytes (`0x0100bee4..0x0100ca8c`), leaving
+1,396 bytes before that allocator. State occupies 1,472 bytes
 (`0x01017868..0x01017e28`), leaving 472 bytes before the writable-region limit.
 The five following initialized-data source literals move; their destinations
 do not. New zero-initialized state starts at the original USB BSS end,

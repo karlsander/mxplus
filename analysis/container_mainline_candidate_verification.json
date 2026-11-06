@@ -1,7 +1,7 @@
 {
   "status": "passed",
   "original_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
-  "candidate_sha256": "360b316352e7f762d5752813dfa73a45ab13d7203676d16e232ffd29165077ee",
+  "candidate_sha256": "44314acc16a88248b74e0a4dd315f976f6b03f0c6d37e130d27b986ca8573c6c",
   "candidate_bytes": 4194320,
   "changed_decoded_components": [
     {
@@ -14,8 +14,8 @@
     {
       "component": "app_usb",
       "original_decoded_bytes": 224868,
-      "candidate_decoded_bytes": 236096,
-      "candidate_decoded_sha256": "8c9902a149b5b9d1ead5afcb7d03c23e77d993eadeccf3a1580045cf2e5208ac",
+      "candidate_decoded_bytes": 236312,
+      "candidate_decoded_sha256": "9eaf4924a89a1361731ecf25ce8c5685d386d6944997bee12ae5dc2557295a90",
       "original_decoder_matches": true
     }
   ],
@@ -44,7 +44,7 @@
     },
     {
       "component": "app_usb",
-      "checksum": 25375344,
+      "checksum": 25406356,
       "passed": true
     }
   ],

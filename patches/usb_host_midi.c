@@ -247,7 +247,10 @@ send:
         p->flight_ep[tx]=p->ep[tx]; p->flight_generation[tx]=p->generation[tx];
         p->flight_length[tx]=n; p->busy[tx]=1;
         int rc=FN(0x60009465,int(*)(uint32_t,void*,unsigned,void*,uintptr_t,int,unsigned))
-            (p->ep[tx],buffer(port,tx),n,mx1_host_done,(port<<1)|tx,tx?100:-1,0);
+            /* Stock EHCI 600112ae copies flag bit 13 to wrapper+16;
+             * 60011af2 returns -15 for short data unless that bit is set.
+             * MIDI IN is variable length. OUT must still complete in full. */
+            (p->ep[tx],buffer(port,tx),n,mx1_host_done,(port<<1)|tx,tx?100:-1,tx?0:0x2000);
         if(rc) { p->busy[tx]=0; p->fault[tx]=1; p->errors++; }
     }
 }

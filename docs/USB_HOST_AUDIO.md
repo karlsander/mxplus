@@ -40,7 +40,7 @@ That result does not validate audio or the changed candidate.
 
 The live FM-1 connection uses EHCI despite being full speed. Full-speed alone
 does not establish that OHCI owns a device. An EHCI audio transport remains to
-be implemented; B2 leaves its audio alternate at zero by default and retains MIDI.
+be implemented; B3 leaves its audio alternate at zero by default and retains MIDI.
 
 The stock full-speed OHCI driver has incomplete isochronous submission and
 completion paths. The extension supplies a bounded input transport; it does
@@ -81,9 +81,9 @@ payload remain unchanged. Only `tools/build_firmware.py` produces firmware.
 
 | Runtime interval, end exclusive | Use |
 | --- | --- |
-| `0100bee4..0100ca54` | 2,928-byte MIDI extension and original-function trampolines |
+| `0100bee4..0100ca8c` | 2,984-byte MIDI extension and original-function trampolines |
 | `01017868..01017e28` | Existing 1,472-byte MIDI state |
-| `607f0000..607f206c` | 8,300-byte audio extension and bridge commands |
+| `607f0000..607f210c` | 8,460-byte audio extension and bridge commands |
 | `607f4000..607f9880` | Unmoved 22,656-byte audio state, descriptors and packet buffers |
 | `607f9880..607f9930` | 176-byte diagnostic state |
 | `607f9930..607fa564` | 3,124-byte bridge commands, replies and snapshots |

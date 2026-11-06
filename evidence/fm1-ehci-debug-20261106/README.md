@@ -67,8 +67,7 @@ without requiring a received command. It waits behind user SysEx.
 Exact candidate identity, section sizes and verification are in candidate.json;
 patch bytes and targets remain in build/mainline/build-report.json. Existing
 sample/DMA state is unmoved; only appended debug state grows. Main app, original
-boot programs, updater and panel payload are unchanged. Physical B2 behavior
-and EHCI audio implementation remain pending.
+boot programs, updater and panel payload are unchanged. Physical B2 results follow below; EHCI audio implementation remains pending.
 
 
 ## Verified updater copy
@@ -77,6 +76,22 @@ At 12:23 UTC on 6 November, B2 was copied to the identified MX-1 updater
 volume as `MX1_UPD.BIN`. All 4,194,320 bytes read back with the expected
 SHA-256 `360b316352e7f762d5752813dfa73a45ab13d7203676d16e232ffd29165077ee`.
 The volume was ejected successfully; [copy receipt](copy.json).
-Updater completion, normal restart and the B2 HOST3 diagnostic run remain
-pending user confirmation. Offline CI also passed for code commit `6ebed4a`
+The user subsequently confirmed the update, normal restart and HOST3 connection. Offline CI also passed for code commit `6ebed4a`
 ([run 42215428754](https://github.com/karlsander/mxplus/actions/runs/42215428754)).
+
+
+## Observed on B2
+
+The [Bluetooth readout](live-b2.json) confirmed audio alt0 and the expected
+startup stage 48 hex, controller 1, result 5. FM-1 remained responsive over BLE.
+Its setup trace has configuration and MIDI IF2 alt0, with no audio controls.
+An MX-1 status command timed out; FM-1 USB TX advanced once (203 to 204) while
+USB RX stayed at 152. Audio packets stayed at the earlier Mac total, 18,216.
+
+During a later 120-second watch the user ran START/STOP for about 20 seconds.
+No USB MIDI count or MX-1 report count changed. The mixer clock destinations
+were not read, so this does not establish that clock was sent to HOST3. There
+was no USB reset during these reads. One prior forwarding timeout/drop was
+already recorded; parser errors stayed zero. B2 therefore did not establish a
+working command round trip. [B3 investigation](../fm1-midi-bridge-b3-20261106/README.md)
+reproduces a short-packet receive error and missing TX wakeups offline.

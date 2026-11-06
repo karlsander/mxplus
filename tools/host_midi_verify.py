@@ -96,7 +96,7 @@ def verify_descriptor_lengths(patched,report):
 
 class Transport:
     def __init__(self,image,report):
-        self.m=Machine(image);self.m.uc.mem_protect(0x01001000,0xf000,UC_PROT_READ|UC_PROT_EXEC);self.s=report['symbols'];self.requests=[];self.received=[];self.cancels=[];self.reject=0
+        self.m=Machine(image);self.m.uc.mem_protect(0x01001000,0xf000,UC_PROT_READ|UC_PROT_EXEC);self.s=report['symbols'];self.requests=[];self.received=[];self.cancels=[];self.wakes=[];self.reject=0
         self.m.uc.hook_add(UC_HOOK_CODE,self.stub)
     def stub(self,u,a,size,data):
         m=self.m
@@ -109,6 +109,7 @@ class Transport:
                                   'data':m.read(r[1],r[2]).hex()})
         elif a==0x01008256:self.received.append(r[0])
         elif a==0x60009716:self.cancels.append(r[0])
+        elif a==0x01000876:self.wakes.append(r[:2])
         u.reg_write(UC_ARM_REG_R0,self.reject if a==0x60009464 else 0)
         u.reg_write(UC_ARM_REG_PC,u.reg_read(UC_ARM_REG_LR))
     def checked(self,address,*args):
@@ -152,6 +153,8 @@ def verify(original,patched,main,report):
     def passed(name,**kw):groups.append(dict(name=name,status='pass',**kw))
     h=report['host_midi'];s=h['symbols']
     assert sha256(patched)==h['patched_app_sha256']
+    from host_midi_ehci_verify import verify as verify_ehci
+    passed('Original EHCI short-packet completion and continued MIDI reception',**verify_ehci(original,patched,h))
     # Execute original reset copy/zero loops from dirty memory, not Python scatter.
     machines=[]
     for image in (original,patched):
@@ -290,10 +293,11 @@ def verify(original,patched,main,report):
         u.reg_write(UC_ARM_REG_R0,req if a==0x6000b330 else 0)
         u.reg_write(UC_ARM_REG_PC,u.reg_read(UC_ARM_REG_LR))
     m.uc.hook_add(UC_HOOK_CODE,api_stub)
-    m.write(0x2001fff0,P(3)+P(100)+P(0))
-    assert m.call(0x60009464,ep,0x20000800,64,callback|1)[0]==0
-    assert struct.unpack('<7I',m.read(req+0xc,28))==(interface,ep,0x20000800,64,callback|1,3,100)
-    assert m.read(req+0x28,2)==H(0)
+    for flags in (0,0x2000):
+        m.write(0x2001fff0,P(3)+P(100)+P(flags))
+        assert m.call(0x60009464,ep,0x20000800,64,callback|1)[0]==0
+        assert struct.unpack('<7I',m.read(req+0xc,28))==(interface,ep,0x20000800,64,callback|1,3,100)
+        assert m.read(req+0x28,2)==H(flags)
     for status in (0,-7,-9):
         m.write(ep+0x14,P(req));m.write(ep+0x18,P(0));m.write(ep+8,b'\x01\x00\x02')
         m.write(completion+8,P(status)+P(interface)+P(ep)+P(64))

@@ -13,6 +13,7 @@ static void debug_reply(DebugPort *d,unsigned seq,unsigned op,const uint32_t *v,
     for(unsigned i=1;i<n;i++) sum+=b[i];
     b[n++]=(-sum)&127;b[n++]=0xf7;
     d->reply_pos=0; barrier(); d->reply_n=n;
+    debug_wake_tx();
 }
 static void debug_capture(AudioPort *p) {
     DebugPort *d=&debug_ports[p-mx1_audio_ports];
@@ -81,7 +82,7 @@ static void debug_command(unsigned port) {
     uint32_t arg=0,v[40]; unsigned k=1; v[0]=0;
     if(n==15) for(unsigned j=0;j<5;j++) arg|=(uint32_t)b[8+j]<<(7*j);
     if(op==1 && n==10) {
-        uint32_t fields[]={0xb2,port,a->stage,a->result,a->controller,p->phase,a->control,a->flags,a->cc,a->frame,
+        uint32_t fields[]={0xb3,port,a->stage,a->result,a->controller,p->phase,a->control,a->flags,a->cc,a->frame,
             p->packets,p->malformed,p->overflow,p->underrun,p->missed,p->dsp_errors,p->wanted,p->claimed,p->generation,
             p->write_count,p->read_count,p->next_frame,p->close_frame,p->cost,p->tail_slot,d->mode,d->errors,d->dropped,
             d->probe,d->probe_done,d->probe_result};
@@ -151,12 +152,12 @@ unsigned mx1_debug_transmit(unsigned port,void *ep,uint32_t *out) {
     DebugPort *d=&debug_ports[port]; unsigned n=d->reply_n,k=0,pos=d->reply_pos;
     barrier();
     if(!n) {
-        /* One USB transfer every 512 eligible TX polls. Independent of RX
-         * commands/reply storage, so a broken IN direction remains visible.
-         * This is a poll counter, not a measured wall-clock period. */
-        if(++d->heartbeat%512) return 0;
+        /* The audio task wakes TX every 4096 calls, even without a claimed
+         * audio stream or musical traffic. Coalesce missed intervals. */
+        if((uint32_t)(debug_ticks-d->heartbeat)<4096) return 0;
+        d->heartbeat=debug_ticks;
         uint32_t m[24]; mx1_host_debug_state(port,m);
-        uint32_t v[]={0,0xb2,diagnostics[port].stage,m[1]|(m[2]<<1)|(m[7]<<8),
+        uint32_t v[]={0,0xb3,diagnostics[port].stage,m[1]|(m[2]<<1)|(m[7]<<8),
             m[11]|(m[12]<<1)|(m[17]<<8),m[3],m[13]};
         volatile uint8_t b[45];
         b[0]=0xf0;b[1]=0x7d;b[2]=0x44;b[3]=0x42;b[4]=1;b[5]=1;b[6]=0;b[7]=0x7e;
@@ -174,6 +175,7 @@ unsigned mx1_debug_transmit(unsigned port,void *ep,uint32_t *out) {
         for(unsigned i=0;i<take;i++) w|=(uint32_t)d->reply[pos++]<<(8+i*8);
         out[k++]=w;
     }
-    d->reply_pos=pos; barrier(); if(pos==n) d->reply_n=0;
+    d->reply_pos=pos;
+    if(pos==n) { d->heartbeat=debug_ticks; barrier(); d->reply_n=0; }
     return k;
 }

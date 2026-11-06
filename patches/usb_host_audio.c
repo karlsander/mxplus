@@ -97,6 +97,12 @@ typedef struct {
 } DebugPort;
 __attribute__((section(".host_debug_state"))) static DebugPort debug_ports[4];
 __attribute__((section(".host_debug_state"))) static volatile uint32_t debug_ticks;
+/* The original TX task waits on this flag at 0100921c. Only signal it;
+ * all packet construction and USB submission stay in that task. */
+static void debug_wake_tx(void) {
+    int flag=*(int16_t *)0x4000bc0a;
+    if(flag>0) FN(0x01000877,int(*)(int,int))(flag,1);
+}
 static void debug_capture(AudioPort *p);
 static void debug_done(void *,void *,unsigned,int,uintptr_t);
 static void debug_probe(uint8_t *event);
@@ -447,6 +453,11 @@ extern void host_audio_tick_original(unsigned);
 void mx1_audio_tick(unsigned microframe) {
     host_audio_tick_original(microframe);
     debug_ticks++;
+    if(!(debug_ticks&4095)) {
+        for(unsigned port=0;port<4;port++) if(debug_ports[port].dev) {
+            debug_wake_tx(); break;
+        }
+    }
     for(unsigned port=0;port<4;port++) {
         AudioPort *p=&mx1_audio_ports[port];
         if(!p->claimed) continue;

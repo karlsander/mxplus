@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "8c9902a149b5b9d1ead5afcb7d03c23e77d993eadeccf3a1580045cf2e5208ac",
+  "patched_app_sha256": "9eaf4924a89a1361731ecf25ce8c5685d386d6944997bee12ae5dc2557295a90",
   "hardware_access": false,
   "limits": "instruction checks only; USB/DSP/RTOS boundaries modeled",
   "setup": {
@@ -130,7 +130,9 @@
       "cached topology and MIDI software status",
       "manager-only single-step controls/lookup and failure results",
       "original bind callback queues manager event",
-      "one-transfer unsolicited MIDI telemetry"
+      "reply publication wakes original TX task flag",
+      "idle audio cadence wakes TX without claimed audio",
+      "one-transfer telemetry defers behind user SysEx"
     ],
     "boundary": "USB delivery, RTOS queue dispatch and DSP hardware modeled; actual compiled ARM code executes"
   },

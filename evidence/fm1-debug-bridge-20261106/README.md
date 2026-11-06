@@ -6,8 +6,10 @@ The FM-1 was connected to the Mac and flashed; its Mac USB/BLE bench passed.
 See [implementation, protocol and boundaries](../../docs/DEBUG_BRIDGE.md).
 
 The MX-1 candidate identity and offline checks are in [candidate.json](candidate.json).
-It has **not been installed or boot-tested**. The user must return to put the
-MX-1 in update mode and move the FM-1 to HOST3. No new MX-1 audio success is claimed.
+The candidate was copied as `MX1_UPD.BIN` with a matching readback hash and the
+volume was ejected; [copy receipt](copy.json). Updater completion, reboot and
+the complete HOST3/Bluetooth connection still await the user. No new MX-1 audio
+success is claimed.
 
 All 17 offline reproduction stages passed with hardware boundaries modeled.
 The changed image retains the same main app, boot programs, updater and panel

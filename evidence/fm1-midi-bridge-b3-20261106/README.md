@@ -88,3 +88,14 @@ defers a due heartbeat. RTOS scheduling and wire delivery remain modeled.
 The full reproduction also retains startup, memory bounds, Roland MIDI,
 USB-B audio/MIDI, mainline routing/mastering, updater and container checks.
 Physical B3 installation and the real command round trip remain pending.
+
+
+## Verified updater copy
+
+At 13:03 UTC on 6 November, all 4,194,320 bytes were copied to the identified
+Roland MX-1 updater volume as `MX1_UPD.BIN`. Readback matched candidate SHA-256
+`44314acc16a88248b74e0a4dd315f976f6b03f0c6d37e130d27b986ca8573c6c`;
+the volume was ejected successfully. [Receipt](copy.json). User confirmation
+of updater completion and the B3 round trip is pending. All 17 local offline
+stages, the committed-artifact gate and six browser-patcher checks passed on
+code commit `7dc8203`; hosted run 42222314766 was still running at copy time.

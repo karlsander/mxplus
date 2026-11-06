@@ -38,6 +38,6 @@ test_reject_broken_graph (test_usb_midi.MIDIConfigurationTests.test_reject_broke
 test_reject_truncated_or_zero_length (test_usb_midi.MIDIConfigurationTests.test_reject_truncated_or_zero_length) ... ok
 
 ----------------------------------------------------------------------
-Ran 38 tests in 0.570s
+Ran 38 tests in 0.601s
 
 OK

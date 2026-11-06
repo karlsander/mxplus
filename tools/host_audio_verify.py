@@ -110,6 +110,7 @@ class Audio:
         self.real_done=False;self.real_dsp=False;self.real_tick=False
         self.callbacks=elf
         m=self.m
+        m.uc.mem_map(0x40100000,0x10000) # modeled DSP shared data, page-8 reads
         m.write(DEV+0x10,H(0x1209)+H(1)); m.write(DEV+0x4a,H(0)+H(3))
         m.write(EP+8,bytes([0x84,128,1,0,4]));m.write(EP+0xe,H(1)+H(184))
         m.write(0x6002b0e8,P(DRIVER));m.write(DRIVER+0x40,P(HC))
@@ -358,7 +359,7 @@ def verify_debug_bridge(image,h,syms,c):
             words.extend(struct.unpack('<'+'I'*n,t.m.read(out,n*4)))
         raise AssertionError('unbounded reply')
     wakes=len(t.wakes);receive(frame(1));assert t.wakes[wakes:]==[[2,1]]
-    seq,op,v=decode(transmit());assert (seq,op,v[:4])==(12,65,[0,0xb5,port,3])
+    seq,op,v=decode(transmit());assert (seq,op,v[:4])==(12,65,[0,0xb6,port,3])
     receive(frame(2,[0]));assert decode(transmit())[2]==[2] # no controller snapshot yet
     receive(frame(3,[2]));assert decode(transmit())[2]==[2] # no converter without owned transport
     receive(frame(99));assert decode(transmit())[2]==[1]
@@ -450,7 +451,7 @@ def verify_debug_bridge(image,h,syms,c):
     assert sum(b[1][5]//8 for b in q.dsp)==441 and any(any(x for x in b[2]) for b in q.dsp)
     assert max(abs(x) for b in q.dsp for x in b[2])<=2048*65536
     assert request(3,[1])==[0,1];q.call('mx1_audio_tick',0);assert not any(q.dsp[-1][2])
-    assert request(3,[3])==[1]
+    assert request(3,[4])==[1]
     q.m.write(syms['debug_ticks'],P(240100));q.call('mx1_audio_tick',0)
     assert request(1)[26]==0 # watchdog restores normal mode
     # The measured HOST3 connection uses controller 1 (EHCI). Do not hand the
@@ -462,7 +463,7 @@ def verify_debug_bridge(image,h,syms,c):
     t.bind_initial();t.setup();ep=t.endpoints[t.nodes[-1],128];tx=t.endpoints[t.nodes[-1],0]
     assert t.state()==5 and not t.audio_requests and not t.initialized
     assert [x[1:5] for x in t.controls]==[[1,11,0,2]]
-    receive(frame(1));v=decode(transmit())[2];assert v[1:7]==[0xb5,port,0x48,5,1,0]
+    receive(frame(1));v=decode(transmit())[2];assert v[1:7]==[0xb6,port,0x48,5,1,0]
     receive(frame(2,[3]));topology=decode(transmit())[2]
     assert topology==[0,3,1,3,0,0,0x20018000,parent,1,2,0x400,0x1234,0x5678,1]
     t.drain();t.poll(0)
@@ -510,6 +511,12 @@ def verify_debug_bridge(image,h,syms,c):
     assert t.state()==5 and t.audio_stopped==[[port,1]] and t.m.read(pp+16,12)==P(0,1,2)
     # Modeled worker retirement, then alt0 and rate-failure telemetry again.
     t.m.write(pp+20,P(0,0))
+    receive(frame(5,[7]));assert decode(transmit())[2]==[0,7]
+    t.m.write(EVENT,t.events[-1]);t.checked(syms['mx1_audio_ready'],EVENT)
+    assert len(t.audio_requests)==2 and t.m.read(syms['debug_ports']+port*780+276,4)==P(3)
+    assert t.m.read(pp+16,8)==P(1,1)
+    receive(frame(5,[6]));transmit();t.m.write(EVENT,t.events[-1]);t.checked(syms['mx1_audio_ready'],EVENT)
+    t.m.write(pp+20,P(0,0))
     receive(frame(5,[4]));transmit();t.m.write(EVENT,t.events[-1]);t.checked(syms['mx1_audio_ready'],EVENT)
     t.audio_control_error=-7;receive(frame(5,[1]));transmit()
     t.m.write(EVENT,t.events[-1]);t.checked(syms['mx1_audio_ready'],EVENT)
@@ -526,7 +533,7 @@ def verify_debug_bridge(image,h,syms,c):
     n=t.checked(syms['mx1_debug_transmit'],port,tx,out)
     assert n==15
     heartbeat=decode(struct.unpack('<15I',t.m.read(out,60)))
-    assert heartbeat[:2]==(0,0x7e) and heartbeat[2][:4]==[0,0xb5,0x39,1]
+    assert heartbeat[:2]==(0,0x7e) and heartbeat[2][:4]==[0,0xb6,0x39,1]
     assert not t.checked(syms['mx1_debug_transmit'],port,tx,out)
     # User SysEx defers a due heartbeat, then the end marker releases it.
     t.m.write(out,P(0x017df004));t.checked(syms['mx1_audio_monitor'],port,tx,out,1)

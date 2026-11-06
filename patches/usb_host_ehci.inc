@@ -31,7 +31,7 @@ static void ehci_snapshot(AudioPort *p) {
         ehci.linked,ehci.deadline,ehci.serviced,ehci.poll_pending,ehci.events,ehci.reason,
         ehci.bad_link,ehci.max_walk,p->next_frame,p->tail_slot,p->packets,p->malformed,p->missed,
         ehci.peak[0],ehci.peak[1],ehci.nonzero,ehci.last_bytes,ehci.status,ehci.endpoint,
-        ehci.mask,p->generation,0};
+        ehci.mask,p->generation,U16((void*)0x4000bbb0,0)};
     for(unsigned i=0;i<36;i++) d->raw[i]=words[i];
     for(unsigned i=0;i<ENSLOT;i++) {
         d->raw[36+i*2]=ehci.slot_frame[i]; d->raw[37+i*2]=V32(&p->td[i],12);
@@ -185,8 +185,13 @@ static int ehci_begin(AudioPort *p) {
     }
     p->write_count=p->read_count=p->quarter=p->primed=p->tail_slot=0;
     p->next_frame=(ehci_frame()+4)&2047; ehci.deadline=debug_ticks+240000; ehci.serviced=debug_ticks;
-    zero(p->td,sizeof p->td); p->phase=2;
-    for(unsigned i=0;i<ENSLOT;i++) if(!ehci_arm(p,i)) { ehci_stop(p,0x5b); return 0; }
+    zero(p->td,sizeof p->td);
+    for(unsigned i=0;i<ENSLOT;i++) if(!ehci_arm(p,i)) {
+        p->phase=2; ehci_stop(p,0x5b); return 0;
+    }
+    /* Audio can preempt this worker. Publish running only after all slots
+     * are initialized, so a converter failure cannot interrupt construction. */
+    barrier(); p->phase=2;
     stage(p,0x56,0); ehci_snapshot(p); return 0;
 }
 static void ehci_poll_done(unsigned controller,unsigned status,uintptr_t token) {

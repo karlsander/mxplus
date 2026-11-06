@@ -63,13 +63,14 @@ static void debug_probe(uint8_t *event) {
     if(!r || !(r[0]&1) || U32(r,4) || U16(r,2)>=4) return;
     unsigned port=U16(r,2); DebugPort *d=&debug_ports[port]; AudioPort *p=&mx1_audio_ports[port];
     unsigned op=d->probe;
-    if(d->dev!=dev || !op || op>6 || (p->claimed && op!=6) || U16(dev,0x4a)!=1) return;
+    if(d->dev!=dev || !op || op>7 || (p->claimed && op!=6) || U16(dev,0x4a)!=1) return;
     if(U16(dev,0x10)!=0x1209 || U16(dev,0x12)!=1 || U16(dev,0x58) ||
        !mx1_audio_profile(FN(0x60009d2d,const uint8_t *(*)(void*,unsigned))(dev,0))) {
         d->probe_result=(uint32_t)-5; d->probe_done=op; barrier(); d->probe=0; return;
     }
     int e=-5; stage(p,0x30+op,0);
-    if(op==5) {
+    if(op==5 || op==7) {
+        d->mode_until=debug_ticks+240000; d->mode=op==7?3:0;
         try_open(dev,r); e=p->claimed?0:-5;
     } else if(op==6) {
         cancel(p);
@@ -105,7 +106,7 @@ static void debug_command(unsigned port) {
     uint32_t arg=0,v[40]; unsigned k=1; v[0]=0;
     if(n==15) for(unsigned j=0;j<5;j++) arg|=(uint32_t)b[8+j]<<(7*j);
     if(op==1 && n==10) {
-        uint32_t fields[]={0xb5,port,a->stage,a->result,a->controller,p->phase,a->control,a->flags,a->cc,a->frame,
+        uint32_t fields[]={0xb6,port,a->stage,a->result,a->controller,p->phase,a->control,a->flags,a->cc,a->frame,
             p->packets,p->malformed,p->overflow,p->underrun,p->missed,p->dsp_errors,p->wanted,p->claimed,p->generation,
             p->write_count,p->read_count,p->next_frame,p->close_frame,p->cost,p->tail_slot,d->mode,d->errors,d->dropped,
             d->probe,d->probe_done,d->probe_result};
@@ -115,6 +116,16 @@ static void debug_command(unsigned port) {
         for(unsigned i=0;i<12;i++) v[k++]=d->topology[i];
     } else if(op==2 && n==15 && arg==4) {
         v[k++]=arg; mx1_host_debug_state(port,v+k); k+=24;
+    } else if(op==2 && n==15 && arg==8) {
+        DspDiagnostic *s=&dsp_diagnostics[port]; unsigned seq=s->sequence;
+        if(!seq || (seq&1)) v[0]=2;
+        else {
+            v[k++]=arg; v[k++]=seq;
+            v[k++]=s->calls; v[k++]=s->successes; v[k++]=s->result;
+            v[k++]=s->gate; v[k++]=s->frames;
+            for(unsigned i=0;i<30;i++) v[k++]=s->raw[i];
+            barrier(); if(seq!=s->sequence) { v[0]=2; k=1; }
+        }
     } else if(op==2 && n==15 && (arg<3 || (arg>=5 && arg<=7))) {
         unsigned s=d->snapshot_seq;
         if(!s || (s&1) || (arg<3)!=(a->controller==0)) v[0]=2;
@@ -125,7 +136,7 @@ static void debug_command(unsigned port) {
             for(unsigned i=0;i<count;i++) v[k++]=d->raw[off+i];
             barrier(); if(s!=d->snapshot_seq) { v[0]=2;k=1; }
         }
-    } else if(op==3 && n==15 && arg<=2) {
+    } else if(op==3 && n==15 && arg<=3) {
         if(p->phase!=2 || !p->claimed || !p->wanted) v[0]=2;
         else { d->mode_until=debug_ticks+240000; barrier(); d->mode=arg; v[k++]=arg; }
     } else if(op==4 && n==10) {
@@ -138,7 +149,7 @@ static void debug_command(unsigned port) {
             if(result) debug_done(p->dev,p->ep,0,result,token);
             return;
         }
-    } else if(op==5 && n==15 && arg>=1 && arg<=6) {
+    } else if(op==5 && n==15 && arg>=1 && arg<=7) {
         if(a->controller!=1 || (p->claimed && arg!=6) || d->probe) v[0]=2;
         else {
             uint32_t event[3]={5,(uintptr_t)d->dev,0x3242444d};
@@ -181,7 +192,7 @@ unsigned mx1_debug_transmit(unsigned port,void *ep,uint32_t *out) {
         if((uint32_t)(debug_ticks-d->heartbeat)<4096) return 0;
         d->heartbeat=debug_ticks;
         uint32_t m[24]; mx1_host_debug_state(port,m);
-        uint32_t v[]={0,0xb5,diagnostics[port].stage,m[1]|(m[2]<<1)|(m[7]<<8),
+        uint32_t v[]={0,0xb6,diagnostics[port].stage,m[1]|(m[2]<<1)|(m[7]<<8),
             m[11]|(m[12]<<1)|(m[17]<<8),m[3],m[13]};
         volatile uint8_t b[45];
         b[0]=0xf0;b[1]=0x7d;b[2]=0x44;b[3]=0x42;b[4]=1;b[5]=1;b[6]=0;b[7]=0x7e;

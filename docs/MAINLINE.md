@@ -9,8 +9,10 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`e40b809672c7ef5d4be190b48eb01c5116835e88ae0d67a896d279ba02b3e0b4`.
-B5 adds an explicitly started EHCI split-ISO input experiment; [implementation and limits](../research/fm1-ehci.md).
+`f9d900f6a17159b89bd59bdf690942fbaa3b6f97d07e66177d4422153de2ad1b`.
+B6 adds transport-only startup and converter snapshots after B5's first
+device-side audio-packet progress stopped on a converter error; [B6 evidence](../evidence/fm1-converter-b6-20261106/README.md).
+It retains B5's explicitly started EHCI split-ISO experiment; [implementation and limits](../research/fm1-ehci.md).
 It retains B4’s isolation of the MIDI TX error −20 by using untimed writes only for
 the matched FM-1 debug connection; [evidence and limits](../evidence/fm1-midi-timeout-b4-20261106/README.md).
 B3 short-input and transmit-wakeup fixes remain.

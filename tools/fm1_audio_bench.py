@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Authorized B5 hardware bench over the existing FM-1 Bluetooth bridge.
+"""Authorized B6 hardware bench over the existing FM-1 Bluetooth bridge.
 
 Never called by reproduce.py. Requires the FM-1 bridge repository's client
 and Python environment. Raw logs include local Bluetooth identifiers; keep
@@ -31,24 +31,25 @@ async def run(args):
             super().record(kind,**data)
             if kind=='reply' and data.get('target')==1:
                 report['mx_frames'].append({'time':time.time(),**data})
-                if data.get('op') in (65,126) and len(data.get('words',[]))>1 and data['words'][1]==181:
+                if data.get('op') in (65,126) and len(data.get('words',[]))>1 and data['words'][1]==182:
                     ready.set()
 
     with (args.output/'raw.jsonl').open('x') as log:
         async with Capture(log=log) as b:
-            print('Bluetooth capture connected; waiting for MX-1 B5.',flush=True)
+            print('Bluetooth capture connected; waiting for MX-1 B6.' if args.wait_boot else
+                  'Bluetooth capture connected; checking MX-1 B6.',flush=True)
             engaged=False
             try:
                 if args.wait_boot:
                     until=time.monotonic()+args.wait_boot
                     while not ready.is_set():
-                        if time.monotonic()>=until:raise TimeoutError('No B5 heartbeat before boot wait expired')
+                        if time.monotonic()>=until:raise TimeoutError('No B6 heartbeat before boot wait expired')
                         report['last_waiting_fm']=await b.status()
                         await asyncio.sleep(2)
                 report['before_mx']=await b.status(1)
                 report['before_fm']=await b.status()
-                if report['before_mx']['build']!=181 or report['before_fm']['build']!=177:
-                    raise RuntimeError('This sequence requires MX B5 and FM bridge B1')
+                if report['before_mx']['build']!=182 or report['before_fm']['build']!=177:
+                    raise RuntimeError('This sequence requires MX B6 and FM bridge B1')
                 if report['before_mx']['claimed'] or report['before_mx']['probe_pending']:
                     raise RuntimeError('Existing MX stream/probe: inspect it before starting another')
                 engaged=True
@@ -67,13 +68,13 @@ async def run(args):
 
                 async def pages():
                     rows={}
-                    for page in (3,4,5,6,7):
+                    for page in (3,4,5,6,7,8):
                         try:rows[str(page)]=await b.command(2,[page],target=1)
                         except RuntimeError as e:rows[str(page)]={'error':str(e)}
                     return rows
 
                 await b.command(3,[0])
-                for step in (1,2,3,5):await probe(step)
+                for step in (1,2,3,7):await probe(step)
                 for _ in range(12):
                     s=await b.status(1)
                     if s['phase']==2:break
@@ -88,16 +89,19 @@ async def run(args):
                     report['windows'].append(item)
                     print(f'{label}: {seconds} seconds',flush=True)
                     end=time.monotonic()+seconds
-                    while time.monotonic()<end:
-                        sample={'time':time.time(),'fm':await b.status(),'mx':await b.status(1)}
-                        item['samples'].append(sample);print(json.dumps(sample),flush=True)
-                        if sample['mx']['phase']!=2 or not sample['mx']['wanted']:
-                            raise RuntimeError('Transport stopped during observation')
-                        await asyncio.sleep(.5)
-                    item['pages']=await pages()
+                    try:
+                        while time.monotonic()<end:
+                            sample={'time':time.time(),'fm':await b.status(),'mx':await b.status(1)}
+                            item['samples'].append(sample);print(json.dumps(sample),flush=True)
+                            if sample['mx']['phase']!=2 or not sample['mx']['wanted']:
+                                raise RuntimeError('Transport stopped during observation')
+                            await asyncio.sleep(.5)
+                    finally:
+                        item['pages']=await pages()
 
-                await window('USB silence baseline',0,0,2)
-                await window('FM-1 stereo USB tone, 220/440 Hz',1,0,6)
+                await window('USB silence, converter bypassed',0,3,2)
+                await window('FM-1 stereo packets, converter bypassed',1,3,6)
+                await window('FM-1 stereo USB tone through converter, 220/440 Hz',1,0,4)
                 await window('MX-1 local converter tone, 220 Hz',0,2,4)
                 report['completed_windows']=True
             except Exception as e:
@@ -118,6 +122,7 @@ async def run(args):
                             await asyncio.sleep(.5)
                         report['after_mx']=await b.status(1);report['after_fm']=await b.status()
                         report['after_midi']=await b.command(2,[4],target=1)
+                        report['after_pages']=await pages()
                         report['trace']=[];cursor=report.get('before_fm',{}).get('trace_total',0)
                         for _ in range(16):
                             page=await b.command(2,[cursor]);report['trace'].append(page)
@@ -134,7 +139,7 @@ if __name__=='__main__':
     p.add_argument('--bridge-tools',type=Path,required=True)
     p.add_argument('--candidate',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--wait-boot',type=int,default=0,help='Seconds to wait for B5 heartbeat before sending MX commands')
+    p.add_argument('--wait-boot',type=int,default=0,help='Seconds to wait for B6 heartbeat before sending MX commands')
     args=p.parse_args()
     if not (args.bridge_tools/'bridge.py').is_file() or args.candidate.stat().st_size!=4194320:
         p.error('Expected the existing FM-1 bridge tools and a full MX-1 candidate')

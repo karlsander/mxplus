@@ -77,7 +77,14 @@ def verify(image,h,syms):
             self.m.call(callback,controller,0,token)
 
     q=Ehci();m=q.m;p=q.p
+    publication=[]
+    def publish(u,a,size,data):
+        if q.u32(p+24)==2:
+            assert q.state(51)==0xffff, 'Audio task could see a partially built ring'
+            publication.append(a)
+    hook=m.uc.hook_add(UC_HOOK_CODE,publish)
     assert q.start()==0 and q.u32(p+24)==2 and len(q.events)==1
+    m.uc.hook_del(hook);assert publication
     assert q.u32(syms['diagnostics']+4)==0x56
     for i in range(16):
         t=p+TD+i*TDSTRIDE;data=t+32;f=(2044+i)&2047
@@ -125,6 +132,23 @@ def verify(image,h,syms):
     assert len(page(6))==37 and len(page(7))==35
     sequence=q.u32(syms['debug_ports']+304);m.write(syms['debug_ports']+304,P(sequence|1))
     assert page(5)==[2];m.write(syms['debug_ports']+304,P(sequence))
+    # Transport-only mode drains accepted PCM and collects peaks without any
+    # converter submission. Its timeout stops; it never falls back to audio.
+    d=syms['debug_ports'];sd=syms['dsp_diagnostics']
+    m.write(d+276,P(3,240000));m.write(syms['debug_ticks'],P(31))
+    calls=len(q.dsp);q.call('mx1_audio_tick',0)
+    assert len(q.dsp)==calls and q.u32(sd+4)==calls
+    assert page(8)[3:6]==[calls,calls,0] and page(8)[10]==3
+    snapshot=m.read(sd,144)
+    # A page request consumes cached RAM, even if hardware is inaccessible.
+    m.uc.mem_unmap(0x40100000,0x10000)
+    assert page(8)[2]==q.u32(sd) and m.read(sd,144)==snapshot
+    m.uc.mem_map(0x40100000,0x10000)
+    m.write(sd,P(q.u32(sd)|1));assert page(8)==[2];m.write(sd,snapshot)
+    m.write(syms['debug_ticks'],P(240000));q.call('mx1_audio_tick',0)
+    assert len(q.dsp)==calls and q.u32(p+16)==0
+    # Restore the test's active state for explicit cancellation below.
+    m.write(p+16,P(1));m.write(d+276,P(0));m.write(syms['debug_ticks'],P(1200))
     # Stop leaves current DMA buffers intact, unlinks only our heads and waits
     # for frame progress. The original OHCI wrapper must not inspect EHCI RAM.
     q.call('mx1_ehci_cancel',DEV,EP);saved=m.read(p+TD,16*TDSTRIDE)
@@ -194,6 +218,17 @@ def verify(image,h,syms):
             assert q.u32(td+16)==data and q.u32(td+20)==(data+183)&~4095
             crossed.append(i)
     assert crossed
+    # The original converter's busy-gate return is a real instruction path,
+    # not a mocked failure. Capture it, keep the DMA alive until worker stop.
+    q=Ehci(port=2);assert q.start()==0;q.real_dsp=True
+    ctx=0x20005ee0+2*0xa4;gate=0x40101200;sd=syms['dsp_diagnostics']+2*144
+    q.m.write(ctx+20,P(gate));q.m.write(gate,P(7))
+    q.call('mx1_audio_tick',0)
+    assert q.u32(sd+4)==1 and q.u32(sd+8)==0 and q.u32(sd+12)==0xffffffff
+    assert q.u32(sd+16)==7 and q.u32(sd+24+11*4)==gate
+    assert q.u32(q.p+92)==1 and q.u32(q.p+16)==0 and q.u32(q.p+24)==2
+    q.advance(2041);assert q.u32(q.p+24)==3
+    q.advance(2043);assert q.u32(q.p+20)==0
     # Original controller-status queue and worker dispatch. No USB-object
     # pointer is enqueued. The callback runs in the worker even without IOC.
     q=Ehci();assert q.start()==0;q.real_poll=True;m=q.m
@@ -228,6 +263,8 @@ def verify(image,h,syms):
     assert received and freed==[request] and u32(syms['ehci']+65*4)==0
     return {'status':'pass','original_periodic_dummy_allocations':11,'live_periodic_table':hex(table),
         'driver_context_table_is_not_live_table':True,'stream_packets':300,'outcomes':outcomes,
+        'publish_running_after_ring_complete':True,'transport_only_no_converter':True,
+        'transport_only_expiry_stops':True,'cached_converter_page':True,'original_busy_gate_failure':True,
         'host3_page_crossing_slots':crossed,
         'admission_negative_cases':negatives,'original_controller_status_queue_and_worker':True,
         'cases':['actual stock frame-list replacement and dummy iTD chain','guarded EHCI bind trampoline',

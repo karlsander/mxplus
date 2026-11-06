@@ -3,7 +3,12 @@
 This is an authorized bench experiment for the measured FM-1 profile, not a
 generic host-audio driver. B4 established working bidirectional MIDI commands
 and all four setup probes. B5 adds an explicitly started input transport on
-controller 1. No B5 hardware audio result is established by this document.
+controller 1. The later [B5 bench](../evidence/fm1-ehci-split-b5-20261106/README.md#observed-on-b5)
+established brief FM-1 packet-counter progress followed by a converter error;
+no MX accepted PCM or audible result. [B6](../evidence/fm1-converter-b6-20261106/README.md)
+adds transport-only probe 7, mode 3 and converter page 8, and delays running
+publication until the complete ring is initialized. The B5 topology, split
+masks, admission and DMA retirement below remain unchanged.
 
 ## Original instruction findings
 

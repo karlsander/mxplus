@@ -97,6 +97,31 @@ typedef struct {
 } DebugPort;
 __attribute__((section(".host_debug_state"))) static DebugPort debug_ports[4];
 __attribute__((section(".host_debug_state"))) static volatile uint32_t debug_ticks;
+/* B6: audio-task-owned converter snapshot, appended after all existing state.
+ * Page 8 reads only this cache; MIDI never reads DSP registers or pointers. */
+typedef struct {
+    volatile uint32_t sequence;
+    uint32_t calls, successes, result, gate, frames, raw[30];
+} DspDiagnostic;
+__attribute__((section(".host_dsp_state"))) static DspDiagnostic dsp_diagnostics[4];
+static uint32_t dsp_gate(unsigned port) {
+    uintptr_t g=U32((void*)0x20005ee0,port*0xa4+0x14);
+    /* Original 60007884 constructs this pointer from DSP data base 40101000.
+     * Record an unavailable sentinel if the pointer is outside that data RAM. */
+    return !(g&3) && g>=0x40100000 && g<0x40110000?V32((void*)g,0):0xffffffffu;
+}
+static void dsp_capture(unsigned port) {
+    DspDiagnostic *s=&dsp_diagnostics[port]; AudioPort *p=&mx1_audio_ports[port];
+    uint8_t *ctx=(void*)(0x20005ee0+port*0xa4),*smooth=(void*)(0x010157f8+port*4);
+    uint32_t v[]={debug_ticks,port,debug_ports[port].mode,p->phase,diagnostics[port].controller,
+        (uintptr_t)ctx,U32(ctx,0),U32(ctx,4),U32(ctx,8),U32(ctx,12),U32(ctx,16),
+        U32(ctx,20),U32(ctx,24),U32(ctx,32),U32(ctx,36),U32(ctx,40),U32(ctx,44),
+        U32(ctx,48),U32(ctx,52),U32((void*)0x6002b094,0),U32((void*)0x6002b094,4),
+        U32((void*)0x6002b094,8),U32(smooth,0),U32(smooth,16),U32(smooth,48),
+        U32(smooth,64),U32(smooth,80),U32(smooth,96),V32((void*)0x40101000,0),
+        U16((void*)0x4000bbb0,0)};
+    for(unsigned i=0;i<30;i++) s->raw[i]=v[i];
+}
 /* The original TX task waits on this flag at 0100921c. Only signal it;
  * all packet construction and USB submission stay in that task. */
 static void debug_wake_tx(void) {
@@ -146,10 +171,9 @@ static void try_open(uint8_t *dev,uint8_t *r) {
     if(p->claimed || U16(dev,0x10)!=0x1209 || U16(dev,0x12)!=1 || U16(dev,0x58)) return;
     const uint8_t *c=FN(0x60009d2d,const uint8_t *(*)(void*,unsigned))(dev,0);
     if(!mx1_audio_profile(c)) return;
-    /* Controller 1 is EHCI, including full-speed devices behind a hub.
-     * The custom request hook is installed ONLY on OHCI. Never submit its
-     * private start callback to the unmodified EHCI request handler. */
-    if(U16(dev,0x4a)!=0 && !(U16(dev,0x4a)==1 && debug_ports[port].probe==5)) {
+    /* EHCI starts only through an explicit normal or transport-only probe. */
+    if(U16(dev,0x4a)!=0 && !(U16(dev,0x4a)==1 &&
+       (debug_ports[port].probe==5 || debug_ports[port].probe==7))) {
         stage(p,0x48,-5); return;
     }
     for(unsigned i=0;i<U16(r,0x20) && i<8;i++) {
@@ -163,6 +187,7 @@ static void try_open(uint8_t *dev,uint8_t *r) {
             stage(p,0x45,0); return;
         }
         p->dev=dev; p->ep=ep; p->interface=n; p->generation++;
+        zero(&dsp_diagnostics[port],sizeof dsp_diagnostics[port]);
         p->cancel_queued=0; p->wanted=1; p->claimed=1; barrier();
         /* Stock DSP initialization stays in manager task, before publication
          * to the audio task. Its serial interface is the original open path. */
@@ -469,7 +494,10 @@ void mx1_audio_tick(unsigned microframe) {
         if(!p->wanted) continue;
         if(p->phase!=2) continue;
         DebugPort *d=&debug_ports[port];
-        if(d->mode && (int32_t)(debug_ticks-d->mode_until)>=0) d->mode=0;
+        if(d->mode && (int32_t)(debug_ticks-d->mode_until)>=0) {
+            if(d->mode==3) { cancel(p); post(p,6); continue; }
+            d->mode=0;
+        }
         unsigned r=p->read_count, available=p->write_count-r;
         if(!p->primed && available>=2) { p->primed=1; p->quarter=0; }
         unsigned frames=11;
@@ -495,8 +523,20 @@ void mx1_audio_tick(unsigned microframe) {
                 p->samples[j*2]=p->samples[j*2+1]=sample;
             }
         }
-        uint32_t block[12]={1,0x00020001,0,(uintptr_t)p->samples,0,frames*8,0,2,(uintptr_t)p->discard,0,0,0};
-        if(FN(0x010088dd,int(*)(unsigned,void*))(port,block)) {
+        DspDiagnostic *s=&dsp_diagnostics[port];
+        /* Mode 3 consumes the input queue without submitting converter work.
+         * It is explicit, expires by stopping, and cannot silently unmute. */
+        if(d->mode==3 && (debug_ticks&31)) continue;
+        s->sequence++; barrier(); s->frames=frames; s->gate=dsp_gate(port);
+        int result=0;
+        if(d->mode!=3) {
+            uint32_t block[12]={1,0x00020001,0,(uintptr_t)p->samples,0,frames*8,0,2,(uintptr_t)p->discard,0,0,0};
+            s->calls++;
+            result=FN(0x010088dd,int(*)(unsigned,void*))(port,block);
+            s->result=(uint32_t)result; if(!result) s->successes++;
+        }
+        dsp_capture(port); barrier(); s->sequence++;
+        if(result) {
             p->dsp_errors++; cancel(p); post(p,6);
         }
     }

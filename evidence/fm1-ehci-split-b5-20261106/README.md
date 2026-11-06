@@ -64,4 +64,40 @@ The experiment admits one stream, no other active stock audio, and only small
 HS interrupt traffic alongside its stock dummy chains. It is not a general TT
 bandwidth allocator. New periodic endpoints may be refused with −13 while it
 retires. A run expires after nominally 60 seconds, and unresolved DMA ownership
-is retained until a halted reset or reboot. B5 still needs the physical bench.
+is retained until a halted reset or reboot.
+
+## Observed on B5
+
+The user completed the update and B5 returned wire build 181 over the existing
+FM-1 B1 Bluetooth bridge. [Bench summary](bench-summary.json) and the three
+sanitized result files preserve the measured counters and snapshots. Raw BLE
+logs containing local identifiers remain private. The Mac ran macOS 27.0.1,
+Python 3.14.6 and Bleak 3.0.2; it was the BLE controller, not the USB-audio host.
+MX-1 hosted FM-1 directly on HOST3. The requested mapping was Auto/USB3. Cable,
+board revision and mixer system-mode/rate were not independently measured.
+
+| Run | Start result | FM-1 packet/frame delta | MX accepted packets | DSP errors |
+| --- | --- | --- | --- | --- |
+| [Startup](startup.json), Demora connected during boot | Stage 51, configuration/admission rejection | 0 / 0 | 0 | 0 |
+| [After Demora unplug](after-demora-unplug.json), no reboot | Starts briefly, then stage 57 stop | 1 / 44 | 0 | 1 |
+| [Clean boot](clean-boot.json), only FM-1 | Starts briefly, then stage 57 stop | 5 / 220 | 0 | 1 |
+
+Each run completed rate/alternate/endpoint probes successfully. The first
+snapshot reported USBCMD 00010b39, USBSTS 0000c000, segment zero and live table
+4000b000. Those sampled conditions pass B5's configuration guard. A nonzero
+stock-audio mask is the remaining likely rejection, consistent with the user's
+Demora report, but that mask was not included in B5 telemetry. Unplug timing
+relative to the first start was not measured; no stale-allocation defect is
+established by that run.
+
+Both later runs incremented the FM-1 endpoint's counters and then stopped
+after one converter error. The FM-1 also recorded one stall and three overruns
+per run. The MX packet consumer never accepted a packet before retirement.
+This is initial device-side transfer progress, not successful end-to-end audio
+or a bus-analyzer trace. None of the tone windows ran. All three cleanups
+returned FM-1 to alt0/tone0 and MX-1 to phase0/unclaimed; MIDI commands continued.
+
+B5 does not expose the converter return value or distinguish its entry-gate,
+DSP-completion and drift-estimation failures. The [B6 diagnostic candidate](../fm1-converter-b6-20261106/README.md)
+separates transport testing from converter calls and records the original
+converter state. The B5 counter failure does not by itself identify its cause.

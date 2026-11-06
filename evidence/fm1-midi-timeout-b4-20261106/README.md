@@ -81,4 +81,7 @@ Compiled extension tests check untimed writes only for the matched device,
 multi-transfer responses, one outstanding buffer, stock cancellation and
 retained completion ownership. Existing tests keep generic timeout 100,
 short-input handling, queue failures, Roland behavior and audio regressions.
-The candidate record records final validation; hardware acceptance is pending.
+All 17 offline reproduction stages, current/committed-artifact gates and six
+browser-patcher tests passed on code commit `b5347f1`. The
+[candidate record](candidate.json) retains exact hashes and targeted results.
+B4 has not been installed; hardware acceptance is pending.

@@ -11,7 +11,7 @@
   "mx1_installed": false,
   "physical_mx1_round_trip_verified": false,
   "physical_mx1_audio_verified": false,
-  "verification": "All 17 offline stages and current-artifact gate passed; committed-artifact and browser checks follow this candidate commit.",
+  "verification": "All 17 offline reproduction stages, current/committed-artifact gates and six browser-patcher tests passed. Hardware behavior pending.",
   "code_and_state": {
     "code_bytes": 3032,
     "state_bytes": 1472,
@@ -58,5 +58,6 @@
       "one-transfer telemetry defers behind user SysEx"
     ],
     "boundary": "USB delivery, RTOS queue dispatch and DSP hardware modeled; actual compiled ARM code executes"
-  }
+  },
+  "validated_code_commit": "b5347f110b5e7bd22f2d6c50ad87b946fac33491"
 }

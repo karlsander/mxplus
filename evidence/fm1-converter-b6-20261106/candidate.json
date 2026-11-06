@@ -25,7 +25,11 @@
     "full_reproduction_stages": 17,
     "full_reproduction_status": "passed",
     "current_artifact_gate": "passed",
-    "committed_artifact_gate": "pending commit",
-    "browser_tests": "pending committed-artifact gate"
+    "committed_artifact_gate": "passed",
+    "browser_tests": {
+      "passed": 6,
+      "failed": 0
+    },
+    "verified_code_commit": "15f8daaaef6c1f5b18daafaa47e4399f81c6290b"
   }
 }

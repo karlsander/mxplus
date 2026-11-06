@@ -75,3 +75,7 @@ its result. It captures pages even after a failed window, then mutes, stops and
 returns to alt0. Other USB-host audio devices must remain disconnected for this
 narrow admission experiment. No additional flashing path or firmware variant
 is introduced.
+
+All 17 offline reproduction stages, current and committed-artifact gates, and
+six browser patcher tests passed for the code/artifact commit recorded in
+[candidate.json](candidate.json). Hosted B6 verification is pending.

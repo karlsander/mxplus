@@ -63,3 +63,7 @@ and exact candidate identity are recorded in [candidate.json](candidate.json).
 
 B7 has not been installed at candidate preparation. Keep `UNTESTED` and the
 PR open pending physical audio acceptance.
+
+All 17 offline reproduction stages, current and committed-artifact gates, and
+six browser patcher tests passed for the code/artifact commit recorded in
+[candidate.json](candidate.json). Hosted CI for this revision is pending.

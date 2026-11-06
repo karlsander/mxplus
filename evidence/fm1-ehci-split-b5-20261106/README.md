@@ -14,6 +14,12 @@ Exact identities and validation state are in [candidate.json](candidate.json).
 No physical audio, task timing, coexistence or failed-application recovery is
 claimed from these offline results.
 
+Hosted offline workflow [42236511542](https://github.com/karlsander/mxplus/actions/runs/42236511542)
+passed for commit `a41865e766cb6c291d3782d700c1967d502f6c79`.
+At 14:54 UTC, B5 was copied to the Roland updater as `MX1_UPD.BIN`, read back
+with the candidate SHA-256, and ejected. The [copy receipt](copy.json) records
+that delivery; update completion and normal boot were not yet observed then.
+
 The [implementation report](../../research/fm1-ehci.md) distinguishes original
 instruction findings, new code and modeled boundaries. The crucial original
 finding is that 60007faa replaces the initial EHCI frame list with 4000b000;

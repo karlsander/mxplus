@@ -6,7 +6,7 @@ mxplus is a a firmware hack for the Roland MX-1. Unsurprisingly, everything exce
 - **Channel Source Mapping** On any channel, select a source by holding down Select and rotating the Tempo encoder. Use any analog input, including 5 and 6 separately, Effect Return Stereo/L/R and digital/USB/PC channels as stereo, L or R.
 - **Mastering Mode** Hold down the mastering button and press TAP to enter mastering mode, where the whole control surface is taken over to offer control over the quite comprehensive hidden mastering chain (Parametric EQ > Low Cut > Enhancer > 3-Band Expander and Compressor, with adjustable crossover > Mid/Side Processor > Limiter > Clipper). You can use any of the the 10 built-in slots to store configs.
 
-USB MIDI on the host ports is now an offline experiment, with sync output prioritized and incoming host clock blocked. It still needs testing on the mixer; [scope and limitations](docs/USB_HOST_MIDI.md).
+USB MIDI output to an FM-1 has now worked on the mixer, with sync output prioritized and incoming host clock blocked; [scope and limitations](docs/USB_HOST_MIDI.md). The current candidate also adds experimental FM-1 stereo audio input at 44.1 kHz through the MX-1’s rate converter. Audio still needs testing on the mixer; [FM-1 audio status](docs/USB_HOST_AUDIO.md).
 
 The channel remapping makes it possible to use all 11 channels even without much Roland gear, either by spreading mono / return channels or duplicating inputs for parallel processing.
 

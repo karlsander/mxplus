@@ -1,26 +1,28 @@
 # USB-host MIDI experiment
 
 Mainline adds USB-MIDI 1.0 input and output on the four host ports. Sync output
-is the priority. **No successful physical host-MIDI compatibility or timing result exists
-for this candidate.** A user reported no visible MIDI on an FM-1 after selecting
-INT and restarting both devices. The parser rejected that monitor build's
-MIDI descriptor length; the [compatibility fix and exact built-image fixture](../evidence/fm1-host-midi-20261103/README.md)
-have ARM regression coverage. Subsequent display diagnostics still reported
-connection without MIDI readiness. The [alternate-zero setup fix](../evidence/host-midi-alt-zero-20261104/README.md)
-now covers initial binding through endpoint opening. Neither the fixture nor
-the instruction tests are a live USB capture.
-The subsequent d001 display test reported connection without MIDI readiness
-for the FM-1; see [bench readings](../evidence/mastering-key-range-20261104/README.md#separate-host-midi-observation).
-The current mastering-only fix retains that USB application unchanged. Generic USB audio remains disabled.
+is the priority. The user confirmed MIDI output to an FM-1 after the
+[alternate-zero setup fix](../evidence/host-midi-alt-zero-20261104/README.md),
+using candidate `253645edb92a09c7b0d100da01f57d5127834c109b2ad499332645487a7a1d14`.
+Exact messages, duration and timing were not recorded; the result does not
+establish all MIDI directions or routing combinations. Earlier descriptor and
+startup failures remain in their historical evidence records.
 
-Candidate SHA-256: `253645edb92a09c7b0d100da01f57d5127834c109b2ad499332645487a7a1d14`.
+The current candidate includes the measured [FM-1 audio profile](USB_HOST_AUDIO.md),
+but pauses audio startup on the observed EHCI connection.
+That changed image still requires physical MIDI/audio acceptance. Other generic
+audio profiles remain disabled. The FM-1 experiment also emits a bounded
+[host diagnostic SysEx report](USB_HOST_AUDIO.md#host-diagnostic-report).
+
+Candidate SHA-256: `f9d900f6a17159b89bd59bdf690942fbaa3b6f97d07e66177d4422153de2ad1b`.
 
 ## Behavior and scope
 
 - One MIDIStreaming interface, alternate zero, protocol zero, with one embedded
   cable per direction. Input-only, output-only and bidirectional devices are
-  accepted. MIDI-only devices do not need an audio interface. Composite audio
-  interfaces are ignored; no generic audio alternate is selected.
+  accepted. MIDI-only devices do not need an audio interface. The MIDI parser
+  ignores composite audio interfaces; a separate helper selects only the
+  measured FM-1 input alternate.
 - MIDI header length accepts the header/jack sum or the exact full MIDI span,
   including endpoint descriptors, as used by the FM-1. Every descriptor is still
   individually validated; unrelated audio interfaces are not counted.
@@ -72,8 +74,16 @@ old clock pulses. These limits matter for dense notes and large SysEx bursts:
 **this build does not establish lossless bulk patch transfer**. It is not a MIDI
 firmware-update transport with verified delivery.
 
-Input waits without a timeout, since a quiet MIDI device is normal. Output uses
+Input waits without a timeout, since a quiet MIDI device is normal. B3 requests
+the stock short-packet option (`2000` hex), so valid variable-length MIDI and
+zero-length packets complete successfully. Non-word lengths and controller errors
+still fault the direction. [Original EHCI evidence](../evidence/fm1-midi-bridge-b3-20261106/README.md). Other generic output uses
 the stock API's timeout value 100; its wall-clock duration has not been measured.
+B4 uses −1 (no per-transfer alarm) only for the matched FM-1 debug session to
+isolate the captured TX error −20. A noncompleting write keeps its one buffer
+until completion or stock disconnect cancellation; there is no new watchdog
+or retry. This is a diagnostic experiment, not established fault recovery.
+[Original alarm/core evidence](../evidence/fm1-midi-timeout-b4-20261106/README.md).
 A blocked or failed generic port does not make the new dispatcher wait for that
 port. The existing Roland/cross-core paths retain their original behavior.
 
@@ -93,15 +103,15 @@ application components in one container. There is no separate host firmware.
 Boot programs, updater, panel payload, update range and container boundaries
 remain unchanged. The host-MIDI addition in PR #14 changed **app_usb** while retaining PR #13
 main-application bytes. Later mastering changes are documented in
-[mainline integration](MAINLINE.md). The current startup fix changes only the USB parser/setup callback and regenerated
-extension placement/patch accounting; the main application remains identical
+[mainline integration](MAINLINE.md). The FM-1 audio follow-up adds USB manager/OHCI/EHCI hooks and SDRAM placement;
+the main application remains identical
 to the mastering held-key fix in PR #18.
 
 USB startup originally copies decoded `0x2b1f4..0x36dd8` to
 `0x01000300..0x0100bee4`. The new USB code is inserted at decoded `0x36dd8`,
 runtime `0x0100bee4`, below the existing USB allocator at `0x0100d000`.
-The extension occupies 2,772 bytes (`0x0100bee4..0x0100c9b8`), leaving
-1,608 bytes before that allocator. State occupies 1,472 bytes
+The extension occupies 3,056 bytes (`0x0100bee4..0x0100cad4`), leaving
+1,324 bytes before that allocator. State occupies 1,472 bytes
 (`0x01017868..0x01017e28`), leaving 472 bytes before the writable-region limit.
 The five following initialized-data source literals move; their destinations
 do not. New zero-initialized state starts at the original USB BSS end,
@@ -113,6 +123,8 @@ the code read-only and the state region writable. Original RTOS pools are
 table at decoded `0x2820c` also reserves `0x0100d000`, `0x0100e000` and
 `0x0100f000` as 4-KiB regions. Exact table bytes are guarded.
 
+The separate [audio extension](USB_HOST_AUDIO.md#usb-processor-placement-and-binary-changes) reserves 64 KiB from the original USB SDRAM heap; its code and state are initialized by formerly empty startup entries.
+
 These are USB-processor addresses, not additional space in the main processor.
 Mastering reclaimed 2,548 bytes of resident main code footprint and consumed
 140 bytes of writable main SRAM; it did not free main SRAM. The main executable
@@ -122,7 +134,7 @@ extension still has only 20 bytes unused.
 | --- | --- | --- |
 | `0xa1e2` | `0x6000a1e2` | Bounded generic configuration parser; exact Roland trampoline |
 | `0x7848` | `0x60007848` | Selection callback; generic MIDI only, original Roland policy |
-| `0x28288` | `0x60028288` | Setup callback table entry; finish generic MIDI alt0 setup using the original open dispatcher |
+| `0x28288` | `0x60028288` | Setup callback table entry; finish generic MIDI alt0 setup using the original open dispatcher, then select measured FM-1 audio |
 | `0x7844` | `0x60007844` | Receive callback; reject incoming host sync before cross-core delivery |
 | `0x90fa`, `0x9160` | `0x600090fa`, `0x60009160` | Generic IN/OUT open; retain original Roland endpoint setup |
 | `0x33f60`, `0x340b0` | `0x0100906c`, `0x010091bc` | IN/OUT disconnect wrappers |

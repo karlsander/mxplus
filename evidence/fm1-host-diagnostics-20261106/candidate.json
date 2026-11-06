@@ -1,0 +1,14 @@
+{
+  "status": "UNTESTED",
+  "hardware_audio_result": false,
+  "installed": false,
+  "base_commit": "e8181fe806e4066eff58d338915afdcdccffc562",
+  "candidate": "build/mainline/MXPLUS_MAINLINE_UNTESTED.bin",
+  "updater_filename": "MX1_UPD.BIN",
+  "container_sha256": "4eb649c9c4a268674e1447b3bf1cec1fd6226f5e75c77f2ebaa5e9bcc51de05d",
+  "patched_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
+  "patched_usb_sha256": "4a0598d8b5dff38af632331118586610ddab79dee0dd24a7a70d1ff033d52068",
+  "host_extension_sha256": "8287a506134b7bb2fa34e7960029c7d886ba6343da7e8fe4fb277e6ab0a17323",
+  "host_audio_extension_sha256": "e4501ceb2ac97ddee942b0e87fac0a0b7aaa2af4ba8e52265a7963384597b8f1",
+  "note": "Host startup diagnostics for the existing FM-1 MIDI monitor; transport behavior not deliberately changed."
+}

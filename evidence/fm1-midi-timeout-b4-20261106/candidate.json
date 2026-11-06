@@ -1,0 +1,63 @@
+{
+  "date": "2026-11-06",
+  "build": 180,
+  "candidate_sha256": "389ae886e3ab6af87804f375f9752e3099fc77bd5e157f2c7e8c6ee62d7bfd7c",
+  "preceding_candidate_sha256": "44314acc16a88248b74e0a4dd315f976f6b03f0c6d37e130d27b986ca8573c6c",
+  "usb_app_sha256": "142a1587fbde1f3854131b69a30d4f7de8657902024446d263d2d2f0c28547f6",
+  "host_extension_sha256": "cd89799d08500f8e2b8c391d3535b7f297dde0c1717f7f403856751719aac7d7",
+  "host_audio_extension_sha256": "715bae1b5a824fb9cdc135d23ffee0b8e9ac1b042152b60c6213ffae478c856a",
+  "unchanged_main_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
+  "fm1_bridge_sha256": "f13e43fcb9b34db7c8387751871b9a045fa55572b33c3b1759594c0451c54da0",
+  "mx1_installed": false,
+  "physical_mx1_round_trip_verified": false,
+  "physical_mx1_audio_verified": false,
+  "verification": "All 17 offline reproduction stages, current/committed-artifact gates and six browser-patcher tests passed. Hardware behavior pending.",
+  "code_and_state": {
+    "code_bytes": 3032,
+    "state_bytes": 1472,
+    "audio_code_bytes": 8536,
+    "audio_state_bytes": 25956
+  },
+  "core_alarm_check": {
+    "name": "Original USB core reproduces exhausted timer failure and untimed submission",
+    "status": "pass",
+    "alarm_slots": 5,
+    "exhausted_timed_result": -20,
+    "exhausted_untimed_result": 0,
+    "retained_completion_errors": [
+      -7,
+      -9
+    ],
+    "modeled_preemption_order": [
+      "next TX",
+      "timer cleanup"
+    ],
+    "next_timed_before_cleanup": -20,
+    "next_timed_after_cleanup": 0,
+    "boundary": "Original USB core submission/completion, alarm initialization/create/start/stop/delete and wrapper instructions execute. Heap/free, endpoint list lookup, critical sections, timer wheel, mailbox delivery, HCD and task preemption are modeled. Five slots and the failure path are established; actual live slot occupancy, scheduling order, USB delivery and timing are not."
+  },
+  "protocol_checks": {
+    "status": "pass",
+    "cases": [
+      "structured replies across multiple transfers",
+      "malformed checksum/target rejection",
+      "pending reply retention",
+      "user SysEx continuity",
+      "replacement device isolation",
+      "actual RX and TX poll integration",
+      "untimed OUT restricted to matching debug device; buffer ownership and cancellation retained",
+      "worker-owned register snapshots and bounded pages",
+      "normal/mute/test-tone converter modes",
+      "mode timeout",
+      "EHCI baseline avoids OHCI request and DSP submission",
+      "cached topology and MIDI software status",
+      "manager-only single-step controls/lookup and failure results",
+      "original bind callback queues manager event",
+      "reply publication wakes original TX task flag",
+      "idle audio cadence wakes TX without claimed audio",
+      "one-transfer telemetry defers behind user SysEx"
+    ],
+    "boundary": "USB delivery, RTOS queue dispatch and DSP hardware modeled; actual compiled ARM code executes"
+  },
+  "validated_code_commit": "b5347f110b5e7bd22f2d6c50ad87b946fac33491"
+}

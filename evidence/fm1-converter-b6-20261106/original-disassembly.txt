@@ -1,0 +1,245 @@
+Original app_usb SHA-256 fe52cf6c9e8ec8677963b1c4b876ddeaefae5136b7a5f1f49010e3cda9203a6e
+Resident runtime = 60000000 + decoded offset.
+Hot relocation: decoded 2b1f4 -> runtime 01000300, length bbe4.
+No generated decompiler output was edited.
+
+app_usb decoded 07884, runtime 60007884
+60007884 2de9f04f     push.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+60007888 6f4c         ldr r4, [pc, #0x1bc]
+6000788a 89b0         sub sp, #0x24
+6000788c 6078         ldrb r0, [r4, #1]
+6000788e 0028         cmp r0, #0
+60007890 4ed1         bne #0x60007930
+60007892 00f00df9     bl #0x60007ab0
+60007896 00f03af9     bl #0x60007b0e
+6000789a 0821         movs r1, #8
+6000789c 6846         mov r0, sp
+6000789e 00f085f9     bl #0x60007bac
+600078a2 00f055f9     bl #0x60007b50
+600078a6 a060         str r0, [r4, #8]
+600078a8 0020         movs r0, #0
+600078aa 8826         movs r6, #0x88
+600078ac dff89c91     ldr.w sb, [pc, #0x19c]
+600078b0 dff89ce1     ldr.w lr, [pc, #0x19c]
+600078b4 ea46         mov sl, sp
+600078b6 4ff07e5b     mov.w fp, #0x3f800000
+600078ba 6ff07007     mvn r7, #0x70
+600078be 0125         movs r5, #1
+600078c0 00ebc001     add.w r1, r0, r0, lsl #3
+600078c4 01eb4011     add.w r1, r1, r0, lsl #5
+600078c8 0022         movs r2, #0
+600078ca 49f82100     str.w r0, [sb, r1, lsl #2]
+600078ce 09eb8101     add.w r1, sb, r1, lsl #2
+600078d2 0aeb8003     add.w r3, sl, r0, lsl #2
+600078d6 c1f804b0     str.w fp, [r1, #4]
+600078da c1f808b0     str.w fp, [r1, #8]
+600078de c1f8a020     str.w r2, [r1, #0xa0]
+600078e2 5af82020     ldr.w r2, [sl, r0, lsl #2]
+600078e6 ca60         str r2, [r1, #0xc]
+600078e8 1b69         ldr r3, [r3, #0x10]
+600078ea 0b61         str r3, [r1, #0x10]
+600078ec 52b1         cbz r2, #0x60007904
+600078ee c2f3160c     ubfx ip, r2, #0, #0x17
+600078f2 a6ebe258     sub.w r8, r6, r2, asr #23
+600078f6 07ebe252     add.w r2, r7, r2, asr #23
+600078fa 2cfa08fc     lsr.w ip, ip, r8
+600078fe 05fa02f2     lsl.w r2, r5, r2
+60007902 6244         add r2, ip
+60007904 0eeb8202     add.w r2, lr, r2, lsl #2
+60007908 4a61         str r2, [r1, #0x14]
+6000790a a3b1         cbz r3, #0x60007936
+6000790c c3f31602     ubfx r2, r3, #0, #0x17
+60007910 a6ebe358     sub.w r8, r6, r3, asr #23
+60007914 07ebe353     add.w r3, r7, r3, asr #23
+60007918 22fa08f2     lsr.w r2, r2, r8
+6000791c 05fa03f3     lsl.w r3, r5, r3
+60007920 1a44         add r2, r3
+60007922 0eeb8202     add.w r2, lr, r2, lsl #2
+60007926 401c         adds r0, r0, #1
+60007928 8a61         str r2, [r1, #0x18]
+6000792a 0428         cmp r0, #4
+6000792c c8d3         blo #0x600078c0
+6000792e 6570         strb r5, [r4, #1]
+60007930 09b0         add sp, #0x24
+60007932 bde8f08f     pop.w {r4, r5, r6, r7, r8, sb, sl, fp, pc}
+60007936 0022         movs r2, #0
+60007938 f3e7         b #0x60007922
+
+app_usb decoded 079ee, runtime 600079ee
+600079ee 30b4         push {r4, r5}
+600079f0 1446         mov r4, r2
+600079f2 00ebc002     add.w r2, r0, r0, lsl #3
+600079f6 154b         ldr r3, [pc, #0x54]
+600079f8 02eb4010     add.w r0, r2, r0, lsl #5
+600079fc 03eb8000     add.w r0, r3, r0, lsl #2
+60007a00 0129         cmp r1, #1
+60007a02 08d1         bne #0x60007a16
+60007a04 1049         ldr r1, [pc, #0x40]
+60007a06 4968         ldr r1, [r1, #4]
+60007a08 0029         cmp r1, #0
+60007a0a 04d1         bne #0x60007a16
+60007a0c 2146         mov r1, r4
+60007a0e 30bc         pop {r4, r5}
+60007a10 114a         ldr r2, [pc, #0x44]
+60007a12 0df01bbf     b.w #0x6001584c
+60007a16 30bc         pop {r4, r5}
+60007a18 7047         bx lr
+60007a1a 00ebc002     add.w r2, r0, r0, lsl #3
+60007a1e 02eb4010     add.w r0, r2, r0, lsl #5
+60007a22 0a4a         ldr r2, [pc, #0x28]
+60007a24 0129         cmp r1, #1
+60007a26 02eb8000     add.w r0, r2, r0, lsl #2
+60007a2a 04d1         bne #0x60007a36
+60007a2c 0649         ldr r1, [pc, #0x18]
+60007a2e 4968         ldr r1, [r1, #4]
+60007a30 0029         cmp r1, #0
+60007a32 00d1         bne #0x60007a36
+60007a34 0162         str r1, [r0, #0x20]
+60007a36 7047         bx lr
+
+app_usb decoded 337d0, runtime 010088dc
+010088dc 2de9f041     push.w {r4, r5, r6, r7, r8, lr}
+010088e0 0246         mov r2, r0
+010088e2 02ebc203     add.w r3, r2, r2, lsl #3
+010088e6 544c         ldr r4, [pc, #0x150]
+010088e8 03eb4213     add.w r3, r3, r2, lsl #5
+010088ec 04eb8304     add.w r4, r4, r3, lsl #2
+010088f0 0020         movs r0, #0
+010088f2 6369         ldr r3, [r4, #0x14]
+010088f4 1b68         ldr r3, [r3]
+010088f6 0bb1         cbz r3, #0x10088fc
+010088f8 401e         subs r0, r0, #1
+010088fa 36e5         b #0x100836a
+010088fc 0b68         ldr r3, [r1]
+010088fe 012b         cmp r3, #1
+01008900 fbd1         bne #0x10088fa
+01008902 4e48         ldr r0, [pc, #0x138]
+01008904 4d4b         ldr r3, [pc, #0x134]
+01008906 4068         ldr r0, [r0, #4]
+01008908 1b78         ldrb r3, [r3]
+0100890a 78b1         cbz r0, #0x100892c
+0100890c 0024         movs r4, #0
+0100890e 01eb8405     add.w r5, r1, r4, lsl #2
+01008912 b1f91cc0     ldrsh.w ip, [r1, #0x1c]
+01008916 6b69         ldr r3, [r5, #0x14]
+01008918 4fea8c06     lsl.w r6, ip, #2
+0100891c b3fbf6f6     udiv r6, r3, r6
+01008920 b1f90670     ldrsh.w r7, [r1, #6]
+01008924 0023         movs r3, #0
+01008926 2a6a         ldr r2, [r5, #0x20]
+01008928 e868         ldr r0, [r5, #0xc]
+0100892a 10e0         b #0x100894e
+0100892c 2046         mov r0, r4
+0100892e bde8f041     pop.w {r4, r5, r6, r7, r8, lr}
+01008932 a0e5         b #0x1008476
+01008934 d0f800e0     ldr.w lr, [r0]
+01008938 c2f800e0     str.w lr, [r2]
+0100893c d0f804e0     ldr.w lr, [r0, #4]
+01008940 c2f804e0     str.w lr, [r2, #4]
+01008944 00eb8700     add.w r0, r0, r7, lsl #2
+01008948 02eb8c02     add.w r2, r2, ip, lsl #2
+0100894c 5b1c         adds r3, r3, #1
+0100894e b342         cmp r3, r6
+01008950 f0db         blt #0x1008934
+01008952 7e43         muls r6, r7, r6
+01008954 b000         lsls r0, r6, #2
+01008956 641c         adds r4, r4, #1
+01008958 a862         str r0, [r5, #0x28]
+0100895a 022c         cmp r4, #2
+0100895c d7db         blt #0x100890e
+0100895e 0020         movs r0, #0
+01008960 03e5         b #0x100836a
+
+app_usb decoded 336ca, runtime 010087d6
+010087d6 00f05bf9     bl #0x1008a90
+010087da 10f0ff4f     tst.w r0, #0x7f800000
+010087de 1ed0         beq #0x100881e
+010087e0 58b1         cbz r0, #0x10087fa
+010087e2 8822         movs r2, #0x88
+010087e4 c0f31601     ubfx r1, r0, #0, #0x17
+010087e8 a2ebe052     sub.w r2, r2, r0, asr #23
+010087ec d140         lsrs r1, r2
+010087ee 8f22         movs r2, #0x8f
+010087f0 02ebe052     add.w r2, r2, r0, asr #23
+010087f4 0120         movs r0, #1
+010087f6 9040         lsls r0, r2
+010087f8 0844         add r0, r1
+010087fa 216b         ldr r1, [r4, #0x30]
+010087fc 0844         add r0, r1
+010087fe 2063         str r0, [r4, #0x30]
+01008800 a06a         ldr r0, [r4, #0x28]
+01008802 401e         subs r0, r0, #1
+01008804 a062         str r0, [r4, #0x28]
+01008806 0028         cmp r0, #0
+01008808 3cdc         bgt #0x1008884
+0100880a 00f02ffb     bl #0x1008e6c
+0100880e 0546         mov r5, r0
+01008810 606a         ldr r0, [r4, #0x24]
+01008812 411c         adds r1, r0, #1
+01008814 06d0         beq #0x1008824
+01008816 a842         cmp r0, r5
+01008818 08dd         ble #0x100882c
+0100881a 401b         subs r0, r0, r5
+0100881c 09e0         b #0x1008832
+0100881e 4ff0ff30     mov.w r0, #-1
+01008822 7de6         b #0x1008520
+
+app_usb decoded 33976, runtime 01008a82
+01008a82 224b         ldr r3, [pc, #0x88]
+01008a84 1860         str r0, [r3]
+01008a86 5960         str r1, [r3, #4]
+01008a88 9a60         str r2, [r3, #8]
+01008a8a 2248         ldr r0, [pc, #0x88]
+01008a8c d860         str r0, [r3, #0xc]
+01008a8e 7047         bx lr
+01008a90 10b5         push {r4, lr}
+01008a92 1f4c         ldr r4, [pc, #0x7c]
+01008a94 0020         movs r0, #0
+01008a96 083c         subs r4, #8
+01008a98 0121         movs r1, #1
+01008a9a 6060         str r0, [r4, #4]
+01008a9c 1c48         ldr r0, [pc, #0x70]
+01008a9e b0f90000     ldrsh.w r0, [r0]
+01008aa2 f8f72ff9     bl #0x1000d04
+01008aa6 6168         ldr r1, [r4, #4]
+01008aa8 0843         orrs r0, r1
+01008aaa 01d0         beq #0x1008ab0
+01008aac 0020         movs r0, #0
+01008aae 10bd         pop {r4, pc}
+01008ab0 1648         ldr r0, [pc, #0x58]
+01008ab2 0068         ldr r0, [r0]
+01008ab4 10bd         pop {r4, pc}
+
+app_usb decoded 33b04, runtime 01008c10
+01008c10 fff764fe     bl #0x10088dc
+01008c14 0028         cmp r0, #0
+01008c16 21d1         bne #0x1008c5c
+01008c18 dff89492     ldr.w sb, [pc, #0x294]
+01008c1c 4ff0004c     mov.w ip, #-0x80000000
+
+app_usb decoded 33c54, runtime 01008d60
+01008d60 0006         lsls r0, r0, #0x18
+01008d62 2146         mov r1, r4
+01008d64 2846         mov r0, r5
+01008d66 fff720ff     bl #0x1008baa
+01008d6a 10b1         cbz r0, #0x1008d72
+01008d6c 2846         mov r0, r5
+01008d6e 00f080f8     bl #0x1008e72
+01008d72 6d1c         adds r5, r5, #1
+01008d74 042d         cmp r5, #4
+01008d76 fff67faf     blt.w #0x1008c78
+
+app_usb task creation decoded 08ac0, runtime 60008ac0: size 400, stack pointer from literal 08bec=4000b620, entry literal 08bf0=01008d8f.
+60008ac0 4b48         ldr r0, [pc, #0x12c]
+60008ac2 0290         str r0, [sp, #8]
+60008ac4 4ff48060     mov.w r0, #0x400
+60008ac8 cde90408     strd r0, r8, [sp, #0x10]
+60008acc adf80c60     strh.w r6, [sp, #0xc]
+60008ad0 adf80070     strh.w r7, [sp]
+60008ad4 6846         mov r0, sp
+60008ad6 0cf0f1fd     bl #0x600156bc
+60008ada 0028         cmp r0, #0
+
+B6 compiled audio-task wrapper: 36-byte register save + 148-byte local frame = 184 bytes; B5 had 36+84=120. This is not a whole-call-chain high-water measurement.
+607f16c8 2de9f04f     push.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+607f16cc a5b0         sub sp, #0x94

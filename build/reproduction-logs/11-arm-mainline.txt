@@ -77,6 +77,8 @@
     "Original DSP event dispatch, harmless empty parameter queue and flag delivery",
     "Independent factory graph audit matches all 18 raw PC and 18 serial read bindings",
     "Original native input gates and connection callbacks distinguish native and PC paths",
+    "Original EHCI short-packet completion and continued MIDI reception",
+    "Original USB core reproduces exhausted timer failure and untimed submission",
     "Original USB startup copies code, zeroes state, preserves existing initialized data",
     "Original USB MPU permissions and RTOS pools exclude the extension state",
     "Original TX loop remains intact; task call sites target the new poll wrappers",
@@ -91,7 +93,8 @@
     "Original USB request builder and completion dispatcher establish callback ABI",
     "Original main MIDI sender fans Clock/Start/Continue/Stop to all enabled host ports",
     "Notes, controllers and SysEx survive RX unchanged",
-    "Background queue overload leaves sync output running"
+    "Background queue overload leaves sync output running",
+    "FM-1 full-speed input transport and setup"
   ],
   "patched_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a"
 }

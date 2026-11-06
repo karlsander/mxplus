@@ -1,11 +1,96 @@
 {
   "status": "pass",
-  "patched_app_sha256": "7086bed11d109cd1ca72a54784d3246086a3997ff31b89a107433b5e8ebd360f",
+  "patched_app_sha256": "95517f8974476c6cc13c417140b1552f27a520fcd0173f02b44c2df07ebf2c5e",
   "groups": [
+    {
+      "name": "Original EHCI short-packet completion and continued MIDI reception",
+      "status": "pass",
+      "cases": [
+        {
+          "speed": 0,
+          "bytes": 0,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 0,
+          "bytes": 4,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 0,
+          "bytes": 16,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 0,
+          "bytes": 60,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 0,
+          "bytes": 64,
+          "before": 0,
+          "after": 0
+        },
+        {
+          "speed": 1024,
+          "bytes": 0,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 1024,
+          "bytes": 4,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 1024,
+          "bytes": 16,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 1024,
+          "bytes": 60,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 1024,
+          "bytes": 64,
+          "before": 0,
+          "after": 0
+        }
+      ],
+      "boundary": "Original EHCI wrapper, QH/qTD construction, schedule linking, toggle handling and completion run unchanged. Heap/critical sections and controller DMA/status are modeled; this does not validate USB timing or delivery."
+    },
+    {
+      "name": "Original USB core reproduces exhausted timer failure and untimed submission",
+      "status": "pass",
+      "alarm_slots": 5,
+      "exhausted_timed_result": -20,
+      "exhausted_untimed_result": 0,
+      "retained_completion_errors": [
+        -7,
+        -9
+      ],
+      "modeled_preemption_order": [
+        "next TX",
+        "timer cleanup"
+      ],
+      "next_timed_before_cleanup": -20,
+      "next_timed_after_cleanup": 0,
+      "boundary": "Original USB core submission/completion, alarm initialization/create/start/stop/delete and wrapper instructions execute. Heap/free, endpoint list lookup, critical sections, timer wheel, mailbox delivery, HCD and task preemption are modeled. Five slots and the failure path are established; actual live slot occupancy, scheduling order, USB delivery and timing are not."
+    },
     {
       "name": "Original USB startup copies code, zeroes state, preserves existing initialized data",
       "status": "pass",
-      "code_bytes": 2772,
+      "code_bytes": 3180,
       "state_bytes": 1472
     },
     {
@@ -377,7 +462,7 @@
           "ep": 536936528,
           "buffer": 536872960,
           "size": 16,
-          "callback": 16827415,
+          "callback": 16827419,
           "token": 1,
           "timeout": 100,
           "flags": 0,
@@ -387,7 +472,7 @@
           "ep": 536936784,
           "buffer": 536873472,
           "size": 16,
-          "callback": 16827415,
+          "callback": 16827419,
           "token": 3,
           "timeout": 100,
           "flags": 0,
@@ -397,7 +482,7 @@
           "ep": 536937040,
           "buffer": 536873984,
           "size": 16,
-          "callback": 16827415,
+          "callback": 16827419,
           "token": 5,
           "timeout": 100,
           "flags": 0,
@@ -407,7 +492,7 @@
           "ep": 536937296,
           "buffer": 536874496,
           "size": 16,
-          "callback": 16827415,
+          "callback": 16827419,
           "token": 7,
           "timeout": 100,
           "flags": 0,
@@ -417,7 +502,7 @@
           "ep": 536936528,
           "buffer": 536872960,
           "size": 16,
-          "callback": 16827415,
+          "callback": 16827419,
           "token": 1,
           "timeout": 100,
           "flags": 0,
@@ -427,7 +512,7 @@
           "ep": 536936784,
           "buffer": 536873472,
           "size": 16,
-          "callback": 16827415,
+          "callback": 16827419,
           "token": 3,
           "timeout": 100,
           "flags": 0,
@@ -437,7 +522,7 @@
           "ep": 536937040,
           "buffer": 536873984,
           "size": 16,
-          "callback": 16827415,
+          "callback": 16827419,
           "token": 5,
           "timeout": 100,
           "flags": 0,
@@ -447,7 +532,7 @@
           "ep": 536937296,
           "buffer": 536874496,
           "size": 16,
-          "callback": 16827415,
+          "callback": 16827419,
           "token": 7,
           "timeout": 100,
           "flags": 0,

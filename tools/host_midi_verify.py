@@ -96,7 +96,7 @@ def verify_descriptor_lengths(patched,report):
 
 class Transport:
     def __init__(self,image,report):
-        self.m=Machine(image);self.m.uc.mem_protect(0x01001000,0xf000,UC_PROT_READ|UC_PROT_EXEC);self.s=report['symbols'];self.requests=[];self.received=[];self.cancels=[];self.reject=0
+        self.m=Machine(image);self.m.uc.mem_protect(0x01001000,0xf000,UC_PROT_READ|UC_PROT_EXEC);self.s=report['symbols'];self.requests=[];self.received=[];self.cancels=[];self.wakes=[];self.reject=0
         self.m.uc.hook_add(UC_HOOK_CODE,self.stub)
     def stub(self,u,a,size,data):
         m=self.m
@@ -109,6 +109,7 @@ class Transport:
                                   'data':m.read(r[1],r[2]).hex()})
         elif a==0x01008256:self.received.append(r[0])
         elif a==0x60009716:self.cancels.append(r[0])
+        elif a==0x01000876:self.wakes.append(r[:2])
         u.reg_write(UC_ARM_REG_R0,self.reject if a==0x60009464 else 0)
         u.reg_write(UC_ARM_REG_PC,u.reg_read(UC_ARM_REG_LR))
     def checked(self,address,*args):
@@ -152,16 +153,23 @@ def verify(original,patched,main,report):
     def passed(name,**kw):groups.append(dict(name=name,status='pass',**kw))
     h=report['host_midi'];s=h['symbols']
     assert sha256(patched)==h['patched_app_sha256']
+    from host_midi_ehci_verify import verify as verify_ehci
+    passed('Original EHCI short-packet completion and continued MIDI reception',**verify_ehci(original,patched,h))
+    from host_midi_core_verify import verify as verify_core
+    passed('Original USB core reproduces exhausted timer failure and untimed submission',**verify_core(original))
     # Execute original reset copy/zero loops from dirty memory, not Python scatter.
     machines=[]
     for image in (original,patched):
         m=Machine(image,scatter=False)
         m.write(0x01017868,b'\xa5'*h['state_bytes'])
+        m.write(h['audio_state_start'],b'\xa5'*h['audio_state_bytes'])
         m.uc.reg_write(UC_ARM_REG_SP,0x2001fff0)
         m.uc.emu_start(BASE|1,BASE+0x7e,count=2000000,timeout=2000000)
         assert m.uc.reg_read(UC_ARM_REG_PC)==BASE+0x7e
         machines.append(m)
     assert machines[1].read(h['state_start'],h['state_bytes'])==bytes(h['state_bytes'])
+    assert machines[1].read(h['audio_state_start'],h['audio_state_bytes'])==bytes(h['audio_state_bytes'])
+    assert machines[1].read(h['audio_code_start'],h['audio_code_bytes'])==patched[h['audio_source']-BASE:]
     assert machines[1].read(h['code_start'],h['code_bytes'])==patched[h['insert_offset']:h['insert_offset']+h['code_bytes']]
     for op in recover(original)['operations']:
         if op['kind']=='copy' and op['length'] and op['destination']!=0x01000300:
@@ -179,6 +187,9 @@ def verify(original,patched,main,report):
     m.uc.hook_add(UC_HOOK_CODE,mpu_stub);m.call(0x60003760)
     assert regions[1]['base']==0x01000000 and regions[1]['attributes']==0x06000021
     assert regions[2]['base']==0x01010000 and regions[2]['attributes']==0x1300001d
+    # Original SDRAM MPU region permits execution and writes across the
+    # reserved [607f0000,60800000) range. No MPU protection is relaxed.
+    assert regions[6]=={'base':0x60000000,'attributes':0x03000035}
     m.write(h['state_start'],b'\xa5'*h['state_bytes'])
     m.call(0x01001b9c,count=500000)
     assert m.read(h['state_start'],h['state_bytes'])==b'\xa5'*h['state_bytes']
@@ -268,6 +279,13 @@ def verify(original,patched,main,report):
         t.enqueue(1,[0x0000f80f]);t.poll(1)
         assert t.requests[-1]['token']==3
         before=len(t.requests);t.enqueue(0,[0x0000f80f]);t.poll(1);assert len(t.requests)==before
+        first=h['midi_failure_state_start']+116 # port 0 TX; retained first-failure record
+        record=t.m.read(first,116)
+        assert struct.unpack_from('<II',record)==(2,{'submit':2,'completion':1,'short':1,'overflow':3}[failure])
+        assert struct.unpack_from('<I',record,16)[0]=={'submit':0xfffffff5,'completion':0xfffffff9,'short':0,'overflow':0}[failure]
+        # Later failure notifications and rebind cannot erase the witness.
+        t.call('mx1_debug_midi_failure',0,1,99,-99)
+        assert t.attach(0,1)[0]==0 and t.m.read(first,116)==record
     passed('Submission/completion/short-write/overflow failures isolate the affected output')
     # Original asynchronous USB API request packing and completion ABI. The
     # heap allocator/mailbox/free are stubbed; original struct construction,
@@ -284,10 +302,11 @@ def verify(original,patched,main,report):
         u.reg_write(UC_ARM_REG_R0,req if a==0x6000b330 else 0)
         u.reg_write(UC_ARM_REG_PC,u.reg_read(UC_ARM_REG_LR))
     m.uc.hook_add(UC_HOOK_CODE,api_stub)
-    m.write(0x2001fff0,P(3)+P(100)+P(0))
-    assert m.call(0x60009464,ep,0x20000800,64,callback|1)[0]==0
-    assert struct.unpack('<7I',m.read(req+0xc,28))==(interface,ep,0x20000800,64,callback|1,3,100)
-    assert m.read(req+0x28,2)==H(0)
+    for flags in (0,0x2000):
+        m.write(0x2001fff0,P(3)+P(100)+P(flags))
+        assert m.call(0x60009464,ep,0x20000800,64,callback|1)[0]==0
+        assert struct.unpack('<7I',m.read(req+0xc,28))==(interface,ep,0x20000800,64,callback|1,3,100)
+        assert m.read(req+0x28,2)==H(flags)
     for status in (0,-7,-9):
         m.write(ep+0x14,P(req));m.write(ep+0x18,P(0));m.write(ep+8,b'\x01\x00\x02')
         m.write(completion+8,P(status)+P(interface)+P(ep)+P(64))

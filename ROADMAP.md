@@ -21,20 +21,32 @@ not sustained or comprehensive validation.
    its offline checks do not establish hardware stability.
 4. Physically validate [USB-MIDI](docs/USB_MIDI.md) on class-only hosts: both
    ports, clock/transport, SysEx, reconnect and simultaneous audio.
-5. Consider small control/routing improvements individually. The internal code
+5. Physically validate [FM-1 host audio](docs/USB_HOST_AUDIO.md): stereo input,
+   simultaneous MIDI, unplug/reconnect, connected boot, sustained operation and
+   USB-B operation. B4 established the Bluetooth/MIDI command bridge; B5's
+   explicitly started EHCI experiment advanced the FM-1 packet counter, then
+   stopped on a converter error before accepted PCM. B6 adds transport-only
+   startup and converter snapshots: its long run accepted 52,631 packets with
+   scheduling gaps and MIDI loss until reconnect; a separate muted converter
+   run failed on a nonzero gate after two successful calls. Resolve these
+   before claiming audible or sustained audio. Other host-audio
+   coexistence needs shared bandwidth/TT admission beyond B5. The computer
+   probe and offline tests do not establish an MX-1 audio result.
+6. Consider small control/routing improvements individually. The internal code
    slot has only 20 bytes free; measure compiled size before claiming capacity.
-   An explicitly reserved SDRAM design is possible research, not enabled in
-   the current candidate. [Memory and DSP findings](docs/GENERATOR_RESEARCH.md).
-6. Keep exact image identities and scoped hardware results. TAP rollback worked
+   A main-processor SDRAM design remains research. The separate USB processor
+   now reserves 64 KiB for the FM-1 experiment. [Memory and DSP findings](docs/GENERATOR_RESEARCH.md).
+7. Keep exact image identities and scoped hardware results. TAP rollback worked
    for the observed application failures; other recovery classes are unverified.
 
-Validate the [alternate-zero startup fix](evidence/host-midi-alt-zero-20261104/README.md) for [USB-host MIDI](docs/USB_HOST_MIDI.md): prioritize sync output, block incoming host sync, then test notes/controllers/SysEx and routing. Any future routing configuration belongs in the existing GAIN-at-boot system menu.
+MIDI output to an FM-1 succeeded after the [alternate-zero startup fix](evidence/host-midi-alt-zero-20261104/README.md) for [USB-host MIDI](docs/USB_HOST_MIDI.md). Validate sync output, rejection of incoming host sync, notes/controllers/SysEx and routing on the changed candidate. Any future routing configuration belongs in the existing GAIN-at-boot system menu.
 
-Generators, extra SELECT editing and generic USB-host audio are excluded.
+Generators, extra SELECT editing and generic USB-host audio beyond the measured
+FM-1 input profile are excluded.
 Future DSP work needs a separate explicit experiment and evidence about real
 interrupt timing, memory placement and sample transport before reintegration.
 No alternate generator or host-unlock firmware is maintained.
 
-Known USB limits remain: fixed read-only rate, validity based on configuration
+Known USB-B limits remain: fixed read-only rate, validity based on configuration
 rather than PLL lock, implicit feedback, unverified USB-MIDI host compatibility, high-speed audio/MIDI
 only, and incomplete physical stereo/mixed-alternate and sustained testing.

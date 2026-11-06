@@ -1,0 +1,215 @@
+Original app_usb SHA-256 fe52cf6c9e8ec8677963b1c4b876ddeaefae5136b7a5f1f49010e3cda9203a6e
+Resident runtime = 60000000 + decoded offset.
+Hot relocation: decoded 2b1f4 -> runtime 01000300, length bbe4.
+No generated decompiler output was edited.
+
+app_usb decoded 33a9e, runtime 01008baa
+01008baa 2de9f047     push.w {r4, r5, r6, r7, r8, sb, sl, lr}
+01008bae 1546         mov r5, r2
+01008bb0 0e46         mov r6, r1
+01008bb2 dde90827     ldrd r2, r7, [sp, #0x20]
+01008bb6 bd49         ldr r1, [pc, #0x2f4]
+01008bb8 8146         mov sb, r0
+01008bba b74c         ldr r4, [pc, #0x2dc]
+01008bbc 01eb4920     add.w r0, r1, sb, lsl #9
+01008bc0 9a46         mov sl, r3
+01008bc2 303c         subs r4, #0x30
+01008bc4 2b8c         ldrh r3, [r5, #0x20]
+01008bc6 118c         ldrh r1, [r2, #0x20]
+01008bc8 b0f912c0     ldrsh.w ip, [r0, #0x12]
+01008bcc c4f800c0     str.w ip, [r4]
+01008bd0 407e         ldrb r0, [r0, #0x19]
+01008bd2 a080         strh r0, [r4, #4]
+01008bd4 e380         strh r3, [r4, #6]
+01008bd6 688c         ldrh r0, [r5, #0x22]
+01008bd8 2081         strh r0, [r4, #8]
+01008bda a183         strh r1, [r4, #0x1c]
+01008bdc 508c         ldrh r0, [r2, #0x22]
+01008bde e083         strh r0, [r4, #0x1e]
+01008be0 0020         movs r0, #0
+01008be2 c119         adds r1, r0, r7
+01008be4 06eb8103     add.w r3, r6, r1, lsl #2
+01008be8 55f82180     ldr.w r8, [r5, r1, lsl #2]
+01008bec 5b68         ldr r3, [r3, #4]
+01008bee c3f30b4c     ubfx ip, r3, #0x10, #0xc
+01008bf2 52f82130     ldr.w r3, [r2, r1, lsl #2]
+01008bf6 04eb8001     add.w r1, r4, r0, lsl #2
+01008bfa 401c         adds r0, r0, #1
+01008bfc c1f814c0     str.w ip, [r1, #0x14]
+01008c00 c1f80c80     str.w r8, [r1, #0xc]
+01008c04 0b62         str r3, [r1, #0x20]
+01008c06 0228         cmp r0, #2
+01008c08 ebdb         blt #0x1008be2
+01008c0a a349         ldr r1, [pc, #0x28c]
+01008c0c 4846         mov r0, sb
+01008c0e 3039         subs r1, #0x30
+01008c10 fff764fe     bl #0x10088dc
+01008c14 0028         cmp r0, #0
+01008c16 21d1         bne #0x1008c5c
+01008c18 dff89492     ldr.w sb, [pc, #0x294]
+01008c1c 4ff0004c     mov.w ip, #-0x80000000
+01008c20 c219         adds r2, r0, r7
+01008c22 06eb8201     add.w r1, r6, r2, lsl #2
+01008c26 8b88         ldrh r3, [r1, #4]
+01008c28 9bb2         uxth r3, r3
+01008c2a 4b60         str r3, [r1, #4]
+01008c2c b5f82480     ldrh.w r8, [r5, #0x24]
+01008c30 4cea0848     orr.w r8, ip, r8, lsl #16
+01008c34 43ea0803     orr.w r3, r3, r8
+01008c38 4b60         str r3, [r1, #4]
+01008c3a 0aeb8201     add.w r1, sl, r2, lsl #2
+01008c3e 04eb8003     add.w r3, r4, r0, lsl #2
+01008c42 4a68         ldr r2, [r1, #4]
+01008c44 401c         adds r0, r0, #1
+01008c46 02ea0902     and.w r2, r2, sb
+01008c4a 4a60         str r2, [r1, #4]
+01008c4c 1b8d         ldrh r3, [r3, #0x28]
+01008c4e 4cea0343     orr.w r3, ip, r3, lsl #16
+01008c52 1a43         orrs r2, r3
+01008c54 4a60         str r2, [r1, #4]
+01008c56 0228         cmp r0, #2
+01008c58 e2db         blt #0x1008c20
+01008c5a 0020         movs r0, #0
+01008c5c bde8f087     pop.w {r4, r5, r6, r7, r8, sb, sl, pc}
+
+app_usb decoded 33b54, runtime 01008c60
+01008c60 2de9fc5f     push.w {r2, r3, r4, r5, r6, r7, r8, sb, sl, fp, ip, lr}
+01008c64 dff834b2     ldr.w fp, [pc, #0x234]
+01008c68 0646         mov r6, r0
+01008c6a dbf80800     ldr.w r0, [fp, #8]
+01008c6e 00b1         cbz r0, #0x1008c72
+01008c70 8047         blx r0
+01008c72 dff824a2     ldr.w sl, [pc, #0x224]
+01008c76 0025         movs r5, #0
+01008c78 0120         movs r0, #1
+01008c7a baf90020     ldrsh.w r2, [sl]
+01008c7e a840         lsls r0, r5
+01008c80 5146         mov r1, sl
+01008c82 0242         tst r2, r0
+01008c84 16d0         beq #0x1008cb4
+01008c86 0aeb850e     add.w lr, sl, r5, lsl #2
+01008c8a def80400     ldr.w r0, [lr, #4]
+01008c8e 1028         cmp r0, #0x10
+01008c90 40da         bge #0x1008d14
+01008c92 8848         ldr r0, [pc, #0x220]
+01008c94 3446         mov r4, r6
+01008c96 00ebc512     add.w r2, r0, r5, lsl #7
+01008c9a 05eb4500     add.w r0, r5, r5, lsl #1
+01008c9e 00ebc501     add.w r1, r0, r5, lsl #3
+01008ca2 8548         ldr r0, [pc, #0x214]
+01008ca4 02f14003     add.w r3, r2, #0x40
+01008ca8 00ebc109     add.w sb, r0, r1, lsl #3
+01008cac 4ff00047     mov.w r7, #-0x80000000
+01008cb0 b01c         adds r0, r6, #2
+01008cb2 27e0         b #0x1008d04
+01008cb4 eff31180     mrs r0, basepri
+01008cb8 0822         movs r2, #8
+01008cba 82f31188     msr basepri, r2
+01008cbe 0a6a         ldr r2, [r1, #0x20]
+01008cc0 c0b2         uxtb r0, r0
+01008cc2 80f31188     msr basepri, r0
+01008cc6 ca61         str r2, [r1, #0x1c]
+01008cc8 baf92c00     ldrsh.w r0, [sl, #0x2c]
+01008ccc f9f7fef9     bl #0x10020cc
+01008cd0 4fe0         b #0x1008d72
+01008cd2 00bf         nop 
+01008cd4 02eb840c     add.w ip, r2, r4, lsl #2
+01008cd8 bcf80410     ldrh.w r1, [ip, #4]
+01008cdc 89b2         uxth r1, r1
+01008cde ccf80410     str.w r1, [ip, #4]
+01008ce2 b9f82480     ldrh.w r8, [sb, #0x24]
+01008ce6 47ea0848     orr.w r8, r7, r8, lsl #16
+01008cea 41ea0801     orr.w r1, r1, r8
+01008cee ccf80410     str.w r1, [ip, #4]
+01008cf2 03eb8401     add.w r1, r3, r4, lsl #2
+01008cf6 641c         adds r4, r4, #1
+01008cf8 d1f804c0     ldr.w ip, [r1, #4]
+01008cfc 4cf0004c     orr ip, ip, #0x80000000
+01008d00 c1f804c0     str.w ip, [r1, #4]
+01008d04 8442         cmp r4, r0
+01008d06 e5db         blt #0x1008cd4
+01008d08 def80400     ldr.w r0, [lr, #4]
+01008d0c 401c         adds r0, r0, #1
+01008d0e cef80400     str.w r0, [lr, #4]
+01008d12 2ee0         b #0x1008d72
+01008d14 6748         ldr r0, [pc, #0x19c]
+01008d16 0027         movs r7, #0
+01008d18 00ebc514     add.w r4, r0, r5, lsl #7
+01008d1c 04eb8710     add.w r0, r4, r7, lsl #6
+01008d20 00eb8600     add.w r0, r0, r6, lsl #2
+01008d24 8068         ldr r0, [r0, #8]
+01008d26 0028         cmp r0, #0
+01008d28 0cdb         blt #0x1008d44
+01008d2a 4100         lsls r1, r0, #1
+01008d2c 01d4         bmi #0x1008d32
+01008d2e 8100         lsls r1, r0, #2
+01008d30 03d5         bpl #0x1008d3a
+01008d32 2846         mov r0, r5
+01008d34 00f09df8     bl #0x1008e72
+01008d38 04e0         b #0x1008d44
+01008d3a c000         lsls r0, r0, #3
+01008d3c 02d4         bmi #0x1008d44
+01008d3e 7f1c         adds r7, r7, #1
+01008d40 022f         cmp r7, #2
+01008d42 ebdb         blt #0x1008d1c
+01008d44 022f         cmp r7, #2
+01008d46 14d1         bne #0x1008d72
+01008d48 05eb4500     add.w r0, r5, r5, lsl #1
+01008d4c 00ebc501     add.w r1, r0, r5, lsl #3
+01008d50 5948         ldr r0, [pc, #0x164]
+01008d52 04f14003     add.w r3, r4, #0x40
+01008d56 00ebc102     add.w r2, r0, r1, lsl #3
+01008d5a 02f12c00     add.w r0, r2, #0x2c
+01008d5e cde90006     strd r0, r6, [sp]
+01008d62 2146         mov r1, r4
+01008d64 2846         mov r0, r5
+01008d66 fff720ff     bl #0x1008baa
+01008d6a 10b1         cbz r0, #0x1008d72
+01008d6c 2846         mov r0, r5
+01008d6e 00f080f8     bl #0x1008e72
+01008d72 6d1c         adds r5, r5, #1
+01008d74 042d         cmp r5, #4
+01008d76 fff67faf     blt.w #0x1008c78
+01008d7a dbf80c00     ldr.w r0, [fp, #0xc]
+01008d7e 0028         cmp r0, #0
+01008d80 03d0         beq #0x1008d8a
+01008d82 02b0         add sp, #8
+01008d84 bde8f05f     pop.w {r4, r5, r6, r7, r8, sb, sl, fp, ip, lr}
+01008d88 0047         bx r0
+01008d8a bde8fc9f     pop.w {r2, r3, r4, r5, r6, r7, r8, sb, sl, fp, ip, pc}
+
+app_usb decoded 337d0, runtime 010088dc
+010088dc 2de9f041     push.w {r4, r5, r6, r7, r8, lr}
+010088e0 0246         mov r2, r0
+010088e2 02ebc203     add.w r3, r2, r2, lsl #3
+010088e6 544c         ldr r4, [pc, #0x150]
+010088e8 03eb4213     add.w r3, r3, r2, lsl #5
+010088ec 04eb8304     add.w r4, r4, r3, lsl #2
+010088f0 0020         movs r0, #0
+010088f2 6369         ldr r3, [r4, #0x14]
+010088f4 1b68         ldr r3, [r3]
+010088f6 0bb1         cbz r3, #0x10088fc
+010088f8 401e         subs r0, r0, #1
+010088fa 36e5         b #0x100836a
+010088fc 0b68         ldr r3, [r1]
+010088fe 012b         cmp r3, #1
+01008900 fbd1         bne #0x10088fa
+01008902 4e48         ldr r0, [pc, #0x138]
+01008904 4d4b         ldr r3, [pc, #0x134]
+01008906 4068         ldr r0, [r0, #4]
+01008908 1b78         ldrb r3, [r3]
+0100890a 78b1         cbz r0, #0x100892c
+0100890c 0024         movs r4, #0
+0100890e 01eb8405     add.w r5, r1, r4, lsl #2
+01008912 b1f91cc0     ldrsh.w ip, [r1, #0x1c]
+01008916 6b69         ldr r3, [r5, #0x14]
+01008918 4fea8c06     lsl.w r6, ip, #2
+0100891c b3fbf6f6     udiv r6, r3, r6
+01008920 b1f90670     ldrsh.w r7, [r1, #6]
+01008924 0023         movs r3, #0
+01008926 2a6a         ldr r2, [r5, #0x20]
+01008928 e868         ldr r0, [r5, #0xc]
+0100892a 10e0         b #0x100894e
+0100892c 2046         mov r0, r4
+0100892e bde8f041     pop.w {r4, r5, r6, r7, r8, lr}
+01008932 a0e5         b #0x1008476

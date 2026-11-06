@@ -1,15 +1,25 @@
 # Mainline integration
 
 The only maintained custom firmware combines channel routing, mastering editing, USB-B UAC2 and experimental USB-MIDI 1.0.
-USB-host MIDI is an offline experiment with sync output prioritized and incoming host sync blocked; see [host MIDI](USB_HOST_MIDI.md). Generic host audio remains excluded.
+USB-host MIDI prioritizes sync output and blocks incoming host sync; see [host MIDI](USB_HOST_MIDI.md). The current candidate adds experimental [FM-1 stereo host audio](USB_HOST_AUDIO.md). Other generic host audio remains excluded.
 Generators and their SELECT editor are removed; their findings are in
 [the DSP handoff](GENERATOR_RESEARCH.md).
-The temporary d001 diagnostic menu and SDRAM reservation are absent from this build. Routing now uses scene
+The temporary d001 diagnostic menu and main-processor generator SDRAM reservation are absent from this build. Routing now uses scene
 and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`253645edb92a09c7b0d100da01f57d5127834c109b2ad499332645487a7a1d14`.
+`f9d900f6a17159b89bd59bdf690942fbaa3b6f97d07e66177d4422153de2ad1b`.
+B6 adds transport-only startup and converter snapshots after B5's first
+device-side audio-packet progress stopped on a converter error; [B6 evidence](../evidence/fm1-converter-b6-20261106/README.md).
+It retains B5's explicitly started EHCI split-ISO experiment; [implementation and limits](../research/fm1-ehci.md).
+It retains B4’s isolation of the MIDI TX error −20 by using untimed writes only for
+the matched FM-1 debug connection; [evidence and limits](../evidence/fm1-midi-timeout-b4-20261106/README.md).
+B3 short-input and transmit-wakeup fixes remain.
+It retains [stepwise MIDI diagnostics](DEBUG_BRIDGE.md) and pauses automatic audio startup on the observed EHCI controller. The new EHCI transport has offline checks; physical packet/audio acceptance remains open.
+The experiment accepts the measured FM-1 full-speed, stereo PCM16 input profile and reuses
+the original 44.1-to-96-kHz conversion path. The preceding `253645ed…` image
+has a user-reported MIDI-output result with the FM-1; audio on the MX-1 remains unverified.
 It fixes [host MIDI startup on an already-active alternate zero](../evidence/host-midi-alt-zero-20261104/README.md).
 It retains the fix for the [held-key range that blocked mastering entry](../evidence/mastering-key-range-20261104/README.md).
 It replaces timed mastering entry with the [MASTERING + TAP combination](../evidence/mastering-chord-20261103/README.md)
@@ -24,10 +34,10 @@ require physical acceptance.
 ## Memory and binary integration
 
 The intervals below describe the **main processor**. The independent USB processor
-adds 2,772 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
+adds 3,056 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
 see [host placement and allocator evidence](USB_HOST_MIDI.md#integration-and-memory).
 
-USB-host MIDI additionally modifies the USB application. Boot programs, updater and panel-controller payload remain byte-identical to stock. This follow-up fixes alternate-zero host-MIDI startup in the USB application; the main application is byte-identical to the mastering held-key fix in PR #18.
+USB-host MIDI and FM-1 audio modify the USB application. The audio extension reserves 64 KiB from the USB processor’s existing SDRAM heap; see [its placement and allocator evidence](USB_HOST_AUDIO.md#usb-processor-placement-and-binary-changes). Boot programs, updater and panel-controller payload remain byte-identical to stock. The main application is byte-identical to the mastering held-key fix in PR #18.
 The descriptor, rate and reply buffer in the retired USB-B build occupied
 read-only code SRAM; the combined build fixes that placement before testing.
 
@@ -74,7 +84,9 @@ initialization, boot selection/decoding, updater checks, USB descriptors/control
 requests, panel gestures, mastering transactions and DSP programming helpers against this exact image.
 MIDI tests execute the original packetizer, bulk word transport and cable dispatch
 with explicit FIFO and RTOS models. High-speed endpoint tables differ only in the
-reviewed MIDI entries; audio entries are unchanged.
+reviewed MIDI entries; USB-B audio entries are unchanged. FM-1 host checks
+execute combined setup, OHCI and EHCI scheduling/completion, PCM conversion and
+retirement with DMA, RTOS delivery and DSP hardware modeled explicitly.
 Finite-packet tests execute playback/capture, malformed lengths and alternate
 changes; 18-channel traces are compared against the predecessor.
 An integration case initializes USB and interleaves routing changes with clock
@@ -103,7 +115,8 @@ USB timing or deadline margin.
    in both directions, including simultaneous audio.
 7. Follow the [host MIDI bench checks](USB_HOST_MIDI.md#verification-and-remaining-work),
    especially sync output and rejection of incoming host clock/transport.
-8. Test stereo/18-channel and mixed alternates, then 44.1/48/96 kHz and sustained
+8. Follow the [FM-1 host-audio procedure](USB_HOST_AUDIO.md#verification-and-bench-procedure).
+9. Test stereo/18-channel and mixed alternates, then 44.1/48/96 kHz and sustained
    audio. Record levels, channel order and any glitches or failures.
 
 The filename retains `UNTESTED` because acceptance is incomplete. The
@@ -114,6 +127,6 @@ A separate retirement guard verifies the original sample callback pointer, trans
 SELECT/pad handlers and SDRAM heap start. Saved retired source IDs 53/54 fall
 back to Auto on normal boot and recall; remaining routes keep their IDs.
 
-## USB-processor MIDI extension
+## USB-processor host extensions
 
-See [host MIDI](USB_HOST_MIDI.md) for its separate SRAM map, ABI, queues and limitations. Exact current sizes and hashes are recorded in `build/mainline/build-report.json` under `host_midi`. Host reports are checked against the USB artifact as well as the complete candidate.
+See [host MIDI](USB_HOST_MIDI.md) for its separate SRAM map, ABI, queues and limitations. The [FM-1 audio report](USB_HOST_AUDIO.md) covers its additional SDRAM transport. Exact current sizes and hashes are recorded in `build/mainline/build-report.json` under `host_midi`. Host reports are checked against the USB artifact as well as the complete candidate.

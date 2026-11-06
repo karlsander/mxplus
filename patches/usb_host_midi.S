@@ -54,3 +54,27 @@ trampoline host_tx_poll_original
  resume 0x01009377
 trampoline host_rx_poll_original
  resume 0x010092ef
+trampoline host_ohci_bind_original
+ ldr r2,=0x6002b0f0
+ add.w r0,r0,r0,lsl #1
+ ldrh.w r0,[r2,r0,lsl #2]
+ resume 0x60013c7f
+trampoline host_ehci_bind_original
+ ldr r2,=0x6002b0f0
+ add.w r0,r0,r0,lsl #1
+ ldrh.w r0,[r2,r0,lsl #2]
+ resume 0x60011d4b
+trampoline host_ohci_done_original
+ push.w {r3-r11,lr}
+ mov r5,r0
+ /* Displaced 60013f78 is the identity mapping (bx lr). */
+ resume 0x6001380f
+trampoline host_audio_close_original
+ push {r4-r6,lr}
+ ldrsh.w r4,[r0,#0x12]
+ ldrsh.w r5,[r0,#2]
+ resume 0x6000834b
+trampoline host_audio_tick_original
+ push.w {r2-r12,lr}
+ ldr r11,=0x4000b400
+ resume 0x01008c69

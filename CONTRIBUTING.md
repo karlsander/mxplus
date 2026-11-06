@@ -8,7 +8,7 @@ iPhone/AUM duplex path. Routing/end stops were tested in its predecessor.
 Physical snapshot/restart acceptance and broad USB validation remain open.
 The mastering controls, stereo packet fix and USB-MIDI descriptors have offline evidence only;
 the preceding image's hardware result does not validate these changes.
-USB-host MIDI is an offline experiment. Generators, extra SELECT editing and generic USB-host audio are documentation only;
+USB-host MIDI output to an FM-1 has one user-reported success on the preceding candidate. The current candidate adds [FM-1 host audio](docs/USB_HOST_AUDIO.md), with offline checks and a computer baseline but no MX-1 audio result. Generators, extra SELECT editing and other generic USB-host audio profiles are documentation only;
 see [generator handoff](docs/GENERATOR_RESEARCH.md). TAP rollback was observed
 for particular application failures, not every possible failure class.
 
@@ -37,7 +37,7 @@ The reproduction runner executes 17 offline stages and writes `analysis/reproduc
 
 Maintain one builder (`tools/build_firmware.py`), linker layout and artifact
 (`build/mainline/MXPLUS_MAINLINE_UNTESTED.bin`). Do not reintroduce separate
-host/device/routing build targets. Host MIDI changes the USB application; generic host audio stays disabled. See `docs/USB_HOST_MIDI.md`.
+host/device/routing build targets. Host MIDI and the measured FM-1 audio profile change the USB application; other generic host audio stays disabled. See `docs/USB_HOST_MIDI.md` and `docs/USB_HOST_AUDIO.md`.
 
 Describe the observed problem, the original path that produces it, and the intended new behavior. For a parser change, supply the descriptor bytes that trigger it. For a control change, supply the setup request and expected response or stall. For a pump change, describe the start/stop sequence, stream states and required hardware inputs. Prefer one resolved behavior over an unsupported compatibility claim.
 

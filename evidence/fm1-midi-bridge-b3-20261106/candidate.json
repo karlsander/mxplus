@@ -1,0 +1,110 @@
+{
+  "date": "2026-11-06",
+  "build": 179,
+  "candidate_sha256": "44314acc16a88248b74e0a4dd315f976f6b03f0c6d37e130d27b986ca8573c6c",
+  "preceding_candidate_sha256": "360b316352e7f762d5752813dfa73a45ab13d7203676d16e232ffd29165077ee",
+  "usb_app_sha256": "9eaf4924a89a1361731ecf25ce8c5685d386d6944997bee12ae5dc2557295a90",
+  "host_extension_sha256": "b4b9ceb6a62d8c9ce8c0df3ebfda20976fc20398b50e524d11bc7294211317c3",
+  "host_audio_extension_sha256": "a856186822000a3690fabeca347ee45e44f32f0f3bd2594f9c87710034e9d56a",
+  "unchanged_main_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
+  "fm1_bridge_sha256": "f13e43fcb9b34db7c8387751871b9a045fa55572b33c3b1759594c0451c54da0",
+  "mx1_installed": false,
+  "physical_mx1_round_trip_verified": false,
+  "physical_mx1_audio_verified": false,
+  "verification": "All 17 offline reproduction stages and current-artifact gate passed; hardware behavior pending",
+  "code_and_state": {
+    "code_bytes": 2984,
+    "state_bytes": 1472,
+    "audio_code_bytes": 8460,
+    "audio_state_bytes": 25956
+  },
+  "ehci_short_packet_check": {
+    "name": "Original EHCI short-packet completion and continued MIDI reception",
+    "status": "pass",
+    "cases": [
+      {
+        "speed": 0,
+        "bytes": 0,
+        "before": 4294967281,
+        "after": 0
+      },
+      {
+        "speed": 0,
+        "bytes": 4,
+        "before": 4294967281,
+        "after": 0
+      },
+      {
+        "speed": 0,
+        "bytes": 16,
+        "before": 4294967281,
+        "after": 0
+      },
+      {
+        "speed": 0,
+        "bytes": 60,
+        "before": 4294967281,
+        "after": 0
+      },
+      {
+        "speed": 0,
+        "bytes": 64,
+        "before": 0,
+        "after": 0
+      },
+      {
+        "speed": 1024,
+        "bytes": 0,
+        "before": 4294967281,
+        "after": 0
+      },
+      {
+        "speed": 1024,
+        "bytes": 4,
+        "before": 4294967281,
+        "after": 0
+      },
+      {
+        "speed": 1024,
+        "bytes": 16,
+        "before": 4294967281,
+        "after": 0
+      },
+      {
+        "speed": 1024,
+        "bytes": 60,
+        "before": 4294967281,
+        "after": 0
+      },
+      {
+        "speed": 1024,
+        "bytes": 64,
+        "before": 0,
+        "after": 0
+      }
+    ],
+    "boundary": "Original EHCI wrapper, QH/qTD construction, schedule linking, toggle handling and completion run unchanged. Heap/critical sections and controller DMA/status are modeled; this does not validate USB timing or delivery."
+  },
+  "protocol_checks": {
+    "status": "pass",
+    "cases": [
+      "structured replies across multiple transfers",
+      "malformed checksum/target rejection",
+      "pending reply retention",
+      "user SysEx continuity",
+      "replacement device isolation",
+      "actual RX and TX poll integration",
+      "worker-owned register snapshots and bounded pages",
+      "normal/mute/test-tone converter modes",
+      "mode timeout",
+      "EHCI baseline avoids OHCI request and DSP submission",
+      "cached topology and MIDI software status",
+      "manager-only single-step controls/lookup and failure results",
+      "original bind callback queues manager event",
+      "reply publication wakes original TX task flag",
+      "idle audio cadence wakes TX without claimed audio",
+      "one-transfer telemetry defers behind user SysEx"
+    ],
+    "boundary": "USB delivery, RTOS queue dispatch and DSP hardware modeled; actual compiled ARM code executes"
+  }
+}

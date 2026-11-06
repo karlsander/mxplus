@@ -28,9 +28,9 @@ class Machine:
                 self.uc.mem_write(op['destination'],content)
     def read(self,address,size):return bytes(self.uc.mem_read(address,size))
     def write(self,address,content):self.uc.mem_write(address,bytes(content))
-    def call(self,address,*args,count=100000,measure=False):
+    def call(self,address,*args,count=100000,measure=False,stack=0x2001fff0):
         u=self.uc
-        u.reg_write(UC_ARM_REG_SP,0x2001fff0);u.reg_write(UC_ARM_REG_LR,RETURN|1)
+        u.reg_write(UC_ARM_REG_SP,stack);u.reg_write(UC_ARM_REG_LR,RETURN|1)
         for reg,val in zip((UC_ARM_REG_R0,UC_ARM_REG_R1,UC_ARM_REG_R2,UC_ARM_REG_R3),args):u.reg_write(reg,val)
         instructions=[0]
         handle=None
@@ -41,5 +41,5 @@ class Machine:
         finally:
             if handle is not None:u.hook_del(handle)
         if u.reg_read(UC_ARM_REG_PC)!=RETURN:raise AssertionError(f'function did not return, pc={u.reg_read(UC_ARM_REG_PC):x}')
-        if u.reg_read(UC_ARM_REG_SP)!=0x2001fff0:raise AssertionError('stack pointer not restored')
+        if u.reg_read(UC_ARM_REG_SP)!=stack:raise AssertionError('stack pointer not restored')
         return u.reg_read(UC_ARM_REG_R0),instructions[0]

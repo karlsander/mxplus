@@ -26,7 +26,7 @@ The sole mainline image adds the following through the existing FM-1 MIDI path:
 - Individually queued rate, alternate and endpoint-lookup probes on EHCI.
 - Unsolicited TX telemetry to diagnose a failed MIDI IN command direction.
 
-Build B3 retains the B2 pause of automatic audio startup on EHCI before any audio controls,
+Build B4 retains the B2 pause of automatic audio startup on EHCI before any audio controls,
 lookup, DSP initialization or ISO submission. The existing ISO transport is
 OHCI-only; it cannot serve the observed HOST3 connection. This isolates MIDI and
 lets the Mac exercise setup steps independently. FM-1 stays on bridge B1.
@@ -76,7 +76,7 @@ requests. Overlong private frames are consumed through F7, not forwarded as musi
 Result 0 succeeds; 1 is unsupported command/arguments; 2 is unavailable or a
 concurrent snapshot. Refresh failures return the original absolute queue/worker
 error. Probe queue failure is result 3. Invalid framing/checksum is silent and
-increments errors. B1 is 177, B2 is 178 and the current MX-1 B3 is 179.
+increments errors. B1 is 177, B2 is 178, B3 is 179 and the current MX-1 B4 is 180.
 
 Status after result: build, port, stage, result_code, controller, phase, control,
 flags, cc, frame, packets, malformed, overflow, underrun, missed, dsp_errors,
@@ -123,7 +123,7 @@ step. Stages 31–34 hex mean executing a step; 39–3C mean returned. A subsequ
 interface bind can restore stage 48; probe_done/result still retain the outcome.
 One pending step per device. Rebinding setup resets the diagnostic session.
 
-Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 179,
+Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 180,
 startup stage, RX flags, TX flags, last RX result, last TX result. Flags are busy
 in bit 0, ready in bit 1, fault in bits 8 onward. This fits in one 60-byte USB
 MIDI transfer. B3 wakes the TX task every 4,096 audio-task calls, even with no
@@ -144,8 +144,8 @@ resident addresses map as runtime = 60000000 + decoded offset; hot relocation is
 original decoded 2b1f4 → runtime 01000300, length bbe4. The builder records every
 changed original byte, callback target, inserted source, startup copy/zero and hash.
 
-- Hot extension: 0100bee4..0100ca8c, 2,984 bytes; writable hot state remains 1,472 bytes.
-- Audio/debug code: 607f0000..607f210c, 8,460 bytes, within the existing 16-KiB code slot.
+- Hot extension: 0100bee4..0100cabc, 3,032 bytes; writable hot state remains 1,472 bytes.
+- Audio/debug code: 607f0000..607f2158, 8,536 bytes, within the existing 16-KiB code slot.
 - Audio/DMA state remains 607f4000..607f9880; the A1 diagnostics remain 607f9880..607f9930.
 - Bridge state follows at 607f9930..607fa564 (3,124 bytes). The whole 25,956-byte
   state stays in the already reserved 64-KiB SDRAM region; allocator bounds are unchanged.
@@ -169,7 +169,7 @@ for the updater's completion, restart normally, then connect FM-1 directly to
 HOST3. Keep USB3 at Auto/USB3. Read status and pages 3/4 first; if those work,
 run `mx-probe 1`, `mx-probe 2`, then `mx-probe 3`, checking status and FM-1 trace
 between steps. `mx-probe 4` returns to alt0. OHCI MMIO pages and converter modes
-remain unavailable on EHCI; no audio packet progress is expected from B3.
+remain unavailable on EHCI; no audio packet progress is expected from B4.
 
 
 B2's physical run retained alt0 but commands still timed out. B3 fixes two
@@ -177,4 +177,12 @@ independently established defects: the MIDI IN request omitted the original
 short-packet flag, and debug replies did not signal the TX task. It also replaces
 the idle TX-poll heartbeat with the audio-task wake cadence described above.
 [Before/after evidence and test boundaries](../evidence/fm1-midi-bridge-b3-20261106/README.md).
+B3 was installed and its startup heartbeat captured build 179, previous RX −7
+and previous TX −20. Commands still timed out; last results survive reconnect.
+B4 removes the stock per-transfer alarm only for MIDI OUT belonging to the
+matched FM-1 debug session. The original five-alarm pool can produce −20 before
+HCD submission; actual live exhaustion has not been established. Untimed writes
+retain their buffer until completion or stock disconnect cancellation, with no
+new watchdog or retry. Other generic MIDI OUT keeps timeout 100.
+[B4 experiment and actual-instruction tests](../evidence/fm1-midi-timeout-b4-20261106/README.md).
 The FM-1 firmware and Mac client are unchanged; a real MX-1 round trip is pending.

@@ -2,7 +2,7 @@
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
   "patched_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
-  "candidate_container_sha256": "44314acc16a88248b74e0a4dd315f976f6b03f0c6d37e130d27b986ca8573c6c",
+  "candidate_container_sha256": "389ae886e3ab6af87804f375f9752e3099fc77bd5e157f2c7e8c6ee62d7bfd7c",
   "extension_sha256": "fc4ed00c31546c74a84dbaece0ac9fda8fad28a3c21f19038e123617b945bbeb",
   "groups": [
     {
@@ -1851,9 +1851,27 @@
       "boundary": "Original EHCI wrapper, QH/qTD construction, schedule linking, toggle handling and completion run unchanged. Heap/critical sections and controller DMA/status are modeled; this does not validate USB timing or delivery."
     },
     {
+      "name": "Original USB core reproduces exhausted timer failure and untimed submission",
+      "status": "pass",
+      "alarm_slots": 5,
+      "exhausted_timed_result": -20,
+      "exhausted_untimed_result": 0,
+      "retained_completion_errors": [
+        -7,
+        -9
+      ],
+      "modeled_preemption_order": [
+        "next TX",
+        "timer cleanup"
+      ],
+      "next_timed_before_cleanup": -20,
+      "next_timed_after_cleanup": 0,
+      "boundary": "Original USB core submission/completion, alarm initialization/create/start/stop/delete and wrapper instructions execute. Heap/free, endpoint list lookup, critical sections, timer wheel, mailbox delivery, HCD and task preemption are modeled. Five slots and the failure path are established; actual live slot occupancy, scheduling order, USB delivery and timing are not."
+    },
+    {
       "name": "Original USB startup copies code, zeroes state, preserves existing initialized data",
       "status": "pass",
-      "code_bytes": 2984,
+      "code_bytes": 3032,
       "state_bytes": 1472
     },
     {
@@ -2388,7 +2406,7 @@
       "status": "pass",
       "details": {
         "status": "pass",
-        "patched_app_sha256": "9eaf4924a89a1361731ecf25ce8c5685d386d6944997bee12ae5dc2557295a90",
+        "patched_app_sha256": "142a1587fbde1f3854131b69a30d4f7de8657902024446d263d2d2f0c28547f6",
         "hardware_access": false,
         "limits": "instruction checks only; USB/DSP/RTOS boundaries modeled",
         "setup": {
@@ -2511,6 +2529,7 @@
             "user SysEx continuity",
             "replacement device isolation",
             "actual RX and TX poll integration",
+            "untimed OUT restricted to matching debug device; buffer ownership and cancellation retained",
             "worker-owned register snapshots and bounded pages",
             "normal/mute/test-tone converter modes",
             "mode timeout",

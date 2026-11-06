@@ -78,6 +78,7 @@
     "Independent factory graph audit matches all 18 raw PC and 18 serial read bindings",
     "Original native input gates and connection callbacks distinguish native and PC paths",
     "Original EHCI short-packet completion and continued MIDI reception",
+    "Original USB core reproduces exhausted timer failure and untimed submission",
     "Original USB startup copies code, zeroes state, preserves existing initialized data",
     "Original USB MPU permissions and RTOS pools exclude the extension state",
     "Original TX loop remains intact; task call sites target the new poll wrappers",

@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "9eaf4924a89a1361731ecf25ce8c5685d386d6944997bee12ae5dc2557295a90",
+  "patched_app_sha256": "142a1587fbde1f3854131b69a30d4f7de8657902024446d263d2d2f0c28547f6",
   "hardware_access": false,
   "limits": "instruction checks only; USB/DSP/RTOS boundaries modeled",
   "setup": {
@@ -123,6 +123,7 @@
       "user SysEx continuity",
       "replacement device isolation",
       "actual RX and TX poll integration",
+      "untimed OUT restricted to matching debug device; buffer ownership and cancellation retained",
       "worker-owned register snapshots and bounded pages",
       "normal/mute/test-tone converter modes",
       "mode timeout",

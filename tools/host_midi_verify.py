@@ -155,6 +155,8 @@ def verify(original,patched,main,report):
     assert sha256(patched)==h['patched_app_sha256']
     from host_midi_ehci_verify import verify as verify_ehci
     passed('Original EHCI short-packet completion and continued MIDI reception',**verify_ehci(original,patched,h))
+    from host_midi_core_verify import verify as verify_core
+    passed('Original USB core reproduces exhausted timer failure and untimed submission',**verify_core(original))
     # Execute original reset copy/zero loops from dirty memory, not Python scatter.
     machines=[]
     for image in (original,patched):

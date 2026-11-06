@@ -19,6 +19,7 @@ extern void mx1_audio_setup(uint8_t *);
 extern unsigned mx1_audio_monitor(unsigned,void *,uint32_t *,unsigned);
 extern int mx1_debug_receive(unsigned,void *,uint32_t);
 extern unsigned mx1_debug_transmit(unsigned,void *,uint32_t *);
+extern int mx1_debug_tx_timeout(unsigned,void *);
 static uint16_t le16(const uint8_t *p) { return p[0] | (uint16_t)p[1]<<8; }
 static void zero(uint8_t *p, unsigned n) { while(n--) *p++=0; }
 
@@ -250,7 +251,8 @@ send:
             /* Stock EHCI 600112ae copies flag bit 13 to wrapper+16;
              * 60011af2 returns -15 for short data unless that bit is set.
              * MIDI IN is variable length. OUT must still complete in full. */
-            (p->ep[tx],buffer(port,tx),n,mx1_host_done,(port<<1)|tx,tx?100:-1,tx?0:0x2000);
+            (p->ep[tx],buffer(port,tx),n,mx1_host_done,(port<<1)|tx,
+             tx?mx1_debug_tx_timeout(port,(void *)(uintptr_t)p->ep[1]):-1,tx?0:0x2000);
         if(rc) { p->busy[tx]=0; p->fault[tx]=1; p->errors++; }
     }
 }

@@ -9,9 +9,10 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`44314acc16a88248b74e0a4dd315f976f6b03f0c6d37e130d27b986ca8573c6c`.
-B3 fixes short MIDI input packets and wakes the diagnostic transmit task;
-[original-instruction evidence](../evidence/fm1-midi-bridge-b3-20261106/README.md).
+`389ae886e3ab6af87804f375f9752e3099fc77bd5e157f2c7e8c6ee62d7bfd7c`.
+B4 isolates the captured MIDI TX error −20 by using untimed writes only for
+the matched FM-1 debug connection; [evidence and limits](../evidence/fm1-midi-timeout-b4-20261106/README.md).
+B3 short-input and transmit-wakeup fixes remain.
 It retains [stepwise MIDI diagnostics](DEBUG_BRIDGE.md) and pauses automatic audio startup on the observed EHCI controller. The existing transport supports OHCI only. It has no new claim of working host audio.
 The experiment accepts the measured FM-1 full-speed, stereo PCM16 input profile and reuses
 the original 44.1-to-96-kHz conversion path. The preceding `253645ed…` image
@@ -30,7 +31,7 @@ require physical acceptance.
 ## Memory and binary integration
 
 The intervals below describe the **main processor**. The independent USB processor
-adds 2,984 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
+adds 3,032 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
 see [host placement and allocator evidence](USB_HOST_MIDI.md#integration-and-memory).
 
 USB-host MIDI and FM-1 audio modify the USB application. The audio extension reserves 64 KiB from the USB processor’s existing SDRAM heap; see [its placement and allocator evidence](USB_HOST_AUDIO.md#usb-processor-placement-and-binary-changes). Boot programs, updater and panel-controller payload remain byte-identical to stock. The main application is byte-identical to the mastering held-key fix in PR #18.

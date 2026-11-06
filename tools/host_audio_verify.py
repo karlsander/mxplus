@@ -353,7 +353,7 @@ def verify_debug_bridge(image,h,syms,c):
             words.extend(struct.unpack('<'+'I'*n,t.m.read(out,n*4)))
         raise AssertionError('unbounded reply')
     wakes=len(t.wakes);receive(frame(1));assert t.wakes[wakes:]==[[2,1]]
-    seq,op,v=decode(transmit());assert (seq,op,v[:4])==(12,65,[0,0xb3,port,3])
+    seq,op,v=decode(transmit());assert (seq,op,v[:4])==(12,65,[0,0xb4,port,3])
     receive(frame(2,[0]));assert decode(transmit())[2]==[2] # no controller snapshot yet
     receive(frame(3,[2]));assert decode(transmit())[2]==[2] # no converter without owned transport
     receive(frame(99));assert decode(transmit())[2]==[1]
@@ -379,7 +379,17 @@ def verify_debug_bridge(image,h,syms,c):
     assert t.checked(syms['mx1_debug_receive'],port,ep,0x643c9009)==0
     saved=t.m.read(ep+0x20,4);t.m.write(ep+0x20,P(0x2001b000));t.m.write(0x2001b008,P(DEV+0x100))
     assert t.checked(syms['mx1_debug_receive'],port,ep,packets(frame(1))[0])==0
+    assert t.checked(syms['mx1_debug_tx_timeout'],port,ep)==100
     t.m.write(ep+0x20,saved)
+    assert t.checked(syms['mx1_debug_tx_timeout'],port,ep)==0xffffffff
+    assert t.checked(syms['mx1_debug_tx_timeout'],4,ep)==100
+    assert t.checked(syms['mx1_debug_tx_timeout'],port,0)==100
+    # Recycled object addresses must not grant the FM-1 timeout policy to a
+    # different VID/PID or speed, even if the cached debug pointer matches.
+    for off,value in ((0x10,0x1234),(0x12,2),(0x58,0x400)):
+        saved=t.m.read(DEV+off,2);t.m.write(DEV+off,H(value))
+        assert t.checked(syms['mx1_debug_tx_timeout'],port,ep)==100
+        t.m.write(DEV+off,saved)
     # Entire RX callback/poll path consumes the private command before stock MIDI.
     live=CombinedSetup(image,h,c);live.bind_initial();live.setup();live.drain();live.poll(0)
     rx=[r for r in live.requests if not r['token']&1][-1]
@@ -388,9 +398,21 @@ def verify_debug_bridge(image,h,syms,c):
     for _ in range(8):
         start=len(live.requests);live.poll(1)
         sends=[r for r in live.requests[start:] if r['token']&1]
-        for r in sends: wire.extend(struct.unpack('<'+'I'*(r['size']//4),bytes.fromhex(r['data'])));live.done(r)
+        for r in sends:
+            assert r['timeout']==0xffffffff and r['flags']==0
+            wire.extend(struct.unpack('<'+'I'*(r['size']//4),bytes.fromhex(r['data'])));live.done(r)
     # All response packets precede the queued note; no channel status splits SysEx.
     note=wire.index(0x643c9009);assert decode(wire[:note])[1]==65
+    # Untimed FM-1 OUT retains exactly one outstanding buffer. No idle poll
+    # releases it; close still submits stock cancellation and waits for done.
+    live.enqueue(live.port,[0x643d9009]);live.poll(1);pending=live.requests[-1]
+    assert pending['timeout']==0xffffffff and pending['token']&1
+    before=len(live.requests)
+    for _ in range(3):live.poll(1)
+    assert len(live.requests)==before
+    live.close(live.port,1);assert live.cancels[-1]==pending['ep']
+    live.poll(1);assert len(live.requests)==before
+    live.done(pending,status=-9);live.poll(1);assert len(live.requests)==before
     # Active endpoint: fresh snapshots only in the worker, read pages from RAM.
     q=Audio(image,h,syms);p,rc=q.start();assert rc==0
     q.m.write(syms['debug_ports'],P(DEV));q.m.write(EP+0x20,P(0x20018000));q.m.write(0x20018008,P(DEV))
@@ -435,7 +457,7 @@ def verify_debug_bridge(image,h,syms,c):
     t.bind_initial();t.setup();ep=t.endpoints[t.nodes[-1],128];tx=t.endpoints[t.nodes[-1],0]
     assert t.state()==5 and not t.audio_requests and not t.initialized
     assert [x[1:5] for x in t.controls]==[[1,11,0,2]]
-    receive(frame(1));v=decode(transmit())[2];assert v[1:7]==[0xb3,port,0x48,5,1,0]
+    receive(frame(1));v=decode(transmit())[2];assert v[1:7]==[0xb4,port,0x48,5,1,0]
     receive(frame(2,[3]));topology=decode(transmit())[2]
     assert topology==[0,3,1,3,0,0,0x20018000,parent,1,2,0x400,0x1234,0x5678,1]
     t.drain();t.poll(0)
@@ -476,7 +498,7 @@ def verify_debug_bridge(image,h,syms,c):
     n=t.checked(syms['mx1_debug_transmit'],port,tx,out)
     assert n==15
     heartbeat=decode(struct.unpack('<15I',t.m.read(out,60)))
-    assert heartbeat[:2]==(0,0x7e) and heartbeat[2][:4]==[0,0xb3,0x39,1]
+    assert heartbeat[:2]==(0,0x7e) and heartbeat[2][:4]==[0,0xb4,0x39,1]
     assert not t.checked(syms['mx1_debug_transmit'],port,tx,out)
     # User SysEx defers a due heartbeat, then the end marker releases it.
     t.m.write(out,P(0x017df004));t.checked(syms['mx1_audio_monitor'],port,tx,out,1)
@@ -486,6 +508,7 @@ def verify_debug_bridge(image,h,syms,c):
     assert t.checked(syms['mx1_debug_transmit'],port,tx,out)==15
     return {'status':'pass','cases':['structured replies across multiple transfers','malformed checksum/target rejection',
         'pending reply retention','user SysEx continuity','replacement device isolation','actual RX and TX poll integration',
+        'untimed OUT restricted to matching debug device; buffer ownership and cancellation retained',
         'worker-owned register snapshots and bounded pages','normal/mute/test-tone converter modes','mode timeout',
         'EHCI baseline avoids OHCI request and DSP submission','cached topology and MIDI software status',
         'manager-only single-step controls/lookup and failure results','original bind callback queues manager event',

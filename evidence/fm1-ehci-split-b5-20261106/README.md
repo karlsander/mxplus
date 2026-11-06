@@ -28,7 +28,8 @@ fixed; 264 EHCI state bytes are appended. The new binding hook is at decoded
 11d40, runtime 60011d40. Exact overwritten/new bytes, trampoline and callback
 targets, startup relocation and checksums are in the sole mainline build report.
 
-All 17 reproduction stages and the current-artifact gate passed. Targeted
+All 17 reproduction stages, current/committed-artifact gates and six browser
+patcher tests passed. Targeted
 checks execute original EHCI table construction/replacement and controller
 query queue/worker dispatch, compiled siTD construction, 300 packet completions,
 sample conversion, wrap, error handling, explicit start/stop, readout pages,

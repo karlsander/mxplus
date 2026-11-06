@@ -24,7 +24,11 @@
     "current_artifact_gate": "passed",
     "additional_host3_page_crossing_check": "passed",
     "host3_crossing_slot": 3,
-    "committed_artifact_gate": "pending",
-    "browser_tests": "pending"
+    "committed_artifact_gate": "passed",
+    "browser_tests": {
+      "passed": 6,
+      "failed": 0
+    },
+    "verified_code_commit": "9d2966cc61c9865bf8f1f7577f042ed3601feb88"
   }
 }

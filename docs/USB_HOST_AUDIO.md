@@ -7,10 +7,11 @@ found after the first attempt is corrected, but a further failure remains; see
 [the bench record](../evidence/fm1-host-audio-20261105/README.md#corrected-mx-1-audio-attempt).
 It has instruction-level checks and a live FM-1 computer baseline, but no
 successful physical MX-1 audio result yet.
-The bridge captured controller 1 (EHCI) on HOST3. The implemented ISO transport
-is OHCI-only and cannot serve that connection. The current candidate pauses
-automatic EHCI audio startup and adds [stepwise debug commands](DEBUG_BRIDGE.md).
-It does not claim another audio fix; [live evidence](../evidence/fm1-ehci-debug-20261106/README.md).
+The bridge captured controller 1 (EHCI) on HOST3. B4 established working
+bidirectional debug commands and all four setup probes. B5 adds an explicitly
+started EHCI split-ISO input experiment, while keeping automatic startup off.
+Its offline checks pass; actual MX-1 packet delivery and audio remain unverified.
+See [commands](DEBUG_BRIDGE.md) and [implementation](../research/fm1-ehci.md).
 
 The accepted profile is VID `1209`, PID `0001`, full-speed USB, UAC1 interface 1
 alternate 1: stereo signed 16-bit PCM at 44,100 Hz, asynchronous IN endpoint
@@ -39,8 +40,14 @@ That result does not validate audio or the changed candidate.
 ## Transport and ownership
 
 The live FM-1 connection uses EHCI despite being full speed. Full-speed alone
-does not establish that OHCI owns a device. An EHCI audio transport remains to
-be implemented; B4 leaves its audio alternate at zero by default and retains MIDI.
+does not establish that OHCI owns a device. B5 leaves its audio alternate at
+zero by default. Debug probes 1/2/3 prepare the stream; probe 5 starts it and
+probe 6 stops it. Only one stream is admitted, with no other active host audio.
+The worker inserts 16 split descriptors into Roland's actual periodic table,
+preserves existing links and feeds accepted packets to the shared converter.
+Runs expire after nominally 60 seconds. EHCI guards, admission restrictions,
+retirement and the original instruction evidence are detailed
+[here](../research/fm1-ehci.md). Broader coexistence is future work.
 
 The stock full-speed OHCI driver has incomplete isochronous submission and
 completion paths. The extension supplies a bounded input transport; it does
@@ -81,12 +88,13 @@ payload remain unchanged. Only `tools/build_firmware.py` produces firmware.
 
 | Runtime interval, end exclusive | Use |
 | --- | --- |
-| `0100bee4..0100cabc` | 3,032-byte MIDI extension and original-function trampolines |
+| `0100bee4..0100cad4` | 3,056-byte MIDI extension and original-function trampolines |
 | `01017868..01017e28` | Existing 1,472-byte MIDI state |
-| `607f0000..607f2158` | 8,536-byte audio extension and bridge commands |
+| `607f0000..607f2ee0` | 12,000-byte audio extension and bridge commands |
 | `607f4000..607f9880` | Unmoved 22,656-byte audio state, descriptors and packet buffers |
 | `607f9880..607f9930` | 176-byte diagnostic state |
 | `607f9930..607fa564` | 3,124-byte bridge commands, replies and snapshots |
+| `607fa564..607fa66c` | 264-byte EHCI slot ownership and diagnostic state |
 
 The USB processor's original general heap spans `604b1178..60800000`.
 The builder reduces its upper bound to `607f0000`, reserving 64 KiB in existing
@@ -107,6 +115,7 @@ appended after relocated USB initialized data; its exact source is recorded in
 | `28288` | `60028288` | Existing MIDI setup wrapper also selects FM-1 audio |
 | `2828c` | `6002828c` | Audio-ready event; original handler retained for other devices |
 | `13c74` | `60013c74` | Original OHCI binding plus request/cancel/event/reset wrappers |
+| `11d40` | `60011d40` | Original EHCI binding plus request/cancel/event/reset wrappers |
 | `13804` | `60013804` | Split ISO/general completion lists; original general handler retained |
 | `8340` | `60008340` | Close custom audio without touching unused EHCI descriptors |
 | `33b54` | `01008c60` | Original audio task followed by FM-1 packet consumption |
@@ -128,6 +137,13 @@ audio-task dispatch and input conversion also execute with explicit DSP/MMIO
 models; checks cover sample order and buffer boundaries, not interpolation.
 The original startup loops and MPU setup also execute in the MIDI verifier.
 USB DMA, RTOS delivery and DSP hardware are explicit modeled boundaries.
+
+B5 also runs `tools/host_ehci_audio_verify.py` in this stage. It executes
+original EHCI frame-list construction/replacement and controller-status queue
+dispatch, plus the compiled split transport. Tests cover 300 packets, frame
+wrap, signed stereo data, legal completion state, errors, explicit start/stop,
+readout pages, changed links, frozen counters, freed USB objects and reset-error
+quarantine. Heap, IRQ/task setup, MMIO/DMA and hardware scheduling remain modeled.
 
 The diagnostic revision also executes original periodic-tree construction at
 USB decoded `12274` / runtime `60012274`, request packing at `c276` / `6000c276`,
@@ -192,7 +208,7 @@ audio ports to retain their addresses and buffer layout.
 The full reproduction gate checks this evidence against the actual USB image
 and both inserted USB code artifacts. No hardware probe runs in reproduction.
 
-For the authorized first MX-1 test:
+For the authorized B5 MX-1 test:
 
 1. Retain the last working image and settings backup. Copy the candidate as
    **`MX1_UPD.BIN`**, without a hyphen, to the updater volume. The original
@@ -201,12 +217,15 @@ For the authorized first MX-1 test:
    monitoring down. Check normal analog mixing first.
 3. Connect the FM-1 directly to HOST 3, which supplies bus power. Record the
    exact wiring, power arrangement, system rate and candidate hash.
-4. Trigger notes as in the successful MIDI test. Raise the USB3 channel and
-   monitoring gradually. Check both channels, note tails, clipping and clicks.
-5. Stop/start notes, unplug/reconnect the FM-1, and restart with it connected.
-   Confirm MIDI still operates during audio. Record any failure and its trigger.
-6. After a short successful run, test sustained audio, other supported system
-   rates, stereo separation, and coexistence with a Roland device and USB-B.
+4. Keep the FM-1 bridge near the Mac. Confirm build 181 and MIDI pages 3/4,
+   then run probes 1, 2, 3 and 5 sequentially, waiting for each result. Inspect
+   EHCI pages 5–7 and packet/sample-peak counters before raising monitoring.
+5. Compare the FM-1's quiet stereo tone with MX converter mode 2. Keep USB3
+   at Auto/USB3. Record meter activity, sound, stereo separation and failures.
+6. Mute the FM-1, run probe 6, wait for phase/claimed zero, then probe 4 for
+   alt0. Verify MIDI still works. Reconnect, system-rate and sustained tests
+   follow a successful short run. Other host-audio coexistence is not admitted
+   by B5; it needs a shared bandwidth/TT scheduler first.
 
 Retain `UNTESTED` until these observations exist. A passing build or computer
 baseline does not establish MX-1 timing, sound quality, broad interoperability

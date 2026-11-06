@@ -59,6 +59,11 @@ trampoline host_ohci_bind_original
  add.w r0,r0,r0,lsl #1
  ldrh.w r0,[r2,r0,lsl #2]
  resume 0x60013c7f
+trampoline host_ehci_bind_original
+ ldr r2,=0x6002b0f0
+ add.w r0,r0,r0,lsl #1
+ ldrh.w r0,[r2,r0,lsl #2]
+ resume 0x60011d4b
 trampoline host_ohci_done_original
  push.w {r3-r11,lr}
  mov r5,r0

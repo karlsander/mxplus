@@ -9,11 +9,12 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`389ae886e3ab6af87804f375f9752e3099fc77bd5e157f2c7e8c6ee62d7bfd7c`.
-B4 isolates the captured MIDI TX error −20 by using untimed writes only for
+`e40b809672c7ef5d4be190b48eb01c5116835e88ae0d67a896d279ba02b3e0b4`.
+B5 adds an explicitly started EHCI split-ISO input experiment; [implementation and limits](../research/fm1-ehci.md).
+It retains B4’s isolation of the MIDI TX error −20 by using untimed writes only for
 the matched FM-1 debug connection; [evidence and limits](../evidence/fm1-midi-timeout-b4-20261106/README.md).
 B3 short-input and transmit-wakeup fixes remain.
-It retains [stepwise MIDI diagnostics](DEBUG_BRIDGE.md) and pauses automatic audio startup on the observed EHCI controller. The existing transport supports OHCI only. It has no new claim of working host audio.
+It retains [stepwise MIDI diagnostics](DEBUG_BRIDGE.md) and pauses automatic audio startup on the observed EHCI controller. The new EHCI transport has offline checks; physical packet/audio acceptance remains open.
 The experiment accepts the measured FM-1 full-speed, stereo PCM16 input profile and reuses
 the original 44.1-to-96-kHz conversion path. The preceding `253645ed…` image
 has a user-reported MIDI-output result with the FM-1; audio on the MX-1 remains unverified.
@@ -31,7 +32,7 @@ require physical acceptance.
 ## Memory and binary integration
 
 The intervals below describe the **main processor**. The independent USB processor
-adds 3,032 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
+adds 3,056 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
 see [host placement and allocator evidence](USB_HOST_MIDI.md#integration-and-memory).
 
 USB-host MIDI and FM-1 audio modify the USB application. The audio extension reserves 64 KiB from the USB processor’s existing SDRAM heap; see [its placement and allocator evidence](USB_HOST_AUDIO.md#usb-processor-placement-and-binary-changes). Boot programs, updater and panel-controller payload remain byte-identical to stock. The main application is byte-identical to the mastering held-key fix in PR #18.
@@ -82,7 +83,7 @@ requests, panel gestures, mastering transactions and DSP programming helpers aga
 MIDI tests execute the original packetizer, bulk word transport and cable dispatch
 with explicit FIFO and RTOS models. High-speed endpoint tables differ only in the
 reviewed MIDI entries; USB-B audio entries are unchanged. FM-1 host checks
-execute combined setup, OHCI scheduling/completion, PCM conversion and
+execute combined setup, OHCI and EHCI scheduling/completion, PCM conversion and
 retirement with DMA, RTOS delivery and DSP hardware modeled explicitly.
 Finite-packet tests execute playback/capture, malformed lengths and alternate
 changes; 18-channel traces are compared against the predecessor.

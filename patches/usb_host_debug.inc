@@ -4,7 +4,8 @@
  * No arbitrary memory access, flash operation or USB reset is exposed. */
 static int debug_match(unsigned port,void *ep) {
     if(port>=4 || !ep || !debug_ports[port].dev) return 0;
-    return PTR(PTR(ep,0x20),8)==debug_ports[port].dev;
+    uint8_t *dev=PTR(PTR(ep,0x20),8);
+    return dev==debug_ports[port].dev && U16(dev,0x10)==0x1209 && U16(dev,0x12)==1 && !U16(dev,0x58);
 }
 /* B4 isolation experiment: the stock timed-transfer path allocates from
  * five RTOS alarms and can return -20 before reaching the HCD. Only the
@@ -56,15 +57,25 @@ static void debug_done(void *dev,void *ep,unsigned bytes,int status,uintptr_t to
 }
 /* App-manager event 5 with a private marker. RX only queues this intent;
  * synchronous control/lookup APIs must never run inside the MIDI RX task.
- * No ISO submission, descriptor edits or controller register writes here. */
+ * Step 5 queues ISO start to the HCD worker; manager never edits DMA lists. */
 static void debug_probe(uint8_t *event) {
     uint8_t *dev=PTR(event,4),*r=record(dev);
     if(!r || !(r[0]&1) || U32(r,4) || U16(r,2)>=4) return;
     unsigned port=U16(r,2); DebugPort *d=&debug_ports[port]; AudioPort *p=&mx1_audio_ports[port];
     unsigned op=d->probe;
-    if(d->dev!=dev || !op || op>4 || p->claimed || U16(dev,0x4a)!=1) return;
+    if(d->dev!=dev || !op || op>6 || (p->claimed && op!=6) || U16(dev,0x4a)!=1) return;
+    if(U16(dev,0x10)!=0x1209 || U16(dev,0x12)!=1 || U16(dev,0x58) ||
+       !mx1_audio_profile(FN(0x60009d2d,const uint8_t *(*)(void*,unsigned))(dev,0))) {
+        d->probe_result=(uint32_t)-5; d->probe_done=op; barrier(); d->probe=0; return;
+    }
     int e=-5; stage(p,0x30+op,0);
-    if(op==1) {
+    if(op==5) {
+        try_open(dev,r); e=p->claimed?0:-5;
+    } else if(op==6) {
+        cancel(p);
+        FN(0x60008d7d,int(*)(void*,unsigned))(r,2);
+        FN(0x60007a1b,void(*)(unsigned,unsigned))(port,1); e=0;
+    } else if(op==1) {
         e=FN(0x60009559,int(*)(void*,unsigned,unsigned,unsigned,unsigned,unsigned,void*,unsigned))
             (dev,0x22,1,0x100,0x84,3,(void*)fm1_rate,0);
     } else if(op==2 || op==4) {
@@ -94,7 +105,7 @@ static void debug_command(unsigned port) {
     uint32_t arg=0,v[40]; unsigned k=1; v[0]=0;
     if(n==15) for(unsigned j=0;j<5;j++) arg|=(uint32_t)b[8+j]<<(7*j);
     if(op==1 && n==10) {
-        uint32_t fields[]={0xb4,port,a->stage,a->result,a->controller,p->phase,a->control,a->flags,a->cc,a->frame,
+        uint32_t fields[]={0xb5,port,a->stage,a->result,a->controller,p->phase,a->control,a->flags,a->cc,a->frame,
             p->packets,p->malformed,p->overflow,p->underrun,p->missed,p->dsp_errors,p->wanted,p->claimed,p->generation,
             p->write_count,p->read_count,p->next_frame,p->close_frame,p->cost,p->tail_slot,d->mode,d->errors,d->dropped,
             d->probe,d->probe_done,d->probe_result};
@@ -104,11 +115,12 @@ static void debug_command(unsigned port) {
         for(unsigned i=0;i<12;i++) v[k++]=d->topology[i];
     } else if(op==2 && n==15 && arg==4) {
         v[k++]=arg; mx1_host_debug_state(port,v+k); k+=24;
-    } else if(op==2 && n==15 && arg<3) {
+    } else if(op==2 && n==15 && (arg<3 || (arg>=5 && arg<=7))) {
         unsigned s=d->snapshot_seq;
-        if(!s || (s&1)) v[0]=2;
+        if(!s || (s&1) || (arg<3)!=(a->controller==0)) v[0]=2;
         else {
-            unsigned off=arg==0?0:arg==1?36:70,count=arg==0?36:arg==1?34:32;
+            unsigned page=arg<3?arg:arg-5;
+            unsigned off=page==0?0:page==1?36:70,count=page==0?36:page==1?34:32;
             v[k++]=arg; v[k++]=s;
             for(unsigned i=0;i<count;i++) v[k++]=d->raw[off+i];
             barrier(); if(s!=d->snapshot_seq) { v[0]=2;k=1; }
@@ -126,8 +138,8 @@ static void debug_command(unsigned port) {
             if(result) debug_done(p->dev,p->ep,0,result,token);
             return;
         }
-    } else if(op==5 && n==15 && arg>=1 && arg<=4) {
-        if(a->controller!=1 || p->claimed || d->probe) v[0]=2;
+    } else if(op==5 && n==15 && arg>=1 && arg<=6) {
+        if(a->controller!=1 || (p->claimed && arg!=6) || d->probe) v[0]=2;
         else {
             uint32_t event[3]={5,(uintptr_t)d->dev,0x3242444d};
             d->probe=arg; barrier();
@@ -169,7 +181,7 @@ unsigned mx1_debug_transmit(unsigned port,void *ep,uint32_t *out) {
         if((uint32_t)(debug_ticks-d->heartbeat)<4096) return 0;
         d->heartbeat=debug_ticks;
         uint32_t m[24]; mx1_host_debug_state(port,m);
-        uint32_t v[]={0,0xb4,diagnostics[port].stage,m[1]|(m[2]<<1)|(m[7]<<8),
+        uint32_t v[]={0,0xb5,diagnostics[port].stage,m[1]|(m[2]<<1)|(m[7]<<8),
             m[11]|(m[12]<<1)|(m[17]<<8),m[3],m[13]};
         volatile uint8_t b[45];
         b[0]=0xf0;b[1]=0x7d;b[2]=0x44;b[3]=0x42;b[4]=1;b[5]=1;b[6]=0;b[7]=0x7e;

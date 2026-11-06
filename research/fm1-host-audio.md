@@ -53,7 +53,7 @@ address with `decoded = runtime - 01000300 + 2b1f4`.
 
 ## Implemented memory reservation
 
-Current extension hot code: 0100bee4..0100d000, with only about 1.6 KiB spare.
+Current extension hot code: 0100bee4..0100d000, with 1,324 bytes spare after the B5 extension.
 Current state: 01017868..01018000, only 472 bytes spare. Do not overlap USB
 allocator blocks 0100d000/0100e000/0100f000 or the RTOS pool 01020000..01028000.
 
@@ -74,7 +74,7 @@ OHCI ownership. B2 pauses automatic audio startup there and provides manager
 setup probes plus cached topology. See [live evidence](../evidence/fm1-ehci-debug-20261106/README.md).
 The last received stage-4 report does not establish a particular deadlock.
 Original 6000837c queues binding to the manager; it is not the patched handler
-running synchronously on the USB core task. EHCI ISO support remains future work.
+running synchronously on the USB core task. B5 adds an explicitly started [EHCI split input transport](fm1-ehci.md). Physical audio acceptance remains open.
 
 ## Implemented transport and remaining hardware checks
 

@@ -25,11 +25,12 @@ The sole mainline image adds the following through the existing FM-1 MIDI path:
 - Cached device/parent-hub topology and MIDI RX/TX software state.
 - Individually queued rate, alternate and endpoint-lookup probes on EHCI.
 - Unsolicited TX telemetry to diagnose a failed MIDI IN command direction.
+- Explicit EHCI start/stop, siTD status, packet counts and stereo sample peaks.
 
-Build B4 retains the B2 pause of automatic audio startup on EHCI before any audio controls,
-lookup, DSP initialization or ISO submission. The existing ISO transport is
-OHCI-only; it cannot serve the observed HOST3 connection. This isolates MIDI and
-lets the Mac exercise setup steps independently. FM-1 stays on bridge B1.
+Build B5 retains the pause of automatic audio startup on EHCI. It adds an
+explicit start/stop experiment for the observed HOST3 connection, with EHCI
+pages and sample-peak counters. The working B4 MIDI path remains. FM-1 stays
+on bridge B1. [Transport, admission and ownership](../research/fm1-ehci.md).
 
 Only the current matching FM-1 device on the receiving physical port can use
 these hooks. No arbitrary addresses, writes, USB resets or flash operations are
@@ -68,15 +69,15 @@ requests. Overlong private frames are consumed through F7, not forwarded as musi
 | Op | Request | Reply words after result |
 | --- | --- | --- |
 | 1 | none | Status below |
-| 2 | Page 0–4 | Pages 0–2: page, snapshot sequence, raw fields; pages 3–4: page, fields |
+| 2 | Page 0–7 | Pages 0–2 and 5–7: page, snapshot sequence, raw fields; pages 3–4: page, fields |
 | 3 | Mode 0–2 | Selected mode |
 | 4 | none | Fresh snapshot sequence after worker completion |
-| 5 | Step 1–4 | Accepted step; completion is reported by status |
+| 5 | Step 1–6 | Accepted step; completion is reported by status |
 
 Result 0 succeeds; 1 is unsupported command/arguments; 2 is unavailable or a
 concurrent snapshot. Refresh failures return the original absolute queue/worker
 error. Probe queue failure is result 3. Invalid framing/checksum is silent and
-increments errors. B1 is 177, B2 is 178, B3 is 179 and the current MX-1 B4 is 180.
+increments errors. B1 is 177, B2 is 178, B3 is 179, B4 is 180 and current MX-1 B5 is 181.
 
 Status after result: build, port, stage, result_code, controller, phase, control,
 flags, cc, frame, packets, malformed, overflow, underrun, missed, dsp_errors,
@@ -114,16 +115,44 @@ urgent queue count, dropped count, errors. Tasks can advance between fields;
 this is not an atomic snapshot. A submission failure sets fault/errors but the
 last completion result may still describe an earlier transfer.
 
-Operation 5 accepts only the current EHCI FM-1 with no claimed audio stream.
+Operation 5 accepts only the current EHCI FM-1. Steps 1–5 require no claimed
+audio stream; step 6 is also available while running or retiring.
 Step 1 sends endpoint SET_CUR 44100; 2 selects IF1 alt1; 3 looks up and validates
 EP84 without submitting a transfer; 4 selects IF1 alt0. RX queues a private event
 5 (third word 3242444d hex), and the manager performs the synchronous API call.
 The response means accepted, not completed. Poll status before sending the next
 step. Stages 31–34 hex mean executing a step; 39–3C mean returned. A subsequent
 interface bind can restore stage 48; probe_done/result still retain the outcome.
-One pending step per device. Rebinding setup resets the diagnostic session.
+Step 5 queues input start to the HCD worker after probes 1/2/3. Its probe result
+only confirms queue acceptance; wait for phase 2/stage 56 to establish a running
+transport. Step 6 publishes
+stop, clears audio readiness and stops the converter in the manager. The HCD
+retains DMA ownership until retirement. Wait for phase/claimed zero before
+step 4 (alt0) or another start. Steps 5/6 use stages 35/36 and 3D/3E before the
+worker's own stage. One pending step per device. Rebinding setup resets the session.
 
-Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 180,
+Pages 5–7 are the EHCI counterparts of OHCI pages 0–2. They are available after
+a guarded start attempt; controller mismatches and concurrent writes return 2.
+Page 5 contains 36 words: context, operational registers, active table,
+HCCPARAMS, USBCMD, USBSTS, USBINTR, FRINDEX, CTRLDSSEGMENT, PERIODICLISTBASE,
+ASYNCLISTADDR, CONFIGFLAG, phase, port, linked-slot mask, deadline tick,
+last-service tick, poll pending, service count, stop reason, rejected link,
+maximum chain length, next frame, oldest slot, accepted packets, malformed,
+missed, peak L, peak R, nonzero packets, last byte count, last siTD status,
+endpoint word, split mask, generation, reserved zero.
+Page 6 contains 16 pairs of scheduled frame/current siTD status, then two zeros.
+Page 7 contains 16 pairs of saved original frame-list head/last completion status.
+Fields can change with hardware between reads; the sequence protects only
+against concurrent software snapshot publication.
+
+EHCI stages: 50 topology rejection, 51 controller/table configuration,
+52 periodic admission, 56 running, 57 stop, 58 run expired, 59 controller fault
+or teardown, 5A worker gap/other periodic activity, 5B insertion admission,
+5C changed link/table. Phase 4 quarantines DMA ownership until reboot when
+destroy did not establish a halted controller. On EHCI, status control is raw
+USBCMD, flags is the linked-slot mask and cc is the last siTD status byte.
+
+Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 181,
 startup stage, RX flags, TX flags, last RX result, last TX result. Flags are busy
 in bit 0, ready in bit 1, fault in bits 8 onward. This fits in one 60-byte USB
 MIDI transfer. B3 wakes the TX task every 4,096 audio-task calls, even with no
@@ -134,8 +163,9 @@ interval is not a measured clock. It cannot report through a failed TX path.
 Publishing a command reply also wakes TX, without needing musical traffic.
 FM-1 B1 forwards it to BLE; the Mac client records it as a reply in the raw log.
 
-These readouts accept no arbitrary addresses. The probe operations do not
-submit ISO, write controller registers, reset USB or change flash.
+These readouts accept no arbitrary addresses. Probe 5 submits the bounded
+split-ISO experiment; no command writes controller registers, resets USB or
+changes flash.
 
 ## Integration and evidence
 
@@ -144,10 +174,11 @@ resident addresses map as runtime = 60000000 + decoded offset; hot relocation is
 original decoded 2b1f4 → runtime 01000300, length bbe4. The builder records every
 changed original byte, callback target, inserted source, startup copy/zero and hash.
 
-- Hot extension: 0100bee4..0100cabc, 3,032 bytes; writable hot state remains 1,472 bytes.
-- Audio/debug code: 607f0000..607f2158, 8,536 bytes, within the existing 16-KiB code slot.
+- Hot extension: 0100bee4..0100cad4, 3,056 bytes; writable hot state remains 1,472 bytes.
+- Audio/debug code: 607f0000..607f2ee0, 12,000 bytes, within the existing 16-KiB code slot.
 - Audio/DMA state remains 607f4000..607f9880; the A1 diagnostics remain 607f9880..607f9930.
-- Bridge state follows at 607f9930..607fa564 (3,124 bytes). The whole 25,956-byte
+- Bridge state follows at 607f9930..607fa564 (3,124 bytes); EHCI state adds 264
+  bytes at 607fa564..607fa66c. The whole 26,220-byte
   state stays in the already reserved 64-KiB SDRAM region; allocator bounds are unchanged.
 
 The original main application, boot programs, updater and panel payload are
@@ -168,8 +199,10 @@ Install the verified mainline file as `MX1_UPD.BIN`, wait
 for the updater's completion, restart normally, then connect FM-1 directly to
 HOST3. Keep USB3 at Auto/USB3. Read status and pages 3/4 first; if those work,
 run `mx-probe 1`, `mx-probe 2`, then `mx-probe 3`, checking status and FM-1 trace
-between steps. `mx-probe 4` returns to alt0. OHCI MMIO pages and converter modes
-remain unavailable on EHCI; no audio packet progress is expected from B4.
+between steps. `mx-probe 5` starts the B5 transport; pages 5–7 then show EHCI
+state. Converter modes become available when phase is 2. `mx-probe 6` stops it;
+wait for retirement before `mx-probe 4` returns to alt0. Leave other host-audio
+devices disconnected for this experiment. B5 has no physical audio result yet.
 
 
 B2's physical run retained alt0 but commands still timed out. B3 fixes two
@@ -185,7 +218,7 @@ HCD submission; actual live exhaustion has not been established. Untimed writes
 retain their buffer until completion or stock disconnect cancellation, with no
 new watchdog or retry. Other generic MIDI OUT keeps timeout 100.
 [B4 experiment and actual-instruction tests](../evidence/fm1-midi-timeout-b4-20261106/README.md).
-The FM-1 firmware and Mac client are unchanged. B4 passed the first physical
+The FM-1 firmware and base Mac client are unchanged. B4 passed the first physical
 round trip: status, topology, MIDI state and all four manager setup probes.
 Continuous telemetry was captured for approximately 31 seconds, with zero
 MX-1 MIDI faults/errors. Audio stayed at zero packets; the test returned AS

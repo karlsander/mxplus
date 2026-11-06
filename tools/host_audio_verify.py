@@ -23,7 +23,7 @@ STRIDE=5664; ED=96; TD=160; TDSTRIDE=224
 
 class CombinedSetup(Setup):
     def __init__(self,*args,**kwargs):
-        self.audio_requests=[];self.initialized=[];self.audio_control_error=0
+        self.audio_requests=[];self.initialized=[];self.audio_stopped=[];self.audio_control_error=0
         super().__init__(*args,**kwargs,enable_audio=True)
     def stub(self,u,a,size,data):
         r=[u.reg_read(x) for x in (UC_ARM_REG_R0,UC_ARM_REG_R1,UC_ARM_REG_R2,UC_ARM_REG_R3)]
@@ -32,6 +32,7 @@ class CombinedSetup(Setup):
             stack=struct.unpack('<6I',self.m.read(u.reg_read(UC_ARM_REG_SP),24))
             self.audio_requests.append(r+list(stack))
         elif a==0x600079ee:self.initialized.append(r[:3])
+        elif a==0x60007a1a:self.audio_stopped.append(r[:2])
         elif a==0x60009558 and r[1]==0x22 and self.audio_control_error:
             result=self.audio_control_error
         else:return super().stub(u,a,size,data)
@@ -172,7 +173,7 @@ def verify_converter_boundary(image,h,syms):
     Model only DSP reset/command/result, integer-to-float MMIO and RTOS notify.
     This checks the packet ABI and memory extents, not DSP interpolation.
     """
-    q=Audio(image,h,syms);m=q.m;p,_=q.start()
+    q=Audio(image,h,syms);m=q.m
     m.uc.mem_map(0x40140000,0x1000) # modeled DSP scratch, not ordinary RAM
     context=0x20005ee0;smooth=0x010157f8;scratch=0x40140c00
     m.write(context,P(0,0,0,0,0,0x20016000))
@@ -195,7 +196,11 @@ def verify_converter_boundary(image,h,syms):
             # claiming the physical converter's scale or timing.
             m.write(a+12,struct.pack('<f',float(signed)))
     m.uc.hook_add(UC_HOOK_CODE,boundary)
-    m.uc.hook_add(UC_HOOK_MEM_WRITE,mmio)
+    # Limit this MMIO model to its actual register. A global write hook in
+    # Unicorn 2.1.4 corrupts IT-state progression for an unrelated conditional
+    # descriptor store; it is neither required nor valid to model that store.
+    m.uc.hook_add(UC_HOOK_MEM_WRITE,mmio,begin=0x40040548,end=0x40040548)
+    p,_=q.start()
     m.call(0x600079ee,0,1,44100,count=300000)
     assert q.u32(smooth)==1 and q.u32(smooth+0x60)==100
     assert q.u32(context+8)==struct.unpack('<I',struct.pack('<f',44100/96000))[0]
@@ -353,7 +358,7 @@ def verify_debug_bridge(image,h,syms,c):
             words.extend(struct.unpack('<'+'I'*n,t.m.read(out,n*4)))
         raise AssertionError('unbounded reply')
     wakes=len(t.wakes);receive(frame(1));assert t.wakes[wakes:]==[[2,1]]
-    seq,op,v=decode(transmit());assert (seq,op,v[:4])==(12,65,[0,0xb4,port,3])
+    seq,op,v=decode(transmit());assert (seq,op,v[:4])==(12,65,[0,0xb5,port,3])
     receive(frame(2,[0]));assert decode(transmit())[2]==[2] # no controller snapshot yet
     receive(frame(3,[2]));assert decode(transmit())[2]==[2] # no converter without owned transport
     receive(frame(99));assert decode(transmit())[2]==[1]
@@ -457,7 +462,7 @@ def verify_debug_bridge(image,h,syms,c):
     t.bind_initial();t.setup();ep=t.endpoints[t.nodes[-1],128];tx=t.endpoints[t.nodes[-1],0]
     assert t.state()==5 and not t.audio_requests and not t.initialized
     assert [x[1:5] for x in t.controls]==[[1,11,0,2]]
-    receive(frame(1));v=decode(transmit())[2];assert v[1:7]==[0xb4,port,0x48,5,1,0]
+    receive(frame(1));v=decode(transmit())[2];assert v[1:7]==[0xb5,port,0x48,5,1,0]
     receive(frame(2,[3]));topology=decode(transmit())[2]
     assert topology==[0,3,1,3,0,0,0x20018000,parent,1,2,0x400,0x1234,0x5678,1]
     t.drain();t.poll(0)
@@ -485,6 +490,29 @@ def verify_debug_bridge(image,h,syms,c):
     t.m.write(EVENT,t.events[-1]);t.checked(syms['mx1_audio_ready'],EVENT)
     receive(frame(1));v=decode(transmit())[2];assert v[-3:]==[0,1,0xfffffff9]
     assert t.state()==5
+    # Start is explicit, after selecting alt1. It queues the private callback
+    # and manager DSP initialization, never calls an HCD from MIDI RX. Stop
+    # clears readiness and DSP use while the HCD still owns DMA retirement.
+    t.audio_control_error=0
+    receive(frame(5,[2]));transmit();t.m.write(EVENT,t.events[-1]);t.checked(syms['mx1_audio_ready'],EVENT)
+    receive(frame(5,[5]));assert decode(transmit())[2]==[0,5]
+    assert not t.audio_requests
+    t.m.write(EVENT,t.events[-1]);t.checked(syms['mx1_audio_ready'],EVENT)
+    assert len(t.audio_requests)==1 and t.initialized==[[port,1,44100]]
+    pp=h['audio_ports']+port*STRIDE
+    assert t.m.read(pp+16,8)==P(1,1)
+    # Modeled worker success; original ready-bit publisher executes.
+    t.m.write(pp+24,P(2));t.m.write(EVENT,P(5,DEV,0));t.checked(syms['mx1_audio_ready'],EVENT)
+    assert t.state()==7
+    receive(frame(5,[1]));assert decode(transmit())[2]==[2]
+    receive(frame(5,[6]));assert decode(transmit())[2]==[0,6]
+    t.m.write(EVENT,t.events[-1]);t.checked(syms['mx1_audio_ready'],EVENT)
+    assert t.state()==5 and t.audio_stopped==[[port,1]] and t.m.read(pp+16,12)==P(0,1,2)
+    # Modeled worker retirement, then alt0 and rate-failure telemetry again.
+    t.m.write(pp+20,P(0,0))
+    receive(frame(5,[4]));transmit();t.m.write(EVENT,t.events[-1]);t.checked(syms['mx1_audio_ready'],EVENT)
+    t.audio_control_error=-7;receive(frame(5,[1]));transmit()
+    t.m.write(EVENT,t.events[-1]);t.checked(syms['mx1_audio_ready'],EVENT)
     # Idle TX is flag-driven. The audio-task cadence must wake it without
     # a command, claimed audio endpoint, clock routing or queued music.
     def tick_boundary(u,a,size,data):
@@ -498,7 +526,7 @@ def verify_debug_bridge(image,h,syms,c):
     n=t.checked(syms['mx1_debug_transmit'],port,tx,out)
     assert n==15
     heartbeat=decode(struct.unpack('<15I',t.m.read(out,60)))
-    assert heartbeat[:2]==(0,0x7e) and heartbeat[2][:4]==[0,0xb4,0x39,1]
+    assert heartbeat[:2]==(0,0x7e) and heartbeat[2][:4]==[0,0xb5,0x39,1]
     assert not t.checked(syms['mx1_debug_transmit'],port,tx,out)
     # User SysEx defers a due heartbeat, then the end marker releases it.
     t.m.write(out,P(0x017df004));t.checked(syms['mx1_audio_monitor'],port,tx,out,1)
@@ -512,6 +540,7 @@ def verify_debug_bridge(image,h,syms,c):
         'worker-owned register snapshots and bounded pages','normal/mute/test-tone converter modes','mode timeout',
         'EHCI baseline avoids OHCI request and DSP submission','cached topology and MIDI software status',
         'manager-only single-step controls/lookup and failure results','original bind callback queues manager event',
+        'explicit EHCI start queues HCD and initializes DSP; stop clears readiness before DMA retirement',
         'reply publication wakes original TX task flag','idle audio cadence wakes TX without claimed audio','one-transfer telemetry defers behind user SysEx'],
         'boundary':'USB delivery, RTOS queue dispatch and DSP hardware modeled; actual compiled ARM code executes'}
 
@@ -653,10 +682,12 @@ def verify(image,report,elf_path):
     worker=verify_worker_and_tree(image,h,syms)
     monitor=verify_monitor(image,h,syms,c)
     debug=verify_debug_bridge(image,h,syms,c)
+    from host_ehci_audio_verify import verify as verify_ehci
+    ehci=verify_ehci(image,h,syms)
     return {'status':'pass','patched_app_sha256':sha256(image),'hardware_access':False,
             'limits':'instruction checks only; USB/DSP/RTOS boundaries modeled','setup':setup,'pacing':pacing,
             'converter_boundary':converter,'controller_indices':controllers,
-            'worker_and_tree':worker,'fm1_monitor':monitor,'debug_bridge':debug,
+            'worker_and_tree':worker,'fm1_monitor':monitor,'debug_bridge':debug,'ehci_split_audio':ehci,
             'stock_endpoint_record_hex':endpoint_record.hex(),
             'profile_negative_cases':malformed,'heap_reservation_bytes':65536,
             'iso_descriptors_per_port':17,'audio_state_bytes':h['audio_state_bytes'],

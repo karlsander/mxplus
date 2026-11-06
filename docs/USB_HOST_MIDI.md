@@ -14,7 +14,7 @@ That changed image still requires physical MIDI/audio acceptance. Other generic
 audio profiles remain disabled. The FM-1 experiment also emits a bounded
 [host diagnostic SysEx report](USB_HOST_AUDIO.md#host-diagnostic-report).
 
-Candidate SHA-256: `389ae886e3ab6af87804f375f9752e3099fc77bd5e157f2c7e8c6ee62d7bfd7c`.
+Candidate SHA-256: `e40b809672c7ef5d4be190b48eb01c5116835e88ae0d67a896d279ba02b3e0b4`.
 
 ## Behavior and scope
 
@@ -103,15 +103,15 @@ application components in one container. There is no separate host firmware.
 Boot programs, updater, panel payload, update range and container boundaries
 remain unchanged. The host-MIDI addition in PR #14 changed **app_usb** while retaining PR #13
 main-application bytes. Later mastering changes are documented in
-[mainline integration](MAINLINE.md). The FM-1 audio follow-up adds USB manager/OHCI hooks and SDRAM placement;
+[mainline integration](MAINLINE.md). The FM-1 audio follow-up adds USB manager/OHCI/EHCI hooks and SDRAM placement;
 the main application remains identical
 to the mastering held-key fix in PR #18.
 
 USB startup originally copies decoded `0x2b1f4..0x36dd8` to
 `0x01000300..0x0100bee4`. The new USB code is inserted at decoded `0x36dd8`,
 runtime `0x0100bee4`, below the existing USB allocator at `0x0100d000`.
-The extension occupies 3,032 bytes (`0x0100bee4..0x0100cabc`), leaving
-1,348 bytes before that allocator. State occupies 1,472 bytes
+The extension occupies 3,056 bytes (`0x0100bee4..0x0100cad4`), leaving
+1,324 bytes before that allocator. State occupies 1,472 bytes
 (`0x01017868..0x01017e28`), leaving 472 bytes before the writable-region limit.
 The five following initialized-data source literals move; their destinations
 do not. New zero-initialized state starts at the original USB BSS end,

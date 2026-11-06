@@ -23,8 +23,10 @@ not sustained or comprehensive validation.
    ports, clock/transport, SysEx, reconnect and simultaneous audio.
 5. Physically validate [FM-1 host audio](docs/USB_HOST_AUDIO.md): stereo input,
    simultaneous MIDI, unplug/reconnect, connected boot, sustained operation and
-   coexistence with Roland audio and USB-B. The computer probe and offline tests
-   do not establish an MX-1 audio result.
+   USB-B operation. B4 established the Bluetooth/MIDI command bridge; B5 adds
+   an explicitly started EHCI split-input experiment. Other host-audio
+   coexistence needs shared bandwidth/TT admission beyond B5. The computer
+   probe and offline tests do not establish an MX-1 audio result.
 6. Consider small control/routing improvements individually. The internal code
    slot has only 20 bytes free; measure compiled size before claiming capacity.
    A main-processor SDRAM design remains research. The separate USB processor

@@ -106,6 +106,7 @@ static void debug_wake_tx(void) {
 static void debug_capture(AudioPort *p);
 static void debug_done(void *,void *,unsigned,int,uintptr_t);
 static void debug_probe(uint8_t *event);
+static void ehci_tick(void);
 static AudioDiagnostic *diagnostic(AudioPort *p) { return &diagnostics[p-mx1_audio_ports]; }
 static void stage(AudioPort *p,unsigned value,int result) {
     AudioDiagnostic *d=diagnostic(p);
@@ -148,7 +149,9 @@ static void try_open(uint8_t *dev,uint8_t *r) {
     /* Controller 1 is EHCI, including full-speed devices behind a hub.
      * The custom request hook is installed ONLY on OHCI. Never submit its
      * private start callback to the unmodified EHCI request handler. */
-    if(U16(dev,0x4a)!=0) { stage(p,0x48,-5); return; }
+    if(U16(dev,0x4a)!=0 && !(U16(dev,0x4a)==1 && debug_ports[port].probe==5)) {
+        stage(p,0x48,-5); return;
+    }
     for(unsigned i=0;i<U16(r,0x20) && i<8;i++) {
         uint8_t *n=PTR(r,0x28+i*8);
         if(!n || n[0x13]!=1 || n[0x14]!=1 || n[0x15]!=1) continue;
@@ -247,7 +250,7 @@ void mx1_audio_close(uint8_t *r) {
 /* OHCI worker only below. No stock general-TD structure is used for ISO. */
 static void snapshot(AudioPort *p) {
     AudioDiagnostic *d=diagnostic(p);
-    if(p->phase!=2) return;
+    if(p->phase!=2 || d->controller!=0) return;
     uint8_t *regs=PTR(p->controller,8);
     unsigned control=V32(regs,4), head=p->ed.head;
     d->control=(control&0x3f)|((control&0xc0)==0x80?0x40:0);
@@ -338,7 +341,7 @@ static void stop_worker(AudioPort *p) {
 }
 int mx1_ohci_cancel(void *dev,void *ep) {
     AudioPort *p=for_device(dev);
-    if(!p || ep!=p->ep) return FN(0x600136ad,int(*)(void*,void*))(dev,ep);
+    if(!p || ep!=p->ep || diagnostic(p)->controller) return FN(0x600136ad,int(*)(void*,void*))(dev,ep);
     stop_worker(p);
     return 0;
 }
@@ -347,7 +350,7 @@ extern int host_ohci_done_original(uintptr_t);
 static IsoTD *owned(uintptr_t t,AudioPort **out) {
     for(unsigned i=0;i<4;i++) {
         AudioPort *p=&mx1_audio_ports[i]; uintptr_t base=(uintptr_t)p->td;
-        if(t>=base && t<base+sizeof p->td && (t-base)%sizeof(IsoTD)==0) { *out=p; return (IsoTD *)t; }
+        if(!diagnostic(p)->controller && t>=base && t<base+sizeof p->td && (t-base)%sizeof(IsoTD)==0) { *out=p; return (IsoTD *)t; }
     }
     return 0;
 }
@@ -387,7 +390,7 @@ int mx1_ohci_event(unsigned controller,unsigned event) {
     for(unsigned i=0;i<4;i++) snapshot(&mx1_audio_ports[i]);
     int result=FN(0x60013963,int(*)(unsigned,unsigned))(controller,event);
     for(unsigned i=0;i<4;i++) {
-        AudioPort *p=&mx1_audio_ports[i]; if(p->phase!=3) continue;
+        AudioPort *p=&mx1_audio_ports[i]; if(p->phase!=3 || diagnostic(p)->controller) continue;
         uint8_t *regs=PTR(p->controller,8);
         if((uint16_t)(frame(p)-p->close_frame)>=2 && !U32(PTR(p->controller,12),0x84) &&
            !V32(regs,0x30) && (V32(regs,0x1c)&~15u)!=(uintptr_t)&p->ed) {
@@ -425,6 +428,7 @@ int mx1_ohci_reset(unsigned controller,unsigned operation) {
     /* Remove static EDs before the stock controller teardown frees its lists. */
     for(unsigned i=0;i<4;i++) {
         AudioPort *p=&mx1_audio_ports[i];
+        if(diagnostic(p)->controller) continue;
         if(p->phase==2) { p->wanted=0; unlink_ed(p); p->close_frame=frame(p); p->phase=3; }
     }
     int result=FN(0x600127b7,int(*)(unsigned,unsigned))(controller,operation);
@@ -433,7 +437,7 @@ int mx1_ohci_reset(unsigned controller,unsigned operation) {
          * Never dereference that freed controller state on a later event. */
         for(unsigned i=0;i<4;i++) {
             AudioPort *p=&mx1_audio_ports[i];
-            if(p->phase==3) { p->phase=0; p->controller=0; barrier(); p->claimed=0; }
+            if(p->phase==3 && !diagnostic(p)->controller) { p->phase=0; p->controller=0; barrier(); p->claimed=0; }
         }
     }
     return result;
@@ -453,6 +457,7 @@ extern void host_audio_tick_original(unsigned);
 void mx1_audio_tick(unsigned microframe) {
     host_audio_tick_original(microframe);
     debug_ticks++;
+    ehci_tick();
     if(!(debug_ticks&4095)) {
         for(unsigned port=0;port<4;port++) if(debug_ports[port].dev) {
             debug_wake_tx(); break;
@@ -497,4 +502,5 @@ void mx1_audio_tick(unsigned microframe) {
     }
 }
 
+#include "usb_host_ehci.inc"
 #include "usb_host_debug.inc"

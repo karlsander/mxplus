@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "142a1587fbde1f3854131b69a30d4f7de8657902024446d263d2d2f0c28547f6",
+  "patched_app_sha256": "c1a0c86842a3558e1d399da01428fbef0071b0feaa8a5ba9d1e81947e4cd9dfd",
   "hardware_access": false,
   "limits": "instruction checks only; USB/DSP/RTOS boundaries modeled",
   "setup": {
@@ -131,17 +131,109 @@
       "cached topology and MIDI software status",
       "manager-only single-step controls/lookup and failure results",
       "original bind callback queues manager event",
+      "explicit EHCI start queues HCD and initializes DSP; stop clears readiness before DMA retirement",
       "reply publication wakes original TX task flag",
       "idle audio cadence wakes TX without claimed audio",
       "one-transfer telemetry defers behind user SysEx"
     ],
     "boundary": "USB delivery, RTOS queue dispatch and DSP hardware modeled; actual compiled ARM code executes"
   },
+  "ehci_split_audio": {
+    "status": "pass",
+    "original_periodic_dummy_allocations": 11,
+    "live_periodic_table": "0x4000b000",
+    "driver_context_table_is_not_live_table": true,
+    "stream_packets": 300,
+    "outcomes": [
+      [
+        46,
+        0,
+        1
+      ],
+      [
+        40,
+        2,
+        1
+      ],
+      [
+        44,
+        64,
+        0
+      ],
+      [
+        44,
+        132,
+        0
+      ],
+      [
+        44,
+        4,
+        0
+      ],
+      [
+        39,
+        2,
+        0
+      ]
+    ],
+    "admission_negative_cases": [
+      [
+        "0x40010000",
+        65545
+      ],
+      [
+        "0x40010004",
+        20480
+      ],
+      [
+        "0x40010014",
+        1615265792
+      ],
+      [
+        "0x40010010",
+        1
+      ],
+      [
+        "0x4000bbb0",
+        1
+      ],
+      [
+        "0x4000b424",
+        2147483648
+      ],
+      [
+        "0x607f9c1c",
+        0
+      ],
+      [
+        "0x4000b000",
+        1615333380
+      ]
+    ],
+    "original_controller_status_queue_and_worker": true,
+    "cases": [
+      "actual stock frame-list replacement and dummy iTD chain",
+      "guarded EHCI bind trampoline",
+      "split endpoint/hub/port/masks and DMA alignment",
+      "2048-frame and 256-slot wrap",
+      "44/45-frame stereo PCM and peak telemetry",
+      "completion state bit is not an error",
+      "past-frame reuse, frozen-frame retention and unlink grace",
+      "one pending worker poll",
+      "callback after device object release",
+      "foreign link quarantine",
+      "freed context on reset error; halt check",
+      "new periodic endpoint admission refusal",
+      "OHCI isolation",
+      "60-second and lost-worker watchdogs"
+    ],
+    "boundary": "Original table construction/replacement and controller-status queue/worker execute. Heap, IRQ/task setup, DMA/MMIO/clock, stock EHCI completion/teardown and DSP are modeled; no wire or timing claim."
+  },
   "stock_endpoint_record_hex": "8480010004000100b800",
   "profile_negative_cases": 188,
   "heap_reservation_bytes": 65536,
   "iso_descriptors_per_port": 17,
-  "audio_state_bytes": 25956,
+  "audio_state_bytes": 26220,
   "cases": [
     "guarded complete USB patch accounting",
     "startup placement",

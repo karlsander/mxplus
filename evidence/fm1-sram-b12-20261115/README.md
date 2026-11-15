@@ -66,11 +66,36 @@ elapsed counter wrap, ambiguous long samples, per-start reset, owner/sequence
 guards and cached page reads after controller MMIO is unmapped. USB/DSP/MMIO,
 allocator and task delivery remain modeled; instruction counts are not timing.
 
-B12 has not been installed. Keep UNTESTED and PR #21 open pending physical
-acceptance. FM bridge B1 needs no update. The authorized bench script collects
+At build time B12 had not been installed; see the later bench results below.
+Keep UNTESTED and PR #21 open pending physical audio acceptance. FM bridge B1 needs no update. The authorized bench script collects
 page 19 alongside the existing snapshots before another start.
 
 All 17 offline stages and the current-artifact gate passed with the same
 candidate hash. The committed-image gate and all six browser-patcher tests
 passed against code/artifact commit `4bcc8baf8509e0146b108f87afd5b85e487ff31a`.
 Hosted B12 verification remains pending.
+
+## Observed on B12
+
+The user confirmed restart with FM-1 on HOST3 after the verified copy/eject.
+The bridge reported wire build 188. Two silent poll-only probes completed;
+[sanitized results](bench-20261115.json) retain status delivery times, cached
+pages and cleanup. Private Bluetooth identifiers are omitted.
+
+| Short probe | MX accepted | FM sent | Malformed | Overflow | Underrun | Schedule corrections | Mean service | Max service |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Initial | 1,293 | 1,308 | 0 | 5 | 175 | 328 | 17.73 ms | 26.25 ms |
+| Repeat | 1,287 | 1,303 | 0 | 5 | 173 | 323 | 18.55 ms | 26.63 ms |
+
+Each probe returned three phase-2 diagnostic status replies before its stopped
+status. RX/TX pipeline counts advanced; neither direction recorded a first
+failure, and final MIDI fault/drop/error fields were zero. Both ended with MX
+inactive/unclaimed and FM alt0/tone0. The converter remained bypassed.
+
+Page 19 counted 98 and 94 service calls, totaling 13,897 and 13,947 microframes;
+ambiguity counts were zero. These are elapsed durations, including preemption,
+not CPU cost. Delivery improved over the B11 single poll-only observation of
+999 packets, but substantial gaps and five queue overflows remain in each run.
+The timings support investigating the remaining service code's placement;
+they do not identify which instructions or preempting tasks consume the time.
+No IOC comparison, sustained musical-MIDI test or audible acceptance was run.

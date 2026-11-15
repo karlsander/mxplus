@@ -76,7 +76,11 @@ measure real-time scheduling or establish converter/audio behavior. All 17
 offline stages passed on the full rerun, followed by the current-artifact gate.
 The committed-artifact gate and all six browser-patcher tests also passed
 for code/artifact commit `71bfedc22d8c9461990f344e3eb5398127bdc172`.
-Hosted B14 verification is pending.
+Hosted B14 verification subsequently passed on `db23acb576d4e2f856196e0c5e1d48b48cd7be0c`:
+[run 43752150201](https://github.com/karlsander/mxplus/actions/runs/43752150201).
+The candidate record's pending status describes its original build-time state.
+See the [resume guide](../../docs/FM1_AUDIO_HANDOFF.md) before continuing:
+main now includes #20/#22, while these B14 firmware bytes retain their older base.
 
 B14 has not been installed. Run the same short silent poll-only probe first;
 compare packet/error deltas, MIDI progress and page 19 timings. Use the longer

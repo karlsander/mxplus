@@ -1,5 +1,9 @@
 # FM-1 Bluetooth development bridge
 
+For the current candidate, hardware state and next bench steps, start with the
+[FM-1 audio handoff](FM1_AUDIO_HANDOFF.md). The protocol/history below spans
+multiple experimental builds.
+
 The user authorized a dedicated FM-1 development firmware and MX-1 MIDI control
 hooks on 2026-11-06. The intended connection is Mac ↔ Bluetooth MIDI ↔ FM-1 ↔
 USB ↔ MX-1 HOST3. Both the Mac and MX-1 HOST ports are USB hosts; a direct cable

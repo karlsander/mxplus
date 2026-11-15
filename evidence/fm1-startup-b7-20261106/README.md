@@ -66,4 +66,10 @@ PR open pending physical audio acceptance.
 
 All 17 offline reproduction stages, current and committed-artifact gates, and
 six browser patcher tests passed for the code/artifact commit recorded in
-[candidate.json](candidate.json). Hosted CI for this revision is pending.
+[candidate.json](candidate.json). Hosted workflow [42266386509](https://github.com/karlsander/mxplus/actions/runs/42266386509)
+passed for commit `8592b8725b9c3b740079fd80569d0058969faa2d`.
+
+On 15 November, the same verified B7 candidate was copied as `MX1_UPD.BIN` to
+the Roland updater volume, readback hash-verified and ejected.
+[Copy receipt](copy-20261115.json). Update completion and normal boot remain
+unobserved at the time of copying.

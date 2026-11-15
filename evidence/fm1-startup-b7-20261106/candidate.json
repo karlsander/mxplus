@@ -32,6 +32,11 @@
       "passed": 6,
       "failed": 0
     },
-    "verified_code_commit": "666be1ad70f94b6d58befe427ee4502dae8b4517"
+    "verified_code_commit": "666be1ad70f94b6d58befe427ee4502dae8b4517",
+    "hosted_workflow": {
+      "id": 42266386509,
+      "commit": "8592b8725b9c3b740079fd80569d0058969faa2d",
+      "conclusion": "success"
+    }
   }
 }

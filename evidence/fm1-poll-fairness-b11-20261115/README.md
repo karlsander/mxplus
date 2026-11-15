@@ -71,4 +71,4 @@ negative control: releasing the latch at the same eligible tick admits a
 successor, while the retained latch admits none. This adds no firmware change.
 The committed-image gate and all six browser-patcher tests passed against
 code/artifact commit `9f04955463bbf31ff2c9aeff77eaf6e22edfc5d5`.
-Hosted B11 verification remains pending.
+Hosted B11 verification also passed for `5ba9871` ([run 85](https://github.com/karlsander/mxplus/actions/runs/43735461007)).

@@ -108,3 +108,7 @@ All 17 offline reproduction stages, current and committed-artifact gates,
 and six browser patcher tests passed for code/artifact commit
 `5613a1a2d5b3299eba9284532b9c53f1a3e49a94`. Hosted verification and B8
 installation are pending at preparation.
+
+On 15 November B8 was copied as `MX1_UPD.BIN` to the identified Roland updater
+volume, readback hash-verified and safely ejected. [Copy receipt](copy-20261115.json).
+Update completion and normal boot remain unobserved at the time of copying.

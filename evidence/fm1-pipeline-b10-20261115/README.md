@@ -82,7 +82,7 @@ and cached reads after live controller/heap memory is unmapped. Allocator,
 queues, RTOS delivery, DMA and hardware remain modeled boundaries. Full pipeline,
 committed-image and browser checks are recorded in candidate.json.
 
-B10 has not been installed. Keep UNTESTED and PR #21 open pending physical
+At build time B10 had not been installed. Keep UNTESTED and PR #21 open pending physical
 transport, converter, audible and sustained coexistence results. FM bridge B1
 needs no update. The authorized bench script defaults to one short silent
 probe and collects pages 15..18 before another start; both-policy comparison
@@ -92,3 +92,30 @@ All 17 offline stages and the current-artifact gate passed. The candidate hash
 remained unchanged through reproduction. The committed-image gate and all six
 browser-patcher tests passed against code/artifact commit
 `1fc19931e19ea99f8867ab8d06bc0e73ab2f44b3`. Hosted B10 verification remains pending.
+
+## Observed on B10, 15 November
+
+[Sanitized bench](bench-20261115.json). Build 186 booted and the short poll-only
+bypass accepted 1,341 packets; zero were malformed, with three overflows, 249
+underruns and 519 schedule corrections. MIDI status again arrived after expiry.
+Worker snapshots advanced from 93 to 137 polls with two event callbacks. Their
+pipeline counters were identical:
+
+| Stage | RX count | TX count |
+| --- | ---: | ---: |
+| API entry / return | 11 / 11 | 33 / 33 |
+| Core entry / return | 11 / 10 | 33 / 33 |
+| HCD entry / return | 11 / 11 | 33 / 33 |
+| Application completion | 10 | 32 |
+
+The last TX reached and returned from HCD, but application completion had not
+run. RX was already submitted to HCD but its core call had not returned. This
+locates missing progress in the USB-core path while the HCD worker runs; it
+cannot alone distinguish starvation from an internal wait. Source review found
+that the polling callback cleared its pending flag before servicing audio,
+allowing another poll to queue during service. A completion-relative gap and
+retained latch are the next bounded experiment, not an established hardware fix.
+
+Cleanup confirmed FM alt0/tone0 and MX inactive/unclaimed. Diagnostic replies
+recovered; musical TX remains faulted by its first urgent-queue overflow until
+rebind. No audible, converter or sustained coexistence acceptance was tested.

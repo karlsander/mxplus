@@ -103,3 +103,8 @@ Only app_usb changes. Main application, boot programs, updater, panel payload
 and container boundaries remain unchanged. Whole-input and exact-site guards
 remain; the builder records bytes, relocation, callback targets and component
 checksums. Keep `UNTESTED` and PR #21 open pending physical audio acceptance.
+
+All 17 offline reproduction stages, current and committed-artifact gates,
+and six browser patcher tests passed for code/artifact commit
+`5613a1a2d5b3299eba9284532b9c53f1a3e49a94`. Hosted verification and B8
+installation are pending at preparation.

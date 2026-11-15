@@ -30,7 +30,14 @@
     },
     "full_reproduction_stages": 17,
     "current_artifact_gate": "passed",
-    "verified_code_commit": "5613a1a2d5b3299eba9284532b9c53f1a3e49a94"
+    "verified_code_commit": "5613a1a2d5b3299eba9284532b9c53f1a3e49a94",
+    "hosted": {
+      "status": "passed",
+      "commit": "bc952bf3e322b3f10b852b44ed5e9c0848e59a91",
+      "run_id": 43729673151,
+      "job_id": 132859201839,
+      "url": "https://github.com/karlsander/mxplus/actions/runs/43729673151"
+    }
   },
   "compiled_function_prologues": {
     "mx1_audio_tick": [

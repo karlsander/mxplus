@@ -24,9 +24,10 @@ typedef struct {
 typedef struct {
     uint32_t started, last_tick, events, polls, event_bits;
     AsyncDiagnostic first, last;
+    uint32_t poll_only;
 } AsyncState;
 __attribute__((section(".host_async_state"))) static AsyncState async_diagnostic;
-_Static_assert(sizeof(AsyncState)==532,"Async diagnostic placement");
+_Static_assert(sizeof(AsyncState)==536,"Async diagnostic placement");
 static int async_ram(uintptr_t p,unsigned n) {
     return !(p&3) && p>=0x60400000 && p<=0x607f0000-n;
 }
@@ -157,7 +158,9 @@ static int ehci_arm(AudioPort *p,unsigned i) {
     zero(t,32);
     V32(t,0)=old; V32(t,4)=ehci.endpoint; V32(t,8)=ehci.mask;
     V32(t,16)=data; V32(t,20)=(data+183)&~4095u; V32(t,24)=1;
-    V32(t,12)=0x80000080u|(184u<<16); /* IOC, active, 184-byte buffer */
+    /* Probe 9 isolates audio IOC pressure on the original IRQ/worker path.
+     * Bulk/control interrupts and every controller register stay unchanged. */
+    V32(t,12)=0x80u|(184u<<16)|(async_diagnostic.poll_only?0:0x80000000u);
     ehci.old_link[i]=old; ehci.slot_frame[i]=f;
     barrier(); V32(ehci.table,(f&255)*4)=(uintptr_t)t|4;
     ehci.linked|=1u<<i; p->next_frame=(f+1)&2047; return 1;
@@ -209,13 +212,14 @@ static void ehci_service(unsigned event) {
     }
     ehci_snapshot(p);
 }
-static int ehci_begin(AudioPort *p) {
+static int ehci_begin(AudioPort *p,unsigned poll_only) {
     if(!p->wanted || p->phase || ehci.poll_pending || (ehci.owner && ehci.owner->claimed && ehci.owner!=p)) return -9;
     uint8_t *driver=PTR((void*)0x6002b0e8,4);
     if(!driver || !PTR(driver,0x40) || U16(p->dev,0x4a)!=1 || U16(p->dev,0x58)) return -5;
     p->controller=PTR(driver,0x40);
     zero(&ehci,sizeof ehci); ehci.owner=p; ehci.regs=PTR(p->controller,4);
     zero(&async_diagnostic,sizeof async_diagnostic); async_diagnostic.started=debug_ticks;
+    async_diagnostic.poll_only=poll_only;
     ehci.table=(uint8_t *)(uintptr_t)(V32(ehci.regs,20)&~4095u);
     DebugPort *d=&debug_ports[p-mx1_audio_ports];
     uint8_t *hub=PTR(p->dev,0xec), *parent=hub?PTR(hub,4):0;
@@ -265,9 +269,11 @@ static void ehci_poll_done(unsigned controller,unsigned status,uintptr_t token) 
 }
 static void ehci_tick(void) {
     AudioPort *p=ehci.owner;
-    if(!p || !p->phase || !p->controller || ehci.poll_pending || (debug_ticks&31)) return;
+    if(!p || !p->phase || !p->controller || ehci.poll_pending ||
+       (debug_ticks&(async_diagnostic.poll_only?15:31))) return;
     /* Original 03000020 controller-status queue and callback ABI. One queued
-     * request maximum, every eight ms as fallback; no USB endpoint lifetime. */
+     * request maximum; eight-ms fallback, or four-ms primary service in the
+     * explicit poll-only experiment. No USB endpoint lifetime is retained. */
     ehci.poll_pending=1; barrier();
     if(FN(0x6000c377,int(*)(unsigned,void*,uintptr_t))(1,(void*)ehci_poll_done,0)) ehci.poll_pending=0;
 }
@@ -279,7 +285,10 @@ int mx1_ehci_request(void *dev,void *ep,unsigned flags,unsigned a,unsigned b,voi
         ehci_service(0); ehci_snapshot(p); debug_done(dev,ep,0,0,token); return 0;
     }
     if(p && ep==p->ep && callback==(void*)start_done && token==(uintptr_t)p) {
-        int result=ehci_begin(p);
+        /* Private start callback only: the manager packed this policy into
+         * the original request before clearing its probe command. */
+        if(flags>1) return -5;
+        int result=ehci_begin(p,flags);
         if(!result) start_done(dev,ep,0,0,token);
         return result;
     }

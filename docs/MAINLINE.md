@@ -9,10 +9,10 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`4a580d2bcb8737b1d90b12e9dc69141ef876e4d50874211f904ce333712b6b7c`.
-B8 adds retained asynchronous MIDI descriptor snapshots and a short silent
-transport probe after B7 confirmed packet delivery but stalled MIDI and a
-remaining converter rejection; [B8 evidence](../evidence/fm1-async-b8-20261115/README.md).
+`a737c0b7c46473a98cdf4cb619ada0f47a51cf3f5be4fac5bd4c3c52681ea914`.
+B9 adds an explicit short poll-only transport probe after B8 showed no matched
+MIDI TX wrapper during its stalled stream. Probe 8 retains the preceding IOC
+policy for comparison; [B9 evidence](../evidence/fm1-poll-b9-20261115/README.md).
 It retains B5's explicitly started EHCI split-ISO experiment; [implementation and limits](../research/fm1-ehci.md).
 It retains B4’s isolation of the MIDI TX error −20 by using untimed writes only for
 the matched FM-1 debug connection; [evidence and limits](../evidence/fm1-midi-timeout-b4-20261106/README.md).

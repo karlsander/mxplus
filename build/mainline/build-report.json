@@ -3,7 +3,7 @@
   "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
   "patched_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
-  "container_sha256": "4a580d2bcb8737b1d90b12e9dc69141ef876e4d50874211f904ce333712b6b7c",
+  "container_sha256": "a737c0b7c46473a98cdf4cb619ada0f47a51cf3f5be4fac5bd4c3c52681ea914",
   "extension_sha256": "fc4ed00c31546c74a84dbaece0ac9fda8fad28a3c21f19038e123617b945bbeb",
   "symbols": {
     "mx1_uac2_rate": 16872496,
@@ -35,8 +35,8 @@
   },
   "host_midi": {
     "original_app_sha256": "fe52cf6c9e8ec8677963b1c4b876ddeaefae5136b7a5f1f49010e3cda9203a6e",
-    "patched_app_sha256": "770a26c8ea56902cca24c459ac5c5febfd2b5635f73805f1fd0a48fe531f6159",
-    "extension_sha256": "79d4c1bdeb03ff69974f4768c94f31adc9d8d93c5a9ea62e413a3c622c60d04e",
+    "patched_app_sha256": "0a2d88837fb22ca526a8d05c2c69e7a8e2016886f23e46619d65f562b5f3033c",
+    "extension_sha256": "59dae9660092e2ecea3b648802af130331eb00b0455eda95b1fa0b483b96721a",
     "symbols": {
       "mx1_host_config": 16826085,
       "mx1_host_tx_open": 16827491,
@@ -46,30 +46,30 @@
       "mx1_host_enqueue": 16827923,
       "mx1_host_tx_poll": 16828215,
       "mx1_host_rx_poll": 16828907,
-      "mx1_ohci_bind": 1618941739,
-      "mx1_ehci_bind": 1618946239,
-      "mx1_ohci_done": 1618940309,
-      "mx1_audio_close": 1618938495,
-      "mx1_audio_tick": 1618941789,
+      "mx1_ohci_bind": 1618941775,
+      "mx1_ehci_bind": 1618946279,
+      "mx1_ohci_done": 1618940345,
+      "mx1_audio_close": 1618938531,
+      "mx1_audio_tick": 1618941825,
       "mx1_host_select": 16827093,
       "mx1_host_receive": 16827291,
       "mx1_host_done": 16827419,
       "mx1_host_setup": 16827163,
       "mx1_audio_profile": 1618935957,
       "mx1_audio_setup": 1618936533,
-      "mx1_audio_bind": 1618937603,
-      "mx1_audio_remove": 1618937647,
-      "mx1_audio_ready": 1618937721,
-      "mx1_ohci_request": 1618938621,
-      "mx1_ohci_cancel": 1618940175,
-      "mx1_ohci_event": 1618940777,
-      "mx1_ohci_reset": 1618941485,
-      "mx1_ehci_request": 1618943121,
-      "mx1_ehci_cancel": 1618945951,
-      "mx1_ehci_event": 1618946053,
-      "mx1_ehci_reset": 1618946109,
-      "mx1_debug_receive": 1618946413,
-      "mx1_debug_transmit": 1618948221,
+      "mx1_audio_bind": 1618937635,
+      "mx1_audio_remove": 1618937679,
+      "mx1_audio_ready": 1618937753,
+      "mx1_ohci_request": 1618938657,
+      "mx1_ohci_cancel": 1618940211,
+      "mx1_ohci_event": 1618940813,
+      "mx1_ohci_reset": 1618941521,
+      "mx1_ehci_request": 1618943177,
+      "mx1_ehci_cancel": 1618945991,
+      "mx1_ehci_event": 1618946093,
+      "mx1_ehci_reset": 1618946149,
+      "mx1_debug_receive": 1618946453,
+      "mx1_debug_transmit": 1618948261,
       "mx1_debug_midi_failure": 1618936403
     },
     "patches": [
@@ -150,7 +150,7 @@
         "file_offset": 244,
         "runtime_address": 1610612980,
         "original": "00000000",
-        "replacement": "606e0000",
+        "replacement": "646e0000",
         "component": "app_usb"
       },
       {
@@ -166,7 +166,7 @@
         "file_offset": 272,
         "runtime_address": 1610613008,
         "original": "00000000",
-        "replacement": "60360000",
+        "replacement": "9c360000",
         "component": "app_usb"
       },
       {
@@ -246,7 +246,7 @@
         "file_offset": 81012,
         "runtime_address": 1610693748,
         "original": "af4a00eb400032f82000",
-        "replacement": "dff800f02b177f6000bf",
+        "replacement": "dff800f04f177f6000bf",
         "component": "app_usb"
       },
       {
@@ -254,7 +254,7 @@
         "file_offset": 73024,
         "runtime_address": 1610685760,
         "original": "fd4a00eb400032f82000",
-        "replacement": "dff800f0bf287f6000bf",
+        "replacement": "dff800f0e7287f6000bf",
         "component": "app_usb"
       },
       {
@@ -262,7 +262,7 @@
         "file_offset": 79876,
         "runtime_address": 1610692612,
         "original": "2de9f84f054600f0b5fb",
-        "replacement": "dff800f095117f6000bf",
+        "replacement": "dff800f0b9117f6000bf",
         "component": "app_usb"
       },
       {
@@ -270,7 +270,7 @@
         "file_offset": 33600,
         "runtime_address": 1610646336,
         "original": "70b5b0f91240b0f90250",
-        "replacement": "dff800f07f0a7f6000bf",
+        "replacement": "dff800f0a30a7f6000bf",
         "component": "app_usb"
       },
       {
@@ -278,7 +278,7 @@
         "file_offset": 211796,
         "runtime_address": 16813152,
         "original": "2de9fc5fdff834b2",
-        "replacement": "dff800f05d177f60",
+        "replacement": "dff800f081177f60",
         "component": "app_usb"
       },
       {
@@ -310,7 +310,7 @@
         "file_offset": 164472,
         "runtime_address": 1610777208,
         "original": "27840060",
-        "replacement": "03077f60",
+        "replacement": "23077f60",
         "component": "app_usb"
       },
       {
@@ -318,7 +318,7 @@
         "file_offset": 164476,
         "runtime_address": 1610777212,
         "original": "2b850060",
-        "replacement": "2f077f60",
+        "replacement": "4f077f60",
         "component": "app_usb"
       },
       {
@@ -326,7 +326,7 @@
         "file_offset": 164492,
         "runtime_address": 1610777228,
         "original": "d3880060",
-        "replacement": "79077f60",
+        "replacement": "99077f60",
         "component": "app_usb"
       }
     ],
@@ -337,18 +337,18 @@
     "state_bytes": 1472,
     "state_limit": 16875520,
     "audio_code_start": 1618935808,
-    "audio_code_bytes": 13920,
+    "audio_code_bytes": 13980,
     "audio_code_limit": 1618952192,
     "audio_state_start": 1618952192,
-    "audio_state_bytes": 28256,
+    "audio_state_bytes": 28260,
     "audio_state_limit": 1619001344,
     "audio_ports": 1618952192,
-    "audio_extension_sha256": "aafbd1d2075c88ccbfb8ac0518f9e0fa5e2306ea084db2fa47db7ac74ed43ba1",
+    "audio_extension_sha256": "da4906a7771004af8066b2a3a8422c5c8fc03a6b31febccab2126a9f5340b484",
     "audio_source": 1610840784,
     "midi_failure_state_start": 1618978988,
     "midi_failure_state_bytes": 928,
     "async_diagnostic_start": 1618979916,
-    "async_diagnostic_bytes": 532,
+    "async_diagnostic_bytes": 536,
     "original_sdram_heap": [
       1615532408,
       1619001344
@@ -363,16 +363,16 @@
     "sources": {
       "patches/usb_host_midi.c": "5081807717592755d2bd31e8532ce4d42d623336acbbedd04834d5415667e453",
       "patches/usb_host_midi.S": "70126462dfeeb799ecf2ff010712ef2ca368928c0936866d229ab1a3baca2d0a",
-      "patches/usb_host_audio.c": "eae90007894b6d5f5191771a5fb21427f803ab90a2681c5e7f697ff96378f1e0",
-      "patches/usb_host_debug.inc": "dc7a53105d662e03abf13c709784c7457a5fe2f9742c458a91bb6fc28370e798",
-      "patches/usb_host_ehci.inc": "acdbe7a92f716e53146ff9714ad1ba4000977b37ad2cb8833d159b972cedde9d",
+      "patches/usb_host_audio.c": "39815483d1be72fdd93548f627d4d86edb3c44d80473bf9336ed254db3598daf",
+      "patches/usb_host_debug.inc": "14f5e2117fb621ec65d01e7b239b4e98a0958b8a56bc7e3e3f741836d6f7d950",
+      "patches/usb_host_ehci.inc": "a28f22dd0ea875c17b4529edd9930cc19d56560507b0288a96604582dd1c55f8",
       "patches/mainline.ld": "fb1b03496c0743bc2d5e2847d636b8bce0291a7a28675737f28c93a5d4ee333d",
-      "tools/host_midi_patch.py": "a2c53c7fac76ab23d4ed63aefae3c40dcbd83f9390b5043ecc9e90e26994b634"
+      "tools/host_midi_patch.py": "58be729521b733f156d57708ae6cd0e9bf51f5e5f0a5703f3b1ac10cd9dbbaa2"
     }
   },
-  "patched_usb_sha256": "770a26c8ea56902cca24c459ac5c5febfd2b5635f73805f1fd0a48fe531f6159",
-  "host_extension_sha256": "79d4c1bdeb03ff69974f4768c94f31adc9d8d93c5a9ea62e413a3c622c60d04e",
-  "host_audio_extension_sha256": "aafbd1d2075c88ccbfb8ac0518f9e0fa5e2306ea084db2fa47db7ac74ed43ba1",
+  "patched_usb_sha256": "0a2d88837fb22ca526a8d05c2c69e7a8e2016886f23e46619d65f562b5f3033c",
+  "host_extension_sha256": "59dae9660092e2ecea3b648802af130331eb00b0455eda95b1fa0b483b96721a",
+  "host_audio_extension_sha256": "da4906a7771004af8066b2a3a8422c5c8fc03a6b31febccab2126a9f5340b484",
   "compiler": "ziglang 0.13.0 Cortex-M3 ReleaseSmall, no LTO",
   "sources": {
     "patches/channel_routing_audio.c": "7d548dd68f8e9f9b176ed74049c28eb56dae58da07fd96ae28d85b6608d38de4",
@@ -867,7 +867,7 @@
   },
   "container": {
     "base_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
-    "output_sha256": "4a580d2bcb8737b1d90b12e9dc69141ef876e4d50874211f904ce333712b6b7c",
+    "output_sha256": "a737c0b7c46473a98cdf4cb619ada0f47a51cf3f5be4fac5bd4c3c52681ea914",
     "byte_identical_to_original": false,
     "changes": [
       {
@@ -884,21 +884,21 @@
       },
       {
         "name": "app_usb",
-        "decoded_bytes_changed": 17372,
+        "decoded_bytes_changed": 17432,
         "old_decoded_size": 224868,
-        "new_decoded_size": 241968,
+        "new_decoded_size": 242028,
         "decoded_size_change_explicitly_allowed": true,
         "old_decoded_sha256": "fe52cf6c9e8ec8677963b1c4b876ddeaefae5136b7a5f1f49010e3cda9203a6e",
-        "new_decoded_sha256": "770a26c8ea56902cca24c459ac5c5febfd2b5635f73805f1fd0a48fe531f6159",
+        "new_decoded_sha256": "0a2d88837fb22ca526a8d05c2c69e7a8e2016886f23e46619d65f562b5f3033c",
         "old_stored_size": 137970,
-        "new_stored_size": 272214,
+        "new_stored_size": 272282,
         "encoding": "literal-only LZSS"
       }
     ],
     "boot_images_and_trailer_unchanged": true,
     "all_bytes_outside_update_range_unchanged": true,
     "container_validation": {
-      "sha256": "4a580d2bcb8737b1d90b12e9dc69141ef876e4d50874211f904ce333712b6b7c",
+      "sha256": "a737c0b7c46473a98cdf4cb619ada0f47a51cf3f5be4fac5bd4c3c52681ea914",
       "size": 4194320,
       "is_supplied_original": false,
       "format_scope": "Observed Roland MX-1 firmware 1.051132 layout only",
@@ -1002,15 +1002,15 @@
           "version": "1.051132",
           "entry_address_field": 1610612736,
           "load_address": 1610612736,
-          "stored_size": 272214,
-          "checksum": 26207765,
+          "stored_size": 272282,
+          "checksum": 26215198,
           "checksum_algorithm": "sum of stored payload bytes modulo 2^32",
           "checksum_valid": true,
           "compression": "lzss-zero-init-4096-18",
-          "decoded_size": 241968,
-          "stored_sha256": "dec2dad5cb8b9bae7f40b86b1b1e5d599fc168c0c41db6ecc55d108823889ae7",
+          "decoded_size": 242028,
+          "stored_sha256": "0f1e9968bb9d40aef514a81c90016124d449222d225cc9feede5478dca560b51",
           "padding_is_ff": true,
-          "decoded_sha256": "770a26c8ea56902cca24c459ac5c5febfd2b5635f73805f1fd0a48fe531f6159"
+          "decoded_sha256": "0a2d88837fb22ca526a8d05c2c69e7a8e2016886f23e46619d65f562b5f3033c"
         }
       ],
       "trailer_offset": 4194304,

@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "770a26c8ea56902cca24c459ac5c5febfd2b5635f73805f1fd0a48fe531f6159",
+  "patched_app_sha256": "0a2d88837fb22ca526a8d05c2c69e7a8e2016886f23e46619d65f562b5f3033c",
   "groups": [
     {
       "name": "Original EHCI short-packet completion and continued MIDI reception",

@@ -5,7 +5,7 @@ This does not execute a USB transaction or establish real-time scheduling.
 """
 import struct
 from unicorn.arm_const import *
-from unicorn import UC_HOOK_CODE
+from unicorn import UC_HOOK_CODE, UC_HOOK_MEM_WRITE
 from arm_machine import RETURN
 
 P=lambda *v:struct.pack('<'+'I'*len(v),*v)
@@ -60,10 +60,10 @@ def verify(image,h,syms):
                 self.polls.append(r[:3])
             else:return super().stub(u,a,size,data)
             u.reg_write(UC_ARM_REG_R0,result);u.reg_write(UC_ARM_REG_PC,u.reg_read(UC_ARM_REG_LR))
-        def start(self,frame=2040):
+        def start(self,frame=2040,poll_only=0):
             self.m.write(self.p,P(DEV,EP,0,0,1,1,0,0,1))
             self.m.write(REGS+12,P(frame*8))
-            return self.call('mx1_ehci_request',DEV,EP,0,0,0,0,0,syms['start_done'],self.p)
+            return self.call('mx1_ehci_request',DEV,EP,poll_only,0,0,0,0,syms['start_done'],self.p)
         def state(self,word):return self.u32(syms['ehci']+word*4)
         def advance(self,f):
             self.m.write(REGS+12,P((f&2047)*8))
@@ -218,6 +218,45 @@ def verify(image,h,syms):
             assert q.u32(td+16)==data and q.u32(td+20)==(data+183)&~4095
             crossed.append(i)
     assert crossed
+    # B9 explicit probe 9: no ISO IOC, existing worker queue is the primary
+    # source of service. Execute ticks/poll callbacks with no event callback;
+    # DMA completions and elapsed frame values remain modeled, not timing.
+    q=Ehci(port=2);m=q.m;p=q.p
+    writes=[]
+    m.uc.hook_add(UC_HOOK_MEM_WRITE,lambda u,access,a,n,v,data:writes.append((a,n,v)),
+                  begin=REGS,end=REGS+0xff)
+    assert q.start(frame=0,poll_only=1)==0
+    assert q.u32(syms['async_diagnostic']+532)==1
+    db=syms['debug_ports']+2*780
+    m.write(db+276,P(3,10000))
+    for i in range(16):assert q.u32(p+TD+i*TDSTRIDE+12)==0x00b80080
+    for f in range(1,129):
+        m.write(REGS+12,P(f*8))
+        for i in range(16):
+            if q.state(3+i)==f:
+                q.complete(i)
+                # Hardware retains the originally clear IOC bit.
+                t=p+TD+i*TDSTRIDE
+                m.write(t+12,P(q.u32(t+12)&0x7fffffff))
+        for quarter in range(4):
+            q.call('mx1_audio_tick',quarter*2)
+            if q.state(65):q.poll_done()
+    assert len(q.polls)==32 and q.u32(syms['async_diagnostic']+8)==0
+    assert q.u32(syms['async_diagnostic']+12)==32 and not q.dsp
+    assert q.u32(p+72)>=120 and q.u32(p+76)==q.u32(p+80)==0
+    assert not writes # no controller-register mutation
+    assert all(not q.u32(p+TD+i*TDSTRIDE+12)&0x80000000 for i in range(16))
+    m.write(p+16,P(0));m.write(REGS+12,P(129*8))
+    m.write(syms['debug_ticks'],P(527));q.call('mx1_audio_tick',0);q.poll_done()
+    assert q.u32(p+24)==3 and q.u32(p+20)==1
+    m.write(REGS+12,P(131*8));m.write(syms['debug_ticks'],P(543))
+    q.call('mx1_audio_tick',0);q.poll_done()
+    assert q.u32(p+24)==q.u32(p+20)==0 and m.read(table,1024)==q.baseline
+    # A subsequent ordinary start restores IOC/fallback policy. The flag
+    # belongs to one start, not to a stale manager command or sticky global.
+    assert q.start(frame=140)==0 and q.u32(syms['async_diagnostic']+532)==0
+    assert q.u32(p+TD+12)==0x80b80080
+    rejected=Ehci();assert rejected.start(poll_only=2)==0xfffffffb
     # The original converter's busy-gate return is a real instruction path,
     # not a mocked failure. Capture it, keep the DMA alive until worker stop.
     q=Ehci(port=2);assert q.start()==0;q.real_dsp=True
@@ -344,6 +383,7 @@ def verify(image,h,syms):
         'transport_only_expiry_stops':True,'cached_converter_page':True,'original_busy_gate_failure':True,
         'host3_page_crossing_slots':crossed,
         'async_original_bulk_construction_and_cached_pages':True,
+        'poll_only_without_iso_ioc_or_controller_writes':True,
         'admission_negative_cases':negatives,'original_controller_status_queue_and_worker':True,
         'cases':['actual stock frame-list replacement and dummy iTD chain','guarded EHCI bind trampoline',
                  'split endpoint/hub/port/masks and DMA alignment','2048-frame and 256-slot wrap',

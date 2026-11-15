@@ -188,7 +188,8 @@ static void try_open(uint8_t *dev,uint8_t *r) {
     if(!mx1_audio_profile(c)) return;
     /* EHCI starts only through an explicit normal or transport-only probe. */
     if(U16(dev,0x4a)!=0 && !(U16(dev,0x4a)==1 &&
-       (debug_ports[port].probe==5 || debug_ports[port].probe==7 || debug_ports[port].probe==8))) {
+       (debug_ports[port].probe==5 || debug_ports[port].probe==7 ||
+        debug_ports[port].probe==8 || debug_ports[port].probe==9))) {
         stage(p,0x48,-5); return;
     }
     for(unsigned i=0;i<U16(r,0x20) && i<8;i++) {
@@ -209,7 +210,7 @@ static void try_open(uint8_t *dev,uint8_t *r) {
         FN(0x600079ef,void(*)(unsigned,unsigned,unsigned))(port,1,44100);
         stage(p,5,0);
         int e=FN(0x6000c277,int(*)(void*,void*,unsigned,unsigned,unsigned,void*,unsigned,void*,uintptr_t,unsigned))
-            (dev,ep,0,0,0,0,0,(void*)start_done,(uintptr_t)p,0);
+            (dev,ep,debug_ports[port].probe==9,0,0,0,0,(void*)start_done,(uintptr_t)p,0);
         if(e) { stage(p,0x45,e); p->wanted=0; p->claimed=0; }
         return;
     }

@@ -81,22 +81,33 @@ requests. Overlong private frames are consumed through F7, not forwarded as musi
 | 2 | Page 0–14 | Pages 0–2 and 5–8: page, snapshot sequence, raw fields; pages 3–4: page, fields; pages 9–14 below |
 | 3 | Mode 0–3 | Selected mode |
 | 4 | none | Fresh snapshot sequence after worker completion |
-| 5 | Step 1–8 | Accepted step; completion is reported by status |
+| 5 | Step 1–9 | Accepted step; completion is reported by status |
 
 B6 step 7 initializes the original converter context but starts with converter
 submission bypassed. Mode 3 drains PCM without submitting it to the converter
 and expires by stopping. Modes 0/1/2 require explicit selection to leave that bypass.
 
 B8 step 8 uses the same converter-bypass mode but expires after 8,000 audio
-task calls (nominally two seconds). It does not enable a tone. The default
-`tools/fm1_audio_bench.py` sequence uses this short probe; `--extended` selects
-the separate longer tone/converter experiment.
+task calls (nominally two seconds). It does not enable a tone.
+
+B9 step 9 uses the same short bypass/retirement sequence with ISO IOC clear.
+It services completions through the existing controller-status worker queue
+at most every 16 audio ticks (nominally four ms), with only one request pending.
+Other probes retain IOC and their 32-tick fallback. No controller interrupt
+register, original MIDI request or split mask changes. This compares service
+policies, not only a single IRQ bit: the polling cadence also differs.
+The default `tools/fm1_audio_bench.py` uses probe 9; `--short-probe 8` selects
+the prior policy and `--compare-ioc` runs both, with stop/alt0/setup between them.
+It records reply latency and live status, reads snapshots before another start,
+and reads final FM status after alt0. First-failure pages remain first-since-boot,
+whereas async snapshots reset on each start. `--extended` selects the separate
+longer tone/converter experiment. [B9 evidence](../evidence/fm1-poll-b9-20261115/README.md).
 
 Result 0 succeeds; 1 is unsupported command/arguments; 2 is unavailable or a
 concurrent snapshot. Refresh failures return the original absolute queue/worker
 error. Probe queue failure is result 3. Invalid framing/checksum is silent and
 increments errors. B1 is 177, B2 is 178, B3 is 179, B4 is 180, B5 is 181,
-B6 is 182, B7 is 183 and current MX-1 candidate B8 is 184.
+B6 is 182, B7 is 183, B8 is 184 and current MX-1 candidate B9 is 185.
 
 Status after result: build, port, stage, result_code, controller, phase, control,
 flags, cc, frame, packets, malformed, overflow, underrun, missed, dsp_errors,
@@ -230,7 +241,7 @@ or teardown, 5A worker gap/other periodic activity, 5B insertion admission,
 destroy did not establish a halted controller. On EHCI, status control is raw
 USBCMD, flags is the linked-slot mask and cc is the last siTD status byte.
 
-Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 184,
+Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 185,
 startup stage, RX flags, TX flags, last RX result, last TX result. Flags are busy
 in bit 0, ready in bit 1, fault in bits 8 onward. This fits in one 60-byte USB
 MIDI transfer. B3 wakes the TX task every 4,096 audio-task calls, even with no

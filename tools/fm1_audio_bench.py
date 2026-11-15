@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Authorized B8 hardware bench over the existing FM-1 Bluetooth bridge.
+"""Authorized B9 hardware bench over the existing FM-1 Bluetooth bridge.
 
 Never called by reproduce.py. Requires the FM-1 bridge repository's client
 and Python environment. Raw logs include local Bluetooth identifiers; keep
@@ -32,32 +32,33 @@ async def run(args):
             super().record(kind,**data)
             if kind=='reply' and data.get('target')==1:
                 report['mx_frames'].append({'time':time.time(),**data})
-                if data.get('op') in (65,126) and len(data.get('words',[]))>1 and data['words'][1]==184:
+                if data.get('op') in (65,126) and len(data.get('words',[]))>1 and data['words'][1]==185:
                     ready.set()
 
     with (args.output/'raw.jsonl').open('x') as log:
         async with Capture(log=log) as b:
-            print('Bluetooth capture connected; waiting for MX-1 B8.' if args.wait_boot else
-                  'Bluetooth capture connected; checking MX-1 B8.',flush=True)
+            print('Bluetooth capture connected; waiting for MX-1 B9.' if args.wait_boot else
+                  'Bluetooth capture connected; checking MX-1 B9.',flush=True)
             engaged=False
             try:
                 if args.wait_boot:
                     until=time.monotonic()+args.wait_boot
                     while not ready.is_set():
-                        if time.monotonic()>=until:raise TimeoutError('No B8 heartbeat before boot wait expired')
+                        if time.monotonic()>=until:raise TimeoutError('No B9 heartbeat before boot wait expired')
                         report['last_waiting_fm']=await b.status()
                         await asyncio.sleep(2)
                 report['before_mx']=await b.status(1)
                 report['before_fm']=await b.status()
-                if report['before_mx']['build']!=184 or report['before_fm']['build']!=177:
-                    raise RuntimeError('This sequence requires MX B8 and FM bridge B1')
+                if report['before_mx']['build']!=185 or report['before_fm']['build']!=177:
+                    raise RuntimeError('This sequence requires MX B9 and FM bridge B1')
                 if report['before_mx']['claimed'] or report['before_mx']['probe_pending']:
                     raise RuntimeError('Existing MX stream/probe: inspect it before starting another')
                 engaged=True
 
                 async def probe(step):
-                    item={'step':step};report['steps'].append(item)
+                    item={'step':step,'sent_at':time.time()};report['steps'].append(item)
                     item['accepted']=await b.command(5,[step],target=1)
+                    item['ack_at']=time.time()
                     for _ in range(20):
                         await asyncio.sleep(.2);s=await b.status(1)
                         if s['probe_pending']==0 and s['probe_done']==step:break
@@ -77,15 +78,21 @@ async def run(args):
                 await b.command(3,[0])
                 for step in (1,2,3):await probe(step)
                 if not args.extended:
-                    await probe(8)
-                    for _ in range(20):
-                        s=await b.status(1)
-                        if s['phase']==0 and not s['claimed']:break
-                        await asyncio.sleep(.25)
-                    else:raise TimeoutError('Short transport did not retire')
-                    report['short_transport_mx']=s
-                    report['short_transport_fm']=await b.status()
-                    report['short_transport_pages']=await pages()
+                    report['short_transports']=[]
+                    modes=(args.short_probe,8 if args.short_probe==9 else 9) if args.compare_ioc else (args.short_probe,)
+                    for index,step in enumerate(modes):
+                        if index:
+                            await probe(6);await probe(4)
+                            for setup in (1,2,3):await probe(setup)
+                        item={'probe':step,'before_fm':await b.status(),'before_mx':await b.status(1),'samples':[]}
+                        report['short_transports'].append(item)
+                        s=await probe(step)
+                        for _ in range(20):
+                            item['samples'].append({'time':time.time(),'mx':s,'fm':await b.status()})
+                            if s['phase']==0 and not s['claimed']:break
+                            await asyncio.sleep(.2);s=await b.status(1)
+                        else:raise TimeoutError('Short transport did not retire')
+                        item['after_mx']=s;item['after_fm']=await b.status();item['pages']=await pages()
                     report['completed_short_transport']=True
                     return
                 await probe(7)
@@ -128,8 +135,6 @@ async def run(args):
                         except Exception as e:report['cleanup'].append({label+'_error':repr(e)})
                     # FM Bluetooth remains useful when the MX MIDI path fails.
                     # Keep its status/trace independent of every MX readout.
-                    try:report['after_fm']=await b.status()
-                    except Exception as e:report['cleanup'].append({'fm_readout_error':repr(e)})
                     try:
                         for _ in range(20):
                             s=await b.status(1)
@@ -140,6 +145,9 @@ async def run(args):
                             await asyncio.sleep(.5)
                         report['after_mx']=await b.status(1)
                     except Exception as e:report['cleanup'].append({'mx_readout_error':repr(e)})
+                    # Read FM after the alt0 operation, so this really is final state.
+                    try:report['after_fm']=await b.status()
+                    except Exception as e:report['cleanup'].append({'fm_readout_error':repr(e)})
                     try:
                         report['after_midi']=await b.command(2,[4],target=1)
                     except Exception as e:report['cleanup'].append({'midi_readout_error':repr(e)})
@@ -161,9 +169,12 @@ if __name__=='__main__':
     p.add_argument('--bridge-tools',type=Path,required=True)
     p.add_argument('--candidate',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--wait-boot',type=int,default=0,help='Seconds to wait for B8 heartbeat before sending MX commands')
+    p.add_argument('--wait-boot',type=int,default=0,help='Seconds to wait for B9 heartbeat before sending MX commands')
+    p.add_argument('--short-probe',type=int,choices=(8,9),default=9,help='9: poll-only; 8: prior IOC policy')
+    p.add_argument('--compare-ioc',action='store_true',help='Run both short policies, stopping and selecting alt0 between them')
     p.add_argument('--extended',action='store_true',help='Run the longer tone/converter sequence instead of the default silent two-second probe')
     args=p.parse_args()
+    if args.extended and args.compare_ioc:p.error('--compare-ioc requires the short sequence')
     if not (args.bridge_tools/'bridge.py').is_file() or args.candidate.stat().st_size!=4194320:
         p.error('Expected the existing FM-1 bridge tools and a full MX-1 candidate')
     asyncio.run(run(args))

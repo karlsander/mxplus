@@ -24,7 +24,11 @@ Its first TX record was urgent queue overflow with a pending transfer. A
 separate primed converter run succeeded three times, then rejected a nonzero
 entry gate. B8 adds original MIDI QH/qTD snapshots and a short silent probe to
 distinguish controller-pending work from delayed completion processing.
-[B8 candidate](../evidence/fm1-async-b8-20261115/README.md).
+[B8 candidate and bench](../evidence/fm1-async-b8-20261115/README.md).
+B8 accepted 974 packets during its short run, but both running snapshots lacked
+a matched TX wrapper while software TX was busy. B9 adds a short poll-only
+service experiment alongside the preceding IOC probe; [B9 evidence](../evidence/fm1-poll-b9-20261115/README.md).
+Neither interrupt starvation nor a transport/converter repair is established.
 See [commands](DEBUG_BRIDGE.md) and [implementation](../research/fm1-ehci.md).
 
 The accepted profile is VID `1209`, PID `0001`, full-speed USB, UAC1 interface 1
@@ -104,14 +108,16 @@ payload remain unchanged. Only `tools/build_firmware.py` produces firmware.
 
 | Runtime interval, end exclusive | Use |
 | --- | --- |
-| `0100bee4..0100cad4` | 3,056-byte MIDI extension and original-function trampolines |
+| `0100bee4..0100cb50` | 3,180-byte MIDI extension and original-function trampolines |
 | `01017868..01017e28` | Existing 1,472-byte MIDI state |
-| `607f0000..607f3194` | 12,692-byte audio extension and bridge commands |
+| `607f0000..607f369c` | 13,980-byte audio extension and bridge commands |
 | `607f4000..607f9880` | Unmoved 22,656-byte audio state, descriptors and packet buffers |
 | `607f9880..607f9930` | 176-byte diagnostic state |
 | `607f9930..607fa564` | 3,124-byte bridge commands, replies and snapshots |
 | `607fa564..607fa66c` | 264-byte EHCI slot ownership and diagnostic state |
 | `607fa66c..607fa8ac` | 576-byte audio-task converter snapshots |
+| `607fa8ac..607fac4c` | 928-byte retained first MIDI failure records |
+| `607fac4c..607fae64` | 536-byte asynchronous snapshots and per-start policy |
 
 The USB processor's original general heap spans `604b1178..60800000`.
 The builder reduces its upper bound to `607f0000`, reserving 64 KiB in existing
@@ -225,7 +231,7 @@ audio ports to retain their addresses and buffer layout.
 The full reproduction gate checks this evidence against the actual USB image
 and both inserted USB code artifacts. No hardware probe runs in reproduction.
 
-For the authorized B8 MX-1 test:
+For the authorized B9 MX-1 test:
 
 1. Retain the last working image and settings backup. Copy the candidate as
    **`MX1_UPD.BIN`**, without a hyphen, to the updater volume. The original
@@ -234,10 +240,11 @@ For the authorized B8 MX-1 test:
    monitoring down. Check normal analog mixing first.
 3. Connect the FM-1 directly to HOST 3, which supplies bus power. Record the
    exact wiring, power arrangement, system rate and candidate hash.
-4. Keep the FM-1 bridge near the Mac. Confirm build 184 and MIDI pages 3/4,
-   then run probes 1, 2, 3 and 8 sequentially, waiting for each result. Probe 8
+4. Keep the FM-1 bridge near the Mac. Confirm build 185 and MIDI pages 3/4,
+   then run probes 1, 2, 3 and 9 sequentially, waiting for each result. Probe 9
    stops after nominally two seconds. Inspect retained pages 5–14 after stop;
-   a MIDI timeout does not imply that the command was not executed.
+   a MIDI timeout does not imply that the command was not executed. For comparison,
+   stop/select alt0, repeat setup and use probe 8 with its preceding IOC policy.
 5. After resolving the short transport/MIDI failure, explicitly start probe 7
    for the longer experiment. Select mode 0 to test conversion, then compare the FM-1's quiet stereo tone
    with MX converter mode 2. Keep USB3

@@ -15,6 +15,8 @@ across reconnect; the split schedule itself is unchanged.
 [B8](../evidence/fm1-async-b8-20261115/README.md) adds worker-owned
 asynchronous descriptor snapshots and a two-second transport-only probe.
 It changes neither the split schedule nor original MIDI transfer handling.
+[B9](../evidence/fm1-poll-b9-20261115/README.md) adds an explicit short poll-only
+comparison; the prior IOC mode remains available.
 
 ## Original instruction findings
 
@@ -142,3 +144,23 @@ incorrect IT-state progression after an unrelated conditional descriptor store
 in the new layout. Restricting that hook preserves the original initializer,
 audio task and converter instructions under test; no firmware condition is
 relaxed to accommodate the emulator.
+
+## B9 poll-only comparison
+
+[B8 on hardware](../evidence/fm1-async-b8-20261115/README.md#observed-on-b8-15-november)
+accepted 974 packets with gaps and stalled replies. The first and last running
+snapshots had no matched TX wrapper despite software TX busy. This is not
+proof of an EHCI transaction stuck on the wire. The original app_usb ISR
+(decoded 34480 / runtime 0100958c) wakes an IRQ task when completion status is
+set and the original active-list count is nonzero. That task (decoded 10526 /
+runtime 60010526) allocates and queues an event to the HCD worker; the worker
+6000bdc8 dispatches original bulk requests, queries and event processing.
+
+Probe 9 clears IOC on only our siTDs and uses the existing bounded worker query
+at 16 rather than 32 audio ticks. Probe 8 retains the preceding policy. This
+compares two service policies; a successful result would require further
+isolation before attributing it solely to IOC. Neither policy changes USBINTR,
+USBCMD, original endpoint handling, split masks or converter gates. Both short
+probes bypass conversion and expire after 8,000 audio ticks. The four-byte
+policy is copied in the private start request, so it survives the manager
+clearing its command before the worker runs. [Candidate and checks](../evidence/fm1-poll-b9-20261115/README.md).

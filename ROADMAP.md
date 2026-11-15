@@ -31,7 +31,10 @@ not sustained or comprehensive validation.
    run failed on a nonzero gate after two successful calls. Resolve these
    before claiming audible or sustained audio. B7 confirms packet delivery but
    still rejects the primed converter; its retained queue-overflow record and
-   MIDI recovery after expiry motivate B8 asynchronous descriptor snapshots.
+   MIDI recovery after expiry motivated B8 asynchronous descriptor snapshots.
+   B8 found an active RX wrapper but no TX wrapper during the stall. B9 compares
+   the preceding IOC service with an explicit short poll-only probe. Audio
+   interrupt pressure is a hypothesis, not an established cause.
    Other host-audio
    coexistence needs shared bandwidth/TT admission beyond B5. The computer
    probe and offline tests do not establish an MX-1 audio result.

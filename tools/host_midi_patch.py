@@ -72,7 +72,7 @@ def integrate(original,root,out,env,jump):
         async_address=async_state['st_value']; async_bytes=async_state['st_size']
         if failure_bytes!=928 or failure_address+failure_bytes!=async_address:
             raise FormatError('Invalid retained MIDI failure placement')
-        if async_bytes!=532 or async_address+async_bytes!=0x607f4000+audio_size:
+        if async_bytes!=536 or async_address+async_bytes!=0x607f4000+audio_size:
             raise FormatError('Invalid asynchronous diagnostic placement')
     m=recover(original); hot=m['operations'][0]
     if hot!={'call':0x6000000e,'kind':'copy','destination':0x01000300,'length':0xbbe4,'source':0x6002b1f4}: raise FormatError('USB startup map changed')

@@ -4,6 +4,7 @@
  */
 #include <stdint.h>
 #include <stddef.h>
+#include "usb_host_trace.h"
 #pragma clang section text=".host_audio" rodata=".host_audio_rodata"
 #define FN(a,t) ((t)(a))
 #define U16(p,o) (*(uint16_t *)((uint8_t *)(p)+(o)))
@@ -96,7 +97,7 @@ typedef struct {
     unsigned heartbeat;
 } DebugPort;
 __attribute__((section(".host_debug_state"))) static DebugPort debug_ports[4];
-__attribute__((section(".host_debug_state"))) static volatile uint32_t debug_ticks;
+__attribute__((section(".host_debug_state"))) volatile uint32_t debug_ticks;
 /* B6: audio-task-owned converter snapshot, appended after all existing state.
  * Page 8 reads only this cache; MIDI never reads DSP registers or pointers. */
 typedef struct {

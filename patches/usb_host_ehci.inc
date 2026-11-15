@@ -25,9 +25,10 @@ typedef struct {
     uint32_t started, last_tick, events, polls, event_bits;
     AsyncDiagnostic first, last;
     uint32_t poll_only;
+    MidiPipeline pipeline_first[2], pipeline_last[2];
 } AsyncState;
 __attribute__((section(".host_async_state"))) static AsyncState async_diagnostic;
-_Static_assert(sizeof(AsyncState)==536,"Async diagnostic placement");
+_Static_assert(sizeof(AsyncState)==872,"Async diagnostic placement");
 static int async_ram(uintptr_t p,unsigned n) {
     return !(p&3) && p>=0x60400000 && p<=0x607f0000-n;
 }
@@ -68,12 +69,16 @@ static void async_capture(AudioPort *p,unsigned force) {
         for(unsigned j=0;j<3;j++) v[18+j]=V32(td,j*4);
         v[25]=V32(last,8);
     }
+    for(unsigned t=0;t<2;t++) for(unsigned j=0;j<TRACE_STAGES;j++) for(unsigned k=0;k<3;k++)
+        s->pipeline_last[t].stage[j][k]=mx1_midi_pipeline[p-mx1_audio_ports][t].stage[j][k];
     barrier(); d->sequence++;
     /* Keep one snapshot after approximately one second as well as the last
      * running sample. No claim that task ticks measure exact elapsed time. */
     if(!s->first.sequence && (uint32_t)(debug_ticks-s->started)>=4000) {
         s->first.sequence=1; barrier();
         for(unsigned j=1;j<sizeof *d/4;j++) ((uint32_t *)&s->first)[j]=((uint32_t *)d)[j];
+        for(unsigned t=0;t<2;t++) for(unsigned j=0;j<TRACE_STAGES;j++) for(unsigned k=0;k<3;k++)
+            s->pipeline_first[t].stage[j][k]=s->pipeline_last[t].stage[j][k];
         barrier(); s->first.sequence=2;
     }
 }
@@ -298,8 +303,11 @@ int mx1_ehci_request(void *dev,void *ep,unsigned flags,unsigned a,unsigned b,voi
     if(ehci.owner && ehci.owner->phase && (((uint8_t*)ep)[10]==1 || ((uint8_t*)ep)[10]==3)) {
         ehci_stop(ehci.owner,0x5a); return -13;
     }
-    return FN(0x600111ef,int(*)(void*,void*,unsigned,unsigned,unsigned,void*,unsigned,void*,uintptr_t))
+    mx1_host_trace_hcd(ep,TRACE_HCD_IN,0);
+    int result=FN(0x600111ef,int(*)(void*,void*,unsigned,unsigned,unsigned,void*,unsigned,void*,uintptr_t))
         (dev,ep,flags,a,b,buf,len,callback,token);
+    mx1_host_trace_hcd(ep,TRACE_HCD_OUT,result);
+    return result;
 }
 int mx1_ehci_cancel(void *dev,void *ep) {
     AudioPort *p=for_device(dev);

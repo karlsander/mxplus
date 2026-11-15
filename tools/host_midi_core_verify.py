@@ -13,6 +13,7 @@ class Core:
         self.m=Machine(image);self.heap=0x60470000
         self.queued=[];self.sent=[];self.done=[];self.freed=[];self.scheduled=[]
         self.preempt=False
+        self.callback=CALLBACK|1
         self.m.uc.hook_add(UC_HOOK_CODE,self.boundary)
         m=self.m
         # Execute original five-object alarm pool/list initialization.
@@ -53,7 +54,7 @@ class Core:
     def submit(self,timeout):
         self.m.write(REQ,bytes(0x30))
         self.m.write(REQ,P(0x02000007))
-        self.m.write(REQ+12,P(INTERFACE,EP,0x20000800,60,CALLBACK|1,5,timeout))
+        self.m.write(REQ+12,P(INTERFACE,EP,0x20000800,60,self.callback,5,timeout))
         return self.m.call(0x6000f81a,REQ)[0]
     def complete(self,status=0):
         self.m.write(COMPLETION,P(0x02000008,0,status,DEV,EP,60))

@@ -21,6 +21,12 @@ trampoline host_config_original
  mov r4,r0
  mov r5,r1
  resume 0x6000a1ed
+trampoline host_core_submit_original
+ push.w {r4-r10,lr}
+ mov r4,r0
+ ldr r0,=0x6002b0dc
+ movs r7,#0
+ resume 0x6000f825
 trampoline host_tx_open_original
  push.w {r4-r10,lr}
  mov r4,r0

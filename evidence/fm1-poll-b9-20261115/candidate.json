@@ -30,7 +30,12 @@
       "passed": 6,
       "failed": 0
     },
-    "hosted": "pending",
+    "hosted": {
+      "status": "passed",
+      "commit": "2647bf21ea9aeb0cd7c640b50cb49cbdf0d26de7",
+      "run_id": 43731663546,
+      "url": "https://github.com/karlsander/mxplus/actions/runs/43731663546"
+    },
     "full_reproduction_stages": 17,
     "mocked_bench_flow": "passed",
     "verified_code_commit": "cfb88652b1e49c7f76b906cc7ea6758d360ad9ce"

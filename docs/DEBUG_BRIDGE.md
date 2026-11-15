@@ -78,7 +78,7 @@ requests. Overlong private frames are consumed through F7, not forwarded as musi
 | Op | Request | Reply words after result |
 | --- | --- | --- |
 | 1 | none | Status below |
-| 2 | Page 0–14 | Pages 0–2 and 5–8: page, snapshot sequence, raw fields; pages 3–4: page, fields; pages 9–14 below |
+| 2 | Page 0–18 | Pages 0–2 and 5–8: page, snapshot sequence, raw fields; pages 3–4: page, fields; pages 9–18 below |
 | 3 | Mode 0–3 | Selected mode |
 | 4 | none | Fresh snapshot sequence after worker completion |
 | 5 | Step 1–9 | Accepted step; completion is reported by status |
@@ -107,7 +107,7 @@ Result 0 succeeds; 1 is unsupported command/arguments; 2 is unavailable or a
 concurrent snapshot. Refresh failures return the original absolute queue/worker
 error. Probe queue failure is result 3. Invalid framing/checksum is silent and
 increments errors. B1 is 177, B2 is 178, B3 is 179, B4 is 180, B5 is 181,
-B6 is 182, B7 is 183, B8 is 184 and current MX-1 candidate B9 is 185.
+B6 is 182, B7 is 183, B8 is 184, B9 is 185 and current MX-1 candidate B10 is 186.
 
 Status after result: build, port, stage, result_code, controller, phase, control,
 flags, cc, frame, packets, malformed, overflow, underrun, missed, dsp_errors,
@@ -241,7 +241,7 @@ or teardown, 5A worker gap/other periodic activity, 5B insertion admission,
 destroy did not establish a halted controller. On EHCI, status control is raw
 USBCMD, flags is the linked-slot mask and cc is the last siTD status byte.
 
-Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 185,
+Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 186,
 startup stage, RX flags, TX flags, last RX result, last TX result. Flags are busy
 in bit 0, ready in bit 1, fault in bits 8 onward. This fits in one 60-byte USB
 MIDI transfer. B3 wakes the TX task every 4,096 audio-task calls, even with no
@@ -263,12 +263,13 @@ resident addresses map as runtime = 60000000 + decoded offset; hot relocation is
 original decoded 2b1f4 → runtime 01000300, length bbe4. The builder records every
 changed original byte, callback target, inserted source, startup copy/zero and hash.
 
-- Hot extension: 0100bee4..0100cad4, 3,056 bytes; writable hot state remains 1,472 bytes.
-- Audio/debug code: 607f0000..607f3194, 12,692 bytes, within the existing 16-KiB code slot.
+- Hot extension: 0100bee4..0100ccec, 3,592 bytes; writable hot state remains 1,472 bytes.
+- Audio/debug code: 607f0000..607f3850, 14,416 bytes, within the existing 16-KiB code slot.
 - Audio/DMA state remains 607f4000..607f9880; the A1 diagnostics remain 607f9880..607f9930.
 - Bridge state follows at 607f9930..607fa564 (3,124 bytes); EHCI state adds 264
   bytes at 607fa564..607fa66c. B6 adds 576 bytes of converter snapshots at
-  607fa66c..607fa8ac. The whole 26,796-byte
+  607fa66c..607fa8ac. Failure/async records and B10 pipeline counters follow
+  through 607fb254. The whole 29,268-byte
   state stays in the already reserved 64-KiB SDRAM region; allocator bounds are unchanged.
 
 The original main application, boot programs, updater and panel payload are
@@ -318,3 +319,17 @@ round trip: status, topology, MIDI state and all four manager setup probes.
 Continuous telemetry was captured for approximately 31 seconds, with zero
 MX-1 MIDI faults/errors. Audio stayed at zero packets; the test returned AS
 to alt0. [B4 bench results](../evidence/fm1-midi-timeout-b4-20261106/README.md#observed-on-b4).
+
+## B10 pipeline pages
+
+Pages 15/16 are first RX/TX and 17/18 are last RX/TX, aligned with the snapshots
+on pages 11..14. Reply words are result, page, sequence, tick, phase, then seven
+triples of count/latest-tick/value. Stage order: API entry, API return, core
+entry, core return, HCD entry, HCD return, application completion. Entry values
+are requested byte length, core request address and endpoint address respectively;
+return/completion values are the original signed result represented as uint32.
+Counters are lifetime totals and survive USB rebind; snapshot caches reset per
+start. Compare stages and first/last values, accounting for multiple outstanding
+requests and preemption. Triples/cross-stage values are not an atomic task trace.
+No saved address is followed by MIDI. Wrong owner or an incomplete snapshot
+returns result 2. [B10 evidence](../evidence/fm1-pipeline-b10-20261115/README.md).

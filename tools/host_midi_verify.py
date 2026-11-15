@@ -157,6 +157,10 @@ def verify(original,patched,main,report):
     passed('Original EHCI short-packet completion and continued MIDI reception',**verify_ehci(original,patched,h))
     from host_midi_core_verify import verify as verify_core
     passed('Original USB core reproduces exhausted timer failure and untimed submission',**verify_core(original))
+    from host_pipeline_verify import verify as verify_pipeline
+    pipeline_trace=verify_pipeline(original,patched,h)
+    pipeline_trace.pop('status')
+    passed('MIDI pipeline breadcrumbs preserve original core and request ABI',**pipeline_trace)
     # Execute original reset copy/zero loops from dirty memory, not Python scatter.
     machines=[]
     for image in (original,patched):

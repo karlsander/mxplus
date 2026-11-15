@@ -164,3 +164,12 @@ USBCMD, original endpoint handling, split masks or converter gates. Both short
 probes bypass conversion and expire after 8,000 audio ticks. The four-byte
 policy is copied in the private start request, so it survives the manager
 clearing its command before the worker runs. [Candidate and checks](../evidence/fm1-poll-b9-20261115/README.md).
+
+## B10 pipeline follow-up
+
+Both B9 service policies delayed MIDI replies. In poll-only mode worker status
+queries continued without a matching MIDI TX wrapper, so ISO IOC alone does not
+explain the observed stall. B10 preserves both policies and adds cached lifetime
+API/core/HCD/completion counters; [implementation, original instructions and
+limits](../evidence/fm1-pipeline-b10-20261115/README.md). No scheduler or controller
+change follows from the current evidence.

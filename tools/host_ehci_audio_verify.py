@@ -306,6 +306,8 @@ def verify(image,h,syms):
     def capture(tick):
         m.write(syms['debug_ticks'],P(tick));m.write(syms['ehci']+55*4,P(tick))
         q.advance(2041)
+    pipeline=h['midi_pipeline_start']
+    m.write(pipeline,P(*range(42))) # port zero RX/TX stage triples
     capture(4000)
     assert q.u32(first)==2 and q.u32(first+4)==4000
     assert q.u32(first+24)==0 and q.u32(first+28)==2
@@ -319,6 +321,7 @@ def verify(image,h,syms):
         assert v[20]&128 and v[21]==1 and v[24]==td and v[25]==v[20]
         # Model DMA completion without calling the original event consumer.
         m.write(td+8,P(0x80008d00))
+    m.write(pipeline,P(*range(100,142)))
     capture(4128)
     assert m.read(first,256)==original_first
     assert q.u32(last+48+20*4)==0x80008d00
@@ -331,12 +334,21 @@ def verify(image,h,syms):
         row=page(number);assert len(row)==40 and row[:2]==[0,number]
         assert row[2:14]==list(struct.unpack('<12I',m.read(first if number<13 else last,48)))
         assert row[14]==wrappers[(number-11)&1]
+    for number in (15,16,17,18):
+        row=page(number);assert len(row)==26 and row[:2]==[0,number]
+        cached=first if number<17 else last
+        assert row[2:5]==list(struct.unpack('<3I',m.read(cached,12)))
+        start=(0 if number<17 else 100)+21*((number-15)&1)
+        assert row[5:]==list(range(start,start+21))
     m.write(syms['debug_ports']+780,P(DEV))
     assert page(11,port=1)==[2] # same identity on another port cannot read owner
+    assert page(15,port=1)==[2]
     live_heap=m.read(0x60470000,0x1000)
     m.uc.mem_unmap(0x40010000,0x1000);m.uc.mem_unmap(0x60470000,0x1000)
     assert page(11)[2]==2 and page(14)[2]==q.u32(last)
+    assert page(15)[5:]==list(range(21)) and page(18)[5:]==list(range(121,142))
     m.write(last,P(q.u32(last)|1));assert page(13)==[2]
+    assert page(17)==[2]
     # Corrupt/bounded-list fixtures must not follow arbitrary addresses.
     m.uc.mem_map(0x40010000,0x1000);m.uc.mem_map(0x60470000,0x1000)
     m.write(0x60470000,live_heap)

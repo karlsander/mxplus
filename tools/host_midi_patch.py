@@ -9,6 +9,7 @@ from memory_map import recover
 
 # (decoded offset, runtime address, exact displaced instructions, export).
 HOOKS = [
+    (0xf81a,0x6000f81a,'2de9f04704464d480027','mx1_host_core_submit'),
     (0xa1e2,0x6000a1e2,'2de9f04f87b004460d46','mx1_host_config'),
     (0x9160,0x60009160,'2de9f0470446c27b','mx1_host_tx_open'),
     (0x90fa,0x600090fa,'2de9f047314d0446c27b','mx1_host_rx_open'),
@@ -72,7 +73,10 @@ def integrate(original,root,out,env,jump):
         async_address=async_state['st_value']; async_bytes=async_state['st_size']
         if failure_bytes!=928 or failure_address+failure_bytes!=async_address:
             raise FormatError('Invalid retained MIDI failure placement')
-        if async_bytes!=536 or async_address+async_bytes!=0x607f4000+audio_size:
+        pipeline=tab.get_symbol_by_name('mx1_midi_pipeline')[0]
+        pipeline_address=pipeline['st_value']; pipeline_bytes=pipeline['st_size']
+        if (async_bytes!=872 or async_address+async_bytes!=pipeline_address or pipeline_bytes!=672 or
+            pipeline_address+pipeline_bytes!=0x607f4000+audio_size):
             raise FormatError('Invalid asynchronous diagnostic placement')
     m=recover(original); hot=m['operations'][0]
     if hot!={'call':0x6000000e,'kind':'copy','destination':0x01000300,'length':0xbbe4,'source':0x6002b1f4}: raise FormatError('USB startup map changed')
@@ -133,9 +137,10 @@ def integrate(original,root,out,env,jump):
             'audio_ports':audio_state_address,'audio_extension_sha256':sha256(audio_blob),'audio_source':audio_source,
             'midi_failure_state_start':failure_address,'midi_failure_state_bytes':failure_bytes,
             'async_diagnostic_start':async_address,'async_diagnostic_bytes':async_bytes,
+            'midi_pipeline_start':pipeline_address,'midi_pipeline_bytes':pipeline_bytes,
             'original_sdram_heap':[0x604b1178,0x60800000],'reserved_sdram_heap':[0x604b1178,0x607f0000],
             'insert_offset':cut,'allocator_table_offset':0x2820c,'allocator_table_hex':table.hex(),
-            'sources':{str(p.relative_to(root)):sha256(p.read_bytes()) for p in [*sources,root/'patches/usb_host_debug.inc',root/'patches/usb_host_ehci.inc',root/'patches/mainline.ld',root/'tools/host_midi_patch.py']}}
+            'sources':{str(p.relative_to(root)):sha256(p.read_bytes()) for p in [*sources,root/'patches/usb_host_trace.h',root/'patches/usb_host_debug.inc',root/'patches/usb_host_ehci.inc',root/'patches/mainline.ld',root/'tools/host_midi_patch.py']}}
     (out/'usb-host.load.bin').write_bytes(blob)
     (out/'usb-host-audio.load.bin').write_bytes(audio_blob)
     (out/'app_usb.mainline.bin').write_bytes(patched)

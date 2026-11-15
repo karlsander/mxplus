@@ -3,6 +3,7 @@
  * RTOS tasks own open/close/queues; USB completion callbacks only publish results.
  */
 #include <stdint.h>
+#include "usb_host_trace.h"
 #pragma clang section text=".host_text" rodata=".host_rodata"
 #define FN(a,t) ((t)(a))
 #define U16(p,o) (*(uint16_t *)((uint8_t *)(p)+(o)))
@@ -147,6 +148,30 @@ typedef struct {
     uint32_t queue[32], head, count, urgent[32], urgent_head, urgent_count, flight_length[2], managed[2], fault[2], dropped, errors;
 } Port;
 __attribute__((section(".host_state"))) static Port ports[4];
+__attribute__((section(".host_pipeline_state"))) volatile MidiPipeline mx1_midi_pipeline[4][2];
+extern int host_core_submit_original(void *);
+static void trace(unsigned token,unsigned stage,uint32_t value) {
+    volatile uint32_t *s=mx1_midi_pipeline[token>>1][token&1].stage[stage];
+    s[1]=debug_ticks; s[2]=value; s[0]++;
+}
+/* The core may be preempted after completion wakes TX. Independent counters
+ * retain that ordering without an older return overwriting a newer flight. */
+int mx1_host_core_submit(void *request) {
+    uintptr_t token=U32(request,0x20);
+    extern void mx1_host_done(void *,void *,const int *,uintptr_t);
+    int ours=token<8 && U32(request,0x1c)==(uintptr_t)mx1_host_done;
+    if(ours) trace(token,TRACE_CORE_IN,(uintptr_t)request);
+    int result=host_core_submit_original(request);
+    if(ours) trace(token,TRACE_CORE_OUT,(uint32_t)result);
+    return result;
+}
+void mx1_host_trace_hcd(void *ep,unsigned stage,int result) {
+    for(unsigned p=0;p<4;p++) for(unsigned t=0;t<2;t++)
+        if(ports[p].managed[t] && ports[p].flight_ep[t]==(uintptr_t)ep) {
+            trace(p*2+t,stage,stage==TRACE_HCD_IN?(uintptr_t)ep:(uint32_t)result);
+            return;
+        }
+}
 extern void mx1_debug_midi_failure(unsigned,unsigned,unsigned,int);
 static uint8_t *buffer(unsigned port,unsigned tx) { return (uint8_t *)(0x20000000+tx*0x800+port*0x200); }
 static void wake(unsigned tx) {
@@ -157,6 +182,7 @@ static void wake(unsigned tx) {
 void mx1_host_done(void *interface, void *ep, const int *result, uintptr_t token) {
     (void)interface; (void)ep;
     unsigned tx=token&1, port=token>>1; if(port>=4) return;
+    trace(token,TRACE_DONE,(uint32_t)result[0]);
     Port *p=&ports[port];
     p->result[tx]=result[0]; p->length[tx]=(uint32_t)result[1];
     p->ready[tx]=1; p->busy[tx]=0; wake(tx);
@@ -260,12 +286,14 @@ send:
         } else n=U16(p->ep[0],0x10);
         p->flight_ep[tx]=p->ep[tx]; p->flight_generation[tx]=p->generation[tx];
         p->flight_length[tx]=n; p->busy[tx]=1;
+        trace(port*2+tx,TRACE_API_IN,n);
         int rc=FN(0x60009465,int(*)(uint32_t,void*,unsigned,void*,uintptr_t,int,unsigned))
             /* Stock EHCI 600112ae copies flag bit 13 to wrapper+16;
              * 60011af2 returns -15 for short data unless that bit is set.
              * MIDI IN is variable length. OUT must still complete in full. */
             (p->ep[tx],buffer(port,tx),n,mx1_host_done,(port<<1)|tx,
              tx?mx1_debug_tx_timeout(port,(void *)(uintptr_t)p->ep[1]):-1,tx?0:0x2000);
+        trace(port*2+tx,TRACE_API_OUT,(uint32_t)rc);
         if(rc) {
             p->busy[tx]=0; p->fault[tx]=1; p->errors++;
             mx1_debug_midi_failure(port,tx,2,rc);

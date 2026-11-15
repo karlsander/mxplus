@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "0a2d88837fb22ca526a8d05c2c69e7a8e2016886f23e46619d65f562b5f3033c",
+  "patched_app_sha256": "9df88c41373288444b93954fc8962d28239770fe476cde350afe4f728d789a5e",
   "hardware_access": false,
   "limits": "instruction checks only; USB/DSP/RTOS boundaries modeled",
   "setup": {
@@ -246,7 +246,7 @@
   "profile_negative_cases": 188,
   "heap_reservation_bytes": 65536,
   "iso_descriptors_per_port": 17,
-  "audio_state_bytes": 28260,
+  "audio_state_bytes": 29268,
   "cases": [
     "guarded complete USB patch accounting",
     "startup placement",

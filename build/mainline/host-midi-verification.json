@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "0a2d88837fb22ca526a8d05c2c69e7a8e2016886f23e46619d65f562b5f3033c",
+  "patched_app_sha256": "9df88c41373288444b93954fc8962d28239770fe476cde350afe4f728d789a5e",
   "groups": [
     {
       "name": "Original EHCI short-packet completion and continued MIDI reception",
@@ -88,9 +88,23 @@
       "boundary": "Original USB core submission/completion, alarm initialization/create/start/stop/delete and wrapper instructions execute. Heap/free, endpoint list lookup, critical sections, timer wheel, mailbox delivery, HCD and task preemption are modeled. Five slots and the failure path are established; actual live slot occupancy, scheduling order, USB delivery and timing are not."
     },
     {
+      "name": "MIDI pipeline breadcrumbs preserve original core and request ABI",
+      "status": "pass",
+      "stages": 7,
+      "live_bytes": 672,
+      "checks": [
+        "original core success/error/completion and unrelated callback parity",
+        "invalid token ignored",
+        "API accepted/rejected counters",
+        "HCD register/stack arguments, return and callee-saved registers",
+        "unmatched endpoint ignored"
+      ],
+      "boundary": "Original core and compiled wrappers execute; allocator, queues, wakes, API and HCD delivery modeled. No RTOS timing or DMA."
+    },
+    {
       "name": "Original USB startup copies code, zeroes state, preserves existing initialized data",
       "status": "pass",
-      "code_bytes": 3180,
+      "code_bytes": 3592,
       "state_bytes": 1472
     },
     {
@@ -462,7 +476,7 @@
           "ep": 536936528,
           "buffer": 536872960,
           "size": 16,
-          "callback": 16827419,
+          "callback": 16827513,
           "token": 1,
           "timeout": 100,
           "flags": 0,
@@ -472,7 +486,7 @@
           "ep": 536936784,
           "buffer": 536873472,
           "size": 16,
-          "callback": 16827419,
+          "callback": 16827513,
           "token": 3,
           "timeout": 100,
           "flags": 0,
@@ -482,7 +496,7 @@
           "ep": 536937040,
           "buffer": 536873984,
           "size": 16,
-          "callback": 16827419,
+          "callback": 16827513,
           "token": 5,
           "timeout": 100,
           "flags": 0,
@@ -492,7 +506,7 @@
           "ep": 536937296,
           "buffer": 536874496,
           "size": 16,
-          "callback": 16827419,
+          "callback": 16827513,
           "token": 7,
           "timeout": 100,
           "flags": 0,
@@ -502,7 +516,7 @@
           "ep": 536936528,
           "buffer": 536872960,
           "size": 16,
-          "callback": 16827419,
+          "callback": 16827513,
           "token": 1,
           "timeout": 100,
           "flags": 0,
@@ -512,7 +526,7 @@
           "ep": 536936784,
           "buffer": 536873472,
           "size": 16,
-          "callback": 16827419,
+          "callback": 16827513,
           "token": 3,
           "timeout": 100,
           "flags": 0,
@@ -522,7 +536,7 @@
           "ep": 536937040,
           "buffer": 536873984,
           "size": 16,
-          "callback": 16827419,
+          "callback": 16827513,
           "token": 5,
           "timeout": 100,
           "flags": 0,
@@ -532,7 +546,7 @@
           "ep": 536937296,
           "buffer": 536874496,
           "size": 16,
-          "callback": 16827419,
+          "callback": 16827513,
           "token": 7,
           "timeout": 100,
           "flags": 0,

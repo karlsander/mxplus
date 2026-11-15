@@ -1,7 +1,7 @@
 {
   "status": "pass",
   "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
-  "candidate_sha256": "a737c0b7c46473a98cdf4cb619ada0f47a51cf3f5be4fac5bd4c3c52681ea914",
+  "candidate_sha256": "957e0a81923763cefb78c34ba298650df8ad62d91e2362df89c8e2fd64e811e0",
   "hardware_access": false,
   "hardware_recovery_verified": false,
   "checks": [
@@ -169,8 +169,8 @@
           "normal_peer_setup_calls": 1,
           "usb_application_handoff": {
             "header": "0x3200000",
-            "decoded_bytes": 242028,
-            "sha256": "0a2d88837fb22ca526a8d05c2c69e7a8e2016886f23e46619d65f562b5f3033c"
+            "decoded_bytes": 242876,
+            "sha256": "9df88c41373288444b93954fc8962d28239770fe476cde350afe4f728d789a5e"
           },
           "stub_calls": [
             "0x1000540",

@@ -33,8 +33,10 @@ not sustained or comprehensive validation.
    still rejects the primed converter; its retained queue-overflow record and
    MIDI recovery after expiry motivated B8 asynchronous descriptor snapshots.
    B8 found an active RX wrapper but no TX wrapper during the stall. B9 compares
-   the preceding IOC service with an explicit short poll-only probe. Audio
-   interrupt pressure is a hypothesis, not an established cause.
+   the preceding IOC service with an explicit short poll-only probe; both still
+   delayed MIDI replies while the worker ran. B10 adds API/core/HCD/completion
+   counters to locate the delayed handoff. Interrupt pressure and task starvation
+   remain hypotheses, not established causes.
    Other host-audio
    coexistence needs shared bandwidth/TT admission beyond B5. The computer
    probe and offline tests do not establish an MX-1 audio result.

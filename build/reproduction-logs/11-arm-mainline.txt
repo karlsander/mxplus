@@ -17,6 +17,20 @@
     "All ten selected presets reach original LED records and RGB encoder with a nonzero color; other pads are off",
     "Entire edit surface isolated; held-button releases cannot leak after exit",
     "Mastering entry pickup and forced mixer-return pickup in Jump and Pass modes; stock fader blink encoding",
+    "System lookup matches all 141 IDs and invalid diagnostics; original return and external references preserved",
+    "All 11 stock SELECT toggle paths, four empty pages, signed dial boundaries and asynchronous LED isolation",
+    "Per-channel page memory and switching; no parameter writes from page controls",
+    "Channel-owned duplicate press, release and repeat isolation across deselection",
+    "Held channel-page button blocks mastering entry until released",
+    "No-selection tempo packets and all ordinary mono LED calls preserve original ABI",
+    "Only the four tempo buttons are owned; original tempo adjustment requires no selection",
+    "Stock-held keys release normally after selection changes",
+    "Normal/channel-setting pages and boot, UI-lock, modal and menu guards",
+    "Selection changes through stock parameters refresh right display and LEDs",
+    "Mastering priority and channel page restoration",
+    "Source-routing hold priority, original deselection and VALUE delivery",
+    "Channel-owned held keys participate in the source-routing modifier guard",
+    "Original linked and multiple selection retain their current channel",
     "Actual startup copies extension and preserves existing initialized data",
     "Patched initializer veneer, original registration, and live rate descriptors",
     "Original request dispatch reaches compiled UAC2 handler with correct replies",
@@ -95,5 +109,5 @@
     "Notes, controllers and SysEx survive RX unchanged",
     "Background queue overload leaves sync output running"
   ],
-  "patched_app_sha256": "cfab5a905d27497f74e40f8147346307a3aaae56497eac520324f6d0c0ab1281"
+  "patched_app_sha256": "dfacf026df61a49aae72bf31303ad89b2fe51661564fc0f0c53ba478d5e8c614"
 }

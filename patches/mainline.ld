@@ -1,5 +1,6 @@
 ENTRY(mx1_route_ui_event)
 mx1_original_mix_invalid = 0x6001e650;
+mx1_original_system_invalid = 0x6001a888;
 SECTIONS {
     /* Separate USB-processor ELF, built only by the same mainline builder.
        Numeric addresses overlap the main processor's independent SRAM. */
@@ -44,5 +45,14 @@ SECTIONS {
         *(.master_state) . = ALIGN(4);
     }
     ASSERT(ADDR(.master_state) + SIZEOF(.master_state) <= 0x01018000, "Mastering state overflow")
+    .channel_lookup 0x6001a40c : { KEEP(*(.channel_lookup)) }
+    .channel_head (DEFINED(mx1_host_image) ? ADDR(.host_state) + SIZEOF(.host_state) : 0x6001a41c) : { *(.channel_head) *(.channel_rodata) . = ALIGN(4); }
+    .channel_text (DEFINED(mx1_host_image) ? ADDR(.host_state) + SIZEOF(.host_state) : 0x6001a658) : { *(.channel_text) . = ALIGN(4); }
+    ASSERT(SIZEOF(.channel_lookup) <= 16, "System lookup replacement overflow")
+    ASSERT(SIZEOF(.channel_head) <= 568, "Channel head overlaps original zero return")
+    ASSERT(SIZEOF(.channel_text) <= 560, "Channel text overlaps original invalid path")
+    .channel_state (DEFINED(mx1_host_image) ? ADDR(.host_state) + SIZEOF(.host_state) : 0x010174d0) (NOLOAD) : { *(.channel_state) . = ALIGN(4); }
+    ASSERT(SIZEOF(.channel_state) == (DEFINED(mx1_host_image) ? 0 : 16), "Unexpected channel state")
+    ASSERT(ADDR(.channel_state) + SIZEOF(.channel_state) <= 0x01018000, "Channel state overflow")
     /DISCARD/ : { *(.comment*) *(.ARM.exidx*) *(.ARM.extab*) *(.eh_frame*) }
 }

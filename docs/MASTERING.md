@@ -4,10 +4,11 @@ Hold **MASTERING** until the editor opens, then release it. TAP is no longer
 needed. Entry uses a 1,200-tick hold; physical timing still needs confirmation.
 Press MASTERING once while editing to save and return to the mixer.
 
-A short MASTERING press retains its stock operation. MASTERING + TEMPO still
-selects the stock preset. TAP reaches the original tap-tempo handler; pressing
-another button or turning an encoder cancels a pending hold and preserves the
-stock modified gesture. Repeats from the held MASTERING button cannot exit the
+A short MASTERING press retains its stock operation. With no channel selected,
+MASTERING + TEMPO selects the stock preset and TAP reaches tap-tempo. When a
+channel is selected, the [channel pages](CHANNEL_CONTROLS.md) own those tempo
+controls until mastering mode opens. Another button or encoder cancels a pending
+hold; controls then follow their current channel or stock ownership. Repeats from the held MASTERING button cannot exit the
 editor; release it before pressing again to exit.
 
 The held-key guard checks physical IDs `0..0x54` only, matching routing. The
@@ -22,7 +23,7 @@ Entry is allowed from all six channel-setting pages: GAIN, PAN, TONE, AUX, BFX
 and FADER (IDs 5–10), plus the existing control-surface page 15. Boot, lock,
 modal and other pages remain excluded. Knob/fader samples and unrelated panel
 notifications continue through their ordinary handlers while MASTERING is held.
-Another button or encoder movement preserves the stock modified gesture.
+Another button or encoder movement cancels entry and follows the current control ownership.
 
 Earlier long-hold builds failed before the background-event cancellation,
 page eligibility and held-key-range corrections. Those corrections remain in
@@ -169,7 +170,10 @@ bytes, veneers, exported targets, section usage, relocation literals and all
 component checksums. [The guarded sites](../patches/mastering_sites.json) contain
 the exact original lookup bytes. Mastering uses the reclaimed resident lookup
 space and adds 140 bytes of writable state. With the [MIDI descriptor](USB_MIDI.md),
-the total reservation is now 620 bytes inside stock MPU region 2.
+the mastering-era reservation was 620 bytes inside stock MPU region 2.
+The current [channel-control surface](CHANNEL_CONTROLS.md) adds 16 bytes, for
+636 total, and relocates the unchanged mastering eligibility guard into its
+reclaimed system-lookup slot.
 This mastering change adds no heap, MPU, USB-application, boot-program, updater
 or panel-payload changes.
 

@@ -16,6 +16,9 @@ typedef unsigned int u32;
 #define DIRTY (*(volatile u16 *)0x605141ccu)
 #define MASTER_KEY 0x17u
 #define HOLD_TICKS 1200u
+extern void mx1_channel_refresh(void);
+extern int mx1_channel_keys_held(void);
+extern int mx1_channel_owned_event(const u8 *event);
 extern void mx1_route_ui_event(const u8 *event);
 extern void mx1_master_redraw_original(void *context);
 
@@ -50,6 +53,8 @@ struct master_state {
 };
 struct master_state mx1_master_state;
 #define S mx1_master_state
+__attribute__((section(".channel_head")))
+int mx1_master_is_active(void) { return S.active; }
 static int get(void *ctx, unsigned id, unsigned addr) {
     return FN(addr,int (*)(void *,unsigned,unsigned))(ctx,id,0);
 }
@@ -61,7 +66,7 @@ static u32 now(void) {
     FN(0x010037e9u,void (*)(u32 *))(ticks);
     return ticks[1];
 }
-static __attribute__((noinline)) int eligible(void) {
+static __attribute__((section(".channel_head"),noinline)) int eligible(void) {
     unsigned page = *(volatile u16 *)0x600b4b5eu;
     return *(volatile u32 *)0x600b4b94u == 0 && !*(volatile u32 *)0x600b537cu &&
         ((page >= 5 && page <= 10) || page == 15) &&
@@ -71,6 +76,7 @@ __attribute__((section(".master_head"),noinline))
 static int no_keys(void) {
     /* Only IDs 0..0x54 are panel keys, as in routing and the event classifier.
      * The user's mixer keeps bit 0x55 set; bits 85..87 are outside this range. */
+    if (mx1_channel_keys_held()) return 0;
     for (unsigned i=0;i<10;++i) if (KEYS[i]) return 0;
     return !(KEYS[10] & 0x1fu);
 }
@@ -143,7 +149,7 @@ static void leave(void) {
 }
 __attribute__((section(".master_head")))
 void mx1_master_redraw(void *context) {
-    if (!S.active) { mx1_master_redraw_original(context); return; }
+    if (!S.active) { mx1_channel_refresh(); mx1_master_redraw_original(context); return; }
     led(6,3); /* Stock MASTERING blink mode. */
     unsigned current=slot();
     for (unsigned i=0;i<16;++i)
@@ -179,6 +185,7 @@ void mx1_master_tick(void) {
     if (S.active && S.redraw) mx1_master_redraw(CONTEXT);
 }
 void mx1_master_ui_event(const u8 *event) {
+    if (mx1_channel_owned_event(event)) return;
     unsigned type=event[0],id=event[1];
     int key=type>=1 && type<=3 && id<0x55;
     unsigned bit=1u<<(id&7);

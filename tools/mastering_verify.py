@@ -51,6 +51,8 @@ class MasterMachine(UIMachine):
 
     def instruction(self,uc,address,size,user):
         args=tuple(uc.reg_read(r) for r in (UC_ARM_REG_R0,UC_ARM_REG_R1,UC_ARM_REG_R2,UC_ARM_REG_R3))
+        if address == 0x6001e65e:
+            return  # Actual mixer getter, including channel selection.
         if address == 0x600161f6:
             self.transactions.append(args)
             return

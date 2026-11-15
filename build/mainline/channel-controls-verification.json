@@ -1,0 +1,66 @@
+{
+  "status": "pass",
+  "candidate_container_sha256": "dad7fbf2825a7a7ec82470cd7e4127d5567aa1cb1bed5ff3efb09c971a329ca3",
+  "patched_app_sha256": "dfacf026df61a49aae72bf31303ad89b2fe51661564fc0f0c53ba478d5e8c614",
+  "groups": [
+    {
+      "name": "System lookup matches all 141 IDs and invalid diagnostics; original return and external references preserved",
+      "status": "pass"
+    },
+    {
+      "name": "All 11 stock SELECT toggle paths, four empty pages, signed dial boundaries and asynchronous LED isolation",
+      "status": "pass",
+      "cases": 44
+    },
+    {
+      "name": "Per-channel page memory and switching; no parameter writes from page controls",
+      "status": "pass"
+    },
+    {
+      "name": "Channel-owned duplicate press, release and repeat isolation across deselection",
+      "status": "pass"
+    },
+    {
+      "name": "Held channel-page button blocks mastering entry until released",
+      "status": "pass"
+    },
+    {
+      "name": "No-selection tempo packets and all ordinary mono LED calls preserve original ABI",
+      "status": "pass"
+    },
+    {
+      "name": "Only the four tempo buttons are owned; original tempo adjustment requires no selection",
+      "status": "pass"
+    },
+    {
+      "name": "Stock-held keys release normally after selection changes",
+      "status": "pass"
+    },
+    {
+      "name": "Normal/channel-setting pages and boot, UI-lock, modal and menu guards",
+      "status": "pass"
+    },
+    {
+      "name": "Selection changes through stock parameters refresh right display and LEDs",
+      "status": "pass"
+    },
+    {
+      "name": "Mastering priority and channel page restoration",
+      "status": "pass"
+    },
+    {
+      "name": "Source-routing hold priority, original deselection and VALUE delivery",
+      "status": "pass"
+    },
+    {
+      "name": "Channel-owned held keys participate in the source-routing modifier guard",
+      "status": "pass"
+    },
+    {
+      "name": "Original linked and multiple selection retain their current channel",
+      "status": "pass"
+    }
+  ],
+  "hardware_access": false,
+  "limits": "Original selection and parameter storage execute; final LEDs, RTOS and audio remain modeled/unexecuted. Physical UI acceptance is pending."
+}

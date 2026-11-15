@@ -71,7 +71,7 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
             assert new == dict(old, destination=0x0101727c, length=436, source=BASE + cut + code_size)
             continue
         assert old['kind'] == new['kind'] and old['destination'] == new['destination']
-        assert new['length'] == old['length'] + (code_size if index == 0 else 620 if index == 3 else 0)
+        assert new['length'] == old['length'] + (code_size if index == 0 else 636 if index == 3 else 0)
         if old['kind'] == 'copy':
             assert new['source'] == old['source'] + (size if old['source'] >= BASE + cut else 0)
 
@@ -89,7 +89,7 @@ def verify_layout(original: bytes, patched: bytes, build: dict) -> list[dict]:
             contents = (image[operation['source'] - BASE:operation['source'] - BASE + length]
                         if operation['kind'] == 'copy' else bytes(length))
             if image is patched and index == 3:
-                contents = bytes(length - 596) + extension[code_size:] + bytes(160)
+                contents = bytes(length - 612) + extension[code_size:] + bytes(176)
             assert machine.read(operation['destination'], length) == contents
         started.append(machine)
     for operation in old_map:
@@ -136,6 +136,9 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
     from mastering_verify import verify as verify_mastering
     mastering = verify_mastering(original, patched, build)
     groups.extend(mastering['groups'])
+    from channel_controls_verify import verify as verify_channel
+    channel = verify_channel(original, patched, build)
+    groups.extend(channel['groups'])
     from usb_audio_verify import verify as verify_usb
     usb = verify_usb(original, patched, build)
     assert usb['status'] == 'pass'
@@ -178,7 +181,7 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
         'extension_sha256': build['extension_sha256'], 'groups': groups,
         'hardware_access': False,
         'scope': 'Integrated candidate ARM instructions with explicit DSP and peripheral models',
-        'details': {'mastering': 'mastering-verification.json', 'storage': 'storage-verification.json', 'ui': 'ui-verification.json', 'audio': 'audio-verification.json',
+        'details': {'channel_controls': 'channel-controls-verification.json', 'mastering': 'mastering-verification.json', 'storage': 'storage-verification.json', 'ui': 'ui-verification.json', 'audio': 'audio-verification.json',
                     'usb_packets': 'packet-verification.json', 'usb_midi': 'midi-verification.json',
                     'hardware_initialization': 'hardware-audit.json'},
         'limits': [
@@ -187,7 +190,7 @@ def verify(original: bytes, patched: bytes, build: dict) -> tuple[dict, dict]:
             'Instruction counts do not measure real-time deadline margin or CPU cycles',
         ],
     }
-    return report, {'midi-verification.json': midi, 'mastering-verification.json': mastering, 'usb-verification.json': usb, 'packet-verification.json': packets, 'mpu-verification.json': mpu, 'storage-verification.json': storage, 'ui-verification.json': ui, 'audio-verification.json': audio,
+    return report, {'channel-controls-verification.json': channel, 'midi-verification.json': midi, 'mastering-verification.json': mastering, 'usb-verification.json': usb, 'packet-verification.json': packets, 'mpu-verification.json': mpu, 'storage-verification.json': storage, 'ui-verification.json': ui, 'audio-verification.json': audio,
                     'hardware-audit.json': hardware}
 
 

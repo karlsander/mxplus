@@ -18,7 +18,8 @@ On the normal main page, hold the **SELECT button of the destination strip**
 and turn **TEMPO**. The four-character tempo display shows that strip's source.
 Each nonzero encoder event advances or reverses one source choice. The selector
 stops at `Auto` and `P9 R` (the last computer playback channel); it does not wrap. Release
-SELECT to return the display and encoder to their normal operation.
+SELECT to return to the selected channel's [empty page](CHANNEL_CONTROLS.md),
+or to tempo if the stock SELECT action leaves no channel selected.
 
 The destination order is 1, 2, 3, 4, 5/6, DIGITAL, USB1, USB2, USB3, USB4 and
 COMPUTER. Only the strip whose physical SELECT is held changes its assignment.

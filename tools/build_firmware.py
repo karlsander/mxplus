@@ -69,7 +69,7 @@ def build(firmware: Path, out: Path) -> dict:
     env = dict(os.environ, ZIG_GLOBAL_CACHE_DIR=str(cache.resolve()),
                ZIG_LOCAL_CACHE_DIR=str(cache.resolve()))
     sources = [ROOT / "patches" / p for p in (
-        "channel_routing_audio.c", "channel_routing_ui.c", "channel_routing_ui.S", "usb_audio.c", "usb_playback.S", "mastering_ui.c", "mastering_ui.S")]
+        "channel_routing_audio.c", "channel_routing_ui.c", "channel_routing_ui.S", "usb_audio.c", "usb_playback.S", "mastering_ui.c", "mastering_ui.S", "channel_controls.c", "channel_controls.S")]
     from usb_midi_descriptors import mainline_configuration, validate_configuration
     config = mainline_configuration()
     (out / "uac2_configuration.h").write_text("#define MX1_UAC2_CONFIGURATION_BYTES {" +
@@ -84,6 +84,7 @@ def build(firmware: Path, out: Path) -> dict:
     required = ("mx1_route_ui_event", "mx1_route_ui_display", "mx1_route_get",
                 "mx1_route_adjust", "mx1_route_label", "mx1_route_recall", "mx1_uac2_initialize",
                 "mx1_master_ui_event", "mx1_master_tick", "mx1_master_redraw", "mx1_mixer_parameter_id",
+                "mx1_channel_selected", "mx1_channel_event", "mx1_channel_display", "mx1_channel_refresh", "mx1_channel_led", "mx1_system_parameter_id",
                 "mx1_uac2_set_rate", "mx1_uac2_class_request", "mx1_uac2_start", *REQUIRED_SYMBOLS)
     for name in required:
         command += ["--force_undefined", name]
@@ -103,7 +104,7 @@ def build(firmware: Path, out: Path) -> dict:
             raise FormatError("Unresolved extension relocation")
         allocated = [s.name for s in ef.iter_sections()
                      if s["sh_flags"] & 2 and s["sh_size"]]
-        if allocated != [".usb_playback_patch", ".text", ".route_state", ".usb_data", ".usb_state", ".master_lookup", ".master_head", ".master_text", ".master_state"] or text["sh_type"] != "SHT_PROGBITS":
+        if allocated != [".usb_playback_patch", ".text", ".route_state", ".usb_data", ".usb_state", ".master_lookup", ".master_head", ".master_text", ".master_state", ".channel_lookup", ".channel_head", ".channel_text", ".channel_state"] or text["sh_type"] != "SHT_PROGBITS":
             raise FormatError("ELF contains allocated bytes outside the injected section")
         playback = ef.get_section_by_name(".usb_playback_patch")
         if (playback["sh_addr"] != 0x01009860 or playback["sh_size"] != 438 or
@@ -143,6 +144,23 @@ def build(firmware: Path, out: Path) -> dict:
         if (master_state['sh_addr'] != 0x01017444 or master_state['sh_size'] != 140 or
             master_state['sh_type'] != 'SHT_NOBITS' or master_state['sh_flags'] & 7 != 3):
             raise FormatError('Unexpected mastering state')
+        channel_sites = json.loads((ROOT / "patches/channel_control_sites.json").read_text())
+        channel_sections = {}
+        for name, site in channel_sites.items():
+            section = ef.get_section_by_name('.channel_' + name)
+            if (section is None or section['sh_addr'] != 0x60000000 + site['offset'] or
+                section['sh_size'] > site['size'] or section['sh_type'] != 'SHT_PROGBITS' or
+                section['sh_flags'] & 7 != 6):
+                raise FormatError('Unexpected channel code section: ' + name)
+            channel_sections[name] = section.data()
+        channel_state = ef.get_section_by_name('.channel_state')
+        if (channel_state['sh_addr'] != 0x010174d0 or channel_state['sh_size'] != 16 or
+            channel_state['sh_type'] != 'SHT_NOBITS' or channel_state['sh_flags'] & 7 != 3):
+            raise FormatError('Unexpected channel state')
+        objects = table.get_symbol_by_name('mx1_channel_state') or []
+        if (len(objects) != 1 or objects[0]['st_value'] != 0x010174d0 or objects[0]['st_size'] != 13 or
+            ef.get_section(objects[0]['st_shndx']).name != '.channel_state'):
+            raise FormatError('Unexpected channel state object')
         for name in required:
             matches = table.get_symbol_by_name(name) or []
             if len(matches) != 1:
@@ -150,7 +168,8 @@ def build(firmware: Path, out: Path) -> dict:
             symbol = matches[0]
             is_master = name.startswith('mx1_master_') or name == 'mx1_mixer_parameter_id'
             section_name = ef.get_section(symbol['st_shndx']).name if isinstance(symbol['st_shndx'], int) else ''
-            valid_location = (section_name in ('.master_lookup', '.master_head', '.master_text') if is_master else
+            is_channel = name.startswith('mx1_channel_') or name == 'mx1_system_parameter_id'
+            valid_location = (section_name in ('.channel_lookup', '.channel_head', '.channel_text') if is_channel else section_name in ('.master_lookup', '.master_head', '.master_text') if is_master else
                               section_name == '.text' and ENTRY <= (symbol['st_value'] & ~1) < ENTRY + len(blob))
             if (symbol["st_info"]["type"] != "STT_FUNC" or
                 not isinstance(symbol["st_shndx"], int) or
@@ -199,8 +218,8 @@ def build(firmware: Path, out: Path) -> dict:
                "length": 0x71dc}:
         raise FormatError("Unexpected original writable SRAM BSS")
     exact_patch(modified, 0x108, struct.pack("<I", 0x71dc),
-                struct.pack("<I", 0x7448), changes,
-                "Zero 620-byte mainline writable state reservation after original writable SRAM BSS")
+                struct.pack("<I", 0x7458), changes,
+                "Zero 636-byte mainline writable state reservation after original writable SRAM BSS")
     exact_patch(modified, 0x10c, struct.pack('<I', 0x01020000), struct.pack('<I', 0x0101727c), changes,
                 "Repurpose zero-length startup copy for writable USB descriptor")
     exact_patch(modified, 0x110, bytes(4), struct.pack('<I', 436), changes,
@@ -231,6 +250,14 @@ def build(firmware: Path, out: Path) -> dict:
         exact_patch(modified, site['offset'], bytes.fromhex(site['expected']),
                     data + bytes(site['size'] - len(data)), changes,
                     'Reclaim mixer lookup ' + name + ' slot; retain shared literal and return')
+    for name, site in channel_sites.items():
+        data = channel_sections[name]
+        exact_patch(modified, site['offset'], bytes.fromhex(site['expected']),
+                    data + bytes(site['size'] - len(data)), changes,
+                    'Reclaim system lookup ' + name + '; retain zero return and invalid diagnostic')
+    exact_patch(modified, 0x14a78, bytes.fromhex("38b50c4600210091"),
+                absolute_jump(0x60014a78, symbols['mx1_channel_led']), changes,
+                'Mono LED helper: channel page LEDs, including TAP beat updates')
     audio = patch_audio(modified, symbols, changes)
     for change in changes:
         change["component"] = "app_main"
@@ -249,11 +276,16 @@ def build(firmware: Path, out: Path) -> dict:
         "host_midi": host, "patched_usb_sha256": sha256(usb_modified), "host_extension_sha256": host["extension_sha256"],
         "compiler": "ziglang 0.13.0 Cortex-M3 ReleaseSmall, no LTO",
         "sources": {str(p.relative_to(ROOT)): sha256(p.read_bytes()) for p in [
-            *sources, ROOT / "patches/channel_routing.h", ROOT / "patches/mainline.ld", ROOT / "patches/mastering_sites.json",
+            *sources, ROOT / "patches/channel_routing.h", ROOT / "patches/mainline.ld", ROOT / "patches/mastering_sites.json", ROOT / "patches/channel_control_sites.json",
             Path(__file__).resolve(), ROOT / "tools/routing_audio_patch.py",
             ROOT / "tools/firmware_patch.py", ROOT / "tools/uac2_design.py", ROOT / "tools/usb_midi_descriptors.py", ROOT / "tools/usb_playback_patch.py"]},
         "scatter_extension": scatter, "patches": changes,
-        "writable_state": {"start": 0x01017264, "size": 620, "end_exclusive": 0x010174d0, "startup_zero_length_offset": 0x108},
+        "writable_state": {"start": 0x01017264, "size": 636, "end_exclusive": 0x010174e0, "startup_zero_length_offset": 0x108},
+        "channel_controls": {"placement": "Reclaimed system lookup; no new heap or executable memory reservation",
+            "sections": {name: {"runtime": 0x60000000+site['offset'], "capacity": site['size'],
+                "used": len(channel_sections[name])} for name, site in channel_sites.items()},
+            "preserved_zero_return": "0x6001a654", "preserved_invalid_path": "0x6001a888",
+            "state_start": 0x010174d0, "state_size": 16, "pages": "Four empty per-channel pages; volatile only"},
         "mastering_ui": {"placement": "Reclaimed original mixer lookup; no heap or additional code-memory reservation",
             "sections": {name: {"runtime": 0x60000000+site['offset'], "capacity": site['size'],
                 "used": len(master_sections[name])} for name, site in sites.items()},

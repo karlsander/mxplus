@@ -80,6 +80,8 @@ class UIMachine(Machine):
         self.write(MODAL, u32(0))
         self.write(0x6051deb8, u32(dsp_mode))
         self.write(LABEL, b'A6  \0')
+        if not stub_routes:
+            self.write(0x600b53ac, u32(0x600a8804))
         self.uc.hook_add(UC_HOOK_CODE, self.instruction)
 
     def ret(self, result=0):
@@ -106,6 +108,8 @@ class UIMachine(Machine):
             self.ret()
         elif address == 0x6001A1CE:
             self.ret({0: 0, 0x5a: 0, 0x5b: 1234}.get(args[1], 0))
+        elif address == 0x6001e65e and self.stub_routes:
+            self.ret(-1 if args[1] == 0xfb else 0)
         elif address == 0x6001F7C8:
             self.ret(-1)
         elif address == 0x6001A896:

@@ -74,10 +74,14 @@ request ABI, polling preemption, packet validation, admission and retirement.
 USB/DSP/MMIO, allocator and RTOS delivery remain explicit models.
 All 17 offline stages, current and committed-artifact gates, and all six
 browser-patcher tests passed for code/artifact commit
-`c8e03b6566acaa508ce1477daf4eb392009918c0`. Hosted B13 verification is pending.
+`c8e03b6566acaa508ce1477daf4eb392009918c0`. Hosted B13 verification also passed for commit `e1d24a883bd9d9d728ee09f8b19a0b4c6e753715`: [run 89](https://github.com/karlsander/mxplus/actions/runs/43747902186).
 
 B13 has not been installed. After local gates pass, compare the same short
 silent poll-only probe, page 19 service elapsed times, packet/error deltas and
 MIDI pipeline progress. Do not infer a speedup from placement or instruction
 counts. Converter gate repair and audible acceptance remain separate work.
 Keep UNTESTED and PR #21 open pending physical audio acceptance.
+
+The candidate was copied as `MX1_UPD.BIN`, readback hash verified and safely
+ejected on 15 November 2026; [copy receipt](copy-20261115.json). TAP installation
+and B13 boot/bench verification remain pending.

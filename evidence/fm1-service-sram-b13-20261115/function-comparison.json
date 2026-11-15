@@ -1,0 +1,140 @@
+{
+  "baseline_commit": "d6290453abb5b41be74f86983bb5faab59b88f22",
+  "status": "pass",
+  "comparison": "Instructions equal after normalizing local/named branch targets, resolving named linker thunks and omitting alignment NOPs; no timing claim",
+  "functions": {
+    "B12": {
+      "mx1_host_config": {
+        "runtime": "0x100bee4",
+        "bytes": 1008,
+        "instructions": 361,
+        "alignment_nops": 2,
+        "normalized_instruction_sha256": "93292852cc1c35f0a8d3fdc7323872f498364ab876bbd89359fa7de1f1312347"
+      },
+      "mx1_host_select": {
+        "runtime": "0x100c2d4",
+        "bytes": 70,
+        "instructions": 27,
+        "alignment_nops": 0,
+        "normalized_instruction_sha256": "5781f017297b6c56217ef6a15894d093aa45edcdf58f9232ae0850524f72dab4"
+      },
+      "mx1_host_setup": {
+        "runtime": "0x100c31a",
+        "bytes": 128,
+        "instructions": 53,
+        "alignment_nops": 0,
+        "normalized_instruction_sha256": "2c93efe0c1b0355a9608d1e46c0f78408a41f3fa8acb9a7321985f0a646a3349"
+      },
+      "open_port": {
+        "runtime": "0x100c57c",
+        "bytes": 288,
+        "instructions": 99,
+        "alignment_nops": 0,
+        "normalized_instruction_sha256": "f4295c610810a11ae3cb9764758e23e545b207d8f8abed27555276efeb86680d"
+      },
+      "close_port": {
+        "runtime": "0x100c6a4",
+        "bytes": 128,
+        "instructions": 41,
+        "alignment_nops": 0,
+        "normalized_instruction_sha256": "bbc7ead53a3a178411f38d296e5073cb4c3709d9a4c9955bd3edfc8352225c91"
+      },
+      "ehci_path": {
+        "runtime": "0x100cde6",
+        "bytes": 284,
+        "instructions": 103,
+        "alignment_nops": 4,
+        "normalized_instruction_sha256": "b209176435805f001acfd551fa401c454f4bbda271198ea1c4e4c7ec1fac4681"
+      },
+      "ehci_arm": {
+        "runtime": "0x100cd06",
+        "bytes": 224,
+        "instructions": 78,
+        "alignment_nops": 1,
+        "normalized_instruction_sha256": "b6bb367aeef3153dd62f9605344716a02d8382573b920a7773c38e4ce61e750b"
+      },
+      "ehci_unlink": {
+        "runtime": "0x100cca0",
+        "bytes": 102,
+        "instructions": 34,
+        "alignment_nops": 0,
+        "normalized_instruction_sha256": "03baee3eb6585f269c68611c2e82f055155e7499b00555e2d519d77c9676f34c"
+      },
+      "ehci_service": {
+        "runtime": "0x607f2102",
+        "bytes": 1654,
+        "instructions": 572,
+        "alignment_nops": 6,
+        "normalized_instruction_sha256": "8c04c20bfe31f96b4106471cc7366a38a8a1baabd6ce73729a63a4d72ea1e4f4"
+      }
+    },
+    "B13": {
+      "mx1_host_config": {
+        "runtime": "0x607f0000",
+        "bytes": 1008,
+        "instructions": 361,
+        "alignment_nops": 2,
+        "normalized_instruction_sha256": "93292852cc1c35f0a8d3fdc7323872f498364ab876bbd89359fa7de1f1312347"
+      },
+      "mx1_host_select": {
+        "runtime": "0x607f03f0",
+        "bytes": 70,
+        "instructions": 27,
+        "alignment_nops": 0,
+        "normalized_instruction_sha256": "5781f017297b6c56217ef6a15894d093aa45edcdf58f9232ae0850524f72dab4"
+      },
+      "mx1_host_setup": {
+        "runtime": "0x607f0436",
+        "bytes": 128,
+        "instructions": 53,
+        "alignment_nops": 0,
+        "normalized_instruction_sha256": "2c93efe0c1b0355a9608d1e46c0f78408a41f3fa8acb9a7321985f0a646a3349"
+      },
+      "open_port": {
+        "runtime": "0x607f04b6",
+        "bytes": 288,
+        "instructions": 99,
+        "alignment_nops": 0,
+        "normalized_instruction_sha256": "f4295c610810a11ae3cb9764758e23e545b207d8f8abed27555276efeb86680d"
+      },
+      "close_port": {
+        "runtime": "0x607f05d6",
+        "bytes": 128,
+        "instructions": 41,
+        "alignment_nops": 0,
+        "normalized_instruction_sha256": "bbc7ead53a3a178411f38d296e5073cb4c3709d9a4c9955bd3edfc8352225c91"
+      },
+      "ehci_path": {
+        "runtime": "0x100ce12",
+        "bytes": 284,
+        "instructions": 103,
+        "alignment_nops": 4,
+        "normalized_instruction_sha256": "b209176435805f001acfd551fa401c454f4bbda271198ea1c4e4c7ec1fac4681"
+      },
+      "ehci_arm": {
+        "runtime": "0x100cd32",
+        "bytes": 224,
+        "instructions": 78,
+        "alignment_nops": 1,
+        "normalized_instruction_sha256": "b6bb367aeef3153dd62f9605344716a02d8382573b920a7773c38e4ce61e750b"
+      },
+      "ehci_unlink": {
+        "runtime": "0x100cccc",
+        "bytes": 102,
+        "instructions": 34,
+        "alignment_nops": 0,
+        "normalized_instruction_sha256": "03baee3eb6585f269c68611c2e82f055155e7499b00555e2d519d77c9676f34c"
+      },
+      "ehci_service": {
+        "runtime": "0x100c654",
+        "bytes": 1656,
+        "instructions": 573,
+        "alignment_nops": 7,
+        "normalized_instruction_sha256": "8c04c20bfe31f96b4106471cc7366a38a8a1baabd6ce73729a63a4d72ea1e4f4"
+      }
+    }
+  },
+  "differences": {},
+  "baseline_elf_sha256": "5fcd32c7927b203c2638fa19fa9a54aed8087ac760bba4bdb3d9ba5807f400bf",
+  "candidate_elf_sha256": "389de811e91a537c0e705f64d440bdb44821dac2ddad824d82128968b8a188ec"
+}

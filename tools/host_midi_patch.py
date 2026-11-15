@@ -85,11 +85,17 @@ def integrate(original,root,out,env,jump):
             timing_address+timing_bytes!=0x607f4000+audio_size):
             raise FormatError('Invalid asynchronous diagnostic placement')
         fast_helpers={}
-        for name in ('ehci_path','ehci_arm','ehci_unlink'):
+        for name in ('ehci_path','ehci_arm','ehci_unlink','ehci_service'):
             s=tab.get_symbol_by_name(name)[0]; address=s['st_value']&~1
             if s['st_info']['type']!='STT_FUNC' or not code['sh_addr']<=address<address+s['st_size']<=code['sh_addr']+len(blob):
                 raise FormatError('EHCI helper outside reserved executable SRAM')
             fast_helpers[name]={'runtime_address':s['st_value'],'bytes':s['st_size']}
+        cold_helpers={}
+        for name in ('mx1_host_config','mx1_host_select','mx1_host_setup','open_port','close_port'):
+            s=tab.get_symbol_by_name(name)[0]; address=s['st_value']&~1
+            if s['st_info']['type']!='STT_FUNC' or not audio['sh_addr']<=address<address+s['st_size']<=audio['sh_addr']+len(audio_blob):
+                raise FormatError('MIDI setup helper outside reserved SDRAM code')
+            cold_helpers[name]={'runtime_address':s['st_value'],'bytes':s['st_size']}
     m=recover(original); hot=m['operations'][0]
     if hot!={'call':0x6000000e,'kind':'copy','destination':0x01000300,'length':0xbbe4,'source':0x6002b1f4}: raise FormatError('USB startup map changed')
     if m['operations'][3]!={'call':0x60000028,'kind':'zero','destination':0x01010060,'length':0x7808}: raise FormatError('USB BSS map changed')
@@ -153,6 +159,7 @@ def integrate(original,root,out,env,jump):
             'poll_after_start':poll_address,'poll_after_bytes':poll_bytes,
             'service_timing_start':timing_address,'service_timing_bytes':timing_bytes,
             'ehci_sram_helpers':fast_helpers,
+            'midi_sdram_helpers':cold_helpers,
             'original_sdram_heap':[0x604b1178,0x60800000],'reserved_sdram_heap':[0x604b1178,0x607f0000],
             'insert_offset':cut,'allocator_table_offset':0x2820c,'allocator_table_hex':table.hex(),
             'sources':{str(p.relative_to(root)):sha256(p.read_bytes()) for p in [*sources,root/'patches/usb_host_trace.h',root/'patches/usb_host_debug.inc',root/'patches/usb_host_ehci.inc',root/'patches/mainline.ld',root/'tools/host_midi_patch.py']}}

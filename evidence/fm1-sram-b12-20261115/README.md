@@ -73,7 +73,7 @@ page 19 alongside the existing snapshots before another start.
 All 17 offline stages and the current-artifact gate passed with the same
 candidate hash. The committed-image gate and all six browser-patcher tests
 passed against code/artifact commit `4bcc8baf8509e0146b108f87afd5b85e487ff31a`.
-Hosted B12 verification remains pending.
+Hosted B12 verification also passed for commit `d6290453abb5b41be74f86983bb5faab59b88f22`: [run 88](https://github.com/karlsander/mxplus/actions/runs/43746497022).
 
 ## Observed on B12
 

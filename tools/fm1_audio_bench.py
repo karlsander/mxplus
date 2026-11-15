@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Authorized B12 hardware bench over the existing FM-1 Bluetooth bridge.
+"""Authorized B13 hardware bench over the existing FM-1 Bluetooth bridge.
 
 Never called by reproduce.py. Requires the FM-1 bridge repository's client
 and Python environment. Raw logs include local Bluetooth identifiers; keep
@@ -32,25 +32,25 @@ async def run(args):
             super().record(kind,**data)
             if kind=='reply' and data.get('target')==1:
                 report['mx_frames'].append({'time':time.time(),**data})
-                if data.get('op') in (65,126) and len(data.get('words',[]))>1 and data['words'][1]==188:
+                if data.get('op') in (65,126) and len(data.get('words',[]))>1 and data['words'][1]==189:
                     ready.set()
 
     with (args.output/'raw.jsonl').open('x') as log:
         async with Capture(log=log) as b:
-            print('Bluetooth capture connected; waiting for MX-1 B12.' if args.wait_boot else
-                  'Bluetooth capture connected; checking MX-1 B12.',flush=True)
+            print('Bluetooth capture connected; waiting for MX-1 B13.' if args.wait_boot else
+                  'Bluetooth capture connected; checking MX-1 B13.',flush=True)
             engaged=False
             try:
                 if args.wait_boot:
                     until=time.monotonic()+args.wait_boot
                     while not ready.is_set():
-                        if time.monotonic()>=until:raise TimeoutError('No B12 heartbeat before boot wait expired')
+                        if time.monotonic()>=until:raise TimeoutError('No B13 heartbeat before boot wait expired')
                         report['last_waiting_fm']=await b.status()
                         await asyncio.sleep(2)
                 report['before_mx']=await b.status(1)
                 report['before_fm']=await b.status()
-                if report['before_mx']['build']!=188 or report['before_fm']['build']!=177:
-                    raise RuntimeError('This sequence requires MX B12 and FM bridge B1')
+                if report['before_mx']['build']!=189 or report['before_fm']['build']!=177:
+                    raise RuntimeError('This sequence requires MX B13 and FM bridge B1')
                 if report['before_mx']['claimed'] or report['before_mx']['probe_pending']:
                     raise RuntimeError('Existing MX stream/probe: inspect it before starting another')
                 engaged=True
@@ -169,7 +169,7 @@ if __name__=='__main__':
     p.add_argument('--bridge-tools',type=Path,required=True)
     p.add_argument('--candidate',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--wait-boot',type=int,default=0,help='Seconds to wait for B12 heartbeat before sending MX commands')
+    p.add_argument('--wait-boot',type=int,default=0,help='Seconds to wait for B13 heartbeat before sending MX commands')
     p.add_argument('--short-probe',type=int,choices=(8,9),default=9,help='9: poll-only; 8: prior IOC policy')
     p.add_argument('--compare-ioc',action='store_true',help='Run both short policies, stopping and selecting alt0 between them')
     p.add_argument('--extended',action='store_true',help='Run the longer tone/converter sequence instead of the default silent two-second probe')

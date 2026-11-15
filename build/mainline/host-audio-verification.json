@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "53da299dd82d1ce1c591b02eac7f8f7ce31c919f3679b82145d8afc4b6726ab8",
+  "patched_app_sha256": "be0f5bdd04bb8c95d8239d7c4ffd4ac24cf89781fc7395ad824714fe614b7442",
   "hardware_access": false,
   "limits": "instruction checks only; USB/DSP/RTOS boundaries modeled",
   "setup": {

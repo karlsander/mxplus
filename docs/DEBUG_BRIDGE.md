@@ -107,7 +107,7 @@ Result 0 succeeds; 1 is unsupported command/arguments; 2 is unavailable or a
 concurrent snapshot. Refresh failures return the original absolute queue/worker
 error. Probe queue failure is result 3. Invalid framing/checksum is silent and
 increments errors. B1 is 177, B2 is 178, B3 is 179, B4 is 180, B5 is 181,
-B6 is 182, B7 is 183, B8 is 184, B9 is 185, B10 is 186, B11 is 187 and current MX-1 candidate B12 is 188.
+B6 is 182, B7 is 183, B8 is 184, B9 is 185, B10 is 186, B11 is 187, B12 is 188 and current MX-1 candidate B13 is 189.
 
 Status after result: build, port, stage, result_code, controller, phase, control,
 flags, cc, frame, packets, malformed, overflow, underrun, missed, dsp_errors,
@@ -241,7 +241,7 @@ or teardown, 5A worker gap/other periodic activity, 5B insertion admission,
 destroy did not establish a halted controller. On EHCI, status control is raw
 USBCMD, flags is the linked-slot mask and cc is the last siTD status byte.
 
-Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 188,
+Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 189,
 startup stage, RX flags, TX flags, last RX result, last TX result. Flags are busy
 in bit 0, ready in bit 1, fault in bits 8 onward. This fits in one 60-byte USB
 MIDI transfer. B3 wakes the TX task every 4,096 audio-task calls, even with no
@@ -263,8 +263,8 @@ resident addresses map as runtime = 60000000 + decoded offset; hot relocation is
 original decoded 2b1f4 → runtime 01000300, length bbe4. The builder records every
 changed original byte, callback target, inserted source, startup copy/zero and hash.
 
-- Hot extension: 0100bee4..0100cf50, 4,204 bytes; writable hot state remains 1,472 bytes.
-- Audio/debug code: 607f0000..607f3790, 14,224 bytes, within the existing 16-KiB code slot.
+- Hot extension: 0100bee4..0100cf9c, 4,280 bytes; writable hot state remains 1,472 bytes.
+- Audio/debug code: 607f0000..607f37ac, 14,252 bytes, within the existing 16-KiB code slot.
 - Audio/DMA state remains 607f4000..607f9880; the A1 diagnostics remain 607f9880..607f9930.
 - Bridge state follows at 607f9930..607fa564 (3,124 bytes); EHCI state adds 264
   bytes at 607fa564..607fa66c. B6 adds 576 bytes of converter snapshots at
@@ -352,3 +352,12 @@ them from total/max microframes; this does not establish CPU time or detect all
 possible counter halts/wraps. The frame counter must be running. Cache resets
 per start. Wrong-owner/incomplete reads return 2 and never access live MMIO.
 [Definition, primary source and tests](../evidence/fm1-sram-b12-20261115/README.md).
+
+## B13 service placement
+
+The worker's unchanged service body now runs in the reserved executable SRAM,
+including its inlined packet copy and asynchronous snapshots. The five
+enumeration/open/close bodies move to the existing SDRAM code reservation;
+steady MIDI polling, enqueue and completion code remain in SRAM. No command,
+timer, queue policy or state address changes. Page 19 remains the comparison
+metric, including preemption. [B13 evidence](../evidence/fm1-service-sram-b13-20261115/README.md).

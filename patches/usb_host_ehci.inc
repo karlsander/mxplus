@@ -198,7 +198,7 @@ static void ehci_packet(AudioPort *p,unsigned i,unsigned status) {
     if(nonzero) ehci.nonzero++;
     q->frames=bytes/4; barrier(); p->write_count=w+1; p->packets++;
 }
-static void ehci_service(unsigned event) {
+__attribute__((section(".host_text"),noinline)) static void ehci_service(unsigned event) {
     AudioPort *p=ehci.owner;
     if(!p || !p->phase || !ehci_current(p)) return;
     unsigned first=V32(ehci.regs,12)&16383, tick=debug_ticks, packets=p->packets;

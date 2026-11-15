@@ -191,3 +191,13 @@ packet gaps remain. B12 places identical descriptor admission/arming/unlinking
 instructions in reserved executable SRAM and adds cached worker elapsed time.
 No admission check is removed. [Instruction comparison, timing definition and
 verification](../evidence/fm1-sram-b12-20261115/README.md).
+
+## B13 complete service body in SRAM
+
+B12's two short probes returned diagnostic MIDI during transfer but averaged
+17.73/18.55 ms elapsed service. B13 moves the unchanged service body, including
+inlined packet/capture loops, into the reserved SRAM slot. Five infrequent MIDI
+setup/open/close bodies move to the existing SDRAM code slot to make room.
+The builder enforces both placements. No state, admission, scheduling or RTOS
+policy changes. This is a placement experiment pending physical comparison;
+[exact function/address comparison and evidence](../evidence/fm1-service-sram-b13-20261115/README.md).

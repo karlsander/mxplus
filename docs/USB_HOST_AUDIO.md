@@ -38,6 +38,11 @@ B11 returned diagnostic MIDI status during poll-only transport, but packet
 gaps remained and IOC still stalled MIDI. B12 moves unchanged descriptor helpers
 into reserved SRAM and adds elapsed-service telemetry;
 [B12 evidence](../evidence/fm1-sram-b12-20261115/README.md).
+B12 accepted 1,293/1,287 packets with diagnostic MIDI progress, but mean service
+elapsed time was 17.73/18.55 ms and packet gaps remain. B13 moves the service
+body into reserved SRAM, relocating infrequent MIDI setup functions into the
+existing SDRAM code slot. Transfer logic, timers and state addresses are unchanged;
+[B13 evidence](../evidence/fm1-service-sram-b13-20261115/README.md).
 Clean transport, sustained MIDI timing and converter repair remain unverified.
 See [commands](DEBUG_BRIDGE.md) and [implementation](../research/fm1-ehci.md).
 
@@ -118,9 +123,9 @@ payload remain unchanged. Only `tools/build_firmware.py` produces firmware.
 
 | Runtime interval, end exclusive | Use |
 | --- | --- |
-| `0100bee4..0100cf50` | 4,204-byte MIDI/EHCI extension and original-function trampolines |
+| `0100bee4..0100cf9c` | 4,280-byte MIDI/EHCI extension and original-function trampolines |
 | `01017868..01017e28` | Existing 1,472-byte MIDI state |
-| `607f0000..607f3790` | 14,224-byte audio extension and bridge commands |
+| `607f0000..607f37ac` | 14,252-byte audio extension and bridge commands |
 | `607f4000..607f9880` | Unmoved 22,656-byte audio state, descriptors and packet buffers |
 | `607f9880..607f9930` | 176-byte diagnostic state |
 | `607f9930..607fa564` | 3,124-byte bridge commands, replies and snapshots |
@@ -245,7 +250,7 @@ audio ports to retain their addresses and buffer layout.
 The full reproduction gate checks this evidence against the actual USB image
 and both inserted USB code artifacts. No hardware probe runs in reproduction.
 
-For the authorized B12 MX-1 test:
+For the authorized B13 MX-1 test:
 
 1. Retain the last working image and settings backup. Copy the candidate as
    **`MX1_UPD.BIN`**, without a hyphen, to the updater volume. The original
@@ -254,7 +259,7 @@ For the authorized B12 MX-1 test:
    monitoring down. Check normal analog mixing first.
 3. Connect the FM-1 directly to HOST 3, which supplies bus power. Record the
    exact wiring, power arrangement, system rate and candidate hash.
-4. Keep the FM-1 bridge near the Mac. Confirm build 188 and MIDI pages 3/4,
+4. Keep the FM-1 bridge near the Mac. Confirm build 189 and MIDI pages 3/4,
    then run probes 1, 2, 3 and 9 sequentially, waiting for each result. Probe 9
    stops after nominally two seconds. Inspect retained pages 5–14 after stop;
    a MIDI timeout does not imply that the command was not executed. For comparison,

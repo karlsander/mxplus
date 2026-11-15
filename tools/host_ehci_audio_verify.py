@@ -14,10 +14,14 @@ H=lambda v:struct.pack('<H',v)
 def verify(image,h,syms):
     from host_audio_verify import Audio,DEV,EP,DRIVER,HC,REGS,TD,TDSTRIDE,STRIDE
     table=0x4000b000;cap=0x40020000;initial_table=0x60470000
-    for name in ('ehci_path','ehci_arm','ehci_unlink'):
+    for name in ('ehci_path','ehci_arm','ehci_unlink','ehci_service'):
         f=h['ehci_sram_helpers'][name]
         assert f['runtime_address']==syms[name]
         assert h['code_start']<=syms[name]&~1<(syms[name]&~1)+f['bytes']<=h['code_start']+h['code_bytes']
+    for name in ('mx1_host_config','mx1_host_select','mx1_host_setup','open_port','close_port'):
+        f=h['midi_sdram_helpers'][name]
+        assert f['runtime_address']==syms[name]
+        assert h['audio_code_start']<=syms[name]&~1<(syms[name]&~1)+f['bytes']<=h['audio_code_start']+h['audio_code_bytes']
 
     class Ehci(Audio):
         def __init__(self,port=0):

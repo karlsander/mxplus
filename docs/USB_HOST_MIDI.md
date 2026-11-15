@@ -110,8 +110,8 @@ to the mastering held-key fix in PR #18.
 USB startup originally copies decoded `0x2b1f4..0x36dd8` to
 `0x01000300..0x0100bee4`. The new USB code is inserted at decoded `0x36dd8`,
 runtime `0x0100bee4`, below the existing USB allocator at `0x0100d000`.
-The extension occupies 4,204 bytes (`0x0100bee4..0x0100cf50`), leaving
-176 bytes before that allocator. State occupies 1,472 bytes
+The extension occupies 4,280 bytes (`0x0100bee4..0x0100cf9c`), leaving
+100 bytes before that allocator. State occupies 1,472 bytes
 (`0x01017868..0x01017e28`), leaving 472 bytes before the writable-region limit.
 The five following initialized-data source literals move; their destinations
 do not. New zero-initialized state starts at the original USB BSS end,
@@ -124,6 +124,9 @@ table at decoded `0x2820c` also reserves `0x0100d000`, `0x0100e000` and
 `0x0100f000` as 4-KiB regions. Exact table bytes are guarded.
 
 The separate [audio extension](USB_HOST_AUDIO.md#usb-processor-placement-and-binary-changes) reserves 64 KiB from the original USB SDRAM heap; its code and state are initialized by formerly empty startup entries.
+B13 also places configuration, interface selection, setup and open/close bodies
+in that SDRAM code slot to make room for the EHCI service in SRAM. Steady MIDI
+polling, enqueue and completion remain in SRAM. [Exact placements and checks](../evidence/fm1-service-sram-b13-20261115/README.md).
 
 These are USB-processor addresses, not additional space in the main processor.
 Mastering reclaimed 2,548 bytes of resident main code footprint and consumed

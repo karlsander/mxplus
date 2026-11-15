@@ -28,7 +28,9 @@ static void zero(uint8_t *p, unsigned n) { while(n--) *p++=0; }
  * one embedded jack per endpoint. Ignore unrelated audio/control interfaces.
  * Duplicate interface/alt descriptors and a second MS interface are rejected.
  */
-int mx1_host_config(uint8_t *r, const uint8_t *cfg) {
+/* B13: infrequent enumeration/open/close bodies use the existing SDRAM code
+ * reservation, leaving executable SRAM for the per-packet EHCI service. */
+__attribute__((section(".host_audio"),noinline)) int mx1_host_config(uint8_t *r, const uint8_t *cfg) {
     if (U16(r,2)==0x0582) return host_config_original(r,cfg);
     zero(r+8,0x13c-8);
     /* Absent audio interfaces must not alias a MIDI-only interface zero. */
@@ -96,7 +98,7 @@ int mx1_host_config(uint8_t *r, const uint8_t *cfg) {
     return 0;
 }
 
-void mx1_host_select(const uint8_t *info, uint16_t *out) {
+__attribute__((section(".host_audio"),noinline)) void mx1_host_select(const uint8_t *info, uint16_t *out) {
     if(le16(info)==0x0582) { FN(0x60007bf9,void(*)(const void*,void*))(info,out); return; }
     if(U32(info,0x64)==1 && (info[0x68] || info[0x69]) &&
        (!info[0x68] || info[0x6a]==2) && (!info[0x69] || info[0x6b]==2)) {
@@ -108,7 +110,7 @@ void mx1_host_select(const uint8_t *info, uint16_t *out) {
  * to the already-active alt0 succeeds without that callback (6000ef38).
  * Finish that case in the same manager task using the stock open dispatcher;
  * its queue acceptance and status notification still own MIDI readiness. */
-void mx1_host_setup(uint8_t *event) {
+__attribute__((section(".host_audio"),noinline)) void mx1_host_setup(uint8_t *event) {
     FN(0x6000865d,void(*)(void*))(event);
     mx1_audio_setup(event);
     uint8_t *dev=(uint8_t *)U32(event,4);
@@ -187,7 +189,7 @@ void mx1_host_done(void *interface, void *ep, const int *result, uintptr_t token
     p->result[tx]=result[0]; p->length[tx]=(uint32_t)result[1];
     p->ready[tx]=1; p->busy[tx]=0; wake(tx);
 }
-static int open_port(uint8_t *record,unsigned tx) {
+__attribute__((section(".host_audio"),noinline)) static int open_port(uint8_t *record,unsigned tx) {
     uint8_t *ep=(uint8_t *)U32(record,4);
     uint8_t *interface=(uint8_t *)U32(ep,0x20);
     uint8_t *dev=(uint8_t *)U32(interface,8);
@@ -211,7 +213,7 @@ static int open_port(uint8_t *record,unsigned tx) {
 }
 int mx1_host_tx_open(uint8_t *r) { return open_port(r,1); }
 int mx1_host_rx_open(uint8_t *r) { return open_port(r,0); }
-static void close_port(uint8_t *event,unsigned tx) {
+__attribute__((section(".host_audio"),noinline)) static void close_port(uint8_t *event,unsigned tx) {
     unsigned port=event[4]; if(port>=4) return;
     Port *p=&ports[port];
     if(!p->managed[tx]) { if(tx) host_tx_close_original(event); else host_rx_close_original(event); return; }

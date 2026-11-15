@@ -76,7 +76,7 @@ All 17 offline stages, current and committed-artifact gates, and all six
 browser-patcher tests passed for code/artifact commit
 `c8e03b6566acaa508ce1477daf4eb392009918c0`. Hosted B13 verification also passed for commit `e1d24a883bd9d9d728ee09f8b19a0b4c6e753715`: [run 89](https://github.com/karlsander/mxplus/actions/runs/43747902186).
 
-B13 has not been installed. After local gates pass, compare the same short
+At build time B13 had not been installed. The planned comparison was the same short
 silent poll-only probe, page 19 service elapsed times, packet/error deltas and
 MIDI pipeline progress. Do not infer a speedup from placement or instruction
 counts. Converter gate repair and audible acceptance remain separate work.
@@ -84,4 +84,30 @@ Keep UNTESTED and PR #21 open pending physical audio acceptance.
 
 The candidate was copied as `MX1_UPD.BIN`, readback hash verified and safely
 ejected on 15 November 2026; [copy receipt](copy-20261115.json). TAP installation
-and B13 boot/bench verification remain pending.
+was pending at that copy; the later boot/bench results follow below.
+
+## Observed on B13
+
+The user confirmed restart on HOST3 and the bridge reported wire build 189.
+[Sanitized evidence](bench-20261115.json) retains status delivery times, cached
+pages, setup and cleanup; private Bluetooth identifiers are omitted.
+
+| Short policy | MX accepted | FM sent | Malformed | Overflow | Underrun | Schedule corrections | Mean service | Max service |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Poll-only | 1,813 | 2,042 | 0 | 225 | 84 | 22 | 3.596 ms | 5.875 ms |
+| IOC | 1,949 | 1,977 | 0 | 25 | 12 | 8 | 1.674 ms | 8.750 ms |
+
+Poll-only returned four running status replies; RX/TX pipeline counts advanced
+and no first MIDI failure was recorded. The 275 service calls totaled 7,911
+microframes, with zero ambiguity flags. This was substantially shorter elapsed
+service than B12's two means of 17.73/18.55 ms. It is not a CPU-time measurement.
+FM packet delivery approached the nominal one-per-ms cadence, but the eight-entry
+software queue dropped 225 otherwise valid packets. Scheduling gaps remain.
+
+The IOC comparison again delayed status until expiry. First/last RX/TX pipeline
+counts were identical; the first TX failure was urgent-queue overflow during
+phase 2. Its 491 service calls totaled 6,577 microframes, ambiguity zero.
+Diagnostic replies recovered after expiry; musical TX retains fault 4 until
+rebind/reboot. Both tests ended MX inactive/unclaimed and FM alt0/tone0. No
+converter submission, sustained musical-MIDI timing or audible acceptance was
+performed. Poll-only remains the baseline for the queue-depth follow-up.

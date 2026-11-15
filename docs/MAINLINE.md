@@ -9,7 +9,9 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`cde8a1039be813d6eba7cddb6b10c6eb22b72dd8507d46c3d7c842fcf99f2418`.
+`dad7fbf2825a7a7ec82470cd7e4127d5567aa1cb1bed5ff3efb09c971a329ca3`.
+It adds [four empty channel pages on the tempo surface](CHANNEL_CONTROLS.md);
+this control-only change has no physical acceptance and adds no sends.
 It accepts [normal short USB-MIDI input](../evidence/host-midi-short-packets-20261115/README.md)
 without including the separate experimental host-audio/debug path.
 It fixes [host MIDI startup on an already-active alternate zero](../evidence/host-midi-alt-zero-20261104/README.md).
@@ -29,34 +31,37 @@ The intervals below describe the **main processor**. The independent USB process
 adds 2,784 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
 see [host placement and allocator evidence](USB_HOST_MIDI.md#integration-and-memory).
 
-USB-host MIDI additionally modifies the USB application. Boot programs, updater and panel-controller payload remain byte-identical to stock. The USB application adds the short-packet receive option to the alternate-zero startup fix. The main application remains byte-identical to PR #20's timed mastering entry and RGB preset-pad correction; their hardware acceptance remains open.
+USB-host MIDI additionally modifies the USB application. Boot programs, updater and panel-controller payload remain byte-identical to stock. The USB application adds the short-packet receive option to the alternate-zero startup fix. The main application adds channel ownership of the tempo surface on top of the timed mastering entry and RGB preset-pad correction. The USB application is byte-identical to PR #22; physical acceptance of this combined candidate remains open.
 The descriptor, rate and reply buffer in the retired USB-B build occupied
 read-only code SRAM; the combined build fixes that placement before testing.
 
 | Runtime interval (end exclusive) | Contents | Initialization |
 | --- | --- | --- |
 | `0x01009860..0x01009a16` | Replacement playback instructions within the original callback | Existing first startup copy, no growth |
-| `0x0100f6a4..0x0100ffec` | 2,376 bytes of code/constants, read-only after MPU setup | Extended original first startup copy |
+| `0x0100f6a4..0x0100ffa8` | 2,308 bytes of code/constants, read-only after MPU setup | Extended original first startup copy |
 | `0x01017264..0x0101727c` | Desired/applied routing cache and startup-ready flag, padded to 24 bytes | Extended original writable BSS clear |
 | `0x0101727c..0x01017430` | 435-byte mutable USB descriptor plus padding | Repurposed formerly zero-length startup copy |
 | `0x01017430..0x01017444` | USB rate, 14-byte reply buffer and one-byte OUT alternate at `0x01017442`, padded to 20 bytes | Extended original writable BSS clear |
 | `0x01017444..0x010174d0` | 140-byte mastering UI state | Extended original writable BSS clear |
+| `0x010174d0..0x010174e0` | 13-byte channel UI state plus padding | Extended original writable BSS clear |
+| `0x6001a40c..0x6001a888` (split slots) | Equivalent system lookup, channel controls and relocated UI guards; zero return and diagnostic retained | Existing resident main image, no new copy |
 | `0x6001dbd6..0x6001e5ec` (split slots) | Reclaimed stock mixer lookup: compressed lookup, mastering UI, redraw trampoline; shared literal retained | Existing resident main image, no new copy |
 
-The SRAM code slot has 20 bytes remaining before `0x01010000`. The 620-byte writable
+The SRAM code slot has 88 bytes remaining before `0x01010000`. The 636-byte writable
 reservation begins exactly at the original BSS end, stays inside stock MPU
 region 2 (`0x01010000..0x01018000`), and overlaps neither RTOS pool. General
 allocation remains `0x01013e18..0x01014e18`; stacks remain
-`0x01020000..0x01028000`. No MPU or allocator configuration is changed. Mastering code uses the original
-resident lookup footprint, not a newly allocated executable region.
+`0x01020000..0x01028000`. No MPU or allocator configuration is changed. Mastering and channel UI code use reclaimed resident lookup footprints, with no
+new executable region. [Channel control evidence](CHANNEL_CONTROLS.md) records
+the new slots and unchanged system-lookup behavior.
 [Mastering evidence](MASTERING.md#placement-and-original-instruction-evidence)
 records exact slots and preserved cross-references.
 
-The load-image insertion is 2,812 bytes at main decoded offset `0xdff30`:
-2,376 code bytes followed by 436 descriptor bytes. Only code is copied into the
+The load-image insertion is 2,744 bytes at main decoded offset `0xdff30`:
+2,308 code bytes followed by 436 descriptor bytes. Only code is copied into the
 executable slot. Main decoded literal `0xe8` extends the first copy accordingly;
 `0x100`, `0x128`, `0x13c`, `0x150` shift existing initialized-data sources.
-`0x108` extends writable BSS clearing from `0x71dc` to `0x7448` bytes.
+`0x108` extends writable BSS clearing from `0x71dc` to `0x7458` bytes.
 The originally zero-length copy described by `0x10c/0x110/0x114` now loads the
 USB descriptor to `0x0101727c`. The following original stack-pool zero is
 unchanged. These startup literals are resident at `0x60000000 + decoded offset`.
@@ -95,7 +100,8 @@ USB timing or deadline margin.
 1. Identify this exact image and keep monitoring muted for the first boot.
 2. Confirm long MASTERING entry, selected preset-pad light and MASTERING exit, all mapped controls and ten slot pads, pickup and original shortcuts;
    the [mastering procedure](MASTERING.md#verification-and-limits) scopes this new check.
-3. Confirm SELECT labels, end stops and routing still work; save/recall differing
+3. Confirm channel pages, dial/button tempo isolation, no-selection tempo controls
+   and SELECT labels/end stops/routing still work; save/recall differing
    snapshots and restart after allowing several seconds for autosave.
 4. Connect USB-B to a host using its class audio driver; record OS/driver,
    negotiated speed, sample rate and channel configuration. A Roland driver

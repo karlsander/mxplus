@@ -21,8 +21,10 @@ not sustained or comprehensive validation.
    its offline checks do not establish hardware stability.
 4. Physically validate [USB-MIDI](docs/USB_MIDI.md) on class-only hosts: both
    ports, clock/transport, SysEx, reconnect and simultaneous audio.
-5. Consider small control/routing improvements individually. The internal code
-   slot has only 20 bytes free; measure compiled size before claiming capacity.
+5. Physically validate the [channel tempo surface](docs/CHANNEL_CONTROLS.md):
+   four empty pages, tempo isolation, deselection and existing routing/mastering
+   behavior. Additional effect sends are deferred. Measure compiled size before
+   claiming capacity for further control/routing improvements.
    An explicitly reserved SDRAM design is possible research, not enabled in
    the current candidate. [Memory and DSP findings](docs/GENERATOR_RESEARCH.md).
 6. Keep exact image identities and scoped hardware results. TAP rollback worked

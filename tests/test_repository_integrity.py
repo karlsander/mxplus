@@ -65,6 +65,9 @@ class ReproductionIdentityTests(unittest.TestCase):
                 "host_midi": {"insert_offset": 6, "code_bytes": len(extension), "patched_app_sha256": hashes["patched_usb_sha256"], "extension_sha256": hashes["host_extension_sha256"]},
                 **hashes,
             })
+            self.write_json(prefix + "channel-controls-verification.json", {
+                "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"],
+                "candidate_container_sha256": hashes["container_sha256"]})
             self.write_json(prefix + "storage-verification.json", {
                 "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"]})
             self.write_json(prefix + "packet-verification.json", {

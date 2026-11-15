@@ -9,6 +9,11 @@ typedef unsigned char ui_u8;
 typedef unsigned short ui_u16;
 typedef unsigned int ui_u32;
 
+extern int mx1_channel_selected(void);
+extern int mx1_channel_keys_held(void);
+extern int mx1_channel_event(const ui_u8 *event);
+extern void mx1_channel_display(unsigned strip);
+
 extern void mx1_route_ui_display_original(void *context);
 
 /* Startup page 0 transitions to page 5 for ordinary mixing or page 15 for
@@ -22,9 +27,11 @@ static int main_page(void) {
 /* Normal panel boot, normal main page, no transient modal display, exactly one
  * SELECT and no other physical button held. This leaves stereo-link and all
  * existing modified gestures to Roland's original code. */
+__attribute__((section(".channel_text")))
 static int target(void) {
     const volatile ui_u8 *keys = (const volatile ui_u8 *)0x605129a4u;
-    if (*(const volatile ui_u32 *)0x600b4b94u != 0 ||
+    if (mx1_channel_keys_held() ||
+        *(const volatile ui_u32 *)0x600b4b94u != 0 ||
         !main_page() ||
         ((int (*)(const void *))0x60018259u)((const void *)0x605144ccu) != 0) return -1;
     int selected = -1;
@@ -41,6 +48,8 @@ static int target(void) {
 void mx1_route_ui_display(void *context) {
     int strip = target();
     if (strip < 0) {
+        strip = mx1_channel_selected();
+        if (strip >= 0) { mx1_channel_display((unsigned)strip); return; }
         mx1_route_ui_display_original(context);
         return;
     }
@@ -63,6 +72,7 @@ void mx1_route_ui_event(const ui_u8 *event) {
             return; /* Do not enqueue the stock tempo adjustment. */
         }
     }
+    if (mx1_channel_event(event)) return;
     ((void (*)(const ui_u8 *))0x60010b49u)(event);
     if (select_key && (before >= 0 || target() >= 0) &&
         *(const volatile ui_u32 *)0x600b4b94u == 0 &&

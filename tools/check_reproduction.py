@@ -139,6 +139,10 @@ def audit(check_committed: bool = False) -> dict:
         mastering = read(prefix + "mastering-verification.json")
         require(mastering.get("status") == "pass" and mastering.get("patched_app_sha256") == actual["patched_app_sha256"],
                 "Mainline mastering evidence missing or belongs to another candidate")
+        channel = read(prefix + "channel-controls-verification.json")
+        require(channel.get("status") == "pass" and channel.get("patched_app_sha256") == actual["patched_app_sha256"]
+                and channel.get("candidate_container_sha256") == actual["container_sha256"],
+                "Channel control evidence missing or belongs to another candidate")
         storage = read(prefix + "storage-verification.json")
         require(storage.get("status") == "pass" and storage.get("patched_app_sha256") == actual["patched_app_sha256"],
                 "Mainline storage evidence missing or belongs to another candidate")

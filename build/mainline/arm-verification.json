@@ -1,23 +1,23 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "cfab5a905d27497f74e40f8147346307a3aaae56497eac520324f6d0c0ab1281",
-  "candidate_container_sha256": "cde8a1039be813d6eba7cddb6b10c6eb22b72dd8507d46c3d7c842fcf99f2418",
-  "extension_sha256": "fc4ed00c31546c74a84dbaece0ac9fda8fad28a3c21f19038e123617b945bbeb",
+  "patched_app_sha256": "dfacf026df61a49aae72bf31303ad89b2fe51661564fc0f0c53ba478d5e8c614",
+  "candidate_container_sha256": "dad7fbf2825a7a7ec82470cd7e4127d5567aa1cb1bed5ff3efb09c971a329ca3",
+  "extension_sha256": "46ed550adae54568125abff11f28d272a889dfd6fbd9a906243d75f64b8cb816",
   "groups": [
     {
       "name": "Every application change matches recorded guarded patches and scatter insertion",
       "status": "pass",
-      "patch_sites": 17,
-      "extension_bytes": 2812,
-      "sram_bytes_remaining": 20
+      "patch_sites": 21,
+      "extension_bytes": 2744,
+      "sram_bytes_remaining": 88
     },
     {
       "name": "Actual original startup installs routing code and preserves existing initialized data and BSS",
       "status": "pass",
       "runtime_interval": [
         "0x0100f6a4",
-        "0x100ffec"
+        "0x100ffa8"
       ],
       "existing_nonempty_destinations_unchanged": true,
       "repurposed_empty_copy": "USB descriptor at 0x0101727c"
@@ -87,7 +87,7 @@
       "code_protection": "0x01001000..0x0100ffff enforced in all UI/audio instruction cases",
       "state_interval": [
         "0x1017264",
-        "0x10174d0"
+        "0x10174e0"
       ]
     },
     {
@@ -101,7 +101,7 @@
         "0x01020000",
         "0x01028000"
       ],
-      "state_reservation_bytes": 620,
+      "state_reservation_bytes": 636,
       "descriptor_initialized_bytes": 436,
       "patterns": [
         85,
@@ -153,9 +153,66 @@
       "status": "pass"
     },
     {
+      "name": "System lookup matches all 141 IDs and invalid diagnostics; original return and external references preserved",
+      "status": "pass"
+    },
+    {
+      "name": "All 11 stock SELECT toggle paths, four empty pages, signed dial boundaries and asynchronous LED isolation",
+      "status": "pass",
+      "cases": 44
+    },
+    {
+      "name": "Per-channel page memory and switching; no parameter writes from page controls",
+      "status": "pass"
+    },
+    {
+      "name": "Channel-owned duplicate press, release and repeat isolation across deselection",
+      "status": "pass"
+    },
+    {
+      "name": "Held channel-page button blocks mastering entry until released",
+      "status": "pass"
+    },
+    {
+      "name": "No-selection tempo packets and all ordinary mono LED calls preserve original ABI",
+      "status": "pass"
+    },
+    {
+      "name": "Only the four tempo buttons are owned; original tempo adjustment requires no selection",
+      "status": "pass"
+    },
+    {
+      "name": "Stock-held keys release normally after selection changes",
+      "status": "pass"
+    },
+    {
+      "name": "Normal/channel-setting pages and boot, UI-lock, modal and menu guards",
+      "status": "pass"
+    },
+    {
+      "name": "Selection changes through stock parameters refresh right display and LEDs",
+      "status": "pass"
+    },
+    {
+      "name": "Mastering priority and channel page restoration",
+      "status": "pass"
+    },
+    {
+      "name": "Source-routing hold priority, original deselection and VALUE delivery",
+      "status": "pass"
+    },
+    {
+      "name": "Channel-owned held keys participate in the source-routing modifier guard",
+      "status": "pass"
+    },
+    {
+      "name": "Original linked and multiple selection retain their current channel",
+      "status": "pass"
+    },
+    {
       "name": "Actual startup copies extension and preserves existing initialized data",
       "status": "pass",
-      "extension_bytes": 2812
+      "extension_bytes": 2744
     },
     {
       "name": "Patched initializer veneer, original registration, and live rate descriptors",
@@ -2391,6 +2448,7 @@
   "hardware_access": false,
   "scope": "Integrated candidate ARM instructions with explicit DSP and peripheral models",
   "details": {
+    "channel_controls": "channel-controls-verification.json",
     "mastering": "mastering-verification.json",
     "storage": "storage-verification.json",
     "ui": "ui-verification.json",

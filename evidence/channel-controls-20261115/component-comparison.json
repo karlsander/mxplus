@@ -1,0 +1,33 @@
+{
+  "status": "pass",
+  "base_commit": "f0ab3374a22b8487eda42ddd11537cf9a48558af",
+  "base_candidate_sha256": "cde8a1039be813d6eba7cddb6b10c6eb22b72dd8507d46c3d7c842fcf99f2418",
+  "candidate_sha256": "dad7fbf2825a7a7ec82470cd7e4127d5567aa1cb1bed5ff3efb09c971a329ca3",
+  "outside_main_slot_unchanged": true,
+  "components": [
+    {
+      "component": "updater",
+      "before_sha256": "8984a4e0c668dcf6fce981f2c2e9223dfe93bb0f115bc43c8bb9ba95b3f1d3ec",
+      "after_sha256": "8984a4e0c668dcf6fce981f2c2e9223dfe93bb0f115bc43c8bb9ba95b3f1d3ec",
+      "unchanged": true
+    },
+    {
+      "component": "subcpu",
+      "before_sha256": "43812718e448b386ccfa0d578ff0700d27c2e9e734dbbb80c08af5b880d4a16d",
+      "after_sha256": "43812718e448b386ccfa0d578ff0700d27c2e9e734dbbb80c08af5b880d4a16d",
+      "unchanged": true
+    },
+    {
+      "component": "app_main",
+      "before_sha256": "cfab5a905d27497f74e40f8147346307a3aaae56497eac520324f6d0c0ab1281",
+      "after_sha256": "dfacf026df61a49aae72bf31303ad89b2fe51661564fc0f0c53ba478d5e8c614",
+      "unchanged": false
+    },
+    {
+      "component": "app_usb",
+      "before_sha256": "3185602fe763043f81b4bb79cbe70faa61f14a4f2c3b7dcc8f7961b358c22712",
+      "after_sha256": "3185602fe763043f81b4bb79cbe70faa61f14a4f2c3b7dcc8f7961b358c22712",
+      "unchanged": true
+    }
+  ]
+}

@@ -87,3 +87,7 @@ control-flow check also passed both-policy ordering, live-status sampling,
 mute and the final alt0 read; it accessed no device. The committed-artifact
 gate and all six browser-patcher tests passed for code/artifact commit
 `cfb88652b1e49c7f76b906cc7ea6758d360ad9ce`. Hosted B9 verification is pending.
+
+On 15 November B9 was copied as `MX1_UPD.BIN` to the identified Roland updater
+volume, readback hash-verified and safely ejected. [Copy receipt](copy-20261115.json).
+Update completion and normal boot remain unobserved at the time of copying.

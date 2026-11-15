@@ -71,5 +71,6 @@ acceptance. FM bridge B1 needs no update. The authorized bench script collects
 page 19 alongside the existing snapshots before another start.
 
 All 17 offline stages and the current-artifact gate passed with the same
-candidate hash. Committed-image and browser checks are pending at this
-source/artifact commit.
+candidate hash. The committed-image gate and all six browser-patcher tests
+passed against code/artifact commit `4bcc8baf8509e0146b108f87afd5b85e487ff31a`.
+Hosted B12 verification remains pending.

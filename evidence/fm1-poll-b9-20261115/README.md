@@ -79,7 +79,7 @@ existing check. DMA/frame progression, RTOS delivery and DSP are modeled;
 instruction execution is not USB timing evidence.
 
 Main application, boot programs, updater, panel and container boundaries remain
-unchanged. Preserve `UNTESTED` and leave PR #21 open. B9 has not been installed;
+unchanged. Preserve `UNTESTED` and leave PR #21 open. At build time B9 had not been installed;
 MIDI coexistence, useful audio and sustained operation remain physical checks.
 
 All 17 offline stages and the current-artifact gate passed. A mocked bench
@@ -91,3 +91,24 @@ gate and all six browser-patcher tests passed for code/artifact commit
 On 15 November B9 was copied as `MX1_UPD.BIN` to the identified Roland updater
 volume, readback hash-verified and safely ejected. [Copy receipt](copy-20261115.json).
 Update completion and normal boot remain unobserved at the time of copying.
+
+## Observed on B9, 15 November
+
+[Sanitized bench record](bench-20261115.json). Normal boot was confirmed by wire
+build 185 and working command replies. Probe 9 accepted 1,378 packets and probe
+8 accepted 1,660 more. Both had zero malformed packets, but gaps and MIDI reply
+delays remained. The poll-only worker advanced from 109 to 155 polls with only
+two event calls. Its snapshots showed Active MIDI RX and no matched TX wrapper.
+The IOC run advanced from 67 to 140 event calls; neither MIDI wrapper matched.
+
+The probe acknowledgements arrived in about 90 ms. Later status delivery waited
+until expiry; a response containing phase 2 was assembled earlier and is not
+evidence of live MIDI responsiveness during the stream. The retained TX fault
+records the first urgent-queue overflow, not a second failure in probe 8.
+Diagnostic replies recovered, while musical TX remains stopped by fault 4 until
+rebind. Cleanup confirmed FM alt0/tone0 and MX inactive/unclaimed, no reconnect.
+
+Polling alone did not resolve the stall. The worker continued servicing queries,
+so the next experiment traces API/core/HCD/completion handoffs. An interrupt
+starvation explanation, a particular blocked task, and a converter fix remain
+unestablished. No audible audio or sustained MIDI coexistence passed here.

@@ -1,0 +1,30 @@
+# fx00-slot0: DSP1; main source 0x600bf71c
+# Logical byte offsets. Packet framing and bindings?/flow? are inferred.
+# Raw words are authoritative; arithmetic/latency/width are not decoded.
+4000: 0a02 ff71                                                                            ; packet[2]
+4004: 1e05 0fe0 2fe2 2006 2007                                                             ; packet[5] bindings? 0fe0->2006@400a,2fe2->2007@400c
+400e: 1e05 8fe0 afe2 0000 0001                                                             ; packet[5] bindings? 8fe0->0000@4014,afe2->0001@4016
+4018: 1e05 0fe0 1fe2 0000 0001                                                             ; packet[5] bindings? 0fe0->0000@401e,1fe2->0001@4020
+4022: 1e05 8fe0 9fe2 2000 2001                                                             ; packet[5] bindings? 8fe0->2000@4028,9fe2->2001@402a
+402c: 0a02 ff70                                                                            ; packet[2]
+4030: 0b02 00f8                                                                            ; packet[2]
+4034: 0001                                                                                 ; packet[1]
+
+# fx00-slot1: DSP1; main source 0x600bf754
+# Logical byte offsets. Packet framing and bindings?/flow? are inferred.
+# Raw words are authoritative; arithmetic/latency/width are not decoded.
+6000: 0a02 ff71                                                                            ; packet[2]
+6004: 1e05 0fe0 2fe2 2006 2007                                                             ; packet[5] bindings? 0fe0->2006@600a,2fe2->2007@600c
+600e: 1e05 8fe0 afe2 0100 0101                                                             ; packet[5] bindings? 8fe0->0100@6014,afe2->0101@6016
+6018: 1e05 0fe0 1fe2 0000 0001                                                             ; packet[5] bindings? 0fe0->0000@601e,1fe2->0001@6020
+6022: 1e05 8fe0 9fe2 2002 2003                                                             ; packet[5] bindings? 8fe0->2002@6028,9fe2->2003@602a
+602c: 0a02 ff70                                                                            ; packet[2]
+6030: 0b02 00f8                                                                            ; packet[2]
+6034: 0001                                                                                 ; packet[1]
+
+# Algorithm 0: slot0 -> slot1 changed halfwords only.
+# Labels describe observed encodings/deltas, not a complete memory ownership proof.
+4014/6014: 0000 -> 0100 low_operand_delta_100
+4016/6016: 0001 -> 0101 low_operand_delta_100
+4028/6028: 2000 -> 2002 unclassified
+402a/602a: 2001 -> 2003 unclassified

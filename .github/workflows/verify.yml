@@ -52,6 +52,11 @@ jobs:
       - name: Check stock FX-send investigation evidence
         run: python tools/fx_sends_audit.py --check
 
+      - name: Check partial DSP disassembly and relocation evidence
+        run: |
+          python tools/test_esc2_disassemble.py
+          python tools/esc2_disassemble.py --check
+
       - name: Set up Node for browser patcher tests
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:

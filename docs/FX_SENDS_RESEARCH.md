@@ -6,6 +6,12 @@ change the builder, linker, candidate, or physical mixer. The channel pages
 remain empty. The active candidate remains
 `dad7fbf2825a7a7ec82470cd7e4127d5567aa1cb1bed5ff3efb09c971a329ca3`.
 
+The follow-up [partial DSP disassembly](DSP_DISASSEMBLY.md) now frames 4,393
+stock packets, annotates mixer coefficient references, compares all twenty
+effect pairs, and executes focused coefficient and delay-address relocation
+checks. It establishes distinct instance records, while complete delay-buffer
+bounds and DSP arithmetic remain unresolved.
+
 ## Requested behavior
 
 All editing below requires a selected channel. No selection restores the

@@ -1,0 +1,20 @@
+{
+  "copied_at_utc": "2026-11-15T18:23:03.904764+00:00",
+  "build": 188,
+  "candidate_sha256": "4ec34d04a05e9a7a477bd85f40e2773b6aa337e85a7f9e70b671a8aaae8bf633",
+  "readback_sha256": "4ec34d04a05e9a7a477bd85f40e2773b6aa337e85a7f9e70b671a8aaae8bf633",
+  "bytes": 4194320,
+  "filename": "MX1_UPD.BIN",
+  "volume": "/Volumes/MX-1",
+  "device": "disk4",
+  "validated_code_commit": "4bcc8baf8509e0146b108f87afd5b85e487ff31a",
+  "copied_from_commit": "2b2c457e38e167e3a2eecd79732425ea56a65b26",
+  "ejected": true,
+  "update_completion_verified": false,
+  "hosted_verification": {
+    "run_id": 43746146214,
+    "status": "in_progress",
+    "observed_at_utc": "2026-11-15T18:23:03.919971+00:00"
+  },
+  "ejected_at_utc": "2026-11-15T18:23:04.386755+00:00"
+}

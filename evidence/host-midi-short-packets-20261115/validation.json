@@ -1,0 +1,38 @@
+{
+  "checked_at_utc": "2026-11-15T21:29:33.805634+00:00",
+  "code_artifact_commit": "3e833ba46c0c2b5065bb076718b72a23dce57136",
+  "candidate_sha256": "cde8a1039be813d6eba7cddb6b10c6eb22b72dd8507d46c3d7c842fcf99f2418",
+  "full_reproduction": "passed",
+  "offline_stages": 17,
+  "python": "3.14.6",
+  "dependencies": {
+    "capstone": "5.0.6",
+    "unicorn": "2.1.4",
+    "pyelftools": "0.33",
+    "ziglang": "0.13.0"
+  },
+  "committed_image_gate": {
+    "status": "passed",
+    "stage_count": 17,
+    "original_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+    "checked_against_git_head": true,
+    "hardware_validation": false,
+    "candidate_artifacts": {
+      "mainline": {
+        "container_sha256": "cde8a1039be813d6eba7cddb6b10c6eb22b72dd8507d46c3d7c842fcf99f2418",
+        "patched_app_sha256": "cfab5a905d27497f74e40f8147346307a3aaae56497eac520324f6d0c0ab1281",
+        "extension_sha256": "fc4ed00c31546c74a84dbaece0ac9fda8fad28a3c21f19038e123617b945bbeb",
+        "patched_usb_sha256": "3185602fe763043f81b4bb79cbe70faa61f14a4f2c3b7dcc8f7961b358c22712",
+        "host_extension_sha256": "ec57afcc2cca9b9125aa7e6be6f77a0b32529de2bfbefbfd69563a06afc1a474"
+      }
+    }
+  },
+  "browser_patcher_tests": {
+    "passed": 6,
+    "failed": 0
+  },
+  "component_comparison": "component-comparison.json",
+  "original_instruction_bytes_verified": 154,
+  "hardware_validation": false,
+  "hosted_validation": "pending at local commit"
+}

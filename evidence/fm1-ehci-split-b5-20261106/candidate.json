@@ -1,0 +1,39 @@
+{
+  "candidate_path": "build/mainline/MXPLUS_MAINLINE_UNTESTED.bin",
+  "candidate_sha256": "e40b809672c7ef5d4be190b48eb01c5116835e88ae0d67a896d279ba02b3e0b4",
+  "bytes": 4194320,
+  "build": 181,
+  "previous_installed_build": 180,
+  "previous_candidate_sha256": "389ae886e3ab6af87804f375f9752e3099fc77bd5e157f2c7e8c6ee62d7bfd7c",
+  "original_input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+  "app_main_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
+  "app_usb_sha256": "c1a0c86842a3558e1d399da01428fbef0071b0feaa8a5ba9d1e81947e4cd9dfd",
+  "midi_extension_sha256": "7cf9db1843bbac868512eba6887ff0a0761004e8998b57b47f40726dcacc6f38",
+  "audio_extension_sha256": "b0f1a54a54ba70e70e4a20b442850f6c83baf904509852221e41dcb5606b17a4",
+  "hot_code_bytes": 3056,
+  "hot_state_bytes": 1472,
+  "audio_code_bytes": 12000,
+  "audio_state_bytes": 26220,
+  "reserved_usb_sdram_bytes": 65536,
+  "hardware_status_at_build": "not installed",
+  "fm1_bridge_build": 177,
+  "fm1_bridge_sha256": "f13e43fcb9b34db7c8387751871b9a045fa55572b33c3b1759594c0451c54da0",
+  "validation": {
+    "full_reproduction_stages": 17,
+    "full_reproduction_status": "passed",
+    "current_artifact_gate": "passed",
+    "additional_host3_page_crossing_check": "passed",
+    "host3_crossing_slot": 3,
+    "committed_artifact_gate": "passed",
+    "browser_tests": {
+      "passed": 6,
+      "failed": 0
+    },
+    "verified_code_commit": "9d2966cc61c9865bf8f1f7577f042ed3601feb88",
+    "hosted_workflow": {
+      "id": 42236511542,
+      "commit": "a41865e766cb6c291d3782d700c1967d502f6c79",
+      "conclusion": "success"
+    }
+  }
+}

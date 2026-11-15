@@ -1,0 +1,36 @@
+{
+  "initial_failure": "MasterMachine initialization, original setter 600161f6, emulator stopped at PC 6000c6e6 before RETURN",
+  "main_image_byte_identical_to_B13": true,
+  "main_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
+  "unchanged_harness_and_limits": true,
+  "exact_failing_case_replays": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "elapsed_seconds": 1.95179433375597
+    },
+    {
+      "attempt": 2,
+      "passed": true,
+      "elapsed_seconds": 1.9572239578701556
+    },
+    {
+      "attempt": 3,
+      "passed": true,
+      "elapsed_seconds": 1.9456763751804829
+    }
+  ],
+  "cause": "Not established; non-reproducing emulator stop in unchanged main code. No timeout, instruction limit, guard or expected result changed.",
+  "modal_guard_assertion": "not active",
+  "emu_call_timeout_us": 1000000,
+  "component": "app_main",
+  "setter_decoded_offset": "0x161f6",
+  "setter_runtime": "0x600161f6",
+  "stopped_decoded_offset": "0xc6e6",
+  "stopped_runtime": "0x6000c6e6",
+  "subsequent_full_reproduction": {
+    "status": "passed",
+    "stages": 17,
+    "candidate_sha256": "e5f8404ca65ae315b782a41d90d3a1ec07bb23dbcca5a69fba08ee2e65036fd2"
+  }
+}

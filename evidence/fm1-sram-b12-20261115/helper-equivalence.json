@@ -1,0 +1,47 @@
+{
+  "status": "pass",
+  "baseline_commit": "35348fa51523b273dfe7762fd6a6d050b84b3319",
+  "comparison": "Instruction mnemonics/operands equal after normalizing local and named branch targets; no timing claim",
+  "helpers": {
+    "B11": {
+      "ehci_path": {
+        "runtime": "0x607f36a6",
+        "bytes": 284,
+        "instructions": 103,
+        "normalized_instruction_sha256": "95820875fee6b2ab772776a80d5c6973e26e578ed600bbe3c98c12ad05ab267d"
+      },
+      "ehci_arm": {
+        "runtime": "0x607f35c6",
+        "bytes": 224,
+        "instructions": 78,
+        "normalized_instruction_sha256": "ea03069eab1f92962049af71dd555dff13ea50b71128ee914c7c663174f3e6e7"
+      },
+      "ehci_unlink": {
+        "runtime": "0x607f3560",
+        "bytes": 102,
+        "instructions": 34,
+        "normalized_instruction_sha256": "c560ebfc515c33da72385bc04476cab63207d9e13e266282ae8a239d8ee8d26b"
+      }
+    },
+    "B12": {
+      "ehci_path": {
+        "runtime": "0x100cde6",
+        "bytes": 284,
+        "instructions": 103,
+        "normalized_instruction_sha256": "95820875fee6b2ab772776a80d5c6973e26e578ed600bbe3c98c12ad05ab267d"
+      },
+      "ehci_arm": {
+        "runtime": "0x100cd06",
+        "bytes": 224,
+        "instructions": 78,
+        "normalized_instruction_sha256": "ea03069eab1f92962049af71dd555dff13ea50b71128ee914c7c663174f3e6e7"
+      },
+      "ehci_unlink": {
+        "runtime": "0x100cca0",
+        "bytes": 102,
+        "instructions": 34,
+        "normalized_instruction_sha256": "c560ebfc515c33da72385bc04476cab63207d9e13e266282ae8a239d8ee8d26b"
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-06",
+  "candidate_sha256": "b6122583727323d36f227fccbcb58f70efb75921d083b4c5bfe4ba4359b15b36",
+  "preceding_candidate_sha256": "4eb649c9c4a268674e1447b3bf1cec1fd6226f5e75c77f2ebaa5e9bcc51de05d",
+  "main_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
+  "usb_app_sha256": "08d180f8d9088d1c25f20c34e605a31725029f44c35241db735133e7b972ba2e",
+  "host_audio_extension_sha256": "7fa8184c2b675846ae1b8ded30b40eb1843f4387a6cbc73ca7d59cb9593e10d6",
+  "fm1_bridge_sha256": "f13e43fcb9b34db7c8387751871b9a045fa55572b33c3b1759594c0451c54da0",
+  "mx1_installed": false,
+  "physical_mx1_audio_verified": false,
+  "offline_stages": 17,
+  "code_and_state": {
+    "code_start": 16826084,
+    "code_bytes": 2928,
+    "state_start": 16873576,
+    "state_bytes": 1472,
+    "audio_code_start": 1618935808,
+    "audio_code_bytes": 7052,
+    "audio_source": 1610840532,
+    "audio_state_start": 1618952192,
+    "audio_state_bytes": 25700
+  },
+  "protocol_checks": {
+    "status": "pass",
+    "cases": [
+      "structured replies across multiple transfers",
+      "malformed checksum/target rejection",
+      "pending reply retention",
+      "user SysEx continuity",
+      "replacement device isolation",
+      "actual RX and TX poll integration",
+      "worker-owned register snapshots and bounded pages",
+      "normal/mute/test-tone converter modes",
+      "mode timeout"
+    ],
+    "boundary": "USB delivery, RTOS queue dispatch and DSP hardware modeled; actual compiled ARM code executes"
+  }
+}

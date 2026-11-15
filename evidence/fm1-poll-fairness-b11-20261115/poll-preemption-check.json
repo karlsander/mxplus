@@ -1,0 +1,118 @@
+{
+  "status": "pass",
+  "original_periodic_dummy_allocations": 11,
+  "live_periodic_table": "0x4000b000",
+  "driver_context_table_is_not_live_table": true,
+  "stream_packets": 300,
+  "outcomes": [
+    [
+      46,
+      0,
+      1
+    ],
+    [
+      40,
+      2,
+      1
+    ],
+    [
+      44,
+      64,
+      0
+    ],
+    [
+      44,
+      132,
+      0
+    ],
+    [
+      44,
+      4,
+      0
+    ],
+    [
+      39,
+      2,
+      0
+    ]
+  ],
+  "publish_running_after_ring_complete": true,
+  "transport_only_no_converter": true,
+  "transport_only_expiry_stops": true,
+  "cached_converter_page": true,
+  "original_busy_gate_failure": true,
+  "host3_page_crossing_slots": [
+    3
+  ],
+  "async_original_bulk_construction_and_cached_pages": true,
+  "poll_only_without_iso_ioc_or_controller_writes": true,
+  "poll_callback_preemption_model": [
+    {
+      "policy": 1,
+      "modeled_service_ticks": 64,
+      "requeued": 0,
+      "released_latch_requeues": 1
+    },
+    {
+      "policy": 0,
+      "modeled_service_ticks": 64,
+      "requeued": 0,
+      "released_latch_requeues": 1
+    }
+  ],
+  "poll_completion_relative_gap_and_wrap": true,
+  "admission_negative_cases": [
+    [
+      "0x40010000",
+      65545
+    ],
+    [
+      "0x40010004",
+      20480
+    ],
+    [
+      "0x40010014",
+      1615265792
+    ],
+    [
+      "0x40010010",
+      1
+    ],
+    [
+      "0x4000bbb0",
+      1
+    ],
+    [
+      "0x4000b424",
+      2147483648
+    ],
+    [
+      "0x607f9c20",
+      0
+    ],
+    [
+      "0x4000b000",
+      1615333380
+    ]
+  ],
+  "original_controller_status_queue_and_worker": true,
+  "cases": [
+    "actual stock frame-list replacement and dummy iTD chain",
+    "guarded EHCI bind trampoline",
+    "split endpoint/hub/port/masks and DMA alignment",
+    "2048-frame and 256-slot wrap",
+    "44/45-frame stereo PCM and peak telemetry",
+    "completion state bit is not an error",
+    "past-frame reuse, frozen-frame retention and unlink grace",
+    "one pending worker poll",
+    "callback after device object release",
+    "foreign link quarantine",
+    "freed context on reset error; halt check",
+    "new periodic endpoint admission refusal",
+    "OHCI isolation",
+    "60-second and lost-worker watchdogs"
+  ],
+  "boundary": "Original table construction/replacement and controller-status queue/worker execute. Heap, IRQ/task setup, DMA/MMIO/clock, stock EHCI completion/teardown and DSP are modeled; no wire or timing claim.",
+  "candidate_sha256": "96be48786bfb12667db3bffd0d4217c82c0be1374427255af7f64f127a6aeee1",
+  "hardware_access": false
+}

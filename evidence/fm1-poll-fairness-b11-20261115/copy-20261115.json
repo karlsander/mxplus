@@ -1,0 +1,12 @@
+{
+  "time_utc": "2026-11-15T18:02:16.093775+00:00",
+  "candidate_sha256": "96be48786bfb12667db3bffd0d4217c82c0be1374427255af7f64f127a6aeee1",
+  "validated_code_commit": "9f04955463bbf31ff2c9aeff77eaf6e22edfc5d5",
+  "copied_filename": "MX1_UPD.BIN",
+  "readback_sha256": "96be48786bfb12667db3bffd0d4217c82c0be1374427255af7f64f127a6aeee1",
+  "bytes": 4194320,
+  "volume": "MX-1",
+  "device": "USB Storage, MX-1 updater volume",
+  "update_completion_verified": false,
+  "ejected": true
+}

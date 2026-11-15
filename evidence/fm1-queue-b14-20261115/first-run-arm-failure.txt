@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "<checkout>/tools/mainline_verify.py", line 256, in <module>
+    main()
+    ~~~~^^
+  File "<checkout>/tools/mainline_verify.py", line 235, in main
+    report, details = verify(original, patched, build)
+                      ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<checkout>/tools/mainline_verify.py", line 137, in verify
+    mastering = verify_mastering(original, patched, build)
+  File "<checkout>/tools/mastering_verify.py", line 389, in verify
+    m=MasterMachine(patched,symbols);m.enter();m.write(MODAL,u32(1));m.tick(1)
+  File "<checkout>/tools/mastering_verify.py", line 49, in __init__
+    self.set(MASTER,i,default)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^
+  File "<checkout>/tools/mastering_verify.py", line 89, in set
+    return self.checked(0x600161f6,ctx,id,value&0xffffffff,0)
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<checkout>/tools/routing_ui_verify.py", line 138, in checked
+    result = self.call(address, *args, measure=True)
+  File "<checkout>/tools/arm_machine.py", line 43, in call
+    if u.reg_read(UC_ARM_REG_PC)!=RETURN:raise AssertionError(f'function did not return, pc={u.reg_read(UC_ARM_REG_PC):x}')
+                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: function did not return, pc=6000c6e6

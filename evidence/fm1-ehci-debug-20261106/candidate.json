@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-06",
+  "candidate_sha256": "360b316352e7f762d5752813dfa73a45ab13d7203676d16e232ffd29165077ee",
+  "preceding_candidate_sha256": "b6122583727323d36f227fccbcb58f70efb75921d083b4c5bfe4ba4359b15b36",
+  "usb_app_sha256": "8c9902a149b5b9d1ead5afcb7d03c23e77d993eadeccf3a1580045cf2e5208ac",
+  "host_audio_extension_sha256": "c82fb4c913b8e11d7070bfb4a9cda09532bda3e45f1083d9ae86696000e48528",
+  "fm1_bridge_sha256": "f13e43fcb9b34db7c8387751871b9a045fa55572b33c3b1759594c0451c54da0",
+  "mx1_installed": false,
+  "physical_mx1_audio_verified": false,
+  "verification": "All 17 offline reproduction stages and current-artifact gate passed; hardware behavior pending",
+  "code_and_state": {
+    "code_bytes": 2928,
+    "state_bytes": 1472,
+    "audio_code_bytes": 8300,
+    "audio_state_bytes": 25956
+  },
+  "offline_stages": 17,
+  "protocol_checks": {
+    "status": "pass",
+    "cases": [
+      "structured replies across multiple transfers",
+      "malformed checksum/target rejection",
+      "pending reply retention",
+      "user SysEx continuity",
+      "replacement device isolation",
+      "actual RX and TX poll integration",
+      "worker-owned register snapshots and bounded pages",
+      "normal/mute/test-tone converter modes",
+      "mode timeout",
+      "EHCI baseline avoids OHCI request and DSP submission",
+      "cached topology and MIDI software status",
+      "manager-only single-step controls/lookup and failure results",
+      "original bind callback queues manager event",
+      "one-transfer unsolicited MIDI telemetry"
+    ],
+    "boundary": "USB delivery, RTOS queue dispatch and DSP hardware modeled; actual compiled ARM code executes"
+  }
+}

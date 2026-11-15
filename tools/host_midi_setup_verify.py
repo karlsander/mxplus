@@ -20,7 +20,8 @@ NOTIFY=0x0fff0300
 CONTROL_RETURN=0x0fff0400
 
 class Setup(Transport):
-    def __init__(self,image,report,cfg,port=2,vid=0x1209):
+    def __init__(self,image,report,cfg,port=2,vid=0x1209,enable_audio=False):
+        self.enable_audio=enable_audio
         self.events=[];self.opens=[];self.controls=[];self.binds=[];self.notices=[]
         self.control_error=0;self.queue_error=False;self.endpoint_error=False
         self.nodes=[];self.endpoints={};self.iteration=0;self.port=port
@@ -47,11 +48,16 @@ class Setup(Transport):
                 m.write(node+0x13,bytes([d[2],d[3],int(d[3]==0)]))
             elif d[1]==5:
                 ep=0x20019000+len(self.endpoints)*0x100
-                m.write(ep+8,bytes([d[2]&15,d[2]&128,d[3],0]))
-                m.write(ep+0x10,d[4:6]);m.write(ep+0x20,P(node))
+                m.write(ep+8,bytes([d[2],d[2]&128,d[3]&3,d[3]&0x30]))
+                m.write(ep+0xc,bytes([d[3]&0xc]))
+                m.write(ep+0xe,H(d[6]));m.write(ep+0x10,d[4:6]);m.write(ep+0x20,P(node))
                 self.endpoints[node,d[2]&128]=ep
     def stub(self,u,a,size,data):
         m=self.m
+        # This historical regression isolates MIDI setup; the combined audio
+        # setup, controls and rebind are executed in host_audio_verify.py.
+        if not self.enable_audio and a==(self.s.get('mx1_audio_setup',0)&~1):
+            u.reg_write(UC_ARM_REG_PC,u.reg_read(UC_ARM_REG_LR));return
         addresses=(0x60009d2c,0x60009f58,0x60007e10,0x60009558,
                    0x6000eb3e,0x6000a904,0x6000ac30,0x6000acb8,
                    0x6000ee16,DETACH,NOTIFY,CONTROL_RETURN,0x60008e5a,0x60008e92,0x600096c6)
@@ -59,13 +65,13 @@ class Setup(Transport):
         r=[u.reg_read(x) for x in (UC_ARM_REG_R0,UC_ARM_REG_R1,UC_ARM_REG_R2,UC_ARM_REG_R3)]
         result=0
         if a==0x60009d2c:result=BUF
-        elif a==0x60007e10:self.events.append(m.read(r[0],12))
+        elif a==0x60007e10:self.events.append(m.read(r[0],12));result=1
         elif a==NOTIFY:self.notices.append(r[:2])
         elif a==0x60009558:
             stack=struct.unpack('<4I',m.read(u.reg_read(UC_ARM_REG_SP),16))
             self.controls.append(r+list(stack))
             if self.control_error:result=self.control_error
-            else:
+            elif r[1]==1 and r[2]==11:
                 # Model successful wire request, then run the REAL completion
                 # in this call frame. Stock completion ignores the alternate
                 # helper's result and returns wire status to the waiting task.
@@ -88,7 +94,7 @@ class Setup(Transport):
             if not self.queue_error:self.opens.append((int(a==0x60008e92),m.read(r[0],12)))
             result=int(not self.queue_error)
         elif a==0x600096c6:
-            assert r[1]==0 and r[3] in (2,3)
+            assert r[1]==0 and r[3] in (1,2,3)
             target=struct.unpack('<3I',m.read(u.reg_read(UC_ARM_REG_SP),12))[2]
             ep=self.endpoints.get((r[0],r[2]),0)
             m.write(target,P(0 if self.endpoint_error else ep))

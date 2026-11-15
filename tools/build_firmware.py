@@ -2,7 +2,7 @@
 """Build the sole MX-1 mainline routing and USB-B firmware candidate.
 
 Only files are read/written. The exact stock input and every overwritten site
-are guarded. Host MIDI is included; generic host audio remains excluded. This never flashes a unit.
+are guarded. Host MIDI and experimental FM-1 stereo input are included. This never flashes a unit.
 """
 from __future__ import annotations
 
@@ -91,6 +91,8 @@ def build(firmware: Path, out: Path) -> dict:
                 "-fno-asynchronous-unwind-tables", "-Wall", "-Wextra", "-Werror", "--"]
     command += [str(p) for p in sources]
     subprocess.run(command, check=True, env=env)
+    if elf.stat().st_size > 1024 * 1024:
+        raise FormatError('Unexpected sparse/oversized main ELF layout')
     with elf.open("rb") as f:
         ef = ELFFile(f)
         text = ef.get_section_by_name(".text")
@@ -247,6 +249,7 @@ def build(firmware: Path, out: Path) -> dict:
         "patched_app_sha256": sha256(modified), "container_sha256": sha256(rebuilt),
         "extension_sha256": sha256(blob), "symbols": symbols,
         "host_midi": host, "patched_usb_sha256": sha256(usb_modified), "host_extension_sha256": host["extension_sha256"],
+        "host_audio_extension_sha256": host["audio_extension_sha256"],
         "compiler": "ziglang 0.13.0 Cortex-M3 ReleaseSmall, no LTO",
         "sources": {str(p.relative_to(ROOT)): sha256(p.read_bytes()) for p in [
             *sources, ROOT / "patches/channel_routing.h", ROOT / "patches/mainline.ld", ROOT / "patches/mastering_sites.json",

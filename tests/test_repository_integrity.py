@@ -52,9 +52,11 @@ class ReproductionIdentityTests(unittest.TestCase):
             prefix = "build/" + kind + "/"
             extension = (kind + " extension").encode()
             application = b"prefix" + extension + b"tail"
+            host_audio = b"audio extension"
             contents = {"container_sha256": (kind + " candidate").encode(),
                         "patched_app_sha256": application, "extension_sha256": extension,
-                        "patched_usb_sha256": application, "host_extension_sha256": extension}
+                        "patched_usb_sha256": application + host_audio, "host_extension_sha256": extension,
+                        "host_audio_extension_sha256": host_audio}
             hashes = {key: sha(data) for key, data in contents.items()}
             for key, data in contents.items():
                 self.write(prefix + names[key], data)
@@ -62,7 +64,9 @@ class ReproductionIdentityTests(unittest.TestCase):
                 "input_sha256": self.original_sha,
                 "status": "OFFLINE EXPERIMENT; NOT HARDWARE VALIDATED",
                 "scatter_extension": {"insert_offset": 6, "insert_length": len(extension)},
-                "host_midi": {"insert_offset": 6, "code_bytes": len(extension), "patched_app_sha256": hashes["patched_usb_sha256"], "extension_sha256": hashes["host_extension_sha256"]},
+                "host_midi": {"insert_offset": 6, "code_bytes": len(extension), "patched_app_sha256": hashes["patched_usb_sha256"], "extension_sha256": hashes["host_extension_sha256"],
+                              "audio_source":0x60000000+len(application),"audio_code_bytes":len(host_audio),
+                              "audio_extension_sha256":hashes['host_audio_extension_sha256']},
                 **hashes,
             })
             self.write_json(prefix + "storage-verification.json", {
@@ -71,6 +75,8 @@ class ReproductionIdentityTests(unittest.TestCase):
                 "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"]})
             self.write_json(prefix + "host-midi-verification.json", {
                 "status": "pass", "patched_app_sha256": hashes["patched_usb_sha256"]})
+            self.write_json(prefix + "host-audio-verification.json", {
+                "status": "pass", "patched_app_sha256": hashes["patched_usb_sha256"],"hardware_access":False})
             self.write_json(prefix + "midi-verification.json", {
                 "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"]})
             self.write_json(prefix + "mastering-verification.json", {
@@ -205,6 +211,12 @@ class ReproductionIdentityTests(unittest.TestCase):
         self.edit_json("build/mainline/storage-verification.json",
                        lambda report: report.update(patched_app_sha256="0" * 64))
         with self.assertRaisesRegex(ValueError, "storage evidence"):
+            CHECK.audit()
+
+    def test_host_audio_evidence_must_match_usb_candidate(self):
+        self.edit_json('build/mainline/host-audio-verification.json',
+                       lambda report: report.update(patched_app_sha256='0'*64))
+        with self.assertRaisesRegex(ValueError,'Host audio evidence'):
             CHECK.audit()
 
     def test_mastering_report_must_match_candidate(self):

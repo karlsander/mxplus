@@ -1,8 +1,9 @@
 /* MX-1 USB-processor extension. USB-MIDI 1.0, one cable per direction.
- * No generic audio selection. All DMA buffers remain the stock per-port buffers.
+ * FM-1 audio is isolated in usb_host_audio.c. MIDI uses stock per-port buffers.
  * RTOS tasks own open/close/queues; USB completion callbacks only publish results.
  */
 #include <stdint.h>
+#include "usb_host_trace.h"
 #pragma clang section text=".host_text" rodata=".host_rodata"
 #define FN(a,t) ((t)(a))
 #define U16(p,o) (*(uint16_t *)((uint8_t *)(p)+(o)))
@@ -15,6 +16,11 @@ extern void host_rx_close_original(void *);
 extern int host_enqueue_original(unsigned, uint32_t);
 extern void host_tx_poll_original(void);
 extern void host_rx_poll_original(void);
+extern void mx1_audio_setup(uint8_t *);
+extern unsigned mx1_audio_monitor(unsigned,void *,uint32_t *,unsigned);
+extern int mx1_debug_receive(unsigned,void *,uint32_t);
+extern unsigned mx1_debug_transmit(unsigned,void *,uint32_t *);
+extern int mx1_debug_tx_timeout(unsigned,void *);
 static uint16_t le16(const uint8_t *p) { return p[0] | (uint16_t)p[1]<<8; }
 static void zero(uint8_t *p, unsigned n) { while(n--) *p++=0; }
 
@@ -22,7 +28,9 @@ static void zero(uint8_t *p, unsigned n) { while(n--) *p++=0; }
  * one embedded jack per endpoint. Ignore unrelated audio/control interfaces.
  * Duplicate interface/alt descriptors and a second MS interface are rejected.
  */
-int mx1_host_config(uint8_t *r, const uint8_t *cfg) {
+/* B13: infrequent enumeration/open/close bodies use the existing SDRAM code
+ * reservation, leaving executable SRAM for the per-packet EHCI service. */
+__attribute__((section(".host_audio"),noinline)) int mx1_host_config(uint8_t *r, const uint8_t *cfg) {
     if (U16(r,2)==0x0582) return host_config_original(r,cfg);
     zero(r+8,0x13c-8);
     /* Absent audio interfaces must not alias a MIDI-only interface zero. */
@@ -90,7 +98,7 @@ int mx1_host_config(uint8_t *r, const uint8_t *cfg) {
     return 0;
 }
 
-void mx1_host_select(const uint8_t *info, uint16_t *out) {
+__attribute__((section(".host_audio"),noinline)) void mx1_host_select(const uint8_t *info, uint16_t *out) {
     if(le16(info)==0x0582) { FN(0x60007bf9,void(*)(const void*,void*))(info,out); return; }
     if(U32(info,0x64)==1 && (info[0x68] || info[0x69]) &&
        (!info[0x68] || info[0x6a]==2) && (!info[0x69] || info[0x6b]==2)) {
@@ -102,8 +110,9 @@ void mx1_host_select(const uint8_t *info, uint16_t *out) {
  * to the already-active alt0 succeeds without that callback (6000ef38).
  * Finish that case in the same manager task using the stock open dispatcher;
  * its queue acceptance and status notification still own MIDI readiness. */
-void mx1_host_setup(uint8_t *event) {
+__attribute__((section(".host_audio"),noinline)) void mx1_host_setup(uint8_t *event) {
     FN(0x6000865d,void(*)(void*))(event);
+    mx1_audio_setup(event);
     uint8_t *dev=(uint8_t *)U32(event,4);
     uint8_t *r=FN(0x60008d4b,uint8_t *(*)(void*))(dev);
     if(!r || U16(dev,0x10)==0x0582 || U32(r,4) || (r[0]&5)!=1 ||
@@ -141,6 +150,31 @@ typedef struct {
     uint32_t queue[32], head, count, urgent[32], urgent_head, urgent_count, flight_length[2], managed[2], fault[2], dropped, errors;
 } Port;
 __attribute__((section(".host_state"))) static Port ports[4];
+__attribute__((section(".host_pipeline_state"))) volatile MidiPipeline mx1_midi_pipeline[4][2];
+extern int host_core_submit_original(void *);
+static void trace(unsigned token,unsigned stage,uint32_t value) {
+    volatile uint32_t *s=mx1_midi_pipeline[token>>1][token&1].stage[stage];
+    s[1]=debug_ticks; s[2]=value; s[0]++;
+}
+/* The core may be preempted after completion wakes TX. Independent counters
+ * retain that ordering without an older return overwriting a newer flight. */
+int mx1_host_core_submit(void *request) {
+    uintptr_t token=U32(request,0x20);
+    extern void mx1_host_done(void *,void *,const int *,uintptr_t);
+    int ours=token<8 && U32(request,0x1c)==(uintptr_t)mx1_host_done;
+    if(ours) trace(token,TRACE_CORE_IN,(uintptr_t)request);
+    int result=host_core_submit_original(request);
+    if(ours) trace(token,TRACE_CORE_OUT,(uint32_t)result);
+    return result;
+}
+void mx1_host_trace_hcd(void *ep,unsigned stage,int result) {
+    for(unsigned p=0;p<4;p++) for(unsigned t=0;t<2;t++)
+        if(ports[p].managed[t] && ports[p].flight_ep[t]==(uintptr_t)ep) {
+            trace(p*2+t,stage,stage==TRACE_HCD_IN?(uintptr_t)ep:(uint32_t)result);
+            return;
+        }
+}
+extern void mx1_debug_midi_failure(unsigned,unsigned,unsigned,int);
 static uint8_t *buffer(unsigned port,unsigned tx) { return (uint8_t *)(0x20000000+tx*0x800+port*0x200); }
 static void wake(unsigned tx) {
     FN(0x01000877,int(*)(int,int))(*(int16_t *)(0x4000bc08+tx*2),1);
@@ -150,11 +184,12 @@ static void wake(unsigned tx) {
 void mx1_host_done(void *interface, void *ep, const int *result, uintptr_t token) {
     (void)interface; (void)ep;
     unsigned tx=token&1, port=token>>1; if(port>=4) return;
+    trace(token,TRACE_DONE,(uint32_t)result[0]);
     Port *p=&ports[port];
     p->result[tx]=result[0]; p->length[tx]=(uint32_t)result[1];
     p->ready[tx]=1; p->busy[tx]=0; wake(tx);
 }
-static int open_port(uint8_t *record,unsigned tx) {
+__attribute__((section(".host_audio"),noinline)) static int open_port(uint8_t *record,unsigned tx) {
     uint8_t *ep=(uint8_t *)U32(record,4);
     uint8_t *interface=(uint8_t *)U32(ep,0x20);
     uint8_t *dev=(uint8_t *)U32(interface,8);
@@ -178,7 +213,7 @@ static int open_port(uint8_t *record,unsigned tx) {
 }
 int mx1_host_tx_open(uint8_t *r) { return open_port(r,1); }
 int mx1_host_rx_open(uint8_t *r) { return open_port(r,0); }
-static void close_port(uint8_t *event,unsigned tx) {
+__attribute__((section(".host_audio"),noinline)) static void close_port(uint8_t *event,unsigned tx) {
     unsigned port=event[4]; if(port>=4) return;
     Port *p=&ports[port];
     if(!p->managed[tx]) { if(tx) host_tx_close_original(event); else host_rx_close_original(event); return; }
@@ -195,14 +230,22 @@ int mx1_host_enqueue(unsigned port,uint32_t word) {
     Port *p=&ports[port];
     if(!p->managed[1]) return host_enqueue_original(port,word);
     /* One advertised cable: stock's second cable must not leak into it. */
-    if(!p->ep[1] || (p->fault[1]&1) || (word&0xf0)) return 1;
+    if(!p->ep[1] || (p->fault[1]&5) || (word&0xf0)) return 1;
     unsigned status=(word>>8)&255;
     if(status==0xf8 || status==0xfa || status==0xfb || status==0xfc || status==0xf2) {
-        if(p->urgent_count==32) { p->dropped++; p->fault[1]=1; p->urgent_count=0; return 1; }
+        if(p->urgent_count==32) {
+            p->dropped++; p->fault[1]|=4;
+            mx1_debug_midi_failure(port,1,3,0);
+            p->urgent_count=0; wake(1); return 1;
+        }
         p->urgent[(p->urgent_head+p->urgent_count)&31]=word; p->urgent_count++; return 1;
     }
     if(p->fault[1]&2) return 1;
-    if(p->count==32) { p->dropped++; p->fault[1]|=2; p->count=0; return 1; }
+    if(p->count==32) {
+        p->dropped++; p->fault[1]|=2;
+        mx1_debug_midi_failure(port,1,4,0);
+        p->count=0; return 1;
+    }
     p->queue[(p->head+p->count)&31]=word; p->count++; return 1;
 }
 static void poll(unsigned tx) {
@@ -214,32 +257,65 @@ static void poll(unsigned tx) {
             if(p->flight_generation[tx]==p->generation[tx] && p->ep[tx]) {
                 if(p->result[tx] || (p->length[tx]&3) || p->length[tx]>p->flight_length[tx] || (tx && p->length[tx]!=p->flight_length[tx])) {
                     p->errors++; p->fault[tx]=1;
+                    mx1_debug_midi_failure(port,tx,1,p->result[tx]);
                 } else if(!tx) {
                     uint32_t *words=(uint32_t *)buffer(port,0);
                     for(unsigned n=0;n<p->length[0]/4;n++)
-                        if(!(words[n]&0xf0)) mx1_host_receive(words[n] | (port<<5));
+                        if(!(words[n]&0xf0) && !mx1_debug_receive(port,(void *)(uintptr_t)p->ep[0],words[n]))
+                            mx1_host_receive(words[n] | (port<<5));
                 }
             }
         }
         if(!p->ep[tx] || (p->fault[tx]&1)) continue;
         unsigned n;
         if(tx) {
-            n=0; uint32_t *dst=(uint32_t *)buffer(port,1);
-            while(n<16 && p->urgent_count) {
+            uint32_t *dst=(uint32_t *)buffer(port,1);
+            n=mx1_debug_transmit(port,(void *)(uintptr_t)p->ep[1],dst);
+            if(n) goto send;
+            /* Queue overflow stops musical output, but a healthy endpoint
+             * can still carry the separate diagnostic reply. USB completion
+             * or submission failures (bit 0) remain terminal until rebind. */
+            while(n<16 && p->urgent_count && !(p->fault[1]&4)) {
                 dst[n++]=p->urgent[p->urgent_head]; p->urgent_head=(p->urgent_head+1)&31; p->urgent_count--;
             }
-            while(n<16 && p->count) {
+            while(n<16 && p->count && !(p->fault[1]&6)) {
                 dst[n++]=p->queue[p->head]; p->head=(p->head+1)&31; p->count--;
             }
+            n=mx1_audio_monitor(port,(void *)(uintptr_t)p->ep[1],dst,n);
             if(!n) continue;
+send:
             n*=4;
         } else n=U16(p->ep[0],0x10);
         p->flight_ep[tx]=p->ep[tx]; p->flight_generation[tx]=p->generation[tx];
         p->flight_length[tx]=n; p->busy[tx]=1;
+        trace(port*2+tx,TRACE_API_IN,n);
         int rc=FN(0x60009465,int(*)(uint32_t,void*,unsigned,void*,uintptr_t,int,unsigned))
-            (p->ep[tx],buffer(port,tx),n,mx1_host_done,(port<<1)|tx,tx?100:-1,0);
-        if(rc) { p->busy[tx]=0; p->fault[tx]=1; p->errors++; }
+            /* Stock EHCI 600112ae copies flag bit 13 to wrapper+16;
+             * 60011af2 returns -15 for short data unless that bit is set.
+             * MIDI IN is variable length. OUT must still complete in full. */
+            (p->ep[tx],buffer(port,tx),n,mx1_host_done,(port<<1)|tx,
+             tx?mx1_debug_tx_timeout(port,(void *)(uintptr_t)p->ep[1]):-1,tx?0:0x2000);
+        trace(port*2+tx,TRACE_API_OUT,(uint32_t)rc);
+        if(rc) {
+            p->busy[tx]=0; p->fault[tx]=1; p->errors++;
+            mx1_debug_midi_failure(port,tx,2,rc);
+        }
     }
 }
 void mx1_host_tx_poll(void) { host_tx_poll_original(); poll(1); }
 void mx1_host_rx_poll(void) { host_rx_poll_original(); poll(0); }
+
+/* Fixed readout only; the audio/debug extension calls this from MIDI RX.
+ * Tasks can advance between fields. These are software observations, not
+ * an atomic USB/controller snapshot. Keep the existing Port ABI unchanged. */
+#pragma clang section text=".host_audio" rodata=".host_audio_rodata"
+void mx1_host_debug_state(unsigned port,uint32_t *out) {
+    Port *p=&ports[port]; unsigned k=0;
+    for(unsigned t=0;t<2;t++) {
+        out[k++]=p->ep[t]; out[k++]=p->busy[t]; out[k++]=p->ready[t];
+        out[k++]=(uint32_t)p->result[t]; out[k++]=p->length[t];
+        out[k++]=p->flight_length[t]; out[k++]=p->managed[t]; out[k++]=p->fault[t];
+        out[k++]=p->generation[t]; out[k++]=p->flight_generation[t];
+    }
+    out[k++]=p->count; out[k++]=p->urgent_count; out[k++]=p->dropped; out[k]=p->errors;
+}

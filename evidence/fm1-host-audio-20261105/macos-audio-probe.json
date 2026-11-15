@@ -1,0 +1,20 @@
+{
+"device":"FM1 Instrument",
+"logical_rate":44100.000000,
+"logical_channels":2,
+"logical_bits":32,
+"logical_flags":9,
+"physical_format_status":0,
+"physical_rate":44100.000000,
+"physical_channels":2,
+"physical_bits":16,
+"create_status":0,
+"start_status":0,
+"midi_destination_found":true,
+"callbacks":956,
+"frames":489472,
+"timestamp_seconds":11.082559625,
+"timestamp_sample_rate":44119.771654,
+"peak":0.020294189,
+"rms":0.004775440
+}

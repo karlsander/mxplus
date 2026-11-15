@@ -1,0 +1,9 @@
+{
+  "copied_utc": "2026-11-05T23:21:55.727340+00:00",
+  "filename": "MX1_UPD.BIN",
+  "bytes": 4194320,
+  "sha256": "4eb649c9c4a268674e1447b3bf1cec1fd6226f5e75c77f2ebaa5e9bcc51de05d",
+  "readback_match": true,
+  "ejected": true,
+  "update_applied": false
+}

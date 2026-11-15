@@ -1,0 +1,11 @@
+{
+  "time_utc": "2026-11-06T11:37:17.108137+00:00",
+  "candidate_sha256": "b6122583727323d36f227fccbcb58f70efb75921d083b4c5bfe4ba4359b15b36",
+  "copied_filename": "MX1_UPD.BIN",
+  "readback_sha256": "b6122583727323d36f227fccbcb58f70efb75921d083b4c5bfe4ba4359b15b36",
+  "bytes": 4194320,
+  "volume": "MX-1",
+  "device": "Roland Storage Media",
+  "update_completion_verified": false,
+  "ejected": true
+}

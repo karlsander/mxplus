@@ -1,0 +1,88 @@
+{
+  "candidate_path": "build/mainline/MXPLUS_MAINLINE_UNTESTED.bin",
+  "candidate_sha256": "e5f8404ca65ae315b782a41d90d3a1ec07bb23dbcca5a69fba08ee2e65036fd2",
+  "bytes": 4194320,
+  "build": 190,
+  "previous_installed_build": 189,
+  "previous_candidate_sha256": "af898612a1af5f6894273343d8145001c5056f9b5f382df47d52f5d7a99e8f58",
+  "original_input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+  "app_main_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
+  "app_usb_sha256": "fa2cc9ced074a4a5dd70d9ff1d9470b08de799203f1ea4d558eb2edccf276cd5",
+  "midi_extension_sha256": "e22c9d8acfaa7eb3da7ad5ea8a4fd9c2eaccd0f3e90f383e78433125edbb03fb",
+  "audio_extension_sha256": "12ce80536a046537b5917a4840c82a5eec3df8f119b16ffae137690fc2468cd6",
+  "hot_code_bytes": 4280,
+  "hot_state_bytes": 1472,
+  "audio_code_bytes": 14368,
+  "audio_state_bytes": 35336,
+  "ehci_queue_start": "0x607fb288",
+  "ehci_queue_bytes": 6016,
+  "ehci_queue_capacity_packets": 32,
+  "ehci_prefill_packets": 16,
+  "reserved_usb_sdram_bytes": 65536,
+  "hardware_status_at_build": "not installed",
+  "fm1_bridge_build": 177,
+  "fm1_bridge_sha256": "f13e43fcb9b34db7c8387751871b9a045fa55572b33c3b1759594c0451c54da0",
+  "validation": {
+    "targeted_host_audio": "passed",
+    "full_reproduction": "passed on full rerun; first failure and replays retained",
+    "current_artifact_gate": "passed",
+    "committed_artifact_gate": "passed",
+    "browser_tests": {
+      "passed": 6,
+      "failed": 0
+    },
+    "hosted": "pending",
+    "full_reproduction_stages": 17,
+    "verified_code_commit": "71bfedc22d8c9461990f344e3eb5398127bdc172"
+  },
+  "compiled_function_prologues": {
+    "mx1_audio_tick": {
+      "runtime": "0x607f1df0",
+      "bytes": 1500,
+      "instructions": [
+        "push.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}",
+        "sub sp, #0x9c",
+        "bl #0x607f37c8",
+        "movw r1, #0x9930",
+        "movt r1, #0x607f",
+        "ldr r0, [r1]"
+      ]
+    },
+    "ehci_service": {
+      "runtime": "0x100c654",
+      "bytes": 1656,
+      "instructions": [
+        "push.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}",
+        "sub sp, #0x1c",
+        "movw sb, #0xa564",
+        "movt sb, #0x607f",
+        "ldr.w r8, [sb]",
+        "cmp.w r8, #0"
+      ]
+    },
+    "debug_command": {
+      "runtime": "0x607f2d10",
+      "bytes": 1778,
+      "instructions": [
+        "push.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}",
+        "sub sp, #0x134",
+        "movw lr, #0x9934",
+        "movt lr, #0x607f",
+        "mov.w r1, #0x30c",
+        "mla r8, r0, r1, lr"
+      ]
+    },
+    "ehci_poll_done": {
+      "runtime": "0x607f366c",
+      "bytes": 80,
+      "instructions": [
+        "push {r4, lr}",
+        "movw r4, #0xac4c",
+        "cmp r0, #1",
+        "movt r4, #0x607f",
+        "bne #0x607f3686",
+        "ldr r0, [r4, #0xc]"
+      ]
+    }
+  }
+}

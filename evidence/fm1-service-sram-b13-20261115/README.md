@@ -72,8 +72,9 @@ functions' SDRAM placement. Existing tests exercise original startup copying,
 MPU/allocator bounds, MIDI descriptors and original setup/open/close paths,
 request ABI, polling preemption, packet validation, admission and retirement.
 USB/DSP/MMIO, allocator and RTOS delivery remain explicit models.
-All 17 offline stages and the current-artifact gate passed. The committed-artifact
-and browser-patcher gates are pending.
+All 17 offline stages, current and committed-artifact gates, and all six
+browser-patcher tests passed for code/artifact commit
+`c8e03b6566acaa508ce1477daf4eb392009918c0`. Hosted B13 verification is pending.
 
 B13 has not been installed. After local gates pass, compare the same short
 silent poll-only probe, page 19 service elapsed times, packet/error deltas and

@@ -73,3 +73,28 @@ On 15 November, the same verified B7 candidate was copied as `MX1_UPD.BIN` to
 the Roland updater volume, readback hash-verified and ejected.
 [Copy receipt](copy-20261115.json). Update completion and normal boot remain
 unobserved at the time of copying.
+
+## Observed on B7, 15 November
+
+The user confirmed the update/restart and FM-1 on HOST3. Wire build 183 was
+read over the bridge. [Sanitized bench record](bench-20261115.json) includes
+the commands, counters and retained pages; raw Bluetooth logs remain private.
+The user also reported playing non-USB mixer channels during the session;
+their start time relative to these tests was not recorded.
+
+Transport-only startup accepted 53,971 MX packets, with no malformed packets
+or queue overflow, but 3,401 underruns and 4,512 schedule corrections. The
+FM ring-fed counter reached 53,979. MIDI replies stalled during the run and
+returned after expiry **without reconnect**. Page 10 retained source 3 (urgent
+queue overflow): TX busy, fault 4, dropped 1, errors 0. Page 9 reported no RX
+failure record. This distinguishes queue saturation from a terminal transfer
+error, but does not show whether the pending MIDI qTD completed on hardware.
+
+A separate normal-converter run, with the FM muted throughout, accepted nine
+more MX packets. Three converter calls succeeded; the fourth returned -1 with
+entry gate `0x38800000` at `401010c0`. Priming therefore did not resolve this
+failure. The original instruction branch establishes the rejection condition,
+not the gate's complete semantics or the reason it becomes nonzero.
+
+Cleanup returned FM to alt0/tone0 and MX to phase0/unclaimed/wanted0; MIDI
+reads worked. No tone window or audible acceptance occurred. Keep `UNTESTED`.

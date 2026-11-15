@@ -112,3 +112,24 @@ installation are pending at preparation.
 On 15 November B8 was copied as `MX1_UPD.BIN` to the identified Roland updater
 volume, readback hash-verified and safely ejected. [Copy receipt](copy-20261115.json).
 Update completion and normal boot remain unobserved at the time of copying.
+
+## Observed on B8, 15 November
+
+The user confirmed the update/restart and HOST3 connection; the bridge then
+reported MX wire build 184 and FM build 177. The nominal two-second silent
+probe accepted 974 MX packets, with no malformed packets, seven queue
+overflows, 301 underruns and 714 schedule corrections. FM refill telemetry
+advanced by 992 packets / 44,581 frames. No converter or tone was enabled.
+
+The probe reply arrived after expiry. The first TX failure remains urgent
+queue overflow while software TX was busy. Both the frozen and last running
+controller snapshots contain an Active RX qTD, but no matched TX wrapper.
+Each walk found two requests and reported no pointer/count validation error.
+This narrows the investigation to submission/worker scheduling or completion
+delivery; it does not prove interrupt starvation or identify a blocked task.
+
+Cleanup required no reconnect. A separate fresh read after alt0 confirms FM
+alt0/tone0 and MX inactive/unclaimed, with working MIDI replies. The bench
+script's original after_fm field was taken before alt0 and must not be used
+as final alternate-state evidence. [Sanitized record](bench-20261115.json).
+No audible or sustained audio acceptance follows.

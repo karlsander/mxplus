@@ -61,7 +61,7 @@ exclusion, retirement, original request ABI and cached page tests remain.
 
 This model executes extension instructions but does not run a preemptive RTOS,
 measure CPU time, or establish real USB scheduling. The full reproduction and
-committed-image/browser results are recorded in candidate.json. B11 is not yet
+committed-image/browser results are recorded in candidate.json. At build time B11 was not yet
 installed. Keep UNTESTED and PR #21 open pending physical acceptance. FM bridge
 B1 needs no update.
 
@@ -72,3 +72,25 @@ successor, while the retained latch admits none. This adds no firmware change.
 The committed-image gate and all six browser-patcher tests passed against
 code/artifact commit `9f04955463bbf31ff2c9aeff77eaf6e22edfc5d5`.
 Hosted B11 verification also passed for `5ba9871` ([run 85](https://github.com/karlsander/mxplus/actions/runs/43735461007)).
+
+## Observed on B11, 15 November
+
+[Sanitized bench](bench-20261115.json). Poll-only probe 9 now returned diagnostic
+MIDI status during the running stream: three phase-2 replies arrived before the
+final stopped reply. First/last pipeline counters advanced (RX core 11 to 13,
+TX core 78 to 88), with no MIDI fault or retained first failure. This is short
+diagnostic coexistence evidence, not sustained musical MIDI or latency acceptance.
+
+| Mode | MX packets | Malformed | Overflow | Underrun | Schedule corrections |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Poll-only | 999 | 0 | 0 | 267 | 660 |
+| IOC | 1,638 | 0 | 4 | 151 | 212 |
+
+The subsequent short IOC run again delayed status until expiry, with unchanged
+pipeline counters and a TX urgent-queue overflow. Poll-only is the useful baseline
+for further work, but its packet gaps are substantial. All final states returned
+to FM alt0/tone0 and MX inactive/unclaimed. Diagnostic replies recovered; after
+IOC, musical TX remains stopped by fault 4 until rebind. No converter or audible
+test ran. The next candidate moves unchanged descriptor helpers into already
+reserved internal SRAM and measures worker elapsed time; faster code and clean
+transport remain hypotheses until observed.

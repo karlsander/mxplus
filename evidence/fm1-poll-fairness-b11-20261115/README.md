@@ -69,4 +69,6 @@ All 17 offline stages and the current-artifact gate passed. The subsequently
 strengthened [preemption check](poll-preemption-check.json) also passes a
 negative control: releasing the latch at the same eligible tick admits a
 successor, while the retained latch admits none. This adds no firmware change.
-Committed-image and browser checks are pending at this source/artifact commit.
+The committed-image gate and all six browser-patcher tests passed against
+code/artifact commit `9f04955463bbf31ff2c9aeff77eaf6e22edfc5d5`.
+Hosted B11 verification remains pending.

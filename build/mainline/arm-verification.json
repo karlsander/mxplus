@@ -2,7 +2,7 @@
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
   "patched_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
-  "candidate_container_sha256": "96be48786bfb12667db3bffd0d4217c82c0be1374427255af7f64f127a6aeee1",
+  "candidate_container_sha256": "4ec34d04a05e9a7a477bd85f40e2773b6aa337e85a7f9e70b671a8aaae8bf633",
   "extension_sha256": "fc4ed00c31546c74a84dbaece0ac9fda8fad28a3c21f19038e123617b945bbeb",
   "groups": [
     {
@@ -1885,7 +1885,7 @@
     {
       "name": "Original USB startup copies code, zeroes state, preserves existing initialized data",
       "status": "pass",
-      "code_bytes": 3592,
+      "code_bytes": 4204,
       "state_bytes": 1472
     },
     {
@@ -2420,7 +2420,7 @@
       "status": "pass",
       "details": {
         "status": "pass",
-        "patched_app_sha256": "454540df6cab61626ca1b41af64471fbcb2a1fa9d9f3b104da72beb579b8eeda",
+        "patched_app_sha256": "53da299dd82d1ce1c591b02eac7f8f7ce31c919f3679b82145d8afc4b6726ab8",
         "hardware_access": false,
         "limits": "instruction checks only; USB/DSP/RTOS boundaries modeled",
         "setup": {
@@ -2613,15 +2613,18 @@
             {
               "policy": 1,
               "modeled_service_ticks": 64,
-              "requeued": 0
+              "requeued": 0,
+              "released_latch_requeues": 1
             },
             {
               "policy": 0,
               "modeled_service_ticks": 64,
-              "requeued": 0
+              "requeued": 0,
+              "released_latch_requeues": 1
             }
           ],
           "poll_completion_relative_gap_and_wrap": true,
+          "sram_helpers_and_cached_service_timing": true,
           "admission_negative_cases": [
             [
               "0x40010000",
@@ -2679,7 +2682,7 @@
         "profile_negative_cases": 188,
         "heap_reservation_bytes": 65536,
         "iso_descriptors_per_port": 17,
-        "audio_state_bytes": 29272,
+        "audio_state_bytes": 29320,
         "cases": [
           "guarded complete USB patch accounting",
           "startup placement",

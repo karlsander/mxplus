@@ -78,7 +78,7 @@ requests. Overlong private frames are consumed through F7, not forwarded as musi
 | Op | Request | Reply words after result |
 | --- | --- | --- |
 | 1 | none | Status below |
-| 2 | Page 0–18 | Pages 0–2 and 5–8: page, snapshot sequence, raw fields; pages 3–4: page, fields; pages 9–18 below |
+| 2 | Page 0–19 | Pages 0–2 and 5–8: page, snapshot sequence, raw fields; pages 3–4: page, fields; pages 9–19 below |
 | 3 | Mode 0–3 | Selected mode |
 | 4 | none | Fresh snapshot sequence after worker completion |
 | 5 | Step 1–9 | Accepted step; completion is reported by status |
@@ -107,7 +107,7 @@ Result 0 succeeds; 1 is unsupported command/arguments; 2 is unavailable or a
 concurrent snapshot. Refresh failures return the original absolute queue/worker
 error. Probe queue failure is result 3. Invalid framing/checksum is silent and
 increments errors. B1 is 177, B2 is 178, B3 is 179, B4 is 180, B5 is 181,
-B6 is 182, B7 is 183, B8 is 184, B9 is 185, B10 is 186 and current MX-1 candidate B11 is 187.
+B6 is 182, B7 is 183, B8 is 184, B9 is 185, B10 is 186, B11 is 187 and current MX-1 candidate B12 is 188.
 
 Status after result: build, port, stage, result_code, controller, phase, control,
 flags, cc, frame, packets, malformed, overflow, underrun, missed, dsp_errors,
@@ -241,7 +241,7 @@ or teardown, 5A worker gap/other periodic activity, 5B insertion admission,
 destroy did not establish a halted controller. On EHCI, status control is raw
 USBCMD, flags is the linked-slot mask and cc is the last siTD status byte.
 
-Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 187,
+Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 188,
 startup stage, RX flags, TX flags, last RX result, last TX result. Flags are busy
 in bit 0, ready in bit 1, fault in bits 8 onward. This fits in one 60-byte USB
 MIDI transfer. B3 wakes the TX task every 4,096 audio-task calls, even with no
@@ -263,13 +263,13 @@ resident addresses map as runtime = 60000000 + decoded offset; hot relocation is
 original decoded 2b1f4 → runtime 01000300, length bbe4. The builder records every
 changed original byte, callback target, inserted source, startup copy/zero and hash.
 
-- Hot extension: 0100bee4..0100ccec, 3,592 bytes; writable hot state remains 1,472 bytes.
-- Audio/debug code: 607f0000..607f38cc, 14,540 bytes, within the existing 16-KiB code slot.
+- Hot extension: 0100bee4..0100cf50, 4,204 bytes; writable hot state remains 1,472 bytes.
+- Audio/debug code: 607f0000..607f3790, 14,224 bytes, within the existing 16-KiB code slot.
 - Audio/DMA state remains 607f4000..607f9880; the A1 diagnostics remain 607f9880..607f9930.
 - Bridge state follows at 607f9930..607fa564 (3,124 bytes); EHCI state adds 264
   bytes at 607fa564..607fa66c. B6 adds 576 bytes of converter snapshots at
   607fa66c..607fa8ac. Failure/async records and B10 pipeline counters follow
-  through 607fb254; B11 appends its four-byte deadline through 607fb258. The whole 29,272-byte
+  through 607fb254; B11 appends its four-byte deadline through 607fb258; B12 adds 48 bytes of service timing through 607fb288. The whole 29,320-byte
   state stays in the already reserved 64-KiB SDRAM region; allocator bounds are unchanged.
 
 The original main application, boot programs, updater and panel payload are
@@ -341,3 +341,14 @@ eligible 16 ticks (probe 9) or 32 ticks (IOC mode) after callback completion,
 including a fresh interval after an enqueue error. Nominal 4/8-ms values do not
 include service duration. Existing commands and cached pipeline pages are
 unchanged. [B11 evidence](../evidence/fm1-poll-fairness-b11-20261115/README.md).
+
+## B12 worker timing
+
+Page 19 returns result, page, sequence, calls, total/max/last FRINDEX delta,
+last/max audio-tick delta, last/total accepted packets, entry/exit FRINDEX,
+and ambiguity count. FRINDEX deltas are modulo 16,384 microframes (125 us each),
+including preemption. Observed tick deltas >=8,192 flag long samples and exclude
+them from total/max microframes; this does not establish CPU time or detect all
+possible counter halts/wraps. The frame counter must be running. Cache resets
+per start. Wrong-owner/incomplete reads return 2 and never access live MMIO.
+[Definition, primary source and tests](../evidence/fm1-sram-b12-20261115/README.md).

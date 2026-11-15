@@ -14,6 +14,10 @@ H=lambda v:struct.pack('<H',v)
 def verify(image,h,syms):
     from host_audio_verify import Audio,DEV,EP,DRIVER,HC,REGS,TD,TDSTRIDE,STRIDE
     table=0x4000b000;cap=0x40020000;initial_table=0x60470000
+    for name in ('ehci_path','ehci_arm','ehci_unlink'):
+        f=h['ehci_sram_helpers'][name]
+        assert f['runtime_address']==syms[name]
+        assert h['code_start']<=syms[name]&~1<(syms[name]&~1)+f['bytes']<=h['code_start']+h['code_bytes']
 
     class Ehci(Audio):
         def __init__(self,port=0):
@@ -255,6 +259,7 @@ def verify(image,h,syms):
     # A subsequent ordinary start restores IOC/fallback policy. The flag
     # belongs to one start, not to a stale manager command or sticky global.
     assert q.start(frame=140)==0 and q.u32(syms['async_diagnostic']+532)==0
+    assert m.read(syms['service_timing'],48)==bytes(48)
     assert q.u32(p+TD+12)==0x80b80080
     rejected=Ehci();assert rejected.start(poll_only=2)==0xfffffffb
     # B11: model an audio-task preemption during a long worker service.
@@ -308,6 +313,24 @@ def verify(image,h,syms):
     for _ in range(15):q.call('mx1_audio_tick',0)
     assert len(q.polls)==1
     q.call('mx1_audio_tick',0);assert len(q.polls)==2
+    # B12 elapsed worker time: model FRINDEX wrap while the worker runs.
+    # Tick progression includes preemption; this fixture supplies both clocks.
+    q=Ehci();m=q.m;assert q.start(frame=2047,poll_only=1)==0
+    timing=syms['service_timing'];clock=[5,10]
+    def elapsed_model(u,a,size,data):
+        if a==(syms['ehci_snapshot']&~1):
+            m.write(REGS+12,P(clock[0]));m.write(syms['debug_ticks'],P(clock[1]))
+    hook=m.uc.hook_add(UC_HOOK_CODE,elapsed_model)
+    q.call('mx1_ehci_event',1,1)
+    assert list(struct.unpack('<12I',m.read(timing,48)))==[2,1,13,13,13,10,10,0,0,16376,5,0]
+    clock[:]=[21,8202];q.call('mx1_ehci_event',1,1)
+    assert list(struct.unpack('<12I',m.read(timing,48)))==[4,2,13,13,16,8192,8192,0,0,5,21,1]
+    m.uc.hook_del(hook)
+    row=page(19);assert row==[0,19]+list(struct.unpack('<12I',m.read(timing,48)))
+    m.write(syms['debug_ports']+780,P(DEV));assert page(19,port=1)==[2]
+    m.uc.mem_unmap(REGS,0x1000)
+    assert page(19)==row # cached state only; no MMIO from MIDI
+    m.write(timing,P(5));assert page(19)==[2]
     # The original converter's busy-gate return is a real instruction path,
     # not a mocked failure. Capture it, keep the DMA alive until worker stop.
     q=Ehci(port=2);assert q.start()==0;q.real_dsp=True
@@ -448,6 +471,7 @@ def verify(image,h,syms):
         'async_original_bulk_construction_and_cached_pages':True,
         'poll_only_without_iso_ioc_or_controller_writes':True,
         'poll_callback_preemption_model':preemptions,'poll_completion_relative_gap_and_wrap':True,
+        'sram_helpers_and_cached_service_timing':True,
         'admission_negative_cases':negatives,'original_controller_status_queue_and_worker':True,
         'cases':['actual stock frame-list replacement and dummy iTD chain','guarded EHCI bind trampoline',
                  'split endpoint/hub/port/masks and DMA alignment','2048-frame and 256-slot wrap',

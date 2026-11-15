@@ -31,6 +31,14 @@ __attribute__((section(".host_async_state"))) static AsyncState async_diagnostic
 /* B11: finish the current callback before admitting its successor. Keep the
  * lifetime counter addresses fixed by appending this word after their state. */
 __attribute__((section(".host_poll_state"))) static volatile uint32_t poll_after;
+/* Worker elapsed time, including task preemption. FRINDEX wraps every 16384
+ * microframes; ticks expose long/ambiguous samples. This is not CPU timing. */
+typedef struct {
+    volatile uint32_t sequence;
+    uint32_t calls,total_uf,max_uf,last_uf,last_ticks,max_ticks;
+    uint32_t last_packets,total_packets,first_frame,end_frame,ambiguous;
+} ServiceTiming;
+__attribute__((section(".host_timing_state"))) static ServiceTiming service_timing;
 _Static_assert(sizeof(AsyncState)==872,"Async diagnostic placement");
 static int async_ram(uintptr_t p,unsigned n) {
     return !(p&3) && p>=0x60400000 && p<=0x607f0000-n;
@@ -116,7 +124,7 @@ static void ehci_snapshot(AudioPort *p) {
  * active stock audio, foreign iTD, siTD or FSTN may share this experiment.
  * Bulk/control continue in the independent asynchronous schedule.
  */
-static int ehci_path(AudioPort *p,uint32_t link) {
+__attribute__((section(".host_text"),noinline)) static int ehci_path(AudioPort *p,uint32_t link) {
     unsigned count=0, interrupts=0;
     while(!(link&1)) {
         uintptr_t ptr=link&~31u; unsigned type=link&6,dummy=0;
@@ -139,7 +147,7 @@ static int ehci_path(AudioPort *p,uint32_t link) {
 bad:
     ehci.bad_link=link; return 0;
 }
-static int ehci_unlink(AudioPort *p,unsigned i) {
+__attribute__((section(".host_text"),noinline)) static int ehci_unlink(AudioPort *p,unsigned i) {
     if(!(ehci.linked&(1u<<i))) return 1;
     uint8_t *entry=ehci.table+(ehci.slot_frame[i]&255)*4;
     /* Only replace the exact head installed by this worker. A foreign edit
@@ -157,7 +165,7 @@ static void ehci_stop(AudioPort *p,unsigned reason) {
         p->close_frame=ehci_frame(); p->phase=3; stage(p,ehci.reason?ehci.reason:0x57,0);
     }
 }
-static int ehci_arm(AudioPort *p,unsigned i) {
+__attribute__((section(".host_text"),noinline)) static int ehci_arm(AudioPort *p,unsigned i) {
     unsigned now=ehci_frame(), distance=(p->next_frame-now)&2047;
     if(distance<4 || distance>64) { p->next_frame=(now+4)&2047; p->missed++; }
     unsigned f=p->next_frame, old=V32(ehci.table,(f&255)*4);
@@ -193,6 +201,7 @@ static void ehci_packet(AudioPort *p,unsigned i,unsigned status) {
 static void ehci_service(unsigned event) {
     AudioPort *p=ehci.owner;
     if(!p || !p->phase || !ehci_current(p)) return;
+    unsigned first=V32(ehci.regs,12)&16383, tick=debug_ticks, packets=p->packets;
     unsigned now=ehci_frame(),sts=V32(ehci.regs,4);
     ehci.events++;
     if(p->phase==2) async_capture(p,!p->wanted);
@@ -219,6 +228,16 @@ static void ehci_service(unsigned event) {
         p->phase=0; barrier(); p->claimed=0;
     }
     ehci_snapshot(p);
+    unsigned end=V32(ehci.regs,12)&16383,elapsed=(end-first)&16383,dt=debug_ticks-tick;
+    ServiceTiming *s=&service_timing;
+    s->sequence++; barrier(); s->calls++;
+    s->last_uf=elapsed; s->last_ticks=dt;
+    if(dt>=8192) s->ambiguous++; /* cannot recover multiple FRINDEX wraps */
+    else { s->total_uf+=elapsed; if(elapsed>s->max_uf) s->max_uf=elapsed; }
+    if(dt>s->max_ticks) s->max_ticks=dt;
+    s->last_packets=p->packets-packets; s->total_packets+=s->last_packets;
+    s->first_frame=first; s->end_frame=end;
+    barrier(); s->sequence++;
 }
 static int ehci_begin(AudioPort *p,unsigned poll_only) {
     if(!p->wanted || p->phase || ehci.poll_pending || (ehci.owner && ehci.owner->claimed && ehci.owner!=p)) return -9;
@@ -229,6 +248,7 @@ static int ehci_begin(AudioPort *p,unsigned poll_only) {
     zero(&async_diagnostic,sizeof async_diagnostic); async_diagnostic.started=debug_ticks;
     async_diagnostic.poll_only=poll_only;
     poll_after=debug_ticks+(poll_only?16:32);
+    zero(&service_timing,sizeof service_timing);
     ehci.table=(uint8_t *)(uintptr_t)(V32(ehci.regs,20)&~4095u);
     DebugPort *d=&debug_ports[p-mx1_audio_ports];
     uint8_t *hub=PTR(p->dev,0xec), *parent=hub?PTR(hub,4):0;

@@ -110,8 +110,8 @@ to the mastering held-key fix in PR #18.
 USB startup originally copies decoded `0x2b1f4..0x36dd8` to
 `0x01000300..0x0100bee4`. The new USB code is inserted at decoded `0x36dd8`,
 runtime `0x0100bee4`, below the existing USB allocator at `0x0100d000`.
-The extension occupies 3,592 bytes (`0x0100bee4..0x0100ccec`), leaving
-788 bytes before that allocator. State occupies 1,472 bytes
+The extension occupies 4,204 bytes (`0x0100bee4..0x0100cf50`), leaving
+176 bytes before that allocator. State occupies 1,472 bytes
 (`0x01017868..0x01017e28`), leaving 472 bytes before the writable-region limit.
 The five following initialized-data source literals move; their destinations
 do not. New zero-initialized state starts at the original USB BSS end,

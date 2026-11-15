@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "454540df6cab61626ca1b41af64471fbcb2a1fa9d9f3b104da72beb579b8eeda",
+  "patched_app_sha256": "53da299dd82d1ce1c591b02eac7f8f7ce31c919f3679b82145d8afc4b6726ab8",
   "groups": [
     {
       "name": "Original EHCI short-packet completion and continued MIDI reception",
@@ -104,7 +104,7 @@
     {
       "name": "Original USB startup copies code, zeroes state, preserves existing initialized data",
       "status": "pass",
-      "code_bytes": 3592,
+      "code_bytes": 4204,
       "state_bytes": 1472
     },
     {

@@ -37,7 +37,9 @@ not sustained or comprehensive validation.
    delayed MIDI replies while the worker ran. B10 adds API/core/HCD/completion
    counters, which found USB-core progress stopped while HCD polls continued.
    B11 retains the poll latch through service and adds a completion-relative
-   gap. Its physical effect and the scheduling explanation remain unverified.
+   gap. Poll-only now returns diagnostic MIDI during transport; substantial gaps
+   remain and IOC still stalls. B12 moves unchanged helpers into reserved SRAM
+   and measures elapsed service time. Clean sustained transport is unverified.
    Other host-audio
    coexistence needs shared bandwidth/TT admission beyond B5. The computer
    probe and offline tests do not establish an MX-1 audio result.

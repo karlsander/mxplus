@@ -183,3 +183,11 @@ through service, then waits a fresh 16/32-tick interval before another poll.
 This is a bounded response to a plausible worker requeue cycle; actual RTOS
 causality and real-time transport quality still require the bench.
 [Change, instruction evidence and preemption model](../evidence/fm1-poll-fairness-b11-20261115/README.md).
+
+## B12 descriptor code placement
+
+B11 poll-only returns diagnostic MIDI during transport; IOC still stalls and
+packet gaps remain. B12 places identical descriptor admission/arming/unlinking
+instructions in reserved executable SRAM and adds cached worker elapsed time.
+No admission check is removed. [Instruction comparison, timing definition and
+verification](../evidence/fm1-sram-b12-20261115/README.md).

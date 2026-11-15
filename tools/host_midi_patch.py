@@ -77,10 +77,19 @@ def integrate(original,root,out,env,jump):
         pipeline_address=pipeline['st_value']; pipeline_bytes=pipeline['st_size']
         poll_state=tab.get_symbol_by_name('poll_after')[0]
         poll_address=poll_state['st_value']; poll_bytes=poll_state['st_size']
+        timing=tab.get_symbol_by_name('service_timing')[0]
+        timing_address=timing['st_value']; timing_bytes=timing['st_size']
         if (async_bytes!=872 or async_address+async_bytes!=pipeline_address or pipeline_bytes!=672 or
             pipeline_address+pipeline_bytes!=poll_address or poll_bytes!=4 or
-            poll_address+poll_bytes!=0x607f4000+audio_size):
+            poll_address+poll_bytes!=timing_address or timing_bytes!=48 or
+            timing_address+timing_bytes!=0x607f4000+audio_size):
             raise FormatError('Invalid asynchronous diagnostic placement')
+        fast_helpers={}
+        for name in ('ehci_path','ehci_arm','ehci_unlink'):
+            s=tab.get_symbol_by_name(name)[0]; address=s['st_value']&~1
+            if s['st_info']['type']!='STT_FUNC' or not code['sh_addr']<=address<address+s['st_size']<=code['sh_addr']+len(blob):
+                raise FormatError('EHCI helper outside reserved executable SRAM')
+            fast_helpers[name]={'runtime_address':s['st_value'],'bytes':s['st_size']}
     m=recover(original); hot=m['operations'][0]
     if hot!={'call':0x6000000e,'kind':'copy','destination':0x01000300,'length':0xbbe4,'source':0x6002b1f4}: raise FormatError('USB startup map changed')
     if m['operations'][3]!={'call':0x60000028,'kind':'zero','destination':0x01010060,'length':0x7808}: raise FormatError('USB BSS map changed')
@@ -142,6 +151,8 @@ def integrate(original,root,out,env,jump):
             'async_diagnostic_start':async_address,'async_diagnostic_bytes':async_bytes,
             'midi_pipeline_start':pipeline_address,'midi_pipeline_bytes':pipeline_bytes,
             'poll_after_start':poll_address,'poll_after_bytes':poll_bytes,
+            'service_timing_start':timing_address,'service_timing_bytes':timing_bytes,
+            'ehci_sram_helpers':fast_helpers,
             'original_sdram_heap':[0x604b1178,0x60800000],'reserved_sdram_heap':[0x604b1178,0x607f0000],
             'insert_offset':cut,'allocator_table_offset':0x2820c,'allocator_table_hex':table.hex(),
             'sources':{str(p.relative_to(root)):sha256(p.read_bytes()) for p in [*sources,root/'patches/usb_host_trace.h',root/'patches/usb_host_debug.inc',root/'patches/usb_host_ehci.inc',root/'patches/mainline.ld',root/'tools/host_midi_patch.py']}}

@@ -27,11 +27,15 @@
     "targeted_host_audio": "passed",
     "full_reproduction": "passed",
     "current_artifact_gate": "passed",
-    "committed_artifact_gate": "pending",
-    "browser_tests": "pending",
+    "committed_artifact_gate": "passed",
+    "browser_tests": {
+      "passed": 6,
+      "failed": 0
+    },
     "hosted": "pending",
     "core_wrapper_callee_saved_and_sp": "passed",
-    "full_reproduction_stages": 17
+    "full_reproduction_stages": 17,
+    "verified_code_commit": "1fc19931e19ea99f8867ab8d06bc0e73ab2f44b3"
   },
   "compiled_function_prologues": {
     "mx1_audio_tick": {

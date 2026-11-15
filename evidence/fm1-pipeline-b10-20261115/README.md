@@ -89,5 +89,6 @@ probe and collects pages 15..18 before another start; both-policy comparison
 remains optional.
 
 All 17 offline stages and the current-artifact gate passed. The candidate hash
-remained unchanged through reproduction. Committed-image and browser checks are
-pending at this source/artifact commit.
+remained unchanged through reproduction. The committed-image gate and all six
+browser-patcher tests passed against code/artifact commit
+`1fc19931e19ea99f8867ab8d06bc0e73ab2f44b3`. Hosted B10 verification remains pending.

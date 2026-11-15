@@ -1,11 +1,78 @@
 {
   "status": "pass",
-  "patched_app_sha256": "7086bed11d109cd1ca72a54784d3246086a3997ff31b89a107433b5e8ebd360f",
+  "patched_app_sha256": "3185602fe763043f81b4bb79cbe70faa61f14a4f2c3b7dcc8f7961b358c22712",
   "groups": [
+    {
+      "name": "Original EHCI short-packet completion and continued MIDI reception",
+      "status": "pass",
+      "cases": [
+        {
+          "speed": 0,
+          "bytes": 0,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 0,
+          "bytes": 4,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 0,
+          "bytes": 16,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 0,
+          "bytes": 60,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 0,
+          "bytes": 64,
+          "before": 0,
+          "after": 0
+        },
+        {
+          "speed": 1024,
+          "bytes": 0,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 1024,
+          "bytes": 4,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 1024,
+          "bytes": 16,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 1024,
+          "bytes": 60,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 1024,
+          "bytes": 64,
+          "before": 0,
+          "after": 0
+        }
+      ],
+      "boundary": "Original EHCI wrapper, QH/qTD construction, schedule linking, toggle handling and completion run unchanged. Heap/critical sections and controller DMA/status are modeled; this does not validate USB timing or delivery."
+    },
     {
       "name": "Original USB startup copies code, zeroes state, preserves existing initialized data",
       "status": "pass",
-      "code_bytes": 2772,
+      "code_bytes": 2784,
       "state_bytes": 1472
     },
     {

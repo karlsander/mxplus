@@ -2,7 +2,7 @@
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
   "patched_app_sha256": "cfab5a905d27497f74e40f8147346307a3aaae56497eac520324f6d0c0ab1281",
-  "candidate_container_sha256": "54d59222e51b44c3583e60c52400f06fc8e3d66e44ecb47e861f2333000250e1",
+  "candidate_container_sha256": "cde8a1039be813d6eba7cddb6b10c6eb22b72dd8507d46c3d7c842fcf99f2418",
   "extension_sha256": "fc4ed00c31546c74a84dbaece0ac9fda8fad28a3c21f19038e123617b945bbeb",
   "groups": [
     {
@@ -1788,9 +1788,76 @@
       "connection_callback_cases": 20
     },
     {
+      "name": "Original EHCI short-packet completion and continued MIDI reception",
+      "status": "pass",
+      "cases": [
+        {
+          "speed": 0,
+          "bytes": 0,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 0,
+          "bytes": 4,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 0,
+          "bytes": 16,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 0,
+          "bytes": 60,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 0,
+          "bytes": 64,
+          "before": 0,
+          "after": 0
+        },
+        {
+          "speed": 1024,
+          "bytes": 0,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 1024,
+          "bytes": 4,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 1024,
+          "bytes": 16,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 1024,
+          "bytes": 60,
+          "before": 4294967281,
+          "after": 0
+        },
+        {
+          "speed": 1024,
+          "bytes": 64,
+          "before": 0,
+          "after": 0
+        }
+      ],
+      "boundary": "Original EHCI wrapper, QH/qTD construction, schedule linking, toggle handling and completion run unchanged. Heap/critical sections and controller DMA/status are modeled; this does not validate USB timing or delivery."
+    },
+    {
       "name": "Original USB startup copies code, zeroes state, preserves existing initialized data",
       "status": "pass",
-      "code_bytes": 2772,
+      "code_bytes": 2784,
       "state_bytes": 1472
     },
     {

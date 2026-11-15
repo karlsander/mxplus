@@ -201,3 +201,13 @@ setup/open/close bodies move to the existing SDRAM code slot to make room.
 The builder enforces both placements. No state, admission, scheduling or RTOS
 policy changes. This is a placement experiment pending physical comparison;
 [exact function/address comparison and evidence](../evidence/fm1-service-sram-b13-20261115/README.md).
+
+## B14 queue capacity and priming
+
+B13's poll-only service was faster but its eight-packet queue overflowed 225
+valid packets in the short run. B14 adds one 32-packet queue for the admitted
+EHCI owner and waits for sixteen packets before consumption/re-priming. Old
+DMA/state addresses and OHCI buffering remain unchanged. This trades buffering
+delay for batch tolerance; it does not fix wire loss or the converter gate.
+Probe 10 permits the same silent polling policy for nominally 60 seconds.
+[Implementation, bounds and FIFO/ownership evidence](../evidence/fm1-queue-b14-20261115/README.md).

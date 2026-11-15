@@ -43,6 +43,10 @@ elapsed time was 17.73/18.55 ms and packet gaps remain. B13 moves the service
 body into reserved SRAM, relocating infrequent MIDI setup functions into the
 existing SDRAM code slot. Transfer logic, timers and state addresses are unchanged;
 [B13 evidence](../evidence/fm1-service-sram-b13-20261115/README.md).
+B13 reduced mean poll-only service to 3.596 ms with diagnostic MIDI progress,
+but dropped 225 packets at the software queue. IOC again stalled MIDI. B14
+adds a separate 32-packet EHCI queue, primes sixteen packets, and offers a
+60-second silent poll-only probe; [B14 evidence](../evidence/fm1-queue-b14-20261115/README.md).
 Clean transport, sustained MIDI timing and converter repair remain unverified.
 See [commands](DEBUG_BRIDGE.md) and [implementation](../research/fm1-ehci.md).
 
@@ -98,13 +102,15 @@ are separated from custom ISO entries and passed to the original handler.
 Valid short packets, including 44/45-frame packets, retain their actual sample
 counts. This first profile accepts 40–46 stereo frames per packet. Corrupt,
 oversized, fractional-frame and very short packets are discarded. The bounded
-eight-packet queue drops new packets on overflow; counters record overflow,
+queue drops new packets on overflow: eight packets for OHCI and 32 for the
+single admitted EHCI owner. Counters record overflow,
 starvation, missed schedules, malformed packets and DSP failures.
 
 The original audio task consumes one quarter of each packet per 250-us call.
 Signed16 samples become left-aligned signed32 before the original converter.
 The original 44.1-kHz smoothing and adaptive conversion remain in place. Two
-packets are buffered before consuming; starvation supplies silence and waits
+packets are buffered for OHCI and sixteen for EHCI before consuming;
+starvation supplies silence and waits
 for that buffer again. This is not a measured end-to-end latency specification.
 
 Disconnect publishes a stop request without retrying through freed USB
@@ -125,7 +131,7 @@ payload remain unchanged. Only `tools/build_firmware.py` produces firmware.
 | --- | --- |
 | `0100bee4..0100cf9c` | 4,280-byte MIDI/EHCI extension and original-function trampolines |
 | `01017868..01017e28` | Existing 1,472-byte MIDI state |
-| `607f0000..607f37ac` | 14,252-byte audio extension and bridge commands |
+| `607f0000..607f3820` | 14,368-byte audio extension and bridge commands |
 | `607f4000..607f9880` | Unmoved 22,656-byte audio state, descriptors and packet buffers |
 | `607f9880..607f9930` | 176-byte diagnostic state |
 | `607f9930..607fa564` | 3,124-byte bridge commands, replies and snapshots |
@@ -136,6 +142,7 @@ payload remain unchanged. Only `tools/build_firmware.py` produces firmware.
 | `607fafb4..607fb254` | 672-byte lifetime MIDI pipeline counters |
 | `607fb254..607fb258` | Four-byte next poll eligibility tick |
 | `607fb258..607fb288` | 48-byte worker elapsed-time cache |
+| `607fb288..607fca08` | 6,016-byte queue for the single EHCI stream, 32 packets |
 
 The USB processor's original general heap spans `604b1178..60800000`.
 The builder reduces its upper bound to `607f0000`, reserving 64 KiB in existing
@@ -250,7 +257,7 @@ audio ports to retain their addresses and buffer layout.
 The full reproduction gate checks this evidence against the actual USB image
 and both inserted USB code artifacts. No hardware probe runs in reproduction.
 
-For the authorized B13 MX-1 test:
+For the authorized B14 MX-1 test:
 
 1. Retain the last working image and settings backup. Copy the candidate as
    **`MX1_UPD.BIN`**, without a hyphen, to the updater volume. The original
@@ -259,12 +266,12 @@ For the authorized B13 MX-1 test:
    monitoring down. Check normal analog mixing first.
 3. Connect the FM-1 directly to HOST 3, which supplies bus power. Record the
    exact wiring, power arrangement, system rate and candidate hash.
-4. Keep the FM-1 bridge near the Mac. Confirm build 189 and MIDI pages 3/4,
+4. Keep the FM-1 bridge near the Mac. Confirm build 190 and MIDI pages 3/4,
    then run probes 1, 2, 3 and 9 sequentially, waiting for each result. Probe 9
-   stops after nominally two seconds. Inspect retained pages 5–14 after stop;
+   stops after nominally two seconds. Inspect retained pages 5–19 after stop;
    a MIDI timeout does not imply that the command was not executed. For comparison,
    stop/select alt0, repeat setup and use probe 8 with its preceding IOC policy.
-5. After resolving the short transport/MIDI failure, explicitly start probe 7
+5. After resolving the short transport/MIDI failure, explicitly start probe 10
    for the longer experiment. Select mode 0 to test conversion, then compare the FM-1's quiet stereo tone
    with MX converter mode 2. Keep USB3
    at Auto/USB3. Record meter activity, sound, stereo separation and failures.

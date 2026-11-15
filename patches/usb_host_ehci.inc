@@ -14,6 +14,7 @@ typedef struct {
     volatile uint32_t poll_pending;
 } EhciAudio;
 __attribute__((section(".host_ehci_state"))) static EhciAudio ehci;
+static unsigned ehci_owned(AudioPort *p) { return ehci.owner==p; }
 /* B8: worker-owned copies of the original asynchronous request state. No
  * retained pointer is followed by MIDI or after the worker's live walk. */
 typedef struct {
@@ -187,8 +188,8 @@ static void ehci_packet(AudioPort *p,unsigned i,unsigned status) {
     /* Missed uframes, split errors and active descriptors are never samples. */
     if((status&0xfc) || bytes<160 || bytes>184 || (bytes&3)) { p->malformed++; return; }
     unsigned w=p->write_count;
-    if(w-p->read_count>=NPACKET) { p->overflow++; return; }
-    Packet *q=&p->packets_in[w&(NPACKET-1)]; unsigned nonzero=0;
+    if(w-p->read_count>=ENPACKET) { p->overflow++; return; }
+    Packet *q=&ehci_packets[w&(ENPACKET-1)]; unsigned nonzero=0;
     for(unsigned j=0;j<bytes/2;j++) {
         int sample=p->td[i].pcm[j]; q->pcm[j]=(int16_t)sample;
         unsigned magnitude=sample<0?(unsigned)-sample:(unsigned)sample;

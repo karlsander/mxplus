@@ -22,6 +22,9 @@ def verify(image,h,syms):
         f=h['midi_sdram_helpers'][name]
         assert f['runtime_address']==syms[name]
         assert h['audio_code_start']<=syms[name]&~1<(syms[name]&~1)+f['bytes']<=h['audio_code_start']+h['audio_code_bytes']
+    assert h['ehci_packets_start']==syms['ehci_packets']==0x607fb288
+    assert h['ehci_packets_bytes']==32*188
+    assert h['service_timing_start']+h['service_timing_bytes']==h['ehci_packets_start']
 
     class Ehci(Audio):
         def __init__(self,port=0):
@@ -115,7 +118,54 @@ def verify(image,h,syms):
     assert q.u32(p+80)==q.u32(p+84)==0
     assert m.read(0x4000b420,512)==q.original_chain
     assert q.state(59)==1234 and q.state(60)==2345 and q.state(61)==300
-    assert sum(len(x[2])//2 for x in q.dsp)==sum(45 if ms%10==9 else 44 for ms in range(299))
+    # EHCI now primes sixteen packets; the original OHCI two-packet pacing
+    # regression remains unchanged in host_audio_verify.py.
+    assert sum(len(x[2])//2 for x in q.dsp)==sum(45 if ms%10==9 else 44 for ms in range(285))
+    # A stalled consumer must retain 32 completed packets, drop only the next
+    # full-queue arrivals, and preserve FIFO stereo data across uint32 wrap.
+    burst=Ehci(port=2);bm=burst.m;bp=burst.p;assert burst.start(frame=0,poll_only=1)==0
+    queue=syms['ehci_packets'];legacy=bp+TD+17*TDSTRIDE
+    guard=bytes([0xa5])*(8*188);bm.write(legacy,guard)
+    bm.write(bp+52,P(0xfffffff0,0xfffffff0))
+    bm.write(syms['debug_ports']+2*780+276,P(3,10000))
+    produced=0
+    for f in range(1,41):
+        for i in range(16):
+            if burst.state(3+i)==f:
+                produced+=1;frames=44+(produced&1)
+                burst.complete(i,frames)
+                bm.write(bp+TD+i*TDSTRIDE+32,struct.pack('<'+'hh'*frames,*([produced,-produced]*frames)))
+        burst.advance(f)
+    assert burst.u32(bp+72)==32 and burst.u32(bp+80)>0
+    assert burst.u32(bp+52)==16 and burst.u32(bp+56)==0xfffffff0
+    # A second claimed port cannot read the single EHCI owner's queue.
+    other=syms['mx1_audio_ports'];bm.write(other+16,P(1,1,2));bm.write(other+52,P(16,0))
+    bm.write(syms['diagnostics']+12,P(1))
+    expected=[];observed=[]
+    for number in range(1,33):
+        frames=44+(number&1)
+        for quarter in range(4):
+            count=frames*(quarter+1)//4-frames*quarter//4
+            burst.call('mx1_audio_tick',quarter*2)
+            observed+=list(struct.unpack('<'+'i'*(count*2),bm.read(bp+5472,count*8)))
+        expected += [number*65536,-number*65536]*frames
+    assert observed==expected and burst.u32(bp+56)==16 and burst.u32(other+56)==0
+    assert bm.read(legacy,len(guard))==guard
+    burst.call('mx1_audio_tick',0)
+    assert burst.u32(bp+64)==0 and burst.u32(bp+84)==1
+    # Re-prime only at sixteen published packets; stale storage is not data.
+    bm.write(bp+52,P(31));burst.call('mx1_audio_tick',0)
+    assert burst.u32(bp+64)==0 and burst.u32(bp+56)==16
+    bm.write(bp+52,P(32));burst.call('mx1_audio_tick',0)
+    assert burst.u32(bp+64)==1 and burst.u32(bp+56)==16
+    burst.call('mx1_ehci_cancel',DEV,EP);burst.advance(42)
+    assert burst.u32(bp+24)==0
+    # The queued status callback still owns its latch after DMA retirement.
+    # Reopening must wait for the modeled worker to deliver that callback.
+    bm.write(bp+16,P(1,1));assert burst.start(frame=44,poll_only=1)==0xfffffff7
+    burst.poll_done();assert burst.start(frame=44,poll_only=1)==0
+    assert bm.read(bp+52,16)==P(0,0,0,0)
+    burst.call('mx1_audio_tick',0);assert burst.u32(bp+64)==0
     # Readout belongs to EHCI pages 5..7; cached raw layout includes live table.
     raw=syms['debug_ports']+308
     assert m.read(raw,12)==P(HC,REGS,table)
@@ -343,13 +393,14 @@ def verify(image,h,syms):
     # B7 waits for real input priming before entering that original gate.
     for i in range(8):q.call('mx1_audio_tick',i*2)
     assert q.u32(sd+4)==0 and q.u32(q.p+92)==0
-    q.complete(0);q.complete(1);q.advance(2047)
+    for i in range(16):q.complete(i)
+    q.advance(13)
     q.call('mx1_audio_tick',0)
     assert q.u32(sd+4)==1 and q.u32(sd+8)==0 and q.u32(sd+12)==0xffffffff
     assert q.u32(sd+16)==7 and q.u32(sd+24+11*4)==gate
     assert q.u32(q.p+92)==1 and q.u32(q.p+16)==0 and q.u32(q.p+24)==2
-    q.advance(0);assert q.u32(q.p+24)==3
-    q.advance(2);assert q.u32(q.p+20)==0
+    q.advance(14);assert q.u32(q.p+24)==3
+    q.advance(16);assert q.u32(q.p+20)==0
     # B8 captures original bulk wrappers and QH/qTDs in worker context. Run
     # original request construction and original indexed-list traversal;
     # allocation, controller DMA and IRQ delivery remain explicit models.
@@ -476,6 +527,7 @@ def verify(image,h,syms):
         'poll_only_without_iso_ioc_or_controller_writes':True,
         'poll_callback_preemption_model':preemptions,'poll_completion_relative_gap_and_wrap':True,
         'sram_helpers_and_cached_service_timing':True,
+        'ehci_32_packet_queue_stereo_fifo_wrap_prefill_and_owner':True,
         'admission_negative_cases':negatives,'original_controller_status_queue_and_worker':True,
         'cases':['actual stock frame-list replacement and dummy iTD chain','guarded EHCI bind trampoline',
                  'split endpoint/hub/port/masks and DMA alignment','2048-frame and 256-slot wrap',

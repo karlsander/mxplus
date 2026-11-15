@@ -79,10 +79,13 @@ def integrate(original,root,out,env,jump):
         poll_address=poll_state['st_value']; poll_bytes=poll_state['st_size']
         timing=tab.get_symbol_by_name('service_timing')[0]
         timing_address=timing['st_value']; timing_bytes=timing['st_size']
+        packets=tab.get_symbol_by_name('ehci_packets')[0]
+        packets_address=packets['st_value']; packets_bytes=packets['st_size']
         if (async_bytes!=872 or async_address+async_bytes!=pipeline_address or pipeline_bytes!=672 or
             pipeline_address+pipeline_bytes!=poll_address or poll_bytes!=4 or
             poll_address+poll_bytes!=timing_address or timing_bytes!=48 or
-            timing_address+timing_bytes!=0x607f4000+audio_size):
+            timing_address+timing_bytes!=packets_address or packets_bytes!=32*188 or
+            packets_address+packets_bytes!=0x607f4000+audio_size):
             raise FormatError('Invalid asynchronous diagnostic placement')
         fast_helpers={}
         for name in ('ehci_path','ehci_arm','ehci_unlink','ehci_service'):
@@ -158,6 +161,7 @@ def integrate(original,root,out,env,jump):
             'midi_pipeline_start':pipeline_address,'midi_pipeline_bytes':pipeline_bytes,
             'poll_after_start':poll_address,'poll_after_bytes':poll_bytes,
             'service_timing_start':timing_address,'service_timing_bytes':timing_bytes,
+            'ehci_packets_start':packets_address,'ehci_packets_bytes':packets_bytes,
             'ehci_sram_helpers':fast_helpers,
             'midi_sdram_helpers':cold_helpers,
             'original_sdram_heap':[0x604b1178,0x60800000],'reserved_sdram_heap':[0x604b1178,0x607f0000],

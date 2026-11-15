@@ -2,7 +2,7 @@
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
   "patched_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
-  "candidate_container_sha256": "af898612a1af5f6894273343d8145001c5056f9b5f382df47d52f5d7a99e8f58",
+  "candidate_container_sha256": "e5f8404ca65ae315b782a41d90d3a1ec07bb23dbcca5a69fba08ee2e65036fd2",
   "extension_sha256": "fc4ed00c31546c74a84dbaece0ac9fda8fad28a3c21f19038e123617b945bbeb",
   "groups": [
     {
@@ -2420,7 +2420,7 @@
       "status": "pass",
       "details": {
         "status": "pass",
-        "patched_app_sha256": "be0f5bdd04bb8c95d8239d7c4ffd4ac24cf89781fc7395ad824714fe614b7442",
+        "patched_app_sha256": "fa2cc9ced074a4a5dd70d9ff1d9470b08de799203f1ea4d558eb2edccf276cd5",
         "hardware_access": false,
         "limits": "instruction checks only; USB/DSP/RTOS boundaries modeled",
         "setup": {
@@ -2625,6 +2625,7 @@
           ],
           "poll_completion_relative_gap_and_wrap": true,
           "sram_helpers_and_cached_service_timing": true,
+          "ehci_32_packet_queue_stereo_fifo_wrap_prefill_and_owner": true,
           "admission_negative_cases": [
             [
               "0x40010000",
@@ -2682,7 +2683,7 @@
         "profile_negative_cases": 188,
         "heap_reservation_bytes": 65536,
         "iso_descriptors_per_port": 17,
-        "audio_state_bytes": 29320,
+        "audio_state_bytes": 35336,
         "cases": [
           "guarded complete USB patch accounting",
           "startup placement",

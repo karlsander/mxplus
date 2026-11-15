@@ -81,7 +81,7 @@ requests. Overlong private frames are consumed through F7, not forwarded as musi
 | 2 | Page 0–19 | Pages 0–2 and 5–8: page, snapshot sequence, raw fields; pages 3–4: page, fields; pages 9–19 below |
 | 3 | Mode 0–3 | Selected mode |
 | 4 | none | Fresh snapshot sequence after worker completion |
-| 5 | Step 1–9 | Accepted step; completion is reported by status |
+| 5 | Step 1–10 | Accepted step; completion is reported by status |
 
 B6 step 7 initializes the original converter context but starts with converter
 submission bypassed. Mode 3 drains PCM without submitting it to the converter
@@ -103,11 +103,17 @@ and reads final FM status after alt0. First-failure pages remain first-since-boo
 whereas async snapshots reset on each start. `--extended` selects the separate
 longer tone/converter experiment. [B9 evidence](../evidence/fm1-poll-b9-20261115/README.md).
 
+B14 step 10 uses the same poll-only policy as step 9, with the existing
+240,000-tick (nominal 60-second) bypass expiry. `--long-silent` observes it
+without tone or converter submission; it cannot combine with `--extended`
+or `--compare-ioc`. The explicit `--extended` converter sequence now starts
+through step 10 as well. Default operation remains the short silent step 9.
+
 Result 0 succeeds; 1 is unsupported command/arguments; 2 is unavailable or a
 concurrent snapshot. Refresh failures return the original absolute queue/worker
 error. Probe queue failure is result 3. Invalid framing/checksum is silent and
 increments errors. B1 is 177, B2 is 178, B3 is 179, B4 is 180, B5 is 181,
-B6 is 182, B7 is 183, B8 is 184, B9 is 185, B10 is 186, B11 is 187, B12 is 188 and current MX-1 candidate B13 is 189.
+B6 is 182, B7 is 183, B8 is 184, B9 is 185, B10 is 186, B11 is 187, B12 is 188, B13 is 189 and current MX-1 candidate B14 is 190.
 
 Status after result: build, port, stage, result_code, controller, phase, control,
 flags, cc, frame, packets, malformed, overflow, underrun, missed, dsp_errors,
@@ -241,7 +247,7 @@ or teardown, 5A worker gap/other periodic activity, 5B insertion admission,
 destroy did not establish a halted controller. On EHCI, status control is raw
 USBCMD, flags is the linked-slot mask and cc is the last siTD status byte.
 
-Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 189,
+Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 190,
 startup stage, RX flags, TX flags, last RX result, last TX result. Flags are busy
 in bit 0, ready in bit 1, fault in bits 8 onward. This fits in one 60-byte USB
 MIDI transfer. B3 wakes the TX task every 4,096 audio-task calls, even with no
@@ -264,12 +270,12 @@ original decoded 2b1f4 → runtime 01000300, length bbe4. The builder records ev
 changed original byte, callback target, inserted source, startup copy/zero and hash.
 
 - Hot extension: 0100bee4..0100cf9c, 4,280 bytes; writable hot state remains 1,472 bytes.
-- Audio/debug code: 607f0000..607f37ac, 14,252 bytes, within the existing 16-KiB code slot.
+- Audio/debug code: 607f0000..607f3820, 14,368 bytes, within the existing 16-KiB code slot.
 - Audio/DMA state remains 607f4000..607f9880; the A1 diagnostics remain 607f9880..607f9930.
 - Bridge state follows at 607f9930..607fa564 (3,124 bytes); EHCI state adds 264
   bytes at 607fa564..607fa66c. B6 adds 576 bytes of converter snapshots at
   607fa66c..607fa8ac. Failure/async records and B10 pipeline counters follow
-  through 607fb254; B11 appends its four-byte deadline through 607fb258; B12 adds 48 bytes of service timing through 607fb288. The whole 29,320-byte
+  through 607fb254; B11 appends its four-byte deadline through 607fb258; B12 adds 48 bytes of service timing through 607fb288. B14 appends its 6,016-byte EHCI packet queue through 607fca08. The whole 35,336-byte
   state stays in the already reserved 64-KiB SDRAM region; allocator bounds are unchanged.
 
 The original main application, boot programs, updater and panel payload are
@@ -361,3 +367,12 @@ enumeration/open/close bodies move to the existing SDRAM code reservation;
 steady MIDI polling, enqueue and completion code remain in SRAM. No command,
 timer, queue policy or state address changes. Page 19 remains the comparison
 metric, including preemption. [B13 evidence](../evidence/fm1-service-sram-b13-20261115/README.md).
+
+## B14 queue buffering
+
+The single EHCI stream uses a 32-packet queue appended after page 19's cache.
+Only its owner may consume it. Sixteen published packets prime/re-prime the
+consumer, increasing buffering delay to absorb worker batches. This is not
+measured end-to-end latency or a guarantee of continuous audio. OHCI keeps its
+eight-entry queue and two-packet priming; all existing state and DMA addresses
+remain fixed. [B14 evidence](../evidence/fm1-queue-b14-20261115/README.md).

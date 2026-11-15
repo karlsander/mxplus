@@ -13,6 +13,8 @@
 #define PTR(p,o) ((uint8_t *)(uintptr_t)U32(p,o))
 #define NTD 17
 #define NPACKET 8
+#define ENPACKET 32
+#define EPREFILL 16
 static void barrier(void) { __asm__ volatile("dmb" ::: "memory"); }
 static void zero(void *v,unsigned n) { uint8_t *p=v; while(n--) *p++=0; }
 static unsigned le16(const uint8_t *p) { return p[0]|(unsigned)p[1]<<8; }
@@ -56,6 +58,9 @@ typedef struct __attribute__((aligned(32))) {
     int16_t pcm[96]; /* 184 bytes advertised; padding keeps the next ITD aligned. */
 } IsoTD;
 typedef struct { uint32_t frames; int16_t pcm[92]; } Packet;
+/* One EHCI stream is admitted at a time. Keep all established AudioPort/DMA
+ * addresses fixed; this larger worker-to-audio queue appends in reserved RAM. */
+__attribute__((section(".host_packet_state"))) static Packet ehci_packets[ENPACKET];
 typedef struct __attribute__((aligned(32))) {
     /* First 16 bytes are an OHCI ED. Remaining fields match stock ED list ABI. */
     volatile uint32_t control, tail, head, next;
@@ -148,6 +153,7 @@ static void debug_capture(AudioPort *p);
 static void debug_done(void *,void *,unsigned,int,uintptr_t);
 static void debug_probe(uint8_t *event);
 static void ehci_tick(void);
+static unsigned ehci_owned(AudioPort *p);
 static AudioDiagnostic *diagnostic(AudioPort *p) { return &diagnostics[p-mx1_audio_ports]; }
 static void stage(AudioPort *p,unsigned value,int result) {
     AudioDiagnostic *d=diagnostic(p);
@@ -190,7 +196,7 @@ static void try_open(uint8_t *dev,uint8_t *r) {
     /* EHCI starts only through an explicit normal or transport-only probe. */
     if(U16(dev,0x4a)!=0 && !(U16(dev,0x4a)==1 &&
        (debug_ports[port].probe==5 || debug_ports[port].probe==7 ||
-        debug_ports[port].probe==8 || debug_ports[port].probe==9))) {
+        debug_ports[port].probe==8 || debug_ports[port].probe==9 || debug_ports[port].probe==10))) {
         stage(p,0x48,-5); return;
     }
     for(unsigned i=0;i<U16(r,0x20) && i<8;i++) {
@@ -211,7 +217,7 @@ static void try_open(uint8_t *dev,uint8_t *r) {
         FN(0x600079ef,void(*)(unsigned,unsigned,unsigned))(port,1,44100);
         stage(p,5,0);
         int e=FN(0x6000c277,int(*)(void*,void*,unsigned,unsigned,unsigned,void*,unsigned,void*,uintptr_t,unsigned))
-            (dev,ep,debug_ports[port].probe==9,0,0,0,0,(void*)start_done,(uintptr_t)p,0);
+            (dev,ep,debug_ports[port].probe==9 || debug_ports[port].probe==10,0,0,0,0,(void*)start_done,(uintptr_t)p,0);
         if(e) { stage(p,0x45,e); p->wanted=0; p->claimed=0; }
         return;
     }
@@ -520,11 +526,13 @@ void mx1_audio_tick(unsigned microframe) {
             if(d->mode==3) { cancel(p); post(p,6); continue; }
             d->mode=0;
         }
+        unsigned is_ehci=diagnostic(p)->controller==1;
+        if(is_ehci && !ehci_owned(p)) continue;
         unsigned r=p->read_count, available=p->write_count-r;
-        if(!p->primed && available>=2) { p->primed=1; p->quarter=0; }
+        if(!p->primed && available>=(is_ehci?EPREFILL:2)) { p->primed=1; p->quarter=0; }
         unsigned frames=11;
         if(p->primed && available) {
-            Packet *q=&p->packets_in[r&(NPACKET-1)]; barrier();
+            Packet *q=is_ehci?&ehci_packets[r&(ENPACKET-1)]:&p->packets_in[r&(NPACKET-1)]; barrier();
             unsigned first=q->frames*p->quarter/4, end=q->frames*(p->quarter+1)/4;
             frames=end-first;
             for(unsigned j=0;j<frames*2;j++) p->samples[j]=(int32_t)q->pcm[first*2+j]*65536;

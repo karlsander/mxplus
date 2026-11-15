@@ -9,11 +9,11 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`af898612a1af5f6894273343d8145001c5056f9b5f382df47d52f5d7a99e8f58`.
-B12's two short poll-only runs returned diagnostic MIDI while accepting
-1,293/1,287 packets, but elapsed service averaged 17.73/18.55 ms and gaps remain.
-B13 moves the unchanged service body into reserved SRAM, exchanging space with
-infrequent MIDI setup functions; [B13 evidence](../evidence/fm1-service-sram-b13-20261115/README.md).
+`e5f8404ca65ae315b782a41d90d3a1ec07bb23dbcca5a69fba08ee2e65036fd2`.
+B13's short poll-only run returned diagnostic MIDI and reduced mean service
+elapsed time to 3.596 ms, but dropped 225 packets at the software queue.
+B14 adds a 32-packet EHCI queue with sixteen-packet priming and a longer silent
+poll-only probe; [B14 evidence](../evidence/fm1-queue-b14-20261115/README.md).
 It retains B5's explicitly started EHCI split-ISO experiment; [implementation and limits](../research/fm1-ehci.md).
 It retains B4’s isolation of the MIDI TX error −20 by using untimed writes only for
 the matched FM-1 debug connection; [evidence and limits](../evidence/fm1-midi-timeout-b4-20261106/README.md).

@@ -41,7 +41,9 @@ not sustained or comprehensive validation.
    remain and IOC still stalls. B12 accepted 1,293/1,287 packets with diagnostic
    MIDI progress, but mean elapsed service was 17.73/18.55 ms. B13 exchanges
    infrequent MIDI setup code for the unchanged service body in reserved SRAM.
-   Clean sustained transport is unverified.
+   It reduced mean poll-only service to 3.596 ms, but dropped 225 packets at
+   the software queue. B14 enlarges that queue, primes sixteen packets and adds
+   a longer silent poll-only probe. Clean sustained transport is unverified.
    Other host-audio
    coexistence needs shared bandwidth/TT admission beyond B5. The computer
    probe and offline tests do not establish an MX-1 audio result.

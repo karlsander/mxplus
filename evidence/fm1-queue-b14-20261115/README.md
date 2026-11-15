@@ -74,7 +74,9 @@ checks probe 10's poll-only flag and long bypass expiry alongside probes 8/9.
 USB/DSP/MMIO, allocation and RTOS delivery remain models. These checks do not
 measure real-time scheduling or establish converter/audio behavior. All 17
 offline stages passed on the full rerun, followed by the current-artifact gate.
-Committed-artifact and browser-patcher gates are pending.
+The committed-artifact gate and all six browser-patcher tests also passed
+for code/artifact commit `71bfedc22d8c9461990f344e3eb5398127bdc172`.
+Hosted B14 verification is pending.
 
 B14 has not been installed. Run the same short silent poll-only probe first;
 compare packet/error deltas, MIDI progress and page 19 timings. Use the longer

@@ -1,7 +1,7 @@
 # Mainline integration
 
 The only maintained custom firmware combines channel routing, mastering editing, USB-B UAC2 and experimental USB-MIDI 1.0.
-USB-host MIDI is an offline experiment with sync output prioritized and incoming host sync blocked; see [host MIDI](USB_HOST_MIDI.md). Generic host audio remains excluded.
+USB-host MIDI is experimental with sync output prioritized and incoming host sync blocked; see [host MIDI](USB_HOST_MIDI.md) for the earlier FM-1 output observation and current limits. Generic host audio remains excluded.
 Generators and their SELECT editor are removed; their findings are in
 [the DSP handoff](GENERATOR_RESEARCH.md).
 The temporary d001 diagnostic menu and SDRAM reservation are absent from this build. Routing now uses scene
@@ -9,7 +9,9 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`54d59222e51b44c3583e60c52400f06fc8e3d66e44ecb47e861f2333000250e1`.
+`cde8a1039be813d6eba7cddb6b10c6eb22b72dd8507d46c3d7c842fcf99f2418`.
+It accepts [normal short USB-MIDI input](../evidence/host-midi-short-packets-20261115/README.md)
+without including the separate experimental host-audio/debug path.
 It fixes [host MIDI startup on an already-active alternate zero](../evidence/host-midi-alt-zero-20261104/README.md).
 It retains the fix for the [held-key range that blocked mastering entry](../evidence/mastering-key-range-20261104/README.md).
 It restores [long MASTERING entry and a visible selected preset pad](../evidence/mastering-hold-light-20261104/README.md)
@@ -24,10 +26,10 @@ require physical acceptance.
 ## Memory and binary integration
 
 The intervals below describe the **main processor**. The independent USB processor
-adds 2,772 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
+adds 2,784 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
 see [host placement and allocator evidence](USB_HOST_MIDI.md#integration-and-memory).
 
-USB-host MIDI additionally modifies the USB application. Boot programs, updater and panel-controller payload remain byte-identical to stock. The USB application retains the alternate-zero host-MIDI startup fix in PR #19. The main application now restores timed mastering entry and corrects RGB preset-pad output; their hardware acceptance remains open.
+USB-host MIDI additionally modifies the USB application. Boot programs, updater and panel-controller payload remain byte-identical to stock. The USB application adds the short-packet receive option to the alternate-zero startup fix. The main application remains byte-identical to PR #20's timed mastering entry and RGB preset-pad correction; their hardware acceptance remains open.
 The descriptor, rate and reply buffer in the retired USB-B build occupied
 read-only code SRAM; the combined build fixes that placement before testing.
 

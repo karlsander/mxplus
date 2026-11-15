@@ -14,6 +14,68 @@ typedef struct {
     volatile uint32_t poll_pending;
 } EhciAudio;
 __attribute__((section(".host_ehci_state"))) static EhciAudio ehci;
+/* B8: worker-owned copies of the original asynchronous request state. No
+ * retained pointer is followed by MIDI or after the worker's live walk. */
+typedef struct {
+    volatile uint32_t sequence;
+    uint32_t tick, phase, events, polls, event_bits, errors, count;
+    uint32_t command, status, interrupt, frame, midi[2][26];
+} AsyncDiagnostic;
+typedef struct {
+    uint32_t started, last_tick, events, polls, event_bits;
+    AsyncDiagnostic first, last;
+} AsyncState;
+__attribute__((section(".host_async_state"))) static AsyncState async_diagnostic;
+_Static_assert(sizeof(AsyncState)==532,"Async diagnostic placement");
+static int async_ram(uintptr_t p,unsigned n) {
+    return !(p&3) && p>=0x60400000 && p<=0x607f0000-n;
+}
+static void async_capture(AudioPort *p,unsigned force) {
+    AsyncState *s=&async_diagnostic; AsyncDiagnostic *d=&s->last;
+    if(!force && (uint32_t)(debug_ticks-s->last_tick)<128) return;
+    s->last_tick=debug_ticks;
+    d->sequence++; barrier();
+    d->tick=debug_ticks; d->phase=p->phase; d->events=s->events;
+    d->polls=s->polls; d->event_bits=s->event_bits; d->errors=0;
+    d->count=U32(p->controller,0x8c);
+    d->command=V32(ehci.regs,0); d->status=V32(ehci.regs,4);
+    d->interrupt=V32(ehci.regs,8); d->frame=V32(ehci.regs,12);
+    zero(d->midi,sizeof d->midi);
+    /* Original 600111ee publishes 0x48-byte wrappers in HC+84; HC+8c is
+     * its count. Original 6000ac44 returns the indexed list member. Both
+     * construction and traversal are exercised by the instruction tests. */
+    if(d->count>16) d->errors|=1;
+    else for(unsigned i=0;i<d->count;i++) {
+        uint8_t *w=FN(0x6000ac45,uint8_t *(*)(void*,unsigned))(p->controller+0x84,i);
+        if(!async_ram((uintptr_t)w,0x48)) { d->errors|=2; break; }
+        if(PTR(w,0x30)!=p->dev || w[0x10]!=2 || w[0xe]!=1 || (w[0xf]!=0 && w[0xf]!=128)) continue;
+        unsigned direction=w[0xf]?0:1; uint32_t *v=d->midi[direction];
+        if(v[0]) { d->errors|=64; continue; }
+        v[0]=(uintptr_t)w; v[1]=U32(w,0x34); v[4]=U32(w,0x28); v[5]=U32(w,0x2c);
+        v[22]=U32(w,8); v[23]=U32(w,12);
+        uint8_t *priv=PTR(w,0x44);
+        if(!async_ram((uintptr_t)priv,16)) { d->errors|=4; continue; }
+        uint8_t *qh=PTR(priv,0), *list=PTR(priv,4); unsigned n=U32(priv,8);
+        v[2]=(uintptr_t)qh; v[21]=n;
+        if(((uintptr_t)qh&63) || (uintptr_t)qh<0x60480800 || (uintptr_t)qh>0x60481c80) { d->errors|=8; continue; }
+        for(unsigned j=0;j<12;j++) v[6+j]=V32(qh,j*4);
+        if(!n || n>4 || !async_ram((uintptr_t)list,n*4)) { d->errors|=16; continue; }
+        uint8_t *td=PTR(list,0), *last=PTR(list,(n-1)*4);
+        v[3]=(uintptr_t)td; v[24]=(uintptr_t)last;
+        if(((uintptr_t)td&31) || ((uintptr_t)last&31) ||
+           !async_ram((uintptr_t)td,12) || !async_ram((uintptr_t)last,12)) { d->errors|=32; continue; }
+        for(unsigned j=0;j<3;j++) v[18+j]=V32(td,j*4);
+        v[25]=V32(last,8);
+    }
+    barrier(); d->sequence++;
+    /* Keep one snapshot after approximately one second as well as the last
+     * running sample. No claim that task ticks measure exact elapsed time. */
+    if(!s->first.sequence && (uint32_t)(debug_ticks-s->started)>=4000) {
+        s->first.sequence=1; barrier();
+        for(unsigned j=1;j<sizeof *d/4;j++) ((uint32_t *)&s->first)[j]=((uint32_t *)d)[j];
+        barrier(); s->first.sequence=2;
+    }
+}
 static unsigned ehci_frame(void) { return (V32(ehci.regs,12)>>3)&2047; }
 static int ehci_current(AudioPort *p) {
     uint8_t *driver=PTR((void*)0x6002b0e8,4);
@@ -122,6 +184,7 @@ static void ehci_service(unsigned event) {
     if(!p || !p->phase || !ehci_current(p)) return;
     unsigned now=ehci_frame(),sts=V32(ehci.regs,4);
     ehci.events++;
+    if(p->phase==2) async_capture(p,!p->wanted);
     if(p->phase==2) {
         if(!p->wanted) ehci_stop(p,0);
         else if((event&16) || (sts&0x1010)) ehci_stop(p,0x59);
@@ -152,6 +215,7 @@ static int ehci_begin(AudioPort *p) {
     if(!driver || !PTR(driver,0x40) || U16(p->dev,0x4a)!=1 || U16(p->dev,0x58)) return -5;
     p->controller=PTR(driver,0x40);
     zero(&ehci,sizeof ehci); ehci.owner=p; ehci.regs=PTR(p->controller,4);
+    zero(&async_diagnostic,sizeof async_diagnostic); async_diagnostic.started=debug_ticks;
     ehci.table=(uint8_t *)(uintptr_t)(V32(ehci.regs,20)&~4095u);
     DebugPort *d=&debug_ports[p-mx1_audio_ports];
     uint8_t *hub=PTR(p->dev,0xec), *parent=hub?PTR(hub,4):0;
@@ -197,7 +261,7 @@ static int ehci_begin(AudioPort *p) {
 static void ehci_poll_done(unsigned controller,unsigned status,uintptr_t token) {
     (void)status;(void)token;
     ehci.poll_pending=0; barrier();
-    if(controller==1) ehci_service(0);
+    if(controller==1) { async_diagnostic.polls++; ehci_service(0); }
 }
 static void ehci_tick(void) {
     AudioPort *p=ehci.owner;
@@ -234,7 +298,10 @@ int mx1_ehci_cancel(void *dev,void *ep) {
     return FN(0x600113af,int(*)(void*,void*))(dev,ep);
 }
 int mx1_ehci_event(unsigned controller,unsigned event) {
-    if(controller==1) ehci_service(event);
+    if(controller==1) {
+        async_diagnostic.events++; async_diagnostic.event_bits|=event;
+        ehci_service(event);
+    }
     return FN(0x60011be5,int(*)(unsigned,unsigned))(controller,event);
 }
 int mx1_ehci_reset(unsigned controller,unsigned operation) {

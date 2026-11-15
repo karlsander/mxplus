@@ -29,7 +29,10 @@ not sustained or comprehensive validation.
    startup and converter snapshots: its long run accepted 52,631 packets with
    scheduling gaps and MIDI loss until reconnect; a separate muted converter
    run failed on a nonzero gate after two successful calls. Resolve these
-   before claiming audible or sustained audio. Other host-audio
+   before claiming audible or sustained audio. B7 confirms packet delivery but
+   still rejects the primed converter; its retained queue-overflow record and
+   MIDI recovery after expiry motivate B8 asynchronous descriptor snapshots.
+   Other host-audio
    coexistence needs shared bandwidth/TT admission beyond B5. The computer
    probe and offline tests do not establish an MX-1 audio result.
 6. Consider small control/routing improvements individually. The internal code

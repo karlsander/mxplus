@@ -359,7 +359,7 @@ def verify_debug_bridge(image,h,syms,c):
             words.extend(struct.unpack('<'+'I'*n,t.m.read(out,n*4)))
         raise AssertionError('unbounded reply')
     wakes=len(t.wakes);receive(frame(1));assert t.wakes[wakes:]==[[2,1]]
-    seq,op,v=decode(transmit());assert (seq,op,v[:4])==(12,65,[0,0xb7,port,3])
+    seq,op,v=decode(transmit());assert (seq,op,v[:4])==(12,65,[0,0xb8,port,3])
     receive(frame(2,[0]));assert decode(transmit())[2]==[2] # no controller snapshot yet
     receive(frame(2,[9]));assert decode(transmit())[2]==[2] # no RX failure
     failure_seq=syms['mx1_midi_failures']+port*232
@@ -498,7 +498,7 @@ def verify_debug_bridge(image,h,syms,c):
     t.bind_initial();t.setup();ep=t.endpoints[t.nodes[-1],128];tx=t.endpoints[t.nodes[-1],0]
     assert t.state()==5 and not t.audio_requests and not t.initialized
     assert [x[1:5] for x in t.controls]==[[1,11,0,2]]
-    receive(frame(1));v=decode(transmit())[2];assert v[1:7]==[0xb7,port,0x48,5,1,0]
+    receive(frame(1));v=decode(transmit())[2];assert v[1:7]==[0xb8,port,0x48,5,1,0]
     receive(frame(2,[3]));topology=decode(transmit())[2]
     assert topology==[0,3,1,3,0,0,0x20018000,parent,1,2,0x400,0x1234,0x5678,1]
     t.drain();t.poll(0)
@@ -552,6 +552,14 @@ def verify_debug_bridge(image,h,syms,c):
     assert t.m.read(pp+16,8)==P(1,1)
     receive(frame(5,[6]));transmit();t.m.write(EVENT,t.events[-1]);t.checked(syms['mx1_audio_ready'],EVENT)
     t.m.write(pp+20,P(0,0))
+    # B8 short transport-only probe expires after 8,000 audio task calls.
+    t.m.write(syms['debug_ticks'],P(123))
+    receive(frame(5,[8]));assert decode(transmit())[2]==[0,8]
+    t.m.write(EVENT,t.events[-1]);t.checked(syms['mx1_audio_ready'],EVENT)
+    assert len(t.audio_requests)==3
+    assert t.m.read(syms['debug_ports']+port*780+276,8)==P(3,8123)
+    receive(frame(5,[6]));transmit();t.m.write(EVENT,t.events[-1]);t.checked(syms['mx1_audio_ready'],EVENT)
+    t.m.write(pp+20,P(0,0))
     receive(frame(5,[4]));transmit();t.m.write(EVENT,t.events[-1]);t.checked(syms['mx1_audio_ready'],EVENT)
     t.audio_control_error=-7;receive(frame(5,[1]));transmit()
     t.m.write(EVENT,t.events[-1]);t.checked(syms['mx1_audio_ready'],EVENT)
@@ -562,13 +570,15 @@ def verify_debug_bridge(image,h,syms,c):
             u.reg_write(UC_ARM_REG_PC,u.reg_read(UC_ARM_REG_LR))
     t.m.uc.hook_add(UC_HOOK_CODE,tick_boundary)
     wakes=len(t.wakes)
+    # Rebase the modeled reply timestamp after the short-probe clock fixture.
+    t.m.write(syms['debug_ports']+port*780+776,P(0))
     t.m.write(syms['debug_ticks'],P(4094));t.checked(syms['mx1_audio_tick'],0)
     assert len(t.wakes)==wakes
     t.checked(syms['mx1_audio_tick'],2);assert t.wakes[wakes:]==[[2,1]]
     n=t.checked(syms['mx1_debug_transmit'],port,tx,out)
     assert n==15
     heartbeat=decode(struct.unpack('<15I',t.m.read(out,60)))
-    assert heartbeat[:2]==(0,0x7e) and heartbeat[2][:4]==[0,0xb7,0x39,1]
+    assert heartbeat[:2]==(0,0x7e) and heartbeat[2][:4]==[0,0xb8,0x39,1]
     assert not t.checked(syms['mx1_debug_transmit'],port,tx,out)
     # User SysEx defers a due heartbeat, then the end marker releases it.
     t.m.write(out,P(0x017df004));t.checked(syms['mx1_audio_monitor'],port,tx,out,1)

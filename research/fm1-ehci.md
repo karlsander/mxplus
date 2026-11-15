@@ -12,6 +12,9 @@ masks, admission and DMA retirement below remain unchanged.
 [B7](../evidence/fm1-startup-b7-20261106/README.md) delays the first normal
 converter submission until input is primed and retains diagnostic evidence
 across reconnect; the split schedule itself is unchanged.
+[B8](../evidence/fm1-async-b8-20261115/README.md) adds worker-owned
+asynchronous descriptor snapshots and a two-second transport-only probe.
+It changes neither the split schedule nor original MIDI transfer handling.
 
 ## Original instruction findings
 

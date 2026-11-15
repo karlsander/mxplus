@@ -68,8 +68,12 @@ def integrate(original,root,out,env,jump):
         audio_state_address=tab.get_symbol_by_name('mx1_audio_ports')[0]['st_value']
         failure_state=tab.get_symbol_by_name('mx1_midi_failures')[0]
         failure_address=failure_state['st_value']; failure_bytes=failure_state['st_size']
-        if failure_bytes!=928 or failure_address+failure_bytes!=0x607f4000+audio_size:
+        async_state=tab.get_symbol_by_name('async_diagnostic')[0]
+        async_address=async_state['st_value']; async_bytes=async_state['st_size']
+        if failure_bytes!=928 or failure_address+failure_bytes!=async_address:
             raise FormatError('Invalid retained MIDI failure placement')
+        if async_bytes!=532 or async_address+async_bytes!=0x607f4000+audio_size:
+            raise FormatError('Invalid asynchronous diagnostic placement')
     m=recover(original); hot=m['operations'][0]
     if hot!={'call':0x6000000e,'kind':'copy','destination':0x01000300,'length':0xbbe4,'source':0x6002b1f4}: raise FormatError('USB startup map changed')
     if m['operations'][3]!={'call':0x60000028,'kind':'zero','destination':0x01010060,'length':0x7808}: raise FormatError('USB BSS map changed')
@@ -128,6 +132,7 @@ def integrate(original,root,out,env,jump):
             'audio_state_start':0x607f4000,'audio_state_bytes':audio_size,'audio_state_limit':0x60800000,
             'audio_ports':audio_state_address,'audio_extension_sha256':sha256(audio_blob),'audio_source':audio_source,
             'midi_failure_state_start':failure_address,'midi_failure_state_bytes':failure_bytes,
+            'async_diagnostic_start':async_address,'async_diagnostic_bytes':async_bytes,
             'original_sdram_heap':[0x604b1178,0x60800000],'reserved_sdram_heap':[0x604b1178,0x607f0000],
             'insert_offset':cut,'allocator_table_offset':0x2820c,'allocator_table_hex':table.hex(),
             'sources':{str(p.relative_to(root)):sha256(p.read_bytes()) for p in [*sources,root/'patches/usb_host_debug.inc',root/'patches/usb_host_ehci.inc',root/'patches/mainline.ld',root/'tools/host_midi_patch.py']}}

@@ -188,7 +188,7 @@ static void try_open(uint8_t *dev,uint8_t *r) {
     if(!mx1_audio_profile(c)) return;
     /* EHCI starts only through an explicit normal or transport-only probe. */
     if(U16(dev,0x4a)!=0 && !(U16(dev,0x4a)==1 &&
-       (debug_ports[port].probe==5 || debug_ports[port].probe==7))) {
+       (debug_ports[port].probe==5 || debug_ports[port].probe==7 || debug_ports[port].probe==8))) {
         stage(p,0x48,-5); return;
     }
     for(unsigned i=0;i<U16(r,0x20) && i<8;i++) {

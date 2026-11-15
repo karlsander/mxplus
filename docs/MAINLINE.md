@@ -9,9 +9,10 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`f9d900f6a17159b89bd59bdf690942fbaa3b6f97d07e66177d4422153de2ad1b`.
-B6 adds transport-only startup and converter snapshots after B5's first
-device-side audio-packet progress stopped on a converter error; [B6 evidence](../evidence/fm1-converter-b6-20261106/README.md).
+`4a580d2bcb8737b1d90b12e9dc69141ef876e4d50874211f904ce333712b6b7c`.
+B8 adds retained asynchronous MIDI descriptor snapshots and a short silent
+transport probe after B7 confirmed packet delivery but stalled MIDI and a
+remaining converter rejection; [B8 evidence](../evidence/fm1-async-b8-20261115/README.md).
 It retains B5's explicitly started EHCI split-ISO experiment; [implementation and limits](../research/fm1-ehci.md).
 It retains B4’s isolation of the MIDI TX error −20 by using untimed writes only for
 the matched FM-1 debug connection; [evidence and limits](../evidence/fm1-midi-timeout-b4-20261106/README.md).
@@ -34,7 +35,7 @@ require physical acceptance.
 ## Memory and binary integration
 
 The intervals below describe the **main processor**. The independent USB processor
-adds 3,056 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
+adds 3,180 bytes of executable SRAM and 1,472 bytes of writable SRAM for host MIDI;
 see [host placement and allocator evidence](USB_HOST_MIDI.md#integration-and-memory).
 
 USB-host MIDI and FM-1 audio modify the USB application. The audio extension reserves 64 KiB from the USB processor’s existing SDRAM heap; see [its placement and allocator evidence](USB_HOST_AUDIO.md#usb-processor-placement-and-binary-changes). Boot programs, updater and panel-controller payload remain byte-identical to stock. The main application is byte-identical to the mastering held-key fix in PR #18.

@@ -1,0 +1,57 @@
+{
+  "candidate_path": "build/mainline/MXPLUS_MAINLINE_UNTESTED.bin",
+  "candidate_sha256": "4a580d2bcb8737b1d90b12e9dc69141ef876e4d50874211f904ce333712b6b7c",
+  "bytes": 4194320,
+  "build": 184,
+  "previous_installed_build": 183,
+  "previous_candidate_sha256": "d1fb3af7a5ec8016646b0b03c06c2fe9dde8a073e4affdb78a54d2ed443c8525",
+  "original_input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+  "app_main_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
+  "app_usb_sha256": "770a26c8ea56902cca24c459ac5c5febfd2b5635f73805f1fd0a48fe531f6159",
+  "midi_extension_sha256": "79d4c1bdeb03ff69974f4768c94f31adc9d8d93c5a9ea62e413a3c622c60d04e",
+  "audio_extension_sha256": "aafbd1d2075c88ccbfb8ac0518f9e0fa5e2306ea084db2fa47db7ac74ed43ba1",
+  "hot_code_bytes": 3180,
+  "hot_state_bytes": 1472,
+  "audio_code_bytes": 13920,
+  "audio_state_bytes": 28256,
+  "async_snapshots_bytes": 532,
+  "async_snapshots_start": "0x607fac4c",
+  "reserved_usb_sdram_bytes": 65536,
+  "hardware_status_at_build": "not installed",
+  "fm1_bridge_build": 177,
+  "fm1_bridge_sha256": "f13e43fcb9b34db7c8387751871b9a045fa55572b33c3b1759594c0451c54da0",
+  "validation": {
+    "targeted_host_audio": "passed",
+    "full_reproduction": "passed",
+    "committed_artifact_gate": "pending",
+    "browser_tests": "pending",
+    "full_reproduction_stages": 17,
+    "current_artifact_gate": "passed"
+  },
+  "compiled_function_prologues": {
+    "mx1_audio_tick": [
+      "push.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}",
+      "sub sp, #0x94",
+      "bl #0x607f363a",
+      "movw r1, #0x9930",
+      "movt r1, #0x607f",
+      "ldr r0, [r1]"
+    ],
+    "ehci_service": [
+      "push.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}",
+      "sub sp, #0x14",
+      "movw sl, #0xa564",
+      "movt sl, #0x607f",
+      "ldr.w r4, [sl]",
+      "cbz r4, #0x607f2094"
+    ],
+    "debug_command": [
+      "push.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}",
+      "sub sp, #0x134",
+      "movw lr, #0x9934",
+      "movt lr, #0x607f",
+      "mov.w r1, #0x30c",
+      "mla r8, r0, r1, lr"
+    ]
+  }
+}

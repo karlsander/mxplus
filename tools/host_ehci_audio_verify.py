@@ -112,16 +112,16 @@ def verify(image,h,syms):
     raw=syms['debug_ports']+308
     assert m.read(raw,12)==P(HC,REGS,table)
     assert q.u32(raw+32*4)==0x81010403 and q.u32(raw+33*4)==0x1c01
-    def page(number):
+    def page(number,port=0):
         b=bytearray([0xf0,0x7d,0x44,0x42,1,1,13,2,number,0,0,0,0])
         b.extend([(-sum(b[1:]))&127,0xf7])
         m.write(EP+0x20,P(0x20019000));m.write(0x20019008,P(DEV))
         for i in range(0,len(b),3):
             part=b[i:i+3];word=(4+len(part) if i+3>=len(b) else 4)|sum(x<<(8+j*8) for j,x in enumerate(part))
-            assert q.call('mx1_debug_receive',0,EP,word)==1
+            assert q.call('mx1_debug_receive',port,EP,word)==1
         wire=bytearray();out=0x2001c000
         for _ in range(10):
-            n=q.call('mx1_debug_transmit',0,EP,out)
+            n=q.call('mx1_debug_transmit',port,EP,out)
             if not n:break
             for word in struct.unpack('<'+'I'*n,m.read(out,n*4)):
                 wire.extend(word.to_bytes(4,'little')[1:1+(3 if word&15==4 else (word&15)-4)])
@@ -233,6 +233,79 @@ def verify(image,h,syms):
     assert q.u32(q.p+92)==1 and q.u32(q.p+16)==0 and q.u32(q.p+24)==2
     q.advance(0);assert q.u32(q.p+24)==3
     q.advance(2);assert q.u32(q.p+20)==0
+    # B8 captures original bulk wrappers and QH/qTDs in worker context. Run
+    # original request construction and original indexed-list traversal;
+    # allocation, controller DMA and IRQ delivery remain explicit models.
+    class AsyncEhci(Ehci):
+        def __init__(self):
+            self.real_midi=False;self.heap=0x60470000;self.qheap=0x60481800
+            self.midi_alloc=[]
+            super().__init__()
+        def stub(self,u,a,size,data):
+            if self.real_midi and a==0x600111ee:return
+            if self.real_midi and a==0x6000b330:
+                n=u.reg_read(UC_ARM_REG_R1);align=u.reg_read(UC_ARM_REG_R2)
+                if n==56 and align==64:
+                    result=self.qheap;self.qheap+=64
+                else:
+                    result=(self.heap+align-1)&-align;self.heap=result+n
+                self.m.write(result,bytes(n));self.midi_alloc.append((result,n))
+                u.reg_write(UC_ARM_REG_R0,result);u.reg_write(UC_ARM_REG_PC,u.reg_read(UC_ARM_REG_LR));return
+            return super().stub(u,a,size,data)
+    q=AsyncEhci();assert q.start()==0;m=q.m;q.real_midi=True
+    m.write(HC+0x80,P(0x60478000)) # original toggle cache
+    wrappers=[]
+    for i,direction in enumerate((128,0)):
+        ep=EP+0x400+i*0x100
+        m.write(ep+8,bytes([1|direction,direction,2,0]));m.write(ep+0x10,H(64))
+        m.write(0x2001ff80,P(0,0x20000000+i*64,64,0x6000f593,0x2001b000))
+        before=len(q.midi_alloc)
+        assert m.call(0x600111ee,DEV,ep,0x2000,0,stack=0x2001ff80)[0]==0
+        wrappers.append(q.midi_alloc[before][0])
+    assert q.u32(HC+0x8c)==2
+    ad=syms['async_diagnostic'];first=ad+20;last=first+256
+    def capture(tick):
+        m.write(syms['debug_ticks'],P(tick));m.write(syms['ehci']+55*4,P(tick))
+        q.advance(2041)
+    capture(4000)
+    assert q.u32(first)==2 and q.u32(first+4)==4000
+    assert q.u32(first+24)==0 and q.u32(first+28)==2
+    original_first=m.read(first,256)
+    for i,w in enumerate(wrappers):
+        v=struct.unpack('<26I',m.read(last+48+i*104,104))
+        private=q.u32(w+0x44);qh=q.u32(private);td=q.u32(q.u32(private+4))
+        assert v[:6]==(w,EP+0x400+i*0x100,qh,td,64,0)
+        assert v[6:18]==struct.unpack('<12I',m.read(qh,48))
+        assert v[18:21]==struct.unpack('<3I',m.read(td,12))
+        assert v[20]&128 and v[21]==1 and v[24]==td and v[25]==v[20]
+        # Model DMA completion without calling the original event consumer.
+        m.write(td+8,P(0x80008d00))
+    capture(4128)
+    assert m.read(first,256)==original_first
+    assert q.u32(last+48+20*4)==0x80008d00
+    assert q.u32(last+48+104+20*4)==0x80008d00
+    # Cached page reads neither touch live MMIO nor follow retained pointers.
+    # The page() closure below uses q/m variables from this verifier.
+    m.write(DEV+0x10,H(0x1209)+H(1));m.write(EP+0x20,P(0x20015100))
+    m.write(0x20015108,P(DEV));m.write(syms['debug_ports'],P(DEV))
+    for number in (11,12,13,14):
+        row=page(number);assert len(row)==40 and row[:2]==[0,number]
+        assert row[2:14]==list(struct.unpack('<12I',m.read(first if number<13 else last,48)))
+        assert row[14]==wrappers[(number-11)&1]
+    m.write(syms['debug_ports']+780,P(DEV))
+    assert page(11,port=1)==[2] # same identity on another port cannot read owner
+    live_heap=m.read(0x60470000,0x1000)
+    m.uc.mem_unmap(0x40010000,0x1000);m.uc.mem_unmap(0x60470000,0x1000)
+    assert page(11)[2]==2 and page(14)[2]==q.u32(last)
+    m.write(last,P(q.u32(last)|1));assert page(13)==[2]
+    # Corrupt/bounded-list fixtures must not follow arbitrary addresses.
+    m.uc.mem_map(0x40010000,0x1000);m.uc.mem_map(0x60470000,0x1000)
+    m.write(0x60470000,live_heap)
+    m.write(REGS,P(0x10039,0x4000,0x33,2041*8,0,table))
+    m.write(last,P(0));m.write(HC+0x8c,P(17));capture(4256)
+    assert q.u32(last+24)==1
+    m.write(HC+0x8c,P(2));m.write(wrappers[0]+0x44,P(0xdead0000));capture(4384)
+    assert q.u32(last+24)==4 # bad private pointer is never followed
     # Original controller-status queue and worker dispatch. No USB-object
     # pointer is enqueued. The callback runs in the worker even without IOC.
     q=Ehci();assert q.start()==0;q.real_poll=True;m=q.m
@@ -270,6 +343,7 @@ def verify(image,h,syms):
         'publish_running_after_ring_complete':True,'transport_only_no_converter':True,
         'transport_only_expiry_stops':True,'cached_converter_page':True,'original_busy_gate_failure':True,
         'host3_page_crossing_slots':crossed,
+        'async_original_bulk_construction_and_cached_pages':True,
         'admission_negative_cases':negatives,'original_controller_status_queue_and_worker':True,
         'cases':['actual stock frame-list replacement and dummy iTD chain','guarded EHCI bind trampoline',
                  'split endpoint/hub/port/masks and DMA alignment','2048-frame and 256-slot wrap',

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Authorized B7 hardware bench over the existing FM-1 Bluetooth bridge.
+"""Authorized B8 hardware bench over the existing FM-1 Bluetooth bridge.
 
 Never called by reproduce.py. Requires the FM-1 bridge repository's client
 and Python environment. Raw logs include local Bluetooth identifiers; keep
-them private. Quiet tones are enabled briefly, then muted in cleanup.
+them private. Default is a short silent transport probe. --extended enables
+the separate quiet-tone/converter sequence, with mute in cleanup.
 """
 import argparse
 import asyncio
@@ -31,25 +32,25 @@ async def run(args):
             super().record(kind,**data)
             if kind=='reply' and data.get('target')==1:
                 report['mx_frames'].append({'time':time.time(),**data})
-                if data.get('op') in (65,126) and len(data.get('words',[]))>1 and data['words'][1]==183:
+                if data.get('op') in (65,126) and len(data.get('words',[]))>1 and data['words'][1]==184:
                     ready.set()
 
     with (args.output/'raw.jsonl').open('x') as log:
         async with Capture(log=log) as b:
-            print('Bluetooth capture connected; waiting for MX-1 B7.' if args.wait_boot else
-                  'Bluetooth capture connected; checking MX-1 B7.',flush=True)
+            print('Bluetooth capture connected; waiting for MX-1 B8.' if args.wait_boot else
+                  'Bluetooth capture connected; checking MX-1 B8.',flush=True)
             engaged=False
             try:
                 if args.wait_boot:
                     until=time.monotonic()+args.wait_boot
                     while not ready.is_set():
-                        if time.monotonic()>=until:raise TimeoutError('No B7 heartbeat before boot wait expired')
+                        if time.monotonic()>=until:raise TimeoutError('No B8 heartbeat before boot wait expired')
                         report['last_waiting_fm']=await b.status()
                         await asyncio.sleep(2)
                 report['before_mx']=await b.status(1)
                 report['before_fm']=await b.status()
-                if report['before_mx']['build']!=183 or report['before_fm']['build']!=177:
-                    raise RuntimeError('This sequence requires MX B7 and FM bridge B1')
+                if report['before_mx']['build']!=184 or report['before_fm']['build']!=177:
+                    raise RuntimeError('This sequence requires MX B8 and FM bridge B1')
                 if report['before_mx']['claimed'] or report['before_mx']['probe_pending']:
                     raise RuntimeError('Existing MX stream/probe: inspect it before starting another')
                 engaged=True
@@ -68,13 +69,26 @@ async def run(args):
 
                 async def pages():
                     rows={}
-                    for page in (3,4,5,6,7,8,9,10):
+                    for page in (3,4,5,6,7,8,9,10,11,12,13,14):
                         try:rows[str(page)]=await b.command(2,[page],target=1)
                         except Exception as e:rows[str(page)]={'error':repr(e)}
                     return rows
 
                 await b.command(3,[0])
-                for step in (1,2,3,7):await probe(step)
+                for step in (1,2,3):await probe(step)
+                if not args.extended:
+                    await probe(8)
+                    for _ in range(20):
+                        s=await b.status(1)
+                        if s['phase']==0 and not s['claimed']:break
+                        await asyncio.sleep(.25)
+                    else:raise TimeoutError('Short transport did not retire')
+                    report['short_transport_mx']=s
+                    report['short_transport_fm']=await b.status()
+                    report['short_transport_pages']=await pages()
+                    report['completed_short_transport']=True
+                    return
+                await probe(7)
                 for _ in range(12):
                     s=await b.status(1)
                     if s['phase']==2:break
@@ -147,7 +161,8 @@ if __name__=='__main__':
     p.add_argument('--bridge-tools',type=Path,required=True)
     p.add_argument('--candidate',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True)
-    p.add_argument('--wait-boot',type=int,default=0,help='Seconds to wait for B7 heartbeat before sending MX commands')
+    p.add_argument('--wait-boot',type=int,default=0,help='Seconds to wait for B8 heartbeat before sending MX commands')
+    p.add_argument('--extended',action='store_true',help='Run the longer tone/converter sequence instead of the default silent two-second probe')
     args=p.parse_args()
     if not (args.bridge_tools/'bridge.py').is_file() or args.candidate.stat().st_size!=4194320:
         p.error('Expected the existing FM-1 bridge tools and a full MX-1 candidate')

@@ -78,20 +78,25 @@ requests. Overlong private frames are consumed through F7, not forwarded as musi
 | Op | Request | Reply words after result |
 | --- | --- | --- |
 | 1 | none | Status below |
-| 2 | Page 0–8 | Pages 0–2 and 5–8: page, snapshot sequence, raw fields; pages 3–4: page, fields |
+| 2 | Page 0–14 | Pages 0–2 and 5–8: page, snapshot sequence, raw fields; pages 3–4: page, fields; pages 9–14 below |
 | 3 | Mode 0–3 | Selected mode |
 | 4 | none | Fresh snapshot sequence after worker completion |
-| 5 | Step 1–7 | Accepted step; completion is reported by status |
+| 5 | Step 1–8 | Accepted step; completion is reported by status |
 
 B6 step 7 initializes the original converter context but starts with converter
 submission bypassed. Mode 3 drains PCM without submitting it to the converter
 and expires by stopping. Modes 0/1/2 require explicit selection to leave that bypass.
 
+B8 step 8 uses the same converter-bypass mode but expires after 8,000 audio
+task calls (nominally two seconds). It does not enable a tone. The default
+`tools/fm1_audio_bench.py` sequence uses this short probe; `--extended` selects
+the separate longer tone/converter experiment.
+
 Result 0 succeeds; 1 is unsupported command/arguments; 2 is unavailable or a
 concurrent snapshot. Refresh failures return the original absolute queue/worker
 error. Probe queue failure is result 3. Invalid framing/checksum is silent and
 increments errors. B1 is 177, B2 is 178, B3 is 179, B4 is 180, B5 is 181,
-B6 is 182 and current MX-1 candidate B7 is 183.
+B6 is 182, B7 is 183 and current MX-1 candidate B8 is 184.
 
 Status after result: build, port, stage, result_code, controller, phase, control,
 flags, cc, frame, packets, malformed, overflow, underrun, missed, dsp_errors,
@@ -147,7 +152,7 @@ transport. Step 6 publishes
 stop, clears audio readiness and stops the converter in the manager. The HCD
 retains DMA ownership until retirement. Wait for phase/claimed zero before
 step 4 (alt0) or another start. Steps 5/6/7 use stages 35/36/37 and 3D/3E/3F before the
-worker's own stage. One pending step per device. Rebinding setup resets the
+worker's own stage. Step 8 uses 38/40. One pending step per device. Rebinding setup resets the
 protocol session. B7 retains cached controller words, whose generation and
 captured state may describe the preceding attachment; it does not follow their
 stored pointers. The next controller snapshot replaces those words.
@@ -189,6 +194,35 @@ cause; its 24 software fields can still advance during capture. These pages
 survive reconnect and are cleared only by normal firmware startup. Use the
 bench script or raw operation 2; the existing FM-1 client CLI predates them.
 
+B8 pages 11/12 contain the first RX/TX asynchronous snapshot after 4,000
+stream audio ticks; pages 13/14 contain the last sampled running state. Each
+reply has 40 words: result, page, then sequence, tick, phase, event-call count,
+fallback-poll count, accumulated event bits, validation errors, active request
+count, USBCMD, USBSTS, USBINTR, FRINDEX, followed by 26 direction-specific words:
+
+- Wrapper address, endpoint object, QH address, first qTD address, requested
+  bytes, software completed bytes.
+- Twelve QH words: horizontal link, endpoint characteristics, endpoint
+  capabilities, current qTD, next qTD, alternate next qTD, token, five buffers.
+- Three first-qTD words: next, alternate next, token.
+- qTD count, wrapper words at offsets 8 and 12, last qTD address and token.
+
+The two wrapper words contain controller/address and speed/endpoint/direction/
+type, respectively. RX means FM-to-MX; TX means MX-to-FM. Missing directions
+are zero. Validation flags: 1 excessive list count, 2 invalid wrapper, 4 invalid
+private structure, 8 invalid QH, 16 invalid qTD table/count, 32 invalid qTD,
+64 duplicate direction. The worker bounds the walk to 16 original requests,
+checks pointer ranges and reads only EP1 bulk wrappers for the current FM.
+
+Snapshots are taken at most once per 128 audio ticks, plus a final observation
+when worker service sees stop intent. Both snapshots reset on a new transport
+start attempt, remain after stop/rebind, and are read without dereferencing
+saved pointers. A page for a different physical port or an incomplete snapshot
+returns 2. DMA can advance during capture; a sequence check protects the copied
+record against software writers, not against hardware changes. Descriptor
+Active bits separate controller-pending work from delayed software completion.
+They do not alone identify the cause of either condition.
+
 EHCI stages: 50 topology rejection, 51 controller/table configuration,
 52 periodic admission, 56 running, 57 stop, 58 run expired, 59 controller fault
 or teardown, 5A worker gap/other periodic activity, 5B insertion admission,
@@ -196,7 +230,7 @@ or teardown, 5A worker gap/other periodic activity, 5B insertion admission,
 destroy did not establish a halted controller. On EHCI, status control is raw
 USBCMD, flags is the linked-slot mask and cc is the last siTD status byte.
 
-Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 183,
+Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 184,
 startup stage, RX flags, TX flags, last RX result, last TX result. Flags are busy
 in bit 0, ready in bit 1, fault in bits 8 onward. This fits in one 60-byte USB
 MIDI transfer. B3 wakes the TX task every 4,096 audio-task calls, even with no

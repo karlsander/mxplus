@@ -1,18 +1,22 @@
 # Mastering mode
 
-Hold **MASTERING**, press **TAP**, then release both buttons. Entry is immediate;
-there is no timed hold. MASTERING must be pressed first. Press MASTERING once
-while editing to save and return to the mixer.
+Hold **MASTERING** until the editor opens, then release it. TAP is no longer
+needed. Entry uses a 1,200-tick hold; physical timing still needs confirmation.
+Press MASTERING once while editing to save and return to the mixer.
 
-MASTERING alone retains its stock short-press operation. MASTERING + TEMPO
-still selects the stock preset. TAP alone reaches the original tap-tempo handler
-immediately; the entry combination consumes TAP and both releases, so it does
-not tap a new tempo. Pressing TAP first remains an ordinary tap-tempo action.
+A short MASTERING press retains its stock operation. MASTERING + TEMPO still
+selects the stock preset. TAP reaches the original tap-tempo handler; pressing
+another button or turning an encoder cancels a pending hold and preserves the
+stock modified gesture. Repeats from the held MASTERING button cannot exit the
+editor; release it before pressing again to exit.
 
 The held-key guard checks physical IDs `0..0x54` only, matching routing. The
-user's mixer reported bit 85 set, which blocked the previous 88-bit check; the
-[diagnostic observation and fix](../evidence/mastering-key-range-20261104/README.md)
-are documented separately. This fix still awaits physical acceptance.
+user's mixer reported bit 85 set, which blocked the previous 88-bit check. On
+4 November the user reported that mastering mode was working on the corrected
+MASTERING + TAP candidate. The [diagnostic observation and fix](../evidence/mastering-key-range-20261104/README.md)
+record that scoped result. The restored hold and RGB preset-pad correction
+in [this follow-up](../evidence/mastering-hold-light-20261104/README.md) still
+need their own physical test.
 
 Entry is allowed from all six channel-setting pages: GAIN, PAN, TONE, AUX, BFX
 and FADER (IDs 5–10), plus the existing control-surface page 15. Boot, lock,
@@ -20,16 +24,15 @@ modal and other pages remain excluded. Knob/fader samples and unrelated panel
 notifications continue through their ordinary handlers while MASTERING is held.
 Another button or encoder movement preserves the stock modified gesture.
 
-The previous long-hold build still failed to enter on the user's mixer,
-including after selecting GAIN. The page guard was independently too narrow,
-but does not explain that complete observation. The
-[chord change record](../evidence/mastering-chord-20261103/README.md) separates
-that unresolved hardware behavior from the new button-combination tests.
-The earlier [background-traffic fix](../evidence/mastering-hold-20261103/README.md)
-is retained as historical evidence.
+Earlier long-hold builds failed before the background-event cancellation,
+page eligibility and held-key-range corrections. Those corrections remain in
+place. The [temporary chord record](../evidence/mastering-chord-20261103/README.md)
+and [background-traffic fix](../evidence/mastering-hold-20261103/README.md) remain
+historical evidence; success with the chord does not itself validate hold timing.
 
 The mode takes over panel buttons, encoders, faders and scanned knobs. Step
-pads **1–10** select the ten built-in mastering slots; the current slot lights.
+pads **1–10** select the ten built-in mastering slots. The current slot uses a
+steady light with a nonzero RGB palette entry; the other fifteen pads are off.
 Pressing the current pad does nothing. Pads 11–16 and other unassigned controls
 do nothing. Overall mastering bypass is retained: turn mastering on before
 entering if it is bypassed.
@@ -124,7 +127,14 @@ Original SELECT rendering at `0x60014692` (decoded `0x14692`) uses logical
 LED IDs `0x34..0x3e`; BFX/MFX rendering at `0x6001458e` (decoded `0x1458e`)
 uses `0x3f..0x49` / `0x4a..0x54`. Their physical key ranges are respectively
 `0x29..0x33`, `0x34..0x3e`, `0x3f..0x49`. Step keys 1–10 use logical LEDs
-`0x19..0x22`. Key IDs must not be used directly as LED IDs.
+`0x19..0x22`; the full row is `0x19..0x28`. Key IDs must not be used directly
+as LED IDs. The mono helper at `0x60014a78` supplies color zero, which the
+original RGB encoder at `0x01009b40` renders as three zero channels. The pad
+redraw now uses `0x60014a8e` with brightness 9 and palette index 4, the nonzero
+color used by a stock selected-control renderer. It clears all sixteen pads
+except the current preset. Original logical mapping and LED record writes
+execute in the regression, followed by original RGB encoding; final panel
+transport remains stubbed.
 
 The original hidden-editor MASTERING release at `0x6005aeb0..0x6005aebe`
 (decoded `0x5aeb0..0x5aebe`) reads system index 1 from `0x600b5390` and calls
@@ -143,10 +153,14 @@ with the actual original instructions; the final storage worker is a boundary.
 
 Callbacks retain the Cortex-M3 Thumb AAPCS convention. Function pointers set
 Thumb bit 0; calls preserve r4–r11 and stack balance in the instruction tests.
-Entry runs directly in the registered event callback on the TAP press. It no
-longer reads the RTOS clock at `0x010037e8` or waits for the periodic callback.
-The tests reject any clock call from the mastering gesture. The periodic wrapper
-still preserves original work, redraw and modal-exit handling.
+Entry runs in the registered periodic wrapper after the hold threshold.
+The original RTOS clock API at `0x010037e8` fills a two-word counter; its low
+word is used with unsigned subtraction so rollover does not break the hold.
+The original periodic callback and queue drain still run first. Tests execute
+the clock API while modeling the advancing counter, and cover threshold,
+short release, repeats, background events and cancellation on modal/page/lock
+changes. The first word of the existing state is reused for the start time;
+there is no added state reservation.
 Stock fader and tone handlers are `0x600174f2` / `0x600175d4`; stock fader
 blink rendering is `0x60014488` (decoded offsets subtract `0x60000000`).
 
@@ -163,13 +177,13 @@ or panel-payload changes.
 
 [mastering-verification.json](../build/mainline/mastering-verification.json)
 executes the compiled registered callbacks, original parameter storage/getters/
-clamping transactions and value formatter. It covers immediate chord entry without a tick, standalone MASTERING and TAP,
-both release orders, repeats, interleaved ADC/background traffic, original
+clamping transactions and value formatter. It covers timed hold entry, standalone short MASTERING and TAP,
+repeats, rollover, interleaved ADC/background traffic, original
 channel-setting button-to-page requests, page/modal/lock guards, all 22 analog assignments, eight switches and ranges, isolated controls,
 held releases, return pickup in Jump and Pass modes, externally changed targets,
 original tone/fader handling, blink encoding and the displaced redraw branches.
 It also checks all ten slots, 65-value round trips, outgoing save payloads,
-selected-pad LEDs, mute ordering, same-slot no-ops and renewed pickup.
+selected-pad LED records and RGB bytes, mute ordering, same-slot no-ops and renewed pickup.
 
 Object constructors are represented by original vtables and initialized values.
 The periodic callback body, mutex operations, parameter notification

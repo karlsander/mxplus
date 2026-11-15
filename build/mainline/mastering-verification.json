@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "patched_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
+  "patched_app_sha256": "cfab5a905d27497f74e40f8147346307a3aaae56497eac520324f6d0c0ab1281",
   "parameters": [
     {
       "n": 1,
@@ -921,13 +921,28 @@
     9,
     10
   ],
+  "preset_pad_lights": {
+    "slots": 10,
+    "pads": 16,
+    "selected_palette_index": 4,
+    "selected_rgb_bytes": [
+      1,
+      0,
+      0
+    ],
+    "previous_palette_zero_rgb": [
+      0,
+      0,
+      0
+    ]
+  },
   "groups": [
     {
       "name": "Reclaimed stock mixer lookup agrees for all 263 valid IDs and invalid boundaries; external literal/shared returns preserved",
       "status": "pass"
     },
     {
-      "name": "All 85 physical held keys block entry; all mixtures of bits 85..87 allow the chord and survive unchanged",
+      "name": "All 85 physical held keys block entry; all mixtures of bits 85..87 allow a long hold and survive unchanged",
       "status": "pass"
     },
     {
@@ -939,11 +954,11 @@
       "status": "pass"
     },
     {
-      "name": "MASTERING then TAP enters immediately without clock or periodic callbacks; exit, stock taps and modifier guards",
+      "name": "MASTERING hold enters at 1200 ticks using original clock API; exit, short taps and modifier guards",
       "status": "pass"
     },
     {
-      "name": "Mastering chord survives ADC/background traffic; elapsed time alone never enters; TAP alone preserves the stock action",
+      "name": "Mastering hold survives ADC/background traffic and timer rollover; threshold/release/cancel behavior and TAP remain isolated",
       "status": "pass"
     },
     {
@@ -952,6 +967,10 @@
     },
     {
       "name": "Ten step-pad slots use original copy/save preparation; all 65 values survive slot round trips; pickup resets and same-slot presses are inert",
+      "status": "pass"
+    },
+    {
+      "name": "All ten selected presets reach original LED records and RGB encoder with a nonzero color; other pads are off",
       "status": "pass"
     },
     {
@@ -966,7 +985,7 @@
   "boundaries": [
     "Original parameter lookup, getters, clamping setters, group storage and formatter execute unchanged except compressed mixer ID lookup",
     "Original fader handlers and blink renderer execute; physical ADC/LED protocol and timing are not modeled",
-    "Object vtables and parameter defaults are initialized fixtures; periodic callback body, mutex, notifications, MIDI send, storage singleton/submission and final panel I/O are stubbed; any mastering clock call fails",
+    "Object vtables and parameter defaults are initialized fixtures; periodic callback body, mutex, notifications, MIDI send, storage singleton/submission and final panel I/O are stubbed; the original clock API and RGB LED record writer execute with modeled time",
     "No hardware, audio measurements or physical save/restart acceptance; no new sample callback, MPU region or heap reservation"
   ]
 }

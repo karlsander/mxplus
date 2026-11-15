@@ -14,8 +14,8 @@ not sustained or comprehensive validation.
    and mixed alternates, stop/restart, reconnect and sustained audio at all
    three rates.
 3. Physically validate [mastering mode](docs/MASTERING.md), now entered with
-   MASTERING then TAP after the previous timed hold failed on hardware. Check
-   the [held-key range fix](evidence/mastering-key-range-20261104/README.md),
+   a long MASTERING press. The user confirmed the held-key fix worked with the
+   temporary chord; validate the [restored hold and selected preset light](evidence/mastering-hold-light-20261104/README.md),
    gesture isolation, all parameter assignments, pickup/blink, save/recall and
    sustained audio. The new UI reclaims an existing stock lookup footprint;
    its offline checks do not establish hardware stability.

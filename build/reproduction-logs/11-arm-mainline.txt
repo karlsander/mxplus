@@ -7,13 +7,14 @@
     "Original MPU makes injected code read-only and new route state read-write",
     "Dirty cold startup clears state; original RTOS pools cannot allocate its reservation",
     "Reclaimed stock mixer lookup agrees for all 263 valid IDs and invalid boundaries; external literal/shared returns preserved",
-    "All 85 physical held keys block entry; all mixtures of bits 85..87 allow the chord and survive unchanged",
+    "All 85 physical held keys block entry; all mixtures of bits 85..87 allow a long hold and survive unchanged",
     "All 65 mastering names and ranges linked to actual original index instructions",
     "Original GAIN/PAN/TONE/AUX/BFX/FADER key actions identify all six supported mixer pages",
-    "MASTERING then TAP enters immediately without clock or periodic callbacks; exit, stock taps and modifier guards",
-    "Mastering chord survives ADC/background traffic; elapsed time alone never enters; TAP alone preserves the stock action",
+    "MASTERING hold enters at 1200 ticks using original clock API; exit, short taps and modifier guards",
+    "Mastering hold survives ADC/background traffic and timer rollover; threshold/release/cancel behavior and TAP remain isolated",
     "All 22 assigned controls and eight switches execute stock transactions, correct display/LED selection, and preserve unmapped parameters",
     "Ten step-pad slots use original copy/save preparation; all 65 values survive slot round trips; pickup resets and same-slot presses are inert",
+    "All ten selected presets reach original LED records and RGB encoder with a nonzero color; other pads are off",
     "Entire edit surface isolated; held-button releases cannot leak after exit",
     "Mastering entry pickup and forced mixer-return pickup in Jump and Pass modes; stock fader blink encoding",
     "Actual startup copies extension and preserves existing initialized data",
@@ -93,5 +94,5 @@
     "Notes, controllers and SysEx survive RX unchanged",
     "Background queue overload leaves sync output running"
   ],
-  "patched_app_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a"
+  "patched_app_sha256": "cfab5a905d27497f74e40f8147346307a3aaae56497eac520324f6d0c0ab1281"
 }

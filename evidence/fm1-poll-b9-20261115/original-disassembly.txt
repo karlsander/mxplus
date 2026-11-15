@@ -55,7 +55,7 @@ app_usb decoded 10526, runtime 60010526
 60010534 7b48         ldr r0, [pc, #0x1ec]
 60010536 dff8e881     ldr.w r8, [pc, #0x1e8]
 6001053a 45ea0006     orr.w r6, r5, r0
-6001053e 00bf         nop 
+6001053e 00bf         nop
 60010540 fbf73cfb     bl #0x6000bbbc
 60010544 58f82500     ldr.w r0, [r8, r5, lsl #2]
 60010548 0422         movs r2, #4

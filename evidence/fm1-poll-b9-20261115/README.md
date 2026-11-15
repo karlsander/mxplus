@@ -84,5 +84,6 @@ MIDI coexistence, useful audio and sustained operation remain physical checks.
 
 All 17 offline stages and the current-artifact gate passed. A mocked bench
 control-flow check also passed both-policy ordering, live-status sampling,
-mute and the final alt0 read; it accessed no device. Committed-artifact and
-browser-patcher checks follow the code/artifact commit.
+mute and the final alt0 read; it accessed no device. The committed-artifact
+gate and all six browser-patcher tests passed for code/artifact commit
+`cfb88652b1e49c7f76b906cc7ea6758d360ad9ce`. Hosted B9 verification is pending.

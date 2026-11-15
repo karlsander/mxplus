@@ -49,6 +49,9 @@ jobs:
       - name: Check evidence and committed candidate hashes
         run: python tools/check_reproduction.py --check-committed
 
+      - name: Check stock FX-send investigation evidence
+        run: python tools/fx_sends_audit.py --check
+
       - name: Set up Node for browser patcher tests
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:

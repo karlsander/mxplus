@@ -1,0 +1,1705 @@
+{
+  "status": "pass",
+  "scope": "Stock ARM control and upload evidence only; no send implementation",
+  "original_update_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+  "main_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
+  "controls": {
+    "channel_aux": [
+      {
+        "channel": 0,
+        "global_parameter": 304,
+        "registration_decoded_offset": "0xb58c4",
+        "callback_runtime": "0x600299d6",
+        "callback_decoded_offset": "0x299d6",
+        "core": 1,
+        "coefficient_index": 45,
+        "gain_table_sha256": "8791c20958a7439f94664fd44bbe2514421cecaa653865cd393fc673f720fa12",
+        "gain_at_0_64_127": [
+          0.0,
+          0.2434527724981308,
+          1.0
+        ]
+      },
+      {
+        "channel": 1,
+        "global_parameter": 305,
+        "registration_decoded_offset": "0xb58d0",
+        "callback_runtime": "0x600299e0",
+        "callback_decoded_offset": "0x299e0",
+        "core": 1,
+        "coefficient_index": 46,
+        "gain_table_sha256": "8791c20958a7439f94664fd44bbe2514421cecaa653865cd393fc673f720fa12",
+        "gain_at_0_64_127": [
+          0.0,
+          0.2434527724981308,
+          1.0
+        ]
+      },
+      {
+        "channel": 2,
+        "global_parameter": 306,
+        "registration_decoded_offset": "0xb58dc",
+        "callback_runtime": "0x600299ea",
+        "callback_decoded_offset": "0x299ea",
+        "core": 1,
+        "coefficient_index": 47,
+        "gain_table_sha256": "8791c20958a7439f94664fd44bbe2514421cecaa653865cd393fc673f720fa12",
+        "gain_at_0_64_127": [
+          0.0,
+          0.2434527724981308,
+          1.0
+        ]
+      },
+      {
+        "channel": 3,
+        "global_parameter": 307,
+        "registration_decoded_offset": "0xb58e8",
+        "callback_runtime": "0x600299f4",
+        "callback_decoded_offset": "0x299f4",
+        "core": 1,
+        "coefficient_index": 48,
+        "gain_table_sha256": "8791c20958a7439f94664fd44bbe2514421cecaa653865cd393fc673f720fa12",
+        "gain_at_0_64_127": [
+          0.0,
+          0.2434527724981308,
+          1.0
+        ]
+      },
+      {
+        "channel": 4,
+        "global_parameter": 308,
+        "registration_decoded_offset": "0xb58f4",
+        "callback_runtime": "0x600299fe",
+        "callback_decoded_offset": "0x299fe",
+        "core": 1,
+        "coefficient_index": 49,
+        "gain_table_sha256": "8791c20958a7439f94664fd44bbe2514421cecaa653865cd393fc673f720fa12",
+        "gain_at_0_64_127": [
+          0.0,
+          0.2434527724981308,
+          1.0
+        ]
+      },
+      {
+        "channel": 5,
+        "global_parameter": 309,
+        "registration_decoded_offset": "0xb5900",
+        "callback_runtime": "0x60029a08",
+        "callback_decoded_offset": "0x29a08",
+        "core": 1,
+        "coefficient_index": 50,
+        "gain_table_sha256": "8791c20958a7439f94664fd44bbe2514421cecaa653865cd393fc673f720fa12",
+        "gain_at_0_64_127": [
+          0.0,
+          0.2434527724981308,
+          1.0
+        ]
+      },
+      {
+        "channel": 6,
+        "global_parameter": 310,
+        "registration_decoded_offset": "0xb590c",
+        "callback_runtime": "0x60029a12",
+        "callback_decoded_offset": "0x29a12",
+        "core": 1,
+        "coefficient_index": 51,
+        "gain_table_sha256": "8791c20958a7439f94664fd44bbe2514421cecaa653865cd393fc673f720fa12",
+        "gain_at_0_64_127": [
+          0.0,
+          0.2434527724981308,
+          1.0
+        ]
+      },
+      {
+        "channel": 7,
+        "global_parameter": 311,
+        "registration_decoded_offset": "0xb5918",
+        "callback_runtime": "0x60029a1c",
+        "callback_decoded_offset": "0x29a1c",
+        "core": 1,
+        "coefficient_index": 52,
+        "gain_table_sha256": "8791c20958a7439f94664fd44bbe2514421cecaa653865cd393fc673f720fa12",
+        "gain_at_0_64_127": [
+          0.0,
+          0.2434527724981308,
+          1.0
+        ]
+      },
+      {
+        "channel": 8,
+        "global_parameter": 312,
+        "registration_decoded_offset": "0xb5924",
+        "callback_runtime": "0x60029a26",
+        "callback_decoded_offset": "0x29a26",
+        "core": 1,
+        "coefficient_index": 53,
+        "gain_table_sha256": "8791c20958a7439f94664fd44bbe2514421cecaa653865cd393fc673f720fa12",
+        "gain_at_0_64_127": [
+          0.0,
+          0.2434527724981308,
+          1.0
+        ]
+      },
+      {
+        "channel": 9,
+        "global_parameter": 313,
+        "registration_decoded_offset": "0xb5930",
+        "callback_runtime": "0x60029a30",
+        "callback_decoded_offset": "0x29a30",
+        "core": 1,
+        "coefficient_index": 54,
+        "gain_table_sha256": "8791c20958a7439f94664fd44bbe2514421cecaa653865cd393fc673f720fa12",
+        "gain_at_0_64_127": [
+          0.0,
+          0.2434527724981308,
+          1.0
+        ]
+      },
+      {
+        "channel": 10,
+        "global_parameter": 314,
+        "registration_decoded_offset": "0xb593c",
+        "callback_runtime": "0x60029a3a",
+        "callback_decoded_offset": "0x29a3a",
+        "core": 1,
+        "coefficient_index": 55,
+        "gain_table_sha256": "8791c20958a7439f94664fd44bbe2514421cecaa653865cd393fc673f720fa12",
+        "gain_at_0_64_127": [
+          0.0,
+          0.2434527724981308,
+          1.0
+        ]
+      }
+    ],
+    "routing_switches": [
+      {
+        "global_parameter": 6,
+        "value": 0,
+        "callback_runtime": "0x60029b98",
+        "callback_decoded_offset": "0x29b98",
+        "requests": [
+          {
+            "kind": "embedded_float",
+            "core": 1,
+            "offset": 6792,
+            "format": 0,
+            "float_bits": 0
+          }
+        ]
+      },
+      {
+        "global_parameter": 6,
+        "value": 1,
+        "callback_runtime": "0x60029b98",
+        "callback_decoded_offset": "0x29b98",
+        "requests": [
+          {
+            "kind": "embedded_float",
+            "core": 1,
+            "offset": 6792,
+            "format": 0,
+            "float_bits": 1065353216
+          }
+        ]
+      },
+      {
+        "global_parameter": 7,
+        "value": 0,
+        "callback_runtime": "0x60029bbc",
+        "callback_decoded_offset": "0x29bbc",
+        "requests": [
+          {
+            "kind": "embedded_float",
+            "core": 1,
+            "offset": 6708,
+            "format": 0,
+            "float_bits": 0
+          }
+        ]
+      },
+      {
+        "global_parameter": 7,
+        "value": 1,
+        "callback_runtime": "0x60029bbc",
+        "callback_decoded_offset": "0x29bbc",
+        "requests": [
+          {
+            "kind": "embedded_float",
+            "core": 1,
+            "offset": 6708,
+            "format": 0,
+            "float_bits": 1065353216
+          }
+        ]
+      }
+    ],
+    "headphone_controls": [
+      {
+        "global_parameter": 172,
+        "value": 0,
+        "callback_runtime": "0x60027cc4",
+        "callback_decoded_offset": "0x27cc4",
+        "requests": [
+          {
+            "kind": "coefficient",
+            "core": 0,
+            "index": 40,
+            "float_bits": 0,
+            "smoothing": 15
+          }
+        ]
+      },
+      {
+        "global_parameter": 172,
+        "value": 64,
+        "callback_runtime": "0x60027cc4",
+        "callback_decoded_offset": "0x27cc4",
+        "requests": [
+          {
+            "kind": "coefficient",
+            "core": 0,
+            "index": 40,
+            "float_bits": 1061013667,
+            "smoothing": 2
+          }
+        ]
+      },
+      {
+        "global_parameter": 172,
+        "value": 127,
+        "callback_runtime": "0x60027cc4",
+        "callback_decoded_offset": "0x27cc4",
+        "requests": [
+          {
+            "kind": "coefficient",
+            "core": 0,
+            "index": 40,
+            "float_bits": 1086794598,
+            "smoothing": 2
+          }
+        ]
+      },
+      {
+        "global_parameter": 173,
+        "value": 0,
+        "callback_runtime": "0x60027cce",
+        "callback_decoded_offset": "0x27cce",
+        "requests": [
+          {
+            "kind": "coefficient",
+            "core": 0,
+            "index": 38,
+            "float_bits": 0,
+            "smoothing": 2
+          },
+          {
+            "kind": "coefficient",
+            "core": 0,
+            "index": 39,
+            "float_bits": 1065353216,
+            "smoothing": 2
+          }
+        ]
+      },
+      {
+        "global_parameter": 173,
+        "value": 64,
+        "callback_runtime": "0x60027cce",
+        "callback_decoded_offset": "0x27cce",
+        "requests": [
+          {
+            "kind": "coefficient",
+            "core": 0,
+            "index": 38,
+            "float_bits": 1061044015,
+            "smoothing": 2
+          },
+          {
+            "kind": "coefficient",
+            "core": 0,
+            "index": 39,
+            "float_bits": 1060950132,
+            "smoothing": 2
+          }
+        ]
+      },
+      {
+        "global_parameter": 173,
+        "value": 127,
+        "callback_runtime": "0x60027cce",
+        "callback_decoded_offset": "0x27cce",
+        "requests": [
+          {
+            "kind": "coefficient",
+            "core": 0,
+            "index": 38,
+            "float_bits": 1065353216,
+            "smoothing": 2
+          },
+          {
+            "kind": "coefficient",
+            "core": 0,
+            "index": 39,
+            "float_bits": 0,
+            "smoothing": 2
+          }
+        ]
+      }
+    ],
+    "original_callback_cases": 1418,
+    "writer_stubs": [],
+    "parameter_stubs": []
+  },
+  "slot_ownership": {
+    "entry_runtime": "0x6002b132",
+    "entry_decoded_offset": "0x2b132",
+    "slot_state_runtime": "0x600ccdbc",
+    "input_first_argument": 1,
+    "loader_calls": [
+      {
+        "slot": 1,
+        "algorithm": 1
+      },
+      {
+        "slot": 0,
+        "algorithm": 4
+      },
+      {
+        "slot": 1,
+        "algorithm": 1
+      }
+    ],
+    "stubbed_calls": [
+      "0x6001a1ce",
+      "0x6001e65e",
+      "0x60029e30",
+      "0x60029ee4",
+      "0x6002a2cc",
+      "0x6002a768"
+    ],
+    "finding": "The original type-change entry alternates both slots; neither is reserved for an independent send."
+  },
+  "programs": {
+    "normal_program_sha256": [
+      "ad9da6b0a0d250259477738ea60b85407b3da1c37e707ff8c0140dcb91fd78ec",
+      "4c17a48ac7ed9d143f0ea085cf32ad96f807b2f7dbd8986e36c0053e389a66f7"
+    ],
+    "normal_chunks": [
+      {
+        "core": 0,
+        "index": 0,
+        "program_offset": 9472,
+        "length": 26,
+        "source": 1611374220
+      },
+      {
+        "core": 0,
+        "index": 1,
+        "program_offset": 5628,
+        "length": 700,
+        "source": 1611373520
+      },
+      {
+        "core": 0,
+        "index": 2,
+        "program_offset": 0,
+        "length": 308,
+        "source": 1611367884
+      },
+      {
+        "core": 0,
+        "index": 3,
+        "program_offset": 28672,
+        "length": 34,
+        "source": 1611374512
+      },
+      {
+        "core": 0,
+        "index": 4,
+        "program_offset": 308,
+        "length": 486,
+        "source": 1611368192
+      },
+      {
+        "core": 0,
+        "index": 5,
+        "program_offset": 12288,
+        "length": 26,
+        "source": 1611374248
+      },
+      {
+        "core": 0,
+        "index": 6,
+        "program_offset": 13568,
+        "length": 26,
+        "source": 1611374276
+      },
+      {
+        "core": 0,
+        "index": 7,
+        "program_offset": 20480,
+        "length": 34,
+        "source": 1611374368
+      },
+      {
+        "core": 0,
+        "index": 8,
+        "program_offset": 16384,
+        "length": 26,
+        "source": 1611374304
+      },
+      {
+        "core": 0,
+        "index": 9,
+        "program_offset": 1276,
+        "length": 642,
+        "source": 1611369164
+      },
+      {
+        "core": 0,
+        "index": 10,
+        "program_offset": 794,
+        "length": 482,
+        "source": 1611368680
+      },
+      {
+        "core": 0,
+        "index": 11,
+        "program_offset": 29952,
+        "length": 34,
+        "source": 1611374548
+      },
+      {
+        "core": 0,
+        "index": 12,
+        "program_offset": 21760,
+        "length": 34,
+        "source": 1611374404
+      },
+      {
+        "core": 0,
+        "index": 13,
+        "program_offset": 17664,
+        "length": 34,
+        "source": 1611374332
+      },
+      {
+        "core": 0,
+        "index": 14,
+        "program_offset": 24576,
+        "length": 34,
+        "source": 1611374440
+      },
+      {
+        "core": 0,
+        "index": 15,
+        "program_offset": 1918,
+        "length": 3710,
+        "source": 1611369808
+      },
+      {
+        "core": 0,
+        "index": 16,
+        "program_offset": 32754,
+        "length": 14,
+        "source": 1611374584
+      },
+      {
+        "core": 0,
+        "index": 17,
+        "program_offset": 25856,
+        "length": 34,
+        "source": 1611374476
+      },
+      {
+        "core": 1,
+        "index": 0,
+        "program_offset": 6858,
+        "length": 104,
+        "source": 1611382092
+      },
+      {
+        "core": 1,
+        "index": 1,
+        "program_offset": 0,
+        "length": 106,
+        "source": 1611375184
+      },
+      {
+        "core": 1,
+        "index": 2,
+        "program_offset": 4146,
+        "length": 408,
+        "source": 1611379372
+      },
+      {
+        "core": 1,
+        "index": 3,
+        "program_offset": 1722,
+        "length": 404,
+        "source": 1611376924
+      },
+      {
+        "core": 1,
+        "index": 4,
+        "program_offset": 914,
+        "length": 404,
+        "source": 1611376108
+      },
+      {
+        "core": 1,
+        "index": 5,
+        "program_offset": 2126,
+        "length": 404,
+        "source": 1611377332
+      },
+      {
+        "core": 1,
+        "index": 6,
+        "program_offset": 6962,
+        "length": 188,
+        "source": 1611382200
+      },
+      {
+        "core": 1,
+        "index": 7,
+        "program_offset": 4554,
+        "length": 2304,
+        "source": 1611379784
+      },
+      {
+        "core": 1,
+        "index": 8,
+        "program_offset": 2530,
+        "length": 404,
+        "source": 1611377740
+      },
+      {
+        "core": 1,
+        "index": 9,
+        "program_offset": 3742,
+        "length": 404,
+        "source": 1611378964
+      },
+      {
+        "core": 1,
+        "index": 10,
+        "program_offset": 2934,
+        "length": 404,
+        "source": 1611378148
+      },
+      {
+        "core": 1,
+        "index": 11,
+        "program_offset": 16384,
+        "length": 34,
+        "source": 1611382392
+      },
+      {
+        "core": 1,
+        "index": 12,
+        "program_offset": 3338,
+        "length": 404,
+        "source": 1611378556
+      },
+      {
+        "core": 1,
+        "index": 13,
+        "program_offset": 106,
+        "length": 404,
+        "source": 1611375292
+      },
+      {
+        "core": 1,
+        "index": 14,
+        "program_offset": 32754,
+        "length": 14,
+        "source": 1611382464
+      },
+      {
+        "core": 1,
+        "index": 15,
+        "program_offset": 24576,
+        "length": 34,
+        "source": 1611382428
+      },
+      {
+        "core": 1,
+        "index": 16,
+        "program_offset": 1318,
+        "length": 404,
+        "source": 1611376516
+      },
+      {
+        "core": 1,
+        "index": 17,
+        "program_offset": 510,
+        "length": 404,
+        "source": 1611375700
+      }
+    ],
+    "effect_programs": [
+      {
+        "algorithm": 0,
+        "slot": 0,
+        "descriptor_runtime": "0x600bf7a8",
+        "descriptor_decoded_offset": "0xbf7a8",
+        "source_runtime": "0x600bf71c",
+        "source_decoded_offset": "0xbf71c",
+        "logical_program_offset": 16384,
+        "length_bytes": 54,
+        "logical_program_sha256": "6f8d6f92977d533233e75f7378c963439f53bdcf4f6e9f321d0b97de915f9e3c",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600bf7a8",
+          "0x600bf8e0",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600bf8e0",
+        "data_descriptor_decoded_offset": "0xbf8e0",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 184,
+        "data_source_runtime": "0x600bf7d4"
+      },
+      {
+        "algorithm": 0,
+        "slot": 1,
+        "descriptor_runtime": "0x600bf7c0",
+        "descriptor_decoded_offset": "0xbf7c0",
+        "source_runtime": "0x600bf754",
+        "source_decoded_offset": "0xbf754",
+        "logical_program_offset": 24576,
+        "length_bytes": 54,
+        "logical_program_sha256": "06b1ed283e73f6f5b42b99c4c6256af3b39e74beb97f3f3967198c6be2d027d5",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600bf7c0",
+          "0x600bf8bc",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600bf8bc",
+        "data_descriptor_decoded_offset": "0xbf8bc",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 40,
+        "data_source_runtime": "0x600bf88c"
+      },
+      {
+        "algorithm": 1,
+        "slot": 0,
+        "descriptor_runtime": "0x600bffe0",
+        "descriptor_decoded_offset": "0xbffe0",
+        "source_runtime": "0x600bf90c",
+        "source_decoded_offset": "0xbf90c",
+        "logical_program_offset": 16384,
+        "length_bytes": 858,
+        "logical_program_sha256": "b21baf53ff54fdcc8e8c8431193cbf3b3ca0bcc8dafc314c4a452449667c2087",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600bffe0",
+          "0x600c0168",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600c0168",
+        "data_descriptor_decoded_offset": "0xc0168",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 280,
+        "data_source_runtime": "0x600c000c"
+      },
+      {
+        "algorithm": 1,
+        "slot": 1,
+        "descriptor_runtime": "0x600bfff8",
+        "descriptor_decoded_offset": "0xbfff8",
+        "source_runtime": "0x600bfc68",
+        "source_decoded_offset": "0xbfc68",
+        "logical_program_offset": 24576,
+        "length_bytes": 858,
+        "logical_program_sha256": "87891922a35fd1bbc446ac974949e67a0934bacd385ad459ce2f8a96986f614d",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600bfff8",
+          "0x600c0144",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600c0144",
+        "data_descriptor_decoded_offset": "0xc0144",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 24,
+        "data_source_runtime": "0x600c0124"
+      },
+      {
+        "algorithm": 2,
+        "slot": 0,
+        "descriptor_runtime": "0x600c0b50",
+        "descriptor_decoded_offset": "0xc0b50",
+        "source_runtime": "0x600c0194",
+        "source_decoded_offset": "0xc0194",
+        "logical_program_offset": 16384,
+        "length_bytes": 1232,
+        "logical_program_sha256": "780cdabf7ea759e60ac41d2b3493b8a3265555637e1eeba7a3fd8936b1adc4be",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c0b50",
+          "0x600c0cb8",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600c0cb8",
+        "data_descriptor_decoded_offset": "0xc0cb8",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 184,
+        "data_source_runtime": "0x600c0b7c"
+      },
+      {
+        "algorithm": 2,
+        "slot": 1,
+        "descriptor_runtime": "0x600c0b68",
+        "descriptor_decoded_offset": "0xc0b68",
+        "source_runtime": "0x600c0664",
+        "source_decoded_offset": "0xc0664",
+        "logical_program_offset": 24576,
+        "length_bytes": 1232,
+        "logical_program_sha256": "ae842d023770c62dc8141dfb02eb40641151030675df7cea13da38d14337b7c1",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c0b68",
+          "0x600c0c94",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600c0c94",
+        "data_descriptor_decoded_offset": "0xc0c94",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 88,
+        "data_source_runtime": "0x600c0c34"
+      },
+      {
+        "algorithm": 3,
+        "slot": 0,
+        "descriptor_runtime": "0x600c15c0",
+        "descriptor_decoded_offset": "0xc15c0",
+        "source_runtime": "0x600c0ce4",
+        "source_decoded_offset": "0xc0ce4",
+        "logical_program_offset": 16384,
+        "length_bytes": 1118,
+        "logical_program_sha256": "a3cf39e4c8d38a3cb7ee161de36198fa568c41ff76c0d6eb21fec062e8eb1944",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c15c0",
+          "0x600c1740",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600c1740",
+        "data_descriptor_decoded_offset": "0xc1740",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 272,
+        "data_source_runtime": "0x600c15ec"
+      },
+      {
+        "algorithm": 3,
+        "slot": 1,
+        "descriptor_runtime": "0x600c15d8",
+        "descriptor_decoded_offset": "0xc15d8",
+        "source_runtime": "0x600c1144",
+        "source_decoded_offset": "0xc1144",
+        "logical_program_offset": 24576,
+        "length_bytes": 1118,
+        "logical_program_sha256": "a5ad2cb728f7c703074adf369c924947ac033a8491cf2a36aacd6ead45e3b2fb",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c15d8",
+          "0x600c171c",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600c171c",
+        "data_descriptor_decoded_offset": "0xc171c",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 24,
+        "data_source_runtime": "0x600c16fc"
+      },
+      {
+        "algorithm": 4,
+        "slot": 0,
+        "descriptor_runtime": "0x600c1e48",
+        "descriptor_decoded_offset": "0xc1e48",
+        "source_runtime": "0x600c176c",
+        "source_decoded_offset": "0xc176c",
+        "logical_program_offset": 16384,
+        "length_bytes": 864,
+        "logical_program_sha256": "bda9b54608417158377c14dc344774aef600e7047d2cef1ddb35aebddf341a5b",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c1e48",
+          "0x600c20b0",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600c20b0",
+        "data_descriptor_decoded_offset": "0xc20b0",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 264,
+        "data_source_runtime": "0x600c1e74"
+      },
+      {
+        "algorithm": 4,
+        "slot": 1,
+        "descriptor_runtime": "0x600c1e60",
+        "descriptor_decoded_offset": "0xc1e60",
+        "source_runtime": "0x600c1acc",
+        "source_decoded_offset": "0xc1acc",
+        "logical_program_offset": 24576,
+        "length_bytes": 864,
+        "logical_program_sha256": "20dd2b598212447b2e54f35e5e6d0f91b56a8907ca767ac68f5d70c876275e8f",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c1e60",
+          "0x600c208c",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600c208c",
+        "data_descriptor_decoded_offset": "0xc208c",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 264,
+        "data_source_runtime": "0x600c1f7c"
+      },
+      {
+        "algorithm": 5,
+        "slot": 0,
+        "descriptor_runtime": "0x600c2be8",
+        "descriptor_decoded_offset": "0xc2be8",
+        "source_runtime": "0x600c20dc",
+        "source_decoded_offset": "0xc20dc",
+        "logical_program_offset": 16384,
+        "length_bytes": 1398,
+        "logical_program_sha256": "78704e373976206f48b752d4eaa7ad1b7036db21e626e72b6f26a9b1dea36773",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c2be8",
+          "0x600c2c48",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600c2c48",
+        "data_descriptor_decoded_offset": "0xc2c48",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 280,
+        "data_source_runtime": "0x605223bc"
+      },
+      {
+        "algorithm": 5,
+        "slot": 1,
+        "descriptor_runtime": "0x600c2c00",
+        "descriptor_decoded_offset": "0xc2c00",
+        "source_runtime": "0x600c2654",
+        "source_decoded_offset": "0xc2654",
+        "logical_program_offset": 24576,
+        "length_bytes": 1398,
+        "logical_program_sha256": "8463489c6fc3504a391d8a166baa4695a7ebbe0f6d64200726fc4aed47dc1c1d",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c2c00",
+          "0x600c2c24",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600c2c24",
+        "data_descriptor_decoded_offset": "0xc2c24",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 8,
+        "data_source_runtime": "0x600c2c14"
+      },
+      {
+        "algorithm": 6,
+        "slot": 0,
+        "descriptor_runtime": "0x600c3750",
+        "descriptor_decoded_offset": "0xc3750",
+        "source_runtime": "0x600c2c74",
+        "source_decoded_offset": "0xc2c74",
+        "logical_program_offset": 16384,
+        "length_bytes": 1374,
+        "logical_program_sha256": "a4f1259f0bede589a3eeb3eb05a3d097e93c9bd53474e6949d0c1751637a79da",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c3750",
+          "0x600c37b0",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600c37b0",
+        "data_descriptor_decoded_offset": "0xc37b0",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 280,
+        "data_source_runtime": "0x605224d4"
+      },
+      {
+        "algorithm": 6,
+        "slot": 1,
+        "descriptor_runtime": "0x600c3768",
+        "descriptor_decoded_offset": "0xc3768",
+        "source_runtime": "0x600c31d4",
+        "source_decoded_offset": "0xc31d4",
+        "logical_program_offset": 24576,
+        "length_bytes": 1374,
+        "logical_program_sha256": "1ee9271eb5fe26912f8b9d0b9365fc627d99daf1b5a9e372385bb6af7c030ae5",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c3768",
+          "0x600c378c",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600c378c",
+        "data_descriptor_decoded_offset": "0xc378c",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 8,
+        "data_source_runtime": "0x600c377c"
+      },
+      {
+        "algorithm": 7,
+        "slot": 0,
+        "descriptor_runtime": "0x600c3dd8",
+        "descriptor_decoded_offset": "0xc3dd8",
+        "source_runtime": "0x600c37dc",
+        "source_decoded_offset": "0xc37dc",
+        "logical_program_offset": 16384,
+        "length_bytes": 750,
+        "logical_program_sha256": "b1433fcb72005e89c78c54fd37da605a9cd8c44e10d33692d7b53f485a3b8444",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c3dd8",
+          "0x600c3e38",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600c3e38",
+        "data_descriptor_decoded_offset": "0xc3e38",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 280,
+        "data_source_runtime": "0x605225ec"
+      },
+      {
+        "algorithm": 7,
+        "slot": 1,
+        "descriptor_runtime": "0x600c3df0",
+        "descriptor_decoded_offset": "0xc3df0",
+        "source_runtime": "0x600c3acc",
+        "source_decoded_offset": "0xc3acc",
+        "logical_program_offset": 24576,
+        "length_bytes": 750,
+        "logical_program_sha256": "ee6a036dbfe14bae1d830868b329fd112d0cb93f4f1850fdebdfbeca88c251d4",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c3df0",
+          "0x600c3e14",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600c3e14",
+        "data_descriptor_decoded_offset": "0xc3e14",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 8,
+        "data_source_runtime": "0x600c3e04"
+      },
+      {
+        "algorithm": 8,
+        "slot": 0,
+        "descriptor_runtime": "0x600c4290",
+        "descriptor_decoded_offset": "0xc4290",
+        "source_runtime": "0x600c3e64",
+        "source_decoded_offset": "0xc3e64",
+        "logical_program_offset": 16384,
+        "length_bytes": 520,
+        "logical_program_sha256": "fa73a64924745a339b537d6c2444963cbda03c1e09f0c118c3d2c16a87fd00dd",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c4290",
+          "0x600c4418",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600c4418",
+        "data_descriptor_decoded_offset": "0xc4418",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 280,
+        "data_source_runtime": "0x600c42bc"
+      },
+      {
+        "algorithm": 8,
+        "slot": 1,
+        "descriptor_runtime": "0x600c42a8",
+        "descriptor_decoded_offset": "0xc42a8",
+        "source_runtime": "0x600c406c",
+        "source_decoded_offset": "0xc406c",
+        "logical_program_offset": 24576,
+        "length_bytes": 520,
+        "logical_program_sha256": "5456dc9a8cba67df79debef8da73f619032a6bf5335a04434750d9416bd29989",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c42a8",
+          "0x600c43f4",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600c43f4",
+        "data_descriptor_decoded_offset": "0xc43f4",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 24,
+        "data_source_runtime": "0x600c43d4"
+      },
+      {
+        "algorithm": 9,
+        "slot": 0,
+        "descriptor_runtime": "0x600c4ce8",
+        "descriptor_decoded_offset": "0xc4ce8",
+        "source_runtime": "0x600c4444",
+        "source_decoded_offset": "0xc4444",
+        "logical_program_offset": 16384,
+        "length_bytes": 1090,
+        "logical_program_sha256": "c78a12bd9a17c24df9c485ab7b19f436c464b2d612023adc86a4bd05ab1b7755",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c4ce8",
+          "0x600c4d48",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600c4d48",
+        "data_descriptor_decoded_offset": "0xc4d48",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 280,
+        "data_source_runtime": "0x60522704"
+      },
+      {
+        "algorithm": 9,
+        "slot": 1,
+        "descriptor_runtime": "0x600c4d00",
+        "descriptor_decoded_offset": "0xc4d00",
+        "source_runtime": "0x600c4888",
+        "source_decoded_offset": "0xc4888",
+        "logical_program_offset": 24576,
+        "length_bytes": 1090,
+        "logical_program_sha256": "0128e1ed96be0861e70c37de954fd26f253f2d7ed029ed9acf8d7356a12ed771",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c4d00",
+          "0x600c4d24",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600c4d24",
+        "data_descriptor_decoded_offset": "0xc4d24",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 8,
+        "data_source_runtime": "0x600c4d14"
+      },
+      {
+        "algorithm": 10,
+        "slot": 0,
+        "descriptor_runtime": "0x600c51f0",
+        "descriptor_decoded_offset": "0xc51f0",
+        "source_runtime": "0x600c4d74",
+        "source_decoded_offset": "0xc4d74",
+        "logical_program_offset": 16384,
+        "length_bytes": 558,
+        "logical_program_sha256": "723892267b306c23af09a4ef3f6dc7a657ee84d3766c5d9c3809f622225b4630",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c51f0",
+          "0x600c5368",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600c5368",
+        "data_descriptor_decoded_offset": "0xc5368",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 272,
+        "data_source_runtime": "0x600c521c"
+      },
+      {
+        "algorithm": 10,
+        "slot": 1,
+        "descriptor_runtime": "0x600c5208",
+        "descriptor_decoded_offset": "0xc5208",
+        "source_runtime": "0x600c4fa4",
+        "source_decoded_offset": "0xc4fa4",
+        "logical_program_offset": 24576,
+        "length_bytes": 558,
+        "logical_program_sha256": "093e1d823235a59dcc7aaf0b37a27e956957eef5b4300b8ea3e1b0f3bf03a272",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c5208",
+          "0x600c5344",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600c5344",
+        "data_descriptor_decoded_offset": "0xc5344",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 16,
+        "data_source_runtime": "0x600c532c"
+      },
+      {
+        "algorithm": 11,
+        "slot": 0,
+        "descriptor_runtime": "0x600c57a8",
+        "descriptor_decoded_offset": "0xc57a8",
+        "source_runtime": "0x600c5394",
+        "source_decoded_offset": "0xc5394",
+        "logical_program_offset": 16384,
+        "length_bytes": 508,
+        "logical_program_sha256": "72b1fd8b3452d4011dc871bd72dcac54691d4b2904c08743d03bbf576f9f6fc7",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c57a8",
+          "0x600c5808",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600c5808",
+        "data_descriptor_decoded_offset": "0xc5808",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 264,
+        "data_source_runtime": "0x6052281c"
+      },
+      {
+        "algorithm": 11,
+        "slot": 1,
+        "descriptor_runtime": "0x600c57c0",
+        "descriptor_decoded_offset": "0xc57c0",
+        "source_runtime": "0x600c5590",
+        "source_decoded_offset": "0xc5590",
+        "logical_program_offset": 24576,
+        "length_bytes": 508,
+        "logical_program_sha256": "95e0abb47cb4c2980b5ce9bcfc25a042e2d22c1daa14f67fdc6252c4938bcbf3",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c57c0",
+          "0x600c57e4",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600c57e4",
+        "data_descriptor_decoded_offset": "0xc57e4",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 8,
+        "data_source_runtime": "0x600c57d4"
+      },
+      {
+        "algorithm": 12,
+        "slot": 0,
+        "descriptor_runtime": "0x600c6350",
+        "descriptor_decoded_offset": "0xc6350",
+        "source_runtime": "0x600c5834",
+        "source_decoded_offset": "0xc5834",
+        "logical_program_offset": 16384,
+        "length_bytes": 1408,
+        "logical_program_sha256": "e398f6d352bfb3237a9aa1dd83e676707a474277be02e10b29511febb7e5509e",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c6350",
+          "0x600c63b0",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600c63b0",
+        "data_descriptor_decoded_offset": "0xc63b0",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 280,
+        "data_source_runtime": "0x60522924"
+      },
+      {
+        "algorithm": 12,
+        "slot": 1,
+        "descriptor_runtime": "0x600c6368",
+        "descriptor_decoded_offset": "0xc6368",
+        "source_runtime": "0x600c5db4",
+        "source_decoded_offset": "0xc5db4",
+        "logical_program_offset": 24576,
+        "length_bytes": 1408,
+        "logical_program_sha256": "ba822808876762e10469630f93afb631239daf5c89942fd50d3e9367e804450a",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c6368",
+          "0x600c638c",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600c638c",
+        "data_descriptor_decoded_offset": "0xc638c",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 8,
+        "data_source_runtime": "0x600c637c"
+      },
+      {
+        "algorithm": 13,
+        "slot": 0,
+        "descriptor_runtime": "0x600c6b98",
+        "descriptor_decoded_offset": "0xc6b98",
+        "source_runtime": "0x600c63dc",
+        "source_decoded_offset": "0xc63dc",
+        "logical_program_offset": 16384,
+        "length_bytes": 974,
+        "logical_program_sha256": "36e8e78610cc30b0e59fbb9a46fa63e8e76a7e2b7333bf9078bc5ed0b1e5c6e2",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c6b98",
+          "0x600c6d20",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600c6d20",
+        "data_descriptor_decoded_offset": "0xc6d20",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 280,
+        "data_source_runtime": "0x600c6bc4"
+      },
+      {
+        "algorithm": 13,
+        "slot": 1,
+        "descriptor_runtime": "0x600c6bb0",
+        "descriptor_decoded_offset": "0xc6bb0",
+        "source_runtime": "0x600c67ac",
+        "source_decoded_offset": "0xc67ac",
+        "logical_program_offset": 24576,
+        "length_bytes": 974,
+        "logical_program_sha256": "10942991240cbd0b16a2d629b5232f76d685865b5f2d37bdbc6a8b7913473168",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c6bb0",
+          "0x600c6cfc",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600c6cfc",
+        "data_descriptor_decoded_offset": "0xc6cfc",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 24,
+        "data_source_runtime": "0x600c6cdc"
+      },
+      {
+        "algorithm": 14,
+        "slot": 0,
+        "descriptor_runtime": "0x600c7560",
+        "descriptor_decoded_offset": "0xc7560",
+        "source_runtime": "0x600c6d4c",
+        "source_decoded_offset": "0xc6d4c",
+        "logical_program_offset": 16384,
+        "length_bytes": 1020,
+        "logical_program_sha256": "3a4e41d26d47a7a158ea37e1fa8a791b65f681eb558ae97c5ee09191f0350889",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c7560",
+          "0x600c76e8",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600c76e8",
+        "data_descriptor_decoded_offset": "0xc76e8",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 280,
+        "data_source_runtime": "0x600c758c"
+      },
+      {
+        "algorithm": 14,
+        "slot": 1,
+        "descriptor_runtime": "0x600c7578",
+        "descriptor_decoded_offset": "0xc7578",
+        "source_runtime": "0x600c7148",
+        "source_decoded_offset": "0xc7148",
+        "logical_program_offset": 24576,
+        "length_bytes": 1020,
+        "logical_program_sha256": "679b7b32aa0677cf02055d82bfac8f4d6c3073501d67c0488d94b78464543fdc",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c7578",
+          "0x600c76c4",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600c76c4",
+        "data_descriptor_decoded_offset": "0xc76c4",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 24,
+        "data_source_runtime": "0x600c76a4"
+      },
+      {
+        "algorithm": 15,
+        "slot": 0,
+        "descriptor_runtime": "0x600c7e50",
+        "descriptor_decoded_offset": "0xc7e50",
+        "source_runtime": "0x600c7714",
+        "source_decoded_offset": "0xc7714",
+        "logical_program_offset": 16384,
+        "length_bytes": 910,
+        "logical_program_sha256": "965876671ca0d7e3c73cab8b3b46d315d57559b8be3c70c8c0189ec87f2ce2b9",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c7e50",
+          "0x600c7fd8",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600c7fd8",
+        "data_descriptor_decoded_offset": "0xc7fd8",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 280,
+        "data_source_runtime": "0x600c7e7c"
+      },
+      {
+        "algorithm": 15,
+        "slot": 1,
+        "descriptor_runtime": "0x600c7e68",
+        "descriptor_decoded_offset": "0xc7e68",
+        "source_runtime": "0x600c7aa4",
+        "source_decoded_offset": "0xc7aa4",
+        "logical_program_offset": 24576,
+        "length_bytes": 910,
+        "logical_program_sha256": "71a83bc90410512b8d9a2aa000b142e108664ab2d4173e81f71060173cc7d0cc",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c7e68",
+          "0x600c7fb4",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600c7fb4",
+        "data_descriptor_decoded_offset": "0xc7fb4",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 24,
+        "data_source_runtime": "0x600c7f94"
+      },
+      {
+        "algorithm": 16,
+        "slot": 0,
+        "descriptor_runtime": "0x600c8500",
+        "descriptor_decoded_offset": "0xc8500",
+        "source_runtime": "0x600c8004",
+        "source_decoded_offset": "0xc8004",
+        "logical_program_offset": 16384,
+        "length_bytes": 622,
+        "logical_program_sha256": "d8ee9981991a282744d6bc9194d7e72e12faeb0d520aa30611bc1aabefa2165f",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c8500",
+          "0x600c8688",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600c8688",
+        "data_descriptor_decoded_offset": "0xc8688",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 280,
+        "data_source_runtime": "0x600c852c"
+      },
+      {
+        "algorithm": 16,
+        "slot": 1,
+        "descriptor_runtime": "0x600c8518",
+        "descriptor_decoded_offset": "0xc8518",
+        "source_runtime": "0x600c8274",
+        "source_decoded_offset": "0xc8274",
+        "logical_program_offset": 24576,
+        "length_bytes": 622,
+        "logical_program_sha256": "6d100c5148c1d0119b052da2f5088fa63aa53aab962f53a0aff81291168cf86d",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c8518",
+          "0x600c8664",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600c8664",
+        "data_descriptor_decoded_offset": "0xc8664",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 24,
+        "data_source_runtime": "0x600c8644"
+      },
+      {
+        "algorithm": 17,
+        "slot": 0,
+        "descriptor_runtime": "0x600c8d20",
+        "descriptor_decoded_offset": "0xc8d20",
+        "source_runtime": "0x600c86b4",
+        "source_decoded_offset": "0xc86b4",
+        "logical_program_offset": 16384,
+        "length_bytes": 808,
+        "logical_program_sha256": "46c2ea82577ef90f4f046cad075c34c3c8cebc9260f74effb13650e0ac4bc0fd",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c8d20",
+          "0x600c8ea8",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600c8ea8",
+        "data_descriptor_decoded_offset": "0xc8ea8",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 280,
+        "data_source_runtime": "0x600c8d4c"
+      },
+      {
+        "algorithm": 17,
+        "slot": 1,
+        "descriptor_runtime": "0x600c8d38",
+        "descriptor_decoded_offset": "0xc8d38",
+        "source_runtime": "0x600c89dc",
+        "source_decoded_offset": "0xc89dc",
+        "logical_program_offset": 24576,
+        "length_bytes": 808,
+        "logical_program_sha256": "aeaa31ce160b950aa07ec12abc44cf0a3e5031a3ea49e6fa9e69c68cc2b71621",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600c8d38",
+          "0x600c8e84",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600c8e84",
+        "data_descriptor_decoded_offset": "0xc8e84",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 24,
+        "data_source_runtime": "0x600c8e64"
+      },
+      {
+        "algorithm": 18,
+        "slot": 0,
+        "descriptor_runtime": "0x600ca148",
+        "descriptor_decoded_offset": "0xca148",
+        "source_runtime": "0x600c8ed4",
+        "source_decoded_offset": "0xc8ed4",
+        "logical_program_offset": 16384,
+        "length_bytes": 2348,
+        "logical_program_sha256": "ba354e5d80be0e45b69f6ae7bb467b8452a38cdca1bcf5f18ab8048f37831ae8",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600ca148",
+          "0x600ca2d0",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600ca2d0",
+        "data_descriptor_decoded_offset": "0xca2d0",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 280,
+        "data_source_runtime": "0x600ca174"
+      },
+      {
+        "algorithm": 18,
+        "slot": 1,
+        "descriptor_runtime": "0x600ca160",
+        "descriptor_decoded_offset": "0xca160",
+        "source_runtime": "0x600c9800",
+        "source_decoded_offset": "0xc9800",
+        "logical_program_offset": 24576,
+        "length_bytes": 2348,
+        "logical_program_sha256": "a2ef89909ed4bb9b23b0a4e758550bd7d3e85793897de0b42b4a7dba8d9f957e",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600ca160",
+          "0x600ca2ac",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600ca2ac",
+        "data_descriptor_decoded_offset": "0xca2ac",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 24,
+        "data_source_runtime": "0x600ca28c"
+      },
+      {
+        "algorithm": 19,
+        "slot": 0,
+        "descriptor_runtime": "0x600ca7b0",
+        "descriptor_decoded_offset": "0xca7b0",
+        "source_runtime": "0x600ca2fc",
+        "source_decoded_offset": "0xca2fc",
+        "logical_program_offset": 16384,
+        "length_bytes": 586,
+        "logical_program_sha256": "3b4a543040da1a377a183681baceeaab5aa06ac1f972c69363c76b3b7afb69fd",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600ca7b0",
+          "0x600ca940",
+          "0x600ccdec",
+          "0x600ccdfc",
+          "0x4000",
+          "0x1"
+        ],
+        "data_descriptor_runtime": "0x600ca940",
+        "data_descriptor_decoded_offset": "0xca940",
+        "data_offset_bytes": 32,
+        "data_length_bytes": 280,
+        "data_source_runtime": "0x600ca7dc"
+      },
+      {
+        "algorithm": 19,
+        "slot": 1,
+        "descriptor_runtime": "0x600ca7c8",
+        "descriptor_decoded_offset": "0xca7c8",
+        "source_runtime": "0x600ca548",
+        "source_decoded_offset": "0xca548",
+        "logical_program_offset": 24576,
+        "length_bytes": 586,
+        "logical_program_sha256": "4b9737f425651105fae508ea986f688b317987352a0d83c6588380d3863c5ceb",
+        "loader_request": [
+          "0x60522a3c",
+          "0x1",
+          "0x600ca7c8",
+          "0x600ca91c",
+          "0x600ccdf4",
+          "0x600cce04",
+          "0x6000",
+          "0x2"
+        ],
+        "data_descriptor_runtime": "0x600ca91c",
+        "data_descriptor_decoded_offset": "0xca91c",
+        "data_offset_bytes": 312,
+        "data_length_bytes": 32,
+        "data_source_runtime": "0x600ca8f4"
+      }
+    ],
+    "program_upload_cases": 40,
+    "loader_prefix_cases": 40,
+    "loader_prefix_stubs": [
+      "0x6000c59e parameter-view construction",
+      "0x60026fec coefficient clearing"
+    ],
+    "loader_prefix_stop_before": "0x60026f66 live load transaction",
+    "maximum_effect_program_bytes": 2348,
+    "not_established": [
+      "Instruction-cycle budget",
+      "Simultaneous effect execution",
+      "Independent delay-buffer and coefficient ownership",
+      "Pre-pan mono tap and additional bus arithmetic"
+    ]
+  },
+  "limitations": [
+    "ESC2 arithmetic, external delay RAM and timing are not emulated.",
+    "MMIO is recorded storage; no physical DSP accepts these commands.",
+    "Uploader DMA is modeled as a byte copy.",
+    "Type-change parameter queries, loader and subsequent effect setup are stubbed only in the slot-ownership case.",
+    "No candidate, panel controls, output routing or hardware is changed."
+  ]
+}

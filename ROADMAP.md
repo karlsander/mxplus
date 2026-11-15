@@ -23,7 +23,9 @@ not sustained or comprehensive validation.
    ports, clock/transport, SysEx, reconnect and simultaneous audio.
 5. Physically validate the [channel tempo surface](docs/CHANNEL_CONTROLS.md):
    four empty pages, tempo isolation, deselection and existing routing/mastering
-   behavior. Additional effect sends are deferred. Measure compiled size before
+   behavior. Additional effect sends are under
+   [active investigation](docs/FX_SENDS_RESEARCH.md), with no audio implementation
+   in the candidate yet. Measure compiled size before
    claiming capacity for further control/routing improvements.
    An explicitly reserved SDRAM design is possible research, not enabled in
    the current candidate. [Memory and DSP findings](docs/GENERATOR_RESEARCH.md).

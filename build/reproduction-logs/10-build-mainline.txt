@@ -1,6 +1,6 @@
 {
   "status": "OFFLINE EXPERIMENT; NOT HARDWARE VALIDATED",
-  "container_sha256": "957e0a81923763cefb78c34ba298650df8ad62d91e2362df89c8e2fd64e811e0",
+  "container_sha256": "96be48786bfb12667db3bffd0d4217c82c0be1374427255af7f64f127a6aeee1",
   "symbols": {
     "mx1_uac2_rate": 16872496,
     "mx1_uac2_reply": 16872500,

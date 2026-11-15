@@ -28,6 +28,9 @@ typedef struct {
     MidiPipeline pipeline_first[2], pipeline_last[2];
 } AsyncState;
 __attribute__((section(".host_async_state"))) static AsyncState async_diagnostic;
+/* B11: finish the current callback before admitting its successor. Keep the
+ * lifetime counter addresses fixed by appending this word after their state. */
+__attribute__((section(".host_poll_state"))) static volatile uint32_t poll_after;
 _Static_assert(sizeof(AsyncState)==872,"Async diagnostic placement");
 static int async_ram(uintptr_t p,unsigned n) {
     return !(p&3) && p>=0x60400000 && p<=0x607f0000-n;
@@ -225,6 +228,7 @@ static int ehci_begin(AudioPort *p,unsigned poll_only) {
     zero(&ehci,sizeof ehci); ehci.owner=p; ehci.regs=PTR(p->controller,4);
     zero(&async_diagnostic,sizeof async_diagnostic); async_diagnostic.started=debug_ticks;
     async_diagnostic.poll_only=poll_only;
+    poll_after=debug_ticks+(poll_only?16:32);
     ehci.table=(uint8_t *)(uintptr_t)(V32(ehci.regs,20)&~4095u);
     DebugPort *d=&debug_ports[p-mx1_audio_ports];
     uint8_t *hub=PTR(p->dev,0xec), *parent=hub?PTR(hub,4):0;
@@ -269,18 +273,25 @@ static int ehci_begin(AudioPort *p,unsigned poll_only) {
 }
 static void ehci_poll_done(unsigned controller,unsigned status,uintptr_t token) {
     (void)status;(void)token;
-    ehci.poll_pending=0; barrier();
     if(controller==1) { async_diagnostic.polls++; ehci_service(0); }
+    /* Audio can preempt service. Retain ownership through the entire callback,
+     * then leave a fresh interval for other tasks instead of immediately
+     * filling the worker queue again after a long service. */
+    poll_after=debug_ticks+(async_diagnostic.poll_only?16:32);
+    barrier(); ehci.poll_pending=0;
 }
 static void ehci_tick(void) {
     AudioPort *p=ehci.owner;
     if(!p || !p->phase || !p->controller || ehci.poll_pending ||
-       (debug_ticks&(async_diagnostic.poll_only?15:31))) return;
+       (int32_t)(debug_ticks-poll_after)<0) return;
     /* Original 03000020 controller-status queue and callback ABI. One queued
      * request maximum; eight-ms fallback, or four-ms primary service in the
      * explicit poll-only experiment. No USB endpoint lifetime is retained. */
     ehci.poll_pending=1; barrier();
-    if(FN(0x6000c377,int(*)(unsigned,void*,uintptr_t))(1,(void*)ehci_poll_done,0)) ehci.poll_pending=0;
+    if(FN(0x6000c377,int(*)(unsigned,void*,uintptr_t))(1,(void*)ehci_poll_done,0)) {
+        poll_after=debug_ticks+(async_diagnostic.poll_only?16:32);
+        barrier(); ehci.poll_pending=0;
+    }
 }
 int mx1_ehci_request(void *dev,void *ep,unsigned flags,unsigned a,unsigned b,void *buf,unsigned len,void *callback,uintptr_t token) {
     AudioPort *p=for_device(dev);

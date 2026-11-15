@@ -1,0 +1,79 @@
+{
+  "candidate_path": "build/mainline/MXPLUS_MAINLINE_UNTESTED.bin",
+  "candidate_sha256": "96be48786bfb12667db3bffd0d4217c82c0be1374427255af7f64f127a6aeee1",
+  "bytes": 4194320,
+  "build": 187,
+  "previous_installed_build": 186,
+  "previous_candidate_sha256": "957e0a81923763cefb78c34ba298650df8ad62d91e2362df89c8e2fd64e811e0",
+  "original_input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+  "app_main_sha256": "15ff306f7bc970266402ce54bf4c713c7fbd14d85eae4e796bc377dc211c0d2a",
+  "app_usb_sha256": "454540df6cab61626ca1b41af64471fbcb2a1fa9d9f3b104da72beb579b8eeda",
+  "midi_extension_sha256": "a04213e614ca1add95078dc3ec136ea370437663c6d2f59e61ca107d0bad8467",
+  "audio_extension_sha256": "6e177c40fe802a5990fa2470c6a75e81f29660ab007bcb67bf9aa9fdff3bf496",
+  "hot_code_bytes": 3592,
+  "hot_state_bytes": 1472,
+  "audio_code_bytes": 14540,
+  "audio_state_bytes": 29272,
+  "poll_after_start": "0x607fb254",
+  "poll_after_bytes": 4,
+  "reserved_usb_sdram_bytes": 65536,
+  "hardware_status_at_build": "not installed",
+  "fm1_bridge_build": 177,
+  "fm1_bridge_sha256": "f13e43fcb9b34db7c8387751871b9a045fa55572b33c3b1759594c0451c54da0",
+  "validation": {
+    "targeted_host_audio": "passed",
+    "full_reproduction": "passed",
+    "current_artifact_gate": "passed",
+    "committed_artifact_gate": "pending",
+    "browser_tests": "pending",
+    "hosted": "pending",
+    "full_reproduction_stages": 17,
+    "targeted_preemption_negative_control": "passed"
+  },
+  "compiled_function_prologues": {
+    "mx1_audio_tick": {
+      "runtime": "0x607f1780",
+      "instructions": [
+        "push.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}",
+        "sub sp, #0x9c",
+        "bl #0x607f389e",
+        "movw r1, #0x9930",
+        "movt r1, #0x607f",
+        "ldr r0, [r1]"
+      ]
+    },
+    "ehci_service": {
+      "runtime": "0x607f20ee",
+      "instructions": [
+        "push.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}",
+        "sub sp, #0x14",
+        "movw r4, #0xa564",
+        "movt r4, #0x607f",
+        "ldr.w sb, [r4]",
+        "cmp.w sb, #0"
+      ]
+    },
+    "debug_command": {
+      "runtime": "0x607f2c18",
+      "instructions": [
+        "push.w {r4, r5, r6, r7, r8, sb, sl, fp, lr}",
+        "sub sp, #0x134",
+        "movw lr, #0x9934",
+        "movt lr, #0x607f",
+        "mov.w r1, #0x30c",
+        "mla r8, r0, r1, lr"
+      ]
+    },
+    "ehci_poll_done": {
+      "runtime": "0x607f3510",
+      "instructions": [
+        "push {r4, lr}",
+        "movw r4, #0xac4c",
+        "cmp r0, #1",
+        "movt r4, #0x607f",
+        "bne #0x607f352a",
+        "ldr r0, [r4, #0xc]"
+      ]
+    }
+  }
+}

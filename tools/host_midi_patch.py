@@ -75,8 +75,11 @@ def integrate(original,root,out,env,jump):
             raise FormatError('Invalid retained MIDI failure placement')
         pipeline=tab.get_symbol_by_name('mx1_midi_pipeline')[0]
         pipeline_address=pipeline['st_value']; pipeline_bytes=pipeline['st_size']
+        poll_state=tab.get_symbol_by_name('poll_after')[0]
+        poll_address=poll_state['st_value']; poll_bytes=poll_state['st_size']
         if (async_bytes!=872 or async_address+async_bytes!=pipeline_address or pipeline_bytes!=672 or
-            pipeline_address+pipeline_bytes!=0x607f4000+audio_size):
+            pipeline_address+pipeline_bytes!=poll_address or poll_bytes!=4 or
+            poll_address+poll_bytes!=0x607f4000+audio_size):
             raise FormatError('Invalid asynchronous diagnostic placement')
     m=recover(original); hot=m['operations'][0]
     if hot!={'call':0x6000000e,'kind':'copy','destination':0x01000300,'length':0xbbe4,'source':0x6002b1f4}: raise FormatError('USB startup map changed')
@@ -138,6 +141,7 @@ def integrate(original,root,out,env,jump):
             'midi_failure_state_start':failure_address,'midi_failure_state_bytes':failure_bytes,
             'async_diagnostic_start':async_address,'async_diagnostic_bytes':async_bytes,
             'midi_pipeline_start':pipeline_address,'midi_pipeline_bytes':pipeline_bytes,
+            'poll_after_start':poll_address,'poll_after_bytes':poll_bytes,
             'original_sdram_heap':[0x604b1178,0x60800000],'reserved_sdram_heap':[0x604b1178,0x607f0000],
             'insert_offset':cut,'allocator_table_offset':0x2820c,'allocator_table_hex':table.hex(),
             'sources':{str(p.relative_to(root)):sha256(p.read_bytes()) for p in [*sources,root/'patches/usb_host_trace.h',root/'patches/usb_host_debug.inc',root/'patches/usb_host_ehci.inc',root/'patches/mainline.ld',root/'tools/host_midi_patch.py']}}

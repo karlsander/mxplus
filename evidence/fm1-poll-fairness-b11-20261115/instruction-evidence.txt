@@ -1,0 +1,292 @@
+app_usb extension comparison. These are compiled extension instructions, not original Roland code.
+B10 image from commit 25c5aa7; B11 current candidate. Same sole mainline builder.
+
+B10 ehci_poll_done
+607f34b8 4af26451     movw     r1, #0xa564
+607f34bc c6f27f01     movt     r1, #0x607f
+607f34c0 0022         movs     r2, #0
+607f34c2 c1f80421     str.w    r2, [r1, #0x104]
+607f34c6 bff35f8f     dmb      sy
+607f34ca 0128         cmp      r0, #1
+607f34cc 18bf         it       ne
+607f34ce 7047         bxne     lr
+607f34d0 4af64c41     movw     r1, #0xac4c
+607f34d4 c6f27f01     movt     r1, #0x607f
+607f34d8 c868         ldr      r0, [r1, #0xc]
+607f34da 421c         adds     r2, r0, #1
+607f34dc 0020         movs     r0, #0
+607f34de ca60         str      r2, [r1, #0xc]
+607f34e0 fef7dabd     b.w      #0x607f2098
+
+B11 ehci_poll_done
+607f3510 10b5         push     {r4, lr}
+607f3512 4af64c44     movw     r4, #0xac4c
+607f3516 0128         cmp      r0, #1
+607f3518 c6f27f04     movt     r4, #0x607f
+607f351c 05d1         bne      #0x607f352a
+607f351e e068         ldr      r0, [r4, #0xc]
+607f3520 0130         adds     r0, #1
+607f3522 e060         str      r0, [r4, #0xc]
+607f3524 0020         movs     r0, #0
+607f3526 fef7e2fd     bl       #0x607f20ee
+607f352a 49f63010     movw     r0, #0x9930
+607f352e c6f27f00     movt     r0, #0x607f
+607f3532 0068         ldr      r0, [r0]
+607f3534 d4f81412     ldr.w    r1, [r4, #0x214]
+607f3538 1022         movs     r2, #0x10
+607f353a 0029         cmp      r1, #0
+607f353c 4bf25421     movw     r1, #0xb254
+607f3540 08bf         it       eq
+607f3542 2022         moveq    r2, #0x20
+607f3544 1044         add      r0, r2
+607f3546 c6f27f01     movt     r1, #0x607f
+607f354a 0860         str      r0, [r1]
+607f354c 4af26450     movw     r0, #0xa564
+607f3550 bff35f8f     dmb      sy
+607f3554 c6f27f00     movt     r0, #0x607f
+607f3558 0021         movs     r1, #0
+607f355a c0f80411     str.w    r1, [r0, #0x104]
+607f355e 10bd         pop      {r4, pc}
+
+Original app_usb resident instructions. Runtime = decoded offset + 60000000.
+Original USB app SHA256 fe52cf6c9e8ec8677963b1c4b876ddeaefae5136b7a5f1f49010e3cda9203a6e
+
+
+Audio task creation, complete instruction range
+0089f0 600089f0 2de9ff4f     push.w   {r0, r1, r2, r3, r4, r5, r6, r7, r8, sb, sl, fp, lr}
+0089f4 600089f4 8bb0         sub      sp, #0x2c
+0089f6 600089f6 8146         mov      sb, r0
+0089f8 600089f8 dde91834     ldrd     r3, r4, [sp, #0x60]
+0089fc 600089fc 6748         ldr      r0, [pc, #0x19c]
+0089fe 600089fe 0025         movs     r5, #0
+008a00 60008a00 4ff0040b     mov.w    fp, #4
+008a04 60008a04 04c0         stm      r0!, {r2}
+008a06 60008a06 0c22         movs     r2, #0xc
+008a08 60008a08 1ac0         stm      r0!, {r1, r3, r4}
+008a0a 60008a0a 6348         ldr      r0, [pc, #0x18c]
+008a0c 60008a0c 8021         movs     r1, #0x80
+008a0e 60008a0e 644b         ldr      r3, [pc, #0x190]
+008a10 60008a10 c0e90415     strd     r1, r5, [r0, #0x10]
+008a14 60008a14 c0e90252     strd     r5, r2, [r0, #8]
+008a18 60008a18 c0e90035     strd     r3, r5, [r0]
+008a1c 60008a1c 2c46         mov      r4, r5
+008a1e 60008a1e adf818b0     strh.w   fp, [sp, #0x18]
+008a22 60008a22 06a8         add      r0, sp, #0x18
+008a24 60008a24 0795         str      r5, [sp, #0x1c]
+008a26 60008a26 0cf044fe     bl       #0x600156b2
+008a2a 60008a2a 5a4f         ldr      r7, [pc, #0x168]
+008a2c 60008a2c 00b2         sxth     r0, r0
+008a2e 60008a2e 0028         cmp      r0, #0
+008a30 60008a30 b884         strh     r0, [r7, #0x24]
+008a32 60008a32 03dc         bgt      #0x60008a3c
+008a34 60008a34 5ba0         adr      r0, #0x16c
+008a36 60008a36 0cf0ebf8     bl       #0x60014c10
+008a3a 60008a3a fee7         b        #0x60008a3a
+008a3c 60008a3c 6048         ldr      r0, [pc, #0x180]
+008a3e 60008a3e adf81840     strh.w   r4, [sp, #0x18]
+008a42 60008a42 cde90740     strd     r4, r0, [sp, #0x1c]
+008a46 60008a46 0126         movs     r6, #1
+008a48 60008a48 cde90964     strd     r6, r4, [sp, #0x24]
+008a4c 60008a4c 06a8         add      r0, sp, #0x18
+008a4e 60008a4e 0cf07cfd     bl       #0x6001554a
+008a52 60008a52 00b2         sxth     r0, r0
+008a54 60008a54 ba46         mov      sl, r7
+008a56 60008a56 f884         strh     r0, [r7, #0x26]
+008a58 60008a58 0028         cmp      r0, #0
+008a5a 60008a5a 03da         bge      #0x60008a64
+008a5c 60008a5c 59a0         adr      r0, #0x164
+008a5e 60008a5e 0cf0d7f8     bl       #0x60014c10
+008a62 60008a62 fee7         b        #0x60008a62
+008a64 60008a64 5f48         ldr      r0, [pc, #0x17c]
+008a66 60008a66 0290         str      r0, [sp, #8]
+008a68 60008a68 0520         movs     r0, #5
+008a6a 60008a6a adf80c00     strh.w   r0, [sp, #0xc]
+008a6e 60008a6e 4ff48050     mov.w    r0, #0x1000
+008a72 60008a72 0490         str      r0, [sp, #0x10]
+008a74 60008a74 2c48         ldr      r0, [pc, #0xb0]
+008a76 60008a76 0227         movs     r7, #2
+008a78 60008a78 1430         adds     r0, #0x14
+008a7a 60008a7a 0590         str      r0, [sp, #0x14]
+008a7c 60008a7c adf80070     strh.w   r7, [sp]
+008a80 60008a80 6846         mov      r0, sp
+008a82 60008a82 0cf01bfe     bl       #0x600156bc
+008a86 60008a86 0028         cmp      r0, #0
+008a88 60008a88 00dc         bgt      #0x60008a8c
+008a8a 60008a8a 0546         mov      r5, r0
+008a8c 60008a8c 5649         ldr      r1, [pc, #0x158]
+008a8e 60008a8e dff85c81     ldr.w    r8, [pc, #0x15c]
+008a92 60008a92 0020         movs     r0, #0
+008a94 60008a94 48f82010     str.w    r1, [r8, r0, lsl #2]
+008a98 60008a98 401c         adds     r0, r0, #1
+008a9a 60008a9a ff28         cmp      r0, #0xff
+008a9c 60008a9c fad9         bls      #0x60008a94
+008a9e 60008a9e adf818b0     strh.w   fp, [sp, #0x18]
+008aa2 60008aa2 06a8         add      r0, sp, #0x18
+008aa4 60008aa4 0794         str      r4, [sp, #0x1c]
+008aa6 60008aa6 0cf004fe     bl       #0x600156b2
+008aaa 60008aaa 00b2         sxth     r0, r0
+008aac 60008aac 5446         mov      r4, sl
+008aae 60008aae aaf82a00     strh.w   r0, [sl, #0x2a]
+008ab2 60008ab2 0028         cmp      r0, #0
+008ab4 60008ab4 03dc         bgt      #0x60008abe
+008ab6 60008ab6 3ba0         adr      r0, #0xec
+008ab8 60008ab8 0cf0aaf8     bl       #0x60014c10
+008abc 60008abc fee7         b        #0x60008abc
+008abe 60008abe 7db9         cbnz     r5, #0x60008ae0
+008ac0 60008ac0 4b48         ldr      r0, [pc, #0x12c]
+008ac2 60008ac2 0290         str      r0, [sp, #8]
+008ac4 60008ac4 4ff48060     mov.w    r0, #0x400
+008ac8 60008ac8 cde90408     strd     r0, r8, [sp, #0x10]
+008acc 60008acc adf80c60     strh.w   r6, [sp, #0xc]
+008ad0 60008ad0 adf80070     strh.w   r7, [sp]
+008ad4 60008ad4 6846         mov      r0, sp
+008ad6 60008ad6 0cf0f1fd     bl       #0x600156bc
+008ada 60008ada 0028         cmp      r0, #0
+008adc 60008adc 00dd         ble      #0x60008ae0
+008ade 60008ade 2085         strh     r0, [r4, #0x28]
+008ae0 60008ae0 adf81860     strh.w   r6, [sp, #0x18]
+008ae4 60008ae4 0796         str      r6, [sp, #0x1c]
+008ae6 60008ae6 06a8         add      r0, sp, #0x18
+008ae8 60008ae8 0896         str      r6, [sp, #0x20]
+008aea 60008aea 0cf0b4fe     bl       #0x60015856
+008aee 60008aee 00b2         sxth     r0, r0
+008af0 60008af0 a085         strh     r0, [r4, #0x2c]
+008af2 60008af2 0028         cmp      r0, #0
+008af4 60008af4 03da         bge      #0x60008afe
+008af6 60008af6 3fa0         adr      r0, #0xfc
+008af8 60008af8 0cf08af8     bl       #0x60014c10
+008afc 60008afc fee7         b        #0x60008afc
+008afe 60008afe 4249         ldr      r1, [pc, #0x108]
+008b00 60008b00 8945         cmp      sb, r1
+008b02 60008b02 02db         blt      #0x60008b0a
+008b04 60008b04 0820         movs     r0, #8
+008b06 60008b06 2062         str      r0, [r4, #0x20]
+008b08 60008b08 07e0         b        #0x60008b1a
+008b0a 60008b0a 4cf25031     movw     r1, #0xc350
+008b0e 60008b0e 8945         cmp      sb, r1
+008b10 60008b10 02db         blt      #0x60008b18
+008b12 60008b12 c4f820b0     str.w    fp, [r4, #0x20]
+008b16 60008b16 00e0         b        #0x60008b1a
+008b18 60008b18 2762         str      r7, [r4, #0x20]
+008b1a 60008b1a 0e98         ldr      r0, [sp, #0x38]
+008b1c 60008b1c 00f02efa     bl       #0x60008f7c
+008b20 60008b20 0fb0         add      sp, #0x3c
+
+USB core task creation, complete function
+00927c 6000927c 2de9fc41     push.w   {r2, r3, r4, r5, r6, r7, r8, lr}
+009280 60009280 0025         movs     r5, #0
+009282 60009282 4ff48040     mov.w    r0, #0x4000
+009286 60009286 01f0a0fe     bl       #0x6000afca
+00928a 6000928a e64c         ldr      r4, [pc, #0x398]
+00928c 6000928c 6ff01306     mvn      r6, #0x13
+009290 60009290 0028         cmp      r0, #0
+009292 60009292 a060         str      r0, [r4, #8]
+009294 60009294 20dd         ble      #0x600092d8
+009296 60009296 4ff4a050     mov.w    r0, #0x1400
+00929a 6000929a 01f096fe     bl       #0x6000afca
+00929e 6000929e e060         str      r0, [r4, #0xc]
+0092a0 600092a0 0028         cmp      r0, #0
+0092a2 600092a2 19dd         ble      #0x600092d8
+0092a4 600092a4 4ff48057     mov.w    r7, #0x1000
+0092a8 600092a8 3846         mov      r0, r7
+0092aa 600092aa 01f0bffe     bl       #0x6000b02c
+0092ae 600092ae 2061         str      r0, [r4, #0x10]
+0092b0 600092b0 0028         cmp      r0, #0
+0092b2 600092b2 11dd         ble      #0x600092d8
+0092b4 600092b4 02f0b6f9     bl       #0x6000b624
+0092b8 600092b8 6060         str      r0, [r4, #4]
+0092ba 600092ba 0028         cmp      r0, #0
+0092bc 600092bc 0cdd         ble      #0x600092d8
+0092be 600092be 0021         movs     r1, #0
+0092c0 600092c0 1020         movs     r0, #0x10
+0092c2 600092c2 cde90001     strd     r0, r1, [sp]
+0092c6 600092c6 0a46         mov      r2, r1
+0092c8 600092c8 3b46         mov      r3, r7
+0092ca 600092ca d749         ldr      r1, [pc, #0x35c]
+0092cc 600092cc d7a0         adr      r0, #0x35c
+0092ce 600092ce 02f0cefb     bl       #0x6000ba6e
+0092d2 600092d2 2060         str      r0, [r4]
+0092d4 600092d4 0028         cmp      r0, #0
+0092d6 600092d6 02dc         bgt      #0x600092de
+0092d8 600092d8 fff7b2ff     bl       #0x60009240
+0092dc 600092dc 3546         mov      r5, r6
+0092de 600092de 2846         mov      r0, r5
+0092e0 600092e0 bde8fc81     pop.w    {r2, r3, r4, r5, r6, r7, r8, pc}
+
+HCD task creation, complete function
+00c100 6000c100 2de9fc47     push.w   {r2, r3, r4, r5, r6, r7, r8, sb, sl, lr}
+00c104 6000c104 0027         movs     r7, #0
+00c106 6000c106 fdf737ff     bl       #0x60009f78
+00c10a 6000c10a fd4d         ldr      r5, [pc, #0x3f4]
+00c10c 6000c10c 0400         movs     r4, r0
+00c10e 6000c10e 01d0         beq      #0x6000c114
+00c110 6000c110 0127         movs     r7, #1
+00c112 6000c112 0de0         b        #0x6000c130
+00c114 6000c114 fff786fa     bl       #0x6000b624
+00c118 6000c118 a860         str      r0, [r5, #8]
+00c11a 6000c11a 0028         cmp      r0, #0
+00c11c 6000c11c 01da         bge      #0x6000c122
+00c11e 6000c11e 0446         mov      r4, r0
+00c120 6000c120 f6e7         b        #0x6000c110
+00c122 6000c122 0221         movs     r1, #2
+00c124 6000c124 4ff4a050     mov.w    r0, #0x1400
+00c128 6000c128 fef7aeff     bl       #0x6000b088
+00c12c 6000c12c e860         str      r0, [r5, #0xc]
+00c12e 6000c12e 28b1         cbz      r0, #0x6000c13c
+00c130 6000c130 0026         movs     r6, #0
+00c132 6000c132 dff8d093     ldr.w    sb, [pc, #0x3d0]
+00c136 6000c136 dff8d083     ldr.w    r8, [pc, #0x3d0]
+00c13a 6000c13a 21e0         b        #0x6000c180
+00c13c 6000c13c a868         ldr      r0, [r5, #8]
+00c13e 6000c13e fff7a3fa     bl       #0x6000b688
+00c142 6000c142 6ff01304     mvn      r4, #0x13
+00c146 6000c146 e3e7         b        #0x6000c110
+00c148 6000c148 59f82600     ldr.w    r0, [sb, r6, lsl #2]
+00c14c 6000c14c 4168         ldr      r1, [r0, #4]
+00c14e 6000c14e 21b1         cbz      r1, #0x6000c15a
+00c150 6000c150 3046         mov      r0, r6
+00c152 6000c152 8847         blx      r1
+00c154 6000c154 0400         movs     r4, r0
+00c156 6000c156 02d1         bne      #0x6000c15e
+00c158 6000c158 06e0         b        #0x6000c168
+00c15a 6000c15a 6ff00404     mvn      r4, #4
+00c15e 6000c15e 3046         mov      r0, r6
+00c160 6000c160 fff788fd     bl       #0x6000bc74
+00c164 6000c164 0127         movs     r7, #1
+00c166 6000c166 09e0         b        #0x6000c17c
+00c168 6000c168 e849         ldr      r1, [pc, #0x3a0]
+00c16a 6000c16a 06eb4600     add.w    r0, r6, r6, lsl #1
+00c16e 6000c16e 01eb8000     add.w    r0, r1, r0, lsl #2
+00c172 6000c172 8068         ldr      r0, [r0, #8]
+00c174 6000c174 08f025f8     bl       #0x600141c2
+00c178 6000c178 0400         movs     r4, r0
+00c17a 6000c17a f0d1         bne      #0x6000c15e
+00c17c 6000c17c 761c         adds     r6, r6, #1
+00c17e 6000c17e b6b2         uxth     r6, r6
+00c180 6000c180 b8f80000     ldrh.w   r0, [r8]
+00c184 6000c184 8642         cmp      r6, r0
+00c186 6000c186 01d2         bhs      #0x6000c18c
+00c188 6000c188 002f         cmp      r7, #0
+00c18a 6000c18a ddd0         beq      #0x6000c148
+00c18c 6000c18c 761e         subs     r6, r6, #1
+00c18e 6000c18e b6b2         uxth     r6, r6
+00c190 6000c190 afb9         cbnz     r7, #0x6000c1be
+00c192 6000c192 0021         movs     r1, #0
+00c194 6000c194 0f20         movs     r0, #0xf
+00c196 6000c196 4ff40063     mov.w    r3, #0x800
+00c19a 6000c19a 0a46         mov      r2, r1
+00c19c 6000c19c cde90001     strd     r0, r1, [sp]
+00c1a0 6000c1a0 aff2db31     subw     r1, pc, #0x3db
+00c1a4 6000c1a4 daa0         adr      r0, #0x368
+00c1a6 6000c1a6 fff762fc     bl       #0x6000ba6e
+00c1aa 6000c1aa 2861         str      r0, [r5, #0x10]
+00c1ac 6000c1ac 0028         cmp      r0, #0
+00c1ae 6000c1ae 04da         bge      #0x6000c1ba
+00c1b0 6000c1b0 3046         mov      r0, r6
+00c1b2 6000c1b2 fff75ffd     bl       #0x6000bc74
+00c1b6 6000c1b6 2c69         ldr      r4, [r5, #0x10]
+00c1b8 6000c1b8 01e0         b        #0x6000c1be
+00c1ba 6000c1ba 0120         movs     r0, #1
+00c1bc 6000c1bc 2860         str      r0, [r5]
+00c1be 6000c1be 2046         mov      r0, r4
+00c1c0 6000c1c0 bde8fc87     pop.w    {r2, r3, r4, r5, r6, r7, r8, sb, sl, pc}

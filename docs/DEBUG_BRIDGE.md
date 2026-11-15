@@ -107,7 +107,7 @@ Result 0 succeeds; 1 is unsupported command/arguments; 2 is unavailable or a
 concurrent snapshot. Refresh failures return the original absolute queue/worker
 error. Probe queue failure is result 3. Invalid framing/checksum is silent and
 increments errors. B1 is 177, B2 is 178, B3 is 179, B4 is 180, B5 is 181,
-B6 is 182, B7 is 183, B8 is 184, B9 is 185 and current MX-1 candidate B10 is 186.
+B6 is 182, B7 is 183, B8 is 184, B9 is 185, B10 is 186 and current MX-1 candidate B11 is 187.
 
 Status after result: build, port, stage, result_code, controller, phase, control,
 flags, cc, frame, packets, malformed, overflow, underrun, missed, dsp_errors,
@@ -241,7 +241,7 @@ or teardown, 5A worker gap/other periodic activity, 5B insertion admission,
 destroy did not establish a halted controller. On EHCI, status control is raw
 USBCMD, flags is the linked-slot mask and cc is the last siTD status byte.
 
-Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 186,
+Unsolicited op 7E hex, sequence 0, contains seven words: result 0, build 187,
 startup stage, RX flags, TX flags, last RX result, last TX result. Flags are busy
 in bit 0, ready in bit 1, fault in bits 8 onward. This fits in one 60-byte USB
 MIDI transfer. B3 wakes the TX task every 4,096 audio-task calls, even with no
@@ -264,12 +264,12 @@ original decoded 2b1f4 → runtime 01000300, length bbe4. The builder records ev
 changed original byte, callback target, inserted source, startup copy/zero and hash.
 
 - Hot extension: 0100bee4..0100ccec, 3,592 bytes; writable hot state remains 1,472 bytes.
-- Audio/debug code: 607f0000..607f3850, 14,416 bytes, within the existing 16-KiB code slot.
+- Audio/debug code: 607f0000..607f38cc, 14,540 bytes, within the existing 16-KiB code slot.
 - Audio/DMA state remains 607f4000..607f9880; the A1 diagnostics remain 607f9880..607f9930.
 - Bridge state follows at 607f9930..607fa564 (3,124 bytes); EHCI state adds 264
   bytes at 607fa564..607fa66c. B6 adds 576 bytes of converter snapshots at
   607fa66c..607fa8ac. Failure/async records and B10 pipeline counters follow
-  through 607fb254. The whole 29,268-byte
+  through 607fb254; B11 appends its four-byte deadline through 607fb258. The whole 29,272-byte
   state stays in the already reserved 64-KiB SDRAM region; allocator bounds are unchanged.
 
 The original main application, boot programs, updater and panel payload are
@@ -333,3 +333,11 @@ start. Compare stages and first/last values, accounting for multiple outstanding
 requests and preemption. Triples/cross-stage values are not an atomic task trace.
 No saved address is followed by MIDI. Wrong owner or an incomplete snapshot
 returns result 2. [B10 evidence](../evidence/fm1-pipeline-b10-20261115/README.md).
+
+## B11 poll admission
+
+The poll latch now covers service as well as queue wait. The next poll becomes
+eligible 16 ticks (probe 9) or 32 ticks (IOC mode) after callback completion,
+including a fresh interval after an enqueue error. Nominal 4/8-ms values do not
+include service duration. Existing commands and cached pipeline pages are
+unchanged. [B11 evidence](../evidence/fm1-poll-fairness-b11-20261115/README.md).

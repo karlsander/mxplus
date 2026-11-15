@@ -31,7 +31,10 @@ service experiment alongside the preceding IOC probe; [B9 evidence](../evidence/
 Both B9 policies still delayed MIDI replies while the worker continued. B10
 adds API/core/HCD/completion counters to locate the delayed handoff;
 [B10 evidence](../evidence/fm1-pipeline-b10-20261115/README.md).
-Neither interrupt starvation nor a transport/converter repair is established.
+B10 found the core submission/completion counters stopped while HCD polls
+continued. B11 keeps each poll pending through service and adds a gap measured
+from completion; [B11 evidence](../evidence/fm1-poll-fairness-b11-20261115/README.md).
+The scheduling explanation and transport/converter repair remain unverified.
 See [commands](DEBUG_BRIDGE.md) and [implementation](../research/fm1-ehci.md).
 
 The accepted profile is VID `1209`, PID `0001`, full-speed USB, UAC1 interface 1
@@ -113,7 +116,7 @@ payload remain unchanged. Only `tools/build_firmware.py` produces firmware.
 | --- | --- |
 | `0100bee4..0100ccec` | 3,592-byte MIDI extension and original-function trampolines |
 | `01017868..01017e28` | Existing 1,472-byte MIDI state |
-| `607f0000..607f3850` | 14,416-byte audio extension and bridge commands |
+| `607f0000..607f38cc` | 14,540-byte audio extension and bridge commands |
 | `607f4000..607f9880` | Unmoved 22,656-byte audio state, descriptors and packet buffers |
 | `607f9880..607f9930` | 176-byte diagnostic state |
 | `607f9930..607fa564` | 3,124-byte bridge commands, replies and snapshots |
@@ -122,6 +125,7 @@ payload remain unchanged. Only `tools/build_firmware.py` produces firmware.
 | `607fa8ac..607fac4c` | 928-byte retained first MIDI failure records |
 | `607fac4c..607fafb4` | 872-byte asynchronous and pipeline snapshots, per-start policy |
 | `607fafb4..607fb254` | 672-byte lifetime MIDI pipeline counters |
+| `607fb254..607fb258` | Four-byte next poll eligibility tick |
 
 The USB processor's original general heap spans `604b1178..60800000`.
 The builder reduces its upper bound to `607f0000`, reserving 64 KiB in existing
@@ -236,7 +240,7 @@ audio ports to retain their addresses and buffer layout.
 The full reproduction gate checks this evidence against the actual USB image
 and both inserted USB code artifacts. No hardware probe runs in reproduction.
 
-For the authorized B10 MX-1 test:
+For the authorized B11 MX-1 test:
 
 1. Retain the last working image and settings backup. Copy the candidate as
    **`MX1_UPD.BIN`**, without a hyphen, to the updater volume. The original
@@ -245,7 +249,7 @@ For the authorized B10 MX-1 test:
    monitoring down. Check normal analog mixing first.
 3. Connect the FM-1 directly to HOST 3, which supplies bus power. Record the
    exact wiring, power arrangement, system rate and candidate hash.
-4. Keep the FM-1 bridge near the Mac. Confirm build 186 and MIDI pages 3/4,
+4. Keep the FM-1 bridge near the Mac. Confirm build 187 and MIDI pages 3/4,
    then run probes 1, 2, 3 and 9 sequentially, waiting for each result. Probe 9
    stops after nominally two seconds. Inspect retained pages 5–14 after stop;
    a MIDI timeout does not imply that the command was not executed. For comparison,

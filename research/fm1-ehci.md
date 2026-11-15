@@ -173,3 +173,13 @@ explain the observed stall. B10 preserves both policies and adds cached lifetime
 API/core/HCD/completion counters; [implementation, original instructions and
 limits](../evidence/fm1-pipeline-b10-20261115/README.md). No scheduler or controller
 change follows from the current evidence.
+
+## B11 poll admission
+
+B10 retained stage counters identify missing core progress while polling runs.
+The previous callback cleared the pending latch before service, allowing an
+audio tick to queue its successor during the callback. B11 retains the latch
+through service, then waits a fresh 16/32-tick interval before another poll.
+This is a bounded response to a plausible worker requeue cycle; actual RTOS
+causality and real-time transport quality still require the bench.
+[Change, instruction evidence and preemption model](../evidence/fm1-poll-fairness-b11-20261115/README.md).

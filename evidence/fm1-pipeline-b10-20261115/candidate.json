@@ -32,7 +32,12 @@
       "passed": 6,
       "failed": 0
     },
-    "hosted": "pending",
+    "hosted": {
+      "status": "passed",
+      "commit": "25c5aa7a7ad2a003ca0d63358734c7daa9173647",
+      "run_id": 43734026523,
+      "url": "https://github.com/karlsander/mxplus/actions/runs/43734026523"
+    },
     "core_wrapper_callee_saved_and_sp": "passed",
     "full_reproduction_stages": 17,
     "verified_code_commit": "1fc19931e19ea99f8867ab8d06bc0e73ab2f44b3"

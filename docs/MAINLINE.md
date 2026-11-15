@@ -9,10 +9,10 @@ and system reserved fields for snapshots and restart persistence; see
 [storage integration](ROUTING_STORAGE.md).
 
 The current candidate is
-`957e0a81923763cefb78c34ba298650df8ad62d91e2362df89c8e2fd64e811e0`.
-B10 records MIDI API/core/HCD/completion handoffs after both B9 service policies
-still delayed MIDI replies. It preserves the short probes and their transport
-behavior; [B10 evidence](../evidence/fm1-pipeline-b10-20261115/README.md).
+`96be48786bfb12667db3bffd0d4217c82c0be1374427255af7f64f127a6aeee1`.
+B10 located missing USB-core progress while the HCD worker kept running. B11
+retains the poll latch through service and waits a fresh interval before another
+poll; [B11 evidence](../evidence/fm1-poll-fairness-b11-20261115/README.md).
 It retains B5's explicitly started EHCI split-ISO experiment; [implementation and limits](../research/fm1-ehci.md).
 It retains B4’s isolation of the MIDI TX error −20 by using untimed writes only for
 the matched FM-1 debug connection; [evidence and limits](../evidence/fm1-midi-timeout-b4-20261106/README.md).

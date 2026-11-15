@@ -17,7 +17,7 @@ def verify(image,h,syms):
 
     class Ehci(Audio):
         def __init__(self,port=0):
-            self.alloc=[];self.polls=[];self.real_poll=False;self.reset_halt=True
+            self.alloc=[];self.polls=[];self.real_poll=False;self.reset_halt=True;self.poll_result=0
             super().__init__(image,h,syms)
             self.p+=port*STRIDE
             m=self.m
@@ -57,7 +57,7 @@ def verify(image,h,syms):
                     result=0xffffffec # model freed context despite cleanup error
             elif a==0x6000c376:
                 if self.real_poll:return
-                self.polls.append(r[:3])
+                self.polls.append(r[:3]);result=self.poll_result
             else:return super().stub(u,a,size,data)
             u.reg_write(UC_ARM_REG_R0,result);u.reg_write(UC_ARM_REG_PC,u.reg_read(UC_ARM_REG_LR))
         def start(self,frame=2040,poll_only=0):
@@ -257,6 +257,57 @@ def verify(image,h,syms):
     assert q.start(frame=140)==0 and q.u32(syms['async_diagnostic']+532)==0
     assert q.u32(p+TD+12)==0x80b80080
     rejected=Ehci();assert rejected.start(poll_only=2)==0xfffffffb
+    # B11: model an audio-task preemption during a long worker service.
+    # A second machine executes the compiled audio tick against a copied
+    # state at that instruction boundary, without replacing the running
+    # worker's registers/stack. This is a scheduling model, not live timing.
+    preemptions=[]
+    for policy,interval in [(1,16),(0,32)]:
+        q=Ehci();m=q.m;assert q.start(frame=0,poll_only=policy)==0
+        m.write(syms['debug_ports']+276,P(3,10000))
+        for _ in range(interval):q.call('mx1_audio_tick',0)
+        assert len(q.polls)==1 and q.state(65)==1
+        def during_service(u,a,size,data):
+            if a!=(syms['ehci_service']&~1):return
+            assert q.state(65)==1 # latch covers service, not just queue wait
+            tick=q.u32(syms['debug_ticks'])+64
+            m.write(syms['debug_ticks'],P(tick))
+            probe=Audio(image,h,syms)
+            probe.m.write(h['audio_state_start'],m.read(h['audio_state_start'],h['audio_state_bytes']))
+            probe.m.write(syms['debug_ticks'],P(tick-1)) # tick lands on the old modulo deadline
+            attempts=[]
+            def queue_probe(v,pc,n,ctx):
+                if pc==0x6000c376:
+                    attempts.append(pc);v.reg_write(UC_ARM_REG_R0,0)
+                    v.reg_write(UC_ARM_REG_PC,v.reg_read(UC_ARM_REG_LR))
+            probe.m.uc.hook_add(UC_HOOK_CODE,queue_probe)
+            probe.call('mx1_audio_tick',0)
+            assert not attempts
+            preemptions.append({'policy':policy,'modeled_service_ticks':64,'requeued':len(attempts)})
+            # Negative control: releasing the latch at the same eligible tick
+            # admits a successor, reproducing the preceding callback policy.
+            probe.m.write(syms['ehci']+65*4,P(0))
+            probe.m.write(syms['debug_ticks'],P(tick-1))
+            probe.call('mx1_audio_tick',0);assert len(attempts)==1
+            preemptions[-1]['released_latch_requeues']=len(attempts)
+        hook=m.uc.hook_add(UC_HOOK_CODE,during_service)
+        q.poll_done();m.uc.hook_del(hook)
+        finished=q.u32(syms['debug_ticks'])
+        assert q.state(65)==0 and q.u32(syms['poll_after'])==finished+interval
+        for _ in range(interval-1):q.call('mx1_audio_tick',0)
+        assert len(q.polls)==1
+        q.call('mx1_audio_tick',0);assert len(q.polls)==2 and q.state(65)==1
+    # Rejected enqueue also waits a complete interval; wraparound stays bounded.
+    q=Ehci();m=q.m;m.write(syms['debug_ticks'],P(0xfffffff0))
+    assert q.start(frame=0,poll_only=1)==0
+    m.write(syms['debug_ports']+276,P(3,10000));q.poll_result=0xfffffff4
+    for _ in range(15):q.call('mx1_audio_tick',0)
+    assert not q.polls
+    q.call('mx1_audio_tick',0);assert len(q.polls)==1 and q.state(65)==0
+    assert q.u32(syms['poll_after'])==16
+    for _ in range(15):q.call('mx1_audio_tick',0)
+    assert len(q.polls)==1
+    q.call('mx1_audio_tick',0);assert len(q.polls)==2
     # The original converter's busy-gate return is a real instruction path,
     # not a mocked failure. Capture it, keep the DMA alive until worker stop.
     q=Ehci(port=2);assert q.start()==0;q.real_dsp=True
@@ -396,6 +447,7 @@ def verify(image,h,syms):
         'host3_page_crossing_slots':crossed,
         'async_original_bulk_construction_and_cached_pages':True,
         'poll_only_without_iso_ioc_or_controller_writes':True,
+        'poll_callback_preemption_model':preemptions,'poll_completion_relative_gap_and_wrap':True,
         'admission_negative_cases':negatives,'original_controller_status_queue_and_worker':True,
         'cases':['actual stock frame-list replacement and dummy iTD chain','guarded EHCI bind trampoline',
                  'split endpoint/hub/port/masks and DMA alignment','2048-frame and 256-slot wrap',

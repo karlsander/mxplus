@@ -35,8 +35,9 @@ not sustained or comprehensive validation.
    B8 found an active RX wrapper but no TX wrapper during the stall. B9 compares
    the preceding IOC service with an explicit short poll-only probe; both still
    delayed MIDI replies while the worker ran. B10 adds API/core/HCD/completion
-   counters to locate the delayed handoff. Interrupt pressure and task starvation
-   remain hypotheses, not established causes.
+   counters, which found USB-core progress stopped while HCD polls continued.
+   B11 retains the poll latch through service and adds a completion-relative
+   gap. Its physical effect and the scheduling explanation remain unverified.
    Other host-audio
    coexistence needs shared bandwidth/TT admission beyond B5. The computer
    probe and offline tests do not establish an MX-1 audio result.

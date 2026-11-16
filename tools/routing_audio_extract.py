@@ -23,10 +23,12 @@ EXPECTED = "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b"
 RETURN = 0x0100F680
 
 
-def reconstruct(tables=(0x600BA008, 0x600BBED0), counts=(18, 18)) -> tuple[dict, list[bytes]]:
-    blob = (ROOT / "analysis/container_app_main.bin").read_bytes()
-    assert hashlib.sha256(blob).hexdigest() == EXPECTED
-    mapping = json.loads((ROOT / "analysis/map-main.json").read_text())
+def reconstruct(tables=(0x600BA008, 0x600BBED0), counts=(18, 18), *, image=None) -> tuple[dict, list[bytes]]:
+    blob = image if image is not None else (ROOT / "analysis/container_app_main.bin").read_bytes()
+    if image is None:
+        assert hashlib.sha256(blob).hexdigest() == EXPECTED
+    from memory_map import recover
+    mapping = recover(blob)
     uc = Uc(UC_ARCH_ARM, UC_MODE_THUMB | UC_MODE_MCLASS)
     for base, size in ((0x01000000, 0x30000), (0x20000000, 0x20000),
                        (0x40100000, 0x80000), (0x60000000, 0x700000)):
@@ -87,7 +89,7 @@ def reconstruct(tables=(0x600BA008, 0x600BBED0), counts=(18, 18)) -> tuple[dict,
             assert uc.reg_read(UC_ARM_REG_SP) == 0x2001FF00
     images = [bytes(uc.mem_read(base, 0x8000)) for base in (0x40150000, 0x40170000)]
     report = {
-        "source_sha256": EXPECTED,
+        "source_sha256": hashlib.sha256(blob).hexdigest(),
         "executed": ["0x0100bfe2 descriptor wrapper", "0x0100ab32 uploader",
                      "0x0100ab04 original boundary-write helper"],
         "modeled": ["bulk DMA byte copying", "DSP programming-command storage semantics"],

@@ -1,3 +1,7 @@
+> Historical research-stage evidence. The subsequent implementation and its
+> separate verification boundaries are in [Additional channel sends](FX_SENDS.md).
+> Statements below about an unchanged candidate describe that earlier stage.
+
 # Additional FX sends: implementation investigation
 
 Status: **incomplete; no additional sends implemented**. This investigation is

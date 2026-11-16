@@ -2,7 +2,7 @@
 
 RTOS queues/key decoding, SELECT actions, parameter storage, lookup and text
 loops execute. Final panel I/O, notifications, periodic scheduling and hardware
-are modeled as in mastering_verify. No sends or audio processing are modeled.
+are modeled as in mastering_verify. DSP processing is checked separately in extra_sends_verify.
 """
 import json
 import struct
@@ -90,7 +90,7 @@ def verify(original,patched,build):
             m.event(2,key);m.event(3,key);m.event(1,key)
             assert len(m.original_events)==before
             assert m.read(CSTATE+strip,1)==bytes([page])
-            assert m.draw()==f'P{page+1}--'
+            assert m.draw()==('A000','F000','P064','----')[page]
             for delta in (-32768,-1,0,1,32767):m.event(4,1,delta)
             assert len(m.original_events)==before and not m.transactions
             # The stock asynchronous TAP writer must not overwrite page state.
@@ -100,13 +100,13 @@ def verify(original,patched,build):
                     assert m.leds[led]==(led-10==page)
         m.select(strip)
         assert m.selected()==-1 and all(m.get(MIX,i)==0 for i in range(11))
-        assert m.draw()!='P4--'
-    passed('All 11 stock SELECT toggle paths, four empty pages, signed dial boundaries and asynchronous LED isolation',cases=44)
+        assert m.draw()!='----'
+    passed('All 11 stock SELECT toggle paths, four channel pages, signed dial boundaries and asynchronous LED isolation',cases=44)
     # Each channel remembers its page in RAM; no actual mixer/system writes.
     for strip in range(11):
         m.select(strip);m.event(2,KEY_IDS[strip%4]);m.event(1,KEY_IDS[strip%4])
     for strip in range(11):
-        m.select(strip);assert m.draw()==f'P{strip%4+1}--'
+        m.select(strip);assert m.draw()==('A002','F002','P064','----')[strip%4]
     passed('Per-channel page memory and switching; no parameter writes from page controls')
     # Held controls cannot leak release or repeat into tempo after deselection.
     for key in KEY_IDS:
@@ -176,9 +176,9 @@ def verify(original,patched,build):
     for key in KEY_IDS:m.event(2,key);m.event(1,key)
     assert m.read(CSTATE,11)==saved
     m.checked(0x60014a78,13,3,9);assert m.leds[13]==3
-    m.exit();assert m.draw()=='P2--'
+    m.exit();assert m.draw()=='F000'
     passed('Mastering priority and channel page restoration')
-    # Existing source-routing hold keeps priority; the empty page returns on
+    # Existing source-routing hold keeps priority; the send page returns on
     # release without changing its identity. VALUE remains a stock event.
     m=ChannelMachine(patched,symbols);m.select(4)
     m.event(2,0x1c);m.event(1,0x1c);m.event(2,0x29+4)
@@ -186,7 +186,7 @@ def verify(original,patched,build):
     m.event(1,0x29+4)
     # Pressing the current SELECT deselects on release, as stock specifies.
     assert m.selected()==-1
-    m.select(4);assert m.draw()=='P2--'
+    m.select(4);assert m.draw()=='F000'
     before=len(m.original_events);m.event(4,0,1)
     assert len(m.original_events)==before+1
     passed('Source-routing hold priority, original deselection and VALUE delivery')
@@ -204,14 +204,55 @@ def verify(original,patched,build):
         m.select(leader);assert m.selected()==leader
         assert m.get(MIX,leader)==m.get(MIX,follower)==1
         m.select(follower);assert m.selected()==leader
-        m.event(2,0x1d);m.event(1,0x1d);assert m.draw()=='P3--'
+        m.event(2,0x1d);m.event(1,0x1d);assert m.draw()=='P064'
         m.select(leader);assert m.selected()==-1
     # Two physically held SELECTs use original multiple-selection semantics.
     m=ChannelMachine(patched,symbols)
     m.event(2,0x29);m.event(2,0x2d);m.event(1,0x2d);m.event(1,0x29)
     assert m.get(MIX,0)==m.get(MIX,4)==1 and m.selected()==0
-    m.event(2,0x1b);m.event(1,0x1b);assert m.draw()=='P1--'
+    m.event(2,0x1b);m.event(1,0x1b);assert m.draw()=='A000'
     passed('Original linked and multiple selection retain their current channel')
+    # New send gestures operate entirely through the compiled event path.
+    m=ChannelMachine(patched,symbols);m.select(4)
+    send_state=symbols['mx1_sends_state']
+    for page,key in enumerate(KEY_IDS[:2]):
+        m.event(2,key);m.event(1,key)
+        for endpoint,delta in ((0,-32768),(127,32767)):
+            m.write(send_state+page*11+4,bytes([endpoint]))
+            m.event(4,1,delta)
+            assert m.read(send_state+page*11+4,1)==bytes([endpoint])
+        m.write(send_state+page*11+4,bytes(1))
+        m.event(4,1,2)
+        assert m.read(send_state+page*11+4,1)==bytes([1])
+        assert m.draw()==('A001','F001')[page]
+    m.event(2,0x1b);assert m.draw()=='OFF '
+    m.event(4,1,1);assert m.draw()=='Sndr'
+    m.event(4,1,1);assert m.draw()=='Phon'
+    m.event(4,1,1);assert m.draw()=='Phon'
+    m.event(1,0x1b);assert m.draw()=='A001'
+    m.event(2,0x1c)
+    for label in ('StEr','PAn ','CroS','StPn','SPrL','rooM','HALL','rMod'):
+        assert m.draw()==label
+        m.event(4,1,1)
+    assert m.draw()=='rMod';m.event(1,0x1c)
+    m.event(2,0x1d);assert m.draw()=='t010'
+    m.event(4,1,1);assert m.draw()=='t011'
+    m.event(1,0x1d);assert m.draw()=='P064'
+    m.event(4,1,-1);assert m.draw()=='P063'
+    # A held button from another strip must not edit its global setting.
+    m.event(2,0x1b);m.select(5)
+    old_config=m.read(send_state+28,4)
+    m.event(4,1,1)
+    assert m.read(send_state+5,1)==bytes([1])
+    assert m.read(send_state+28,4)==old_config
+    m.event(1,0x1b)
+    for block in ('external','diagnostic'):
+        m.system_values[0x19]=2 if block=='external' else 0
+        m.write(0x6051deb8,u32(4 if block=='diagnostic' else 0))
+        before=m.read(send_state,40)
+        m.event(4,1,1);assert m.read(send_state,40)==before
+        assert m.draw()=='modE'
+    passed('Send level end stops, all destination/effect choices, parameter versus held time, cross-strip holds and blocked modes')
     return dict(status='pass',candidate_container_sha256=build['container_sha256'],patched_app_sha256=sha256(patched),groups=groups,
         hardware_access=False,limits='Original selection and parameter storage execute; final LEDs, RTOS and audio remain modeled/unexecuted. Physical UI acceptance is pending.')
 

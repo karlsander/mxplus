@@ -209,8 +209,10 @@ __attribute__((naked)) static void original_dispatch(void)
     );
 }
 
+extern void mx1_sends_flush(void);
 void mx1_route_dispatch(void)
 {
     original_dispatch();
     mx1_route_flush();
+    mx1_sends_flush();
 }

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Execute the compiled route control and original DSP programming helpers.
+The new sends flush is a boundary here and executes separately in its own tests.
 
 This tests emitted ARM instructions and their command/operand effects. It does
 NOT emulate ESC2 arithmetic, float-port conversion, sample timing, or audio.
@@ -83,7 +84,9 @@ class AudioMachine(Machine):
     def instruction(self, uc, address, size, user):
         args = tuple(uc.reg_read(r) for r in
                      (UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_R2, UC_ARM_REG_R3))
-        if address == 0x6001a896:
+        if address == (self.symbols.get('mx1_sends_flush', 1) & ~1):
+            self.ret()  # Separate complete sends/dispatcher tests in extra_sends_arm_verify.
+        elif address == 0x6001a896:
             assert args[0] == 0x600b5390 and args[2] == 0
             self.ret(self.parameters.get(args[1], 0))
         elif address == 0x0100e266:

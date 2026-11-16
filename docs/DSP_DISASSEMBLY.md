@@ -1,3 +1,7 @@
+> Historical stock-disassembly investigation. The current [send implementation](FX_SENDS.md)
+> adds separate arithmetic, routing and verification evidence. Statements below
+> about unimplemented sends describe the earlier research stage.
+
 # Partial ESC2 DSP disassembly
 
 The stock firmware contains two relocated effect instances, including distinct

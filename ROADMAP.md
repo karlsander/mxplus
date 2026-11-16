@@ -21,12 +21,13 @@ not sustained or comprehensive validation.
    its offline checks do not establish hardware stability.
 4. Physically validate [USB-MIDI](docs/USB_MIDI.md) on class-only hosts: both
    ports, clock/transport, SysEx, reconnect and simultaneous audio.
-5. Physically validate the [channel tempo surface](docs/CHANNEL_CONTROLS.md):
-   four empty pages, tempo isolation, deselection and existing routing/mastering
-   behavior. Additional effect sends are deferred. Measure compiled size before
-   claiming capacity for further control/routing improvements.
-   An explicitly reserved SDRAM design is possible research, not enabled in
-   the current candidate. [Memory and DSP findings](docs/GENERATOR_RESEARCH.md).
+5. Physically validate the [additional sends](docs/FX_SENDS.md): SEND L/R split,
+   headphone replacement/restoration, all eight internal variations, AUX pre/post,
+   MASTER coexistence, type/mode/rate changes and sustained worst-case DSP load.
+   The candidate now contains both buses, with a reserved original effect slot
+   and an explicitly excluded SDRAM code region. Numerical and ARM checks do
+   not establish physical audio or execution headroom. Retain channel tempo
+   isolation and existing routing/mastering behavior.
 6. Keep exact image identities and scoped hardware results. TAP rollback worked
    for the observed application failures; other recovery classes are unverified.
 

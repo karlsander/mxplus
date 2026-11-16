@@ -1,0 +1,203 @@
+# fx16-slot0: DSP1; main source 0x600c8004
+# Logical byte offsets. Packet framing and bindings?/flow? are inferred.
+# Raw words are authoritative; arithmetic/latency/width are not decoded.
+4000: 0a02 ff71                                                                            ; packet[2]
+4004: 6909 2050 0fe2 1fe4 3fe6 0000 a050 0003 e021                                         ; packet[9] bindings? 0fe2->a050@4010,1fe4->0003@4012,3fe6->e021@4014
+4016: 3105 2e83 9e08 8fe0 0002                                                             ; packet[5] bindings? 8fe0->0002@401e
+4020: 0001                                                                                 ; packet[1]
+4022: 7708 1e12 6fe0 6fe2 afe4 e000 e021 0018                                              ; packet[8] bindings? 6fe0->e000@402c,6fe2->e021@402e,afe4->0018@4030
+4032: 1e05 efe0 3fe2 0004 e000                                                             ; packet[5] bindings? efe0->0004@4038,3fe2->e000@403a
+403c: 6509 0074 ae0b 1fe0 4fe2 0006 0004 0000 0000                                         ; packet[9] bindings? 1fe0->0006@4046,4fe2->0004@4048
+404e: 1405 044c 3fe2 0000 e021                                                             ; packet[5] bindings? 3fe2->e021@4056
+4058: 6b05 8e0b 9f40 9ed8 1923                                                             ; packet[5]
+4062: 1b04 ded8 9fe0 0005                                                                  ; packet[4] bindings? 9fe0->0005@4068
+406a: 3d06 1b12 6fe0 6fe2 e000 e021                                                        ; packet[6] bindings? 6fe0->e000@4072,6fe2->e021@4074
+4076: 0902 1f43                                                                            ; packet[2]
+407a: 0803 2d4a a003                                                                       ; packet[3]
+4080: 0902 1442                                                                            ; packet[2]
+4084: 0a02 9c57                                                                            ; packet[2]
+4088: 0a02 bed9                                                                            ; packet[2]
+408c: 0c03 bfe0 0017                                                                       ; packet[3] bindings? bfe0->0017@4090
+4092: 1e05 2fe0 1fe2 e013 0009                                                             ; packet[5] bindings? 2fe0->e013@4098,1fe2->0009@409a
+409c: 2e05 0c42 6584 7fe0 c062                                                             ; packet[5] bindings? 7fe0->c062@40a4
+40a6: 1503 0406 6547                                                                       ; packet[3]
+40ac: 1804 0406 8fe0 0008                                                                  ; packet[4] bindings? 8fe0->0008@40b2
+40b4: 0a02 cc21                                                                            ; packet[2]
+40b8: 1e05 6fe0 7fe2 c064 c065                                                             ; packet[5] bindings? 6fe0->c064@40be,7fe2->c065@40c0
+40c2: 1503 6546 7547                                                                       ; packet[3]
+40c8: 1504 6f90 75c7 3000                                                                  ; packet[4]
+40d0: 1504 6586 7fd0 3000                                                                  ; packet[4]
+40d8: 0c03 0fe0 2006                                                                       ; packet[3] bindings? 0fe0->2006@40dc
+40de: 1d06 4062 8fe0 4016 4915 0000                                                        ; packet[6] bindings? 8fe0->4016@40e4
+40ea: 1804 0044 1fe0 4010                                                                  ; packet[4] bindings? 1fe0->4010@40f0
+40f2: 1b04 8f6d 2fe0 4011                                                                  ; packet[4] bindings? 2fe0->4011@40f8
+40fa: 1d05 4010 3fe2 0010 4012                                                             ; packet[5] bindings? 3fe2->4012@4102
+4104: 1404 0c8b 0a80 92c1                                                                  ; packet[4]
+410c: 1e05 2fe0 5fe2 000c c063                                                             ; packet[5] bindings? 2fe0->000c@4112,5fe2->c063@4114
+4116: 1405 068d 3fe2 0000 000d                                                             ; packet[5] bindings? 3fe2->000d@411e
+4120: 1505 0c0b 15b0 3000 0000                                                             ; packet[5]
+412a: 0902 0842                                                                            ; packet[2]
+412e: 3406 0843 8fe0 1fe2 000b 0012                                                        ; packet[6] bindings? 8fe0->000b@4136,1fe2->0012@4138
+413a: 580c 0828 1fe2 8fe4 8fe6 1ac0 0013 0011 000c 0000 0000 0000                          ; packet[12] bindings? 1fe2->0013@4146,8fe4->0011@4148,8fe6->000c@414a
+4152: 0805 0462 0000 0000 0000                                                             ; packet[5]
+415c: 1804 5407 8fe0 0012                                                                  ; packet[4] bindings? 8fe0->0012@4162
+4164: 0c03 0fe0 2007                                                                       ; packet[3] bindings? 0fe0->2007@4168
+416a: 1d06 4062 8fe0 4017 5644 0000                                                        ; packet[6] bindings? 8fe0->4017@4170
+4176: 1804 0044 1fe0 4013                                                                  ; packet[4] bindings? 1fe0->4013@417c
+417e: 1b04 8f6d 2fe0 4014                                                                  ; packet[4] bindings? 2fe0->4014@4184
+4186: 1d05 4010 3fe2 0013 4015                                                             ; packet[5] bindings? 3fe2->4015@418e
+4190: 1404 0c8b 0a80 92c1                                                                  ; packet[4]
+4198: 1e05 2fe0 4fe2 000f c063                                                             ; packet[5] bindings? 2fe0->000f@419e,4fe2->c063@41a0
+41a2: 1405 068c 3fe2 0000 0010                                                             ; packet[5] bindings? 3fe2->0010@41aa
+41ac: 1505 0c0b 15b0 3000 0000                                                             ; packet[5]
+41b6: 0902 0842                                                                            ; packet[2]
+41ba: 3406 0843 8fe0 1fe2 000e 0015                                                        ; packet[6] bindings? 8fe0->000e@41c2,1fe2->0015@41c4
+41c6: 580c 0828 1fe2 8fe4 8fe6 1ac0 0016 0014 000f 0000 0000 0000                          ; packet[12] bindings? 1fe2->0016@41d2,8fe4->0014@41d4,8fe6->000f@41d6
+41de: 0805 0462 0000 0000 0000                                                             ; packet[5]
+41e8: 1804 6407 8fe0 0015                                                                  ; packet[4] bindings? 8fe0->0015@41ee
+41f0: 3e07 0fe0 1fe2 7fe4 2006 2007 0018                                                   ; packet[7] bindings? 0fe0->2006@41f8,1fe2->2007@41fa,7fe4->0018@41fc
+41fe: 2e05 0407 1447 7fe0 0017                                                             ; packet[5] bindings? 7fe0->0017@4206
+4208: 0803 2d4f 83c0                                                                       ; packet[3]
+420e: 1405 3d8f 7fe2 93c1 c060                                                             ; packet[5] bindings? 7fe2->c060@4216
+4218: b809 2487 34c7 7fe0 0fe2 1fe4 c066 2006 2007                                         ; packet[9] bindings? 7fe0->c066@4224,0fe2->2006@4226,1fe4->2007@4228
+422a: 0803 2c8f 83c0                                                                       ; packet[3]
+4230: 1405 3ccf 7fe2 93c1 c061                                                             ; packet[5] bindings? 7fe2->c061@4238
+423a: 0803 0c8f 83c0                                                                       ; packet[3]
+4240: 0803 1ccf 93c1                                                                       ; packet[3]
+4246: 1e05 8fe0 9fe2 0000 0001                                                             ; packet[5] bindings? 8fe0->0000@424c,9fe2->0001@424e
+4250: 1e05 0fe0 1fe2 0000 0001                                                             ; packet[5] bindings? 0fe0->0000@4256,1fe2->0001@4258
+425a: 1e05 8fe0 9fe2 2000 2001                                                             ; packet[5] bindings? 8fe0->2000@4260,9fe2->2001@4262
+4264: 0a02 ff70                                                                            ; packet[2]
+4268: 0b02 00f8                                                                            ; packet[2]
+426c: 0001                                                                                 ; packet[1]
+
+# fx16-slot1: DSP1; main source 0x600c8274
+# Logical byte offsets. Packet framing and bindings?/flow? are inferred.
+# Raw words are authoritative; arithmetic/latency/width are not decoded.
+6000: 0a02 ff71                                                                            ; packet[2]
+6004: 6909 2050 0fe2 1fe4 3fe6 0000 a0a8 0103 e021                                         ; packet[9] bindings? 0fe2->a0a8@6010,1fe4->0103@6012,3fe6->e021@6014
+6016: 3105 2e83 9e08 8fe0 0102                                                             ; packet[5] bindings? 8fe0->0102@601e
+6020: 0001                                                                                 ; packet[1]
+6022: 7708 1e12 6fe0 6fe2 afe4 e000 e021 0118                                              ; packet[8] bindings? 6fe0->e000@602c,6fe2->e021@602e,afe4->0118@6030
+6032: 1e05 efe0 3fe2 0104 e000                                                             ; packet[5] bindings? efe0->0104@6038,3fe2->e000@603a
+603c: 6509 0074 ae0b 1fe0 4fe2 0106 0104 0000 0000                                         ; packet[9] bindings? 1fe0->0106@6046,4fe2->0104@6048
+604e: 1405 044c 3fe2 0000 e021                                                             ; packet[5] bindings? 3fe2->e021@6056
+6058: 6b05 8e0b 9f40 9ed8 1923                                                             ; packet[5]
+6062: 1b04 ded8 9fe0 0105                                                                  ; packet[4] bindings? 9fe0->0105@6068
+606a: 3d06 1b12 6fe0 6fe2 e000 e021                                                        ; packet[6] bindings? 6fe0->e000@6072,6fe2->e021@6074
+6076: 0902 1f43                                                                            ; packet[2]
+607a: 0803 2d4a a003                                                                       ; packet[3]
+6080: 0902 1442                                                                            ; packet[2]
+6084: 0a02 9c57                                                                            ; packet[2]
+6088: 0a02 bed9                                                                            ; packet[2]
+608c: 0c03 bfe0 0117                                                                       ; packet[3] bindings? bfe0->0117@6090
+6092: 1e05 2fe0 1fe2 e013 0109                                                             ; packet[5] bindings? 2fe0->e013@6098,1fe2->0109@609a
+609c: 2e05 0c42 6584 7fe0 c072                                                             ; packet[5] bindings? 7fe0->c072@60a4
+60a6: 1503 0406 6547                                                                       ; packet[3]
+60ac: 1804 0406 8fe0 0108                                                                  ; packet[4] bindings? 8fe0->0108@60b2
+60b4: 0a02 cc21                                                                            ; packet[2]
+60b8: 1e05 6fe0 7fe2 c074 c075                                                             ; packet[5] bindings? 6fe0->c074@60be,7fe2->c075@60c0
+60c2: 1503 6546 7547                                                                       ; packet[3]
+60c8: 1504 6f90 75c7 3000                                                                  ; packet[4]
+60d0: 1504 6586 7fd0 3000                                                                  ; packet[4]
+60d8: 0c03 0fe0 2006                                                                       ; packet[3] bindings? 0fe0->2006@60dc
+60de: 1d06 4062 8fe0 4046 6373 0000                                                        ; packet[6] bindings? 8fe0->4046@60e4
+60ea: 1804 0044 1fe0 4040                                                                  ; packet[4] bindings? 1fe0->4040@60f0
+60f2: 1b04 8f6d 2fe0 4041                                                                  ; packet[4] bindings? 2fe0->4041@60f8
+60fa: 1d05 4010 3fe2 0040 4042                                                             ; packet[5] bindings? 3fe2->4042@6102
+6104: 1404 0c8b 0a80 92c1                                                                  ; packet[4]
+610c: 1e05 2fe0 5fe2 010c c073                                                             ; packet[5] bindings? 2fe0->010c@6112,5fe2->c073@6114
+6116: 1405 068d 3fe2 0000 010d                                                             ; packet[5] bindings? 3fe2->010d@611e
+6120: 1505 0c0b 15b0 3000 0000                                                             ; packet[5]
+612a: 0902 0842                                                                            ; packet[2]
+612e: 3406 0843 8fe0 1fe2 010b 0112                                                        ; packet[6] bindings? 8fe0->010b@6136,1fe2->0112@6138
+613a: 580c 0828 1fe2 8fe4 8fe6 1ac0 0113 0111 010c 0000 0000 0000                          ; packet[12] bindings? 1fe2->0113@6146,8fe4->0111@6148,8fe6->010c@614a
+6152: 0805 0462 0000 0000 0000                                                             ; packet[5]
+615c: 1804 5407 8fe0 0112                                                                  ; packet[4] bindings? 8fe0->0112@6162
+6164: 0c03 0fe0 2007                                                                       ; packet[3] bindings? 0fe0->2007@6168
+616a: 1d06 4062 8fe0 4047 70a2 0000                                                        ; packet[6] bindings? 8fe0->4047@6170
+6176: 1804 0044 1fe0 4043                                                                  ; packet[4] bindings? 1fe0->4043@617c
+617e: 1b04 8f6d 2fe0 4044                                                                  ; packet[4] bindings? 2fe0->4044@6184
+6186: 1d05 4010 3fe2 0043 4045                                                             ; packet[5] bindings? 3fe2->4045@618e
+6190: 1404 0c8b 0a80 92c1                                                                  ; packet[4]
+6198: 1e05 2fe0 4fe2 010f c073                                                             ; packet[5] bindings? 2fe0->010f@619e,4fe2->c073@61a0
+61a2: 1405 068c 3fe2 0000 0110                                                             ; packet[5] bindings? 3fe2->0110@61aa
+61ac: 1505 0c0b 15b0 3000 0000                                                             ; packet[5]
+61b6: 0902 0842                                                                            ; packet[2]
+61ba: 3406 0843 8fe0 1fe2 010e 0115                                                        ; packet[6] bindings? 8fe0->010e@61c2,1fe2->0115@61c4
+61c6: 580c 0828 1fe2 8fe4 8fe6 1ac0 0116 0114 010f 0000 0000 0000                          ; packet[12] bindings? 1fe2->0116@61d2,8fe4->0114@61d4,8fe6->010f@61d6
+61de: 0805 0462 0000 0000 0000                                                             ; packet[5]
+61e8: 1804 6407 8fe0 0115                                                                  ; packet[4] bindings? 8fe0->0115@61ee
+61f0: 3e07 0fe0 1fe2 7fe4 2006 2007 0118                                                   ; packet[7] bindings? 0fe0->2006@61f8,1fe2->2007@61fa,7fe4->0118@61fc
+61fe: 2e05 0407 1447 7fe0 0117                                                             ; packet[5] bindings? 7fe0->0117@6206
+6208: 0803 2d4f 83c0                                                                       ; packet[3]
+620e: 1405 3d8f 7fe2 93c1 c070                                                             ; packet[5] bindings? 7fe2->c070@6216
+6218: b809 2487 34c7 7fe0 0fe2 1fe4 c076 2006 2007                                         ; packet[9] bindings? 7fe0->c076@6224,0fe2->2006@6226,1fe4->2007@6228
+622a: 0803 2c8f 83c0                                                                       ; packet[3]
+6230: 1405 3ccf 7fe2 93c1 c071                                                             ; packet[5] bindings? 7fe2->c071@6238
+623a: 0803 0c8f 83c0                                                                       ; packet[3]
+6240: 0803 1ccf 93c1                                                                       ; packet[3]
+6246: 1e05 8fe0 9fe2 0100 0101                                                             ; packet[5] bindings? 8fe0->0100@624c,9fe2->0101@624e
+6250: 1e05 0fe0 1fe2 0100 0101                                                             ; packet[5] bindings? 0fe0->0100@6256,1fe2->0101@6258
+625a: 1e05 8fe0 9fe2 2002 2003                                                             ; packet[5] bindings? 8fe0->2002@6260,9fe2->2003@6262
+6264: 0a02 ff70                                                                            ; packet[2]
+6268: 0b02 00f8                                                                            ; packet[2]
+626c: 0001                                                                                 ; packet[1]
+
+# Algorithm 16: slot0 -> slot1 changed halfwords only.
+# Labels describe observed encodings/deltas, not a complete memory ownership proof.
+4010/6010: a050 -> a0a8 unclassified
+4012/6012: 0003 -> 0103 low_operand_delta_100
+401e/601e: 0002 -> 0102 low_operand_delta_100
+4030/6030: 0018 -> 0118 low_operand_delta_100
+4038/6038: 0004 -> 0104 low_operand_delta_100
+4046/6046: 0006 -> 0106 low_operand_delta_100
+4048/6048: 0004 -> 0104 low_operand_delta_100
+4068/6068: 0005 -> 0105 low_operand_delta_100
+4090/6090: 0017 -> 0117 low_operand_delta_100
+409a/609a: 0009 -> 0109 low_operand_delta_100
+40a4/60a4: c062 -> c072 coefficient_encoding_delta_10
+40b2/60b2: 0008 -> 0108 low_operand_delta_100
+40be/60be: c064 -> c074 coefficient_encoding_delta_10
+40c0/60c0: c065 -> c075 coefficient_encoding_delta_10
+40e4/60e4: 4016 -> 4046 unclassified
+40e6/60e6: 4915 -> 6373 unclassified
+40f0/60f0: 4010 -> 4040 unclassified
+40f8/60f8: 4011 -> 4041 unclassified
+4100/6100: 0010 -> 0040 unclassified
+4102/6102: 4012 -> 4042 unclassified
+4112/6112: 000c -> 010c low_operand_delta_100
+4114/6114: c063 -> c073 coefficient_encoding_delta_10
+411e/611e: 000d -> 010d low_operand_delta_100
+4136/6136: 000b -> 010b low_operand_delta_100
+4138/6138: 0012 -> 0112 low_operand_delta_100
+4146/6146: 0013 -> 0113 low_operand_delta_100
+4148/6148: 0011 -> 0111 low_operand_delta_100
+414a/614a: 000c -> 010c low_operand_delta_100
+4162/6162: 0012 -> 0112 low_operand_delta_100
+4170/6170: 4017 -> 4047 unclassified
+4172/6172: 5644 -> 70a2 unclassified
+417c/617c: 4013 -> 4043 unclassified
+4184/6184: 4014 -> 4044 unclassified
+418c/618c: 0013 -> 0043 unclassified
+418e/618e: 4015 -> 4045 unclassified
+419e/619e: 000f -> 010f low_operand_delta_100
+41a0/61a0: c063 -> c073 coefficient_encoding_delta_10
+41aa/61aa: 0010 -> 0110 low_operand_delta_100
+41c2/61c2: 000e -> 010e low_operand_delta_100
+41c4/61c4: 0015 -> 0115 low_operand_delta_100
+41d2/61d2: 0016 -> 0116 low_operand_delta_100
+41d4/61d4: 0014 -> 0114 low_operand_delta_100
+41d6/61d6: 000f -> 010f low_operand_delta_100
+41ee/61ee: 0015 -> 0115 low_operand_delta_100
+41fc/61fc: 0018 -> 0118 low_operand_delta_100
+4206/6206: 0017 -> 0117 low_operand_delta_100
+4216/6216: c060 -> c070 coefficient_encoding_delta_10
+4224/6224: c066 -> c076 coefficient_encoding_delta_10
+4238/6238: c061 -> c071 coefficient_encoding_delta_10
+424c/624c: 0000 -> 0100 low_operand_delta_100
+424e/624e: 0001 -> 0101 low_operand_delta_100
+4256/6256: 0000 -> 0100 low_operand_delta_100
+4258/6258: 0001 -> 0101 low_operand_delta_100
+4260/6260: 2000 -> 2002 unclassified
+4262/6262: 2001 -> 2003 unclassified

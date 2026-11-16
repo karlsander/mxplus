@@ -68,6 +68,10 @@ class ReproductionIdentityTests(unittest.TestCase):
             self.write_json(prefix + "channel-controls-verification.json", {
                 "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"],
                 "candidate_container_sha256": hashes["container_sha256"]})
+            for filename in ('extra-sends-verification.json','sends-memory-verification.json'):
+                self.write_json(prefix + filename, {
+                    "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"],
+                    "candidate_container_sha256": hashes["container_sha256"]})
             self.write_json(prefix + "storage-verification.json", {
                 "status": "pass", "patched_app_sha256": hashes["patched_app_sha256"]})
             self.write_json(prefix + "packet-verification.json", {
@@ -215,6 +219,16 @@ class ReproductionIdentityTests(unittest.TestCase):
                        lambda report: report.update(patched_app_sha256="0" * 64))
         with self.assertRaisesRegex(ValueError, "mastering evidence"):
             CHECK.audit()
+
+    def test_send_evidence_must_match_candidate(self):
+        for filename in ('extra-sends-verification.json','sends-memory-verification.json'):
+            with self.subTest(filename=filename):
+                path='build/mainline/'+filename
+                before=(self.root/path).read_bytes()
+                self.edit_json(path,lambda report:report.update(candidate_container_sha256='0'*64))
+                with self.assertRaisesRegex(ValueError, 'Send evidence'):
+                    CHECK.audit()
+                self.write(path,before)
 
     def test_current_evidence_mode_does_not_read_git(self):
         with mock.patch.object(CHECK.subprocess, "check_output") as git:

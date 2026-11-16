@@ -1,0 +1,6724 @@
+{
+  "scope": "Partial stock ESC2 structural disassembly; no firmware modification",
+  "original_update_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
+  "main_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
+  "chunks": [
+    {
+      "name": "dsp0-2500",
+      "core": 0,
+      "logical_start": 9472,
+      "length_bytes": 26,
+      "source_runtime": "0x600b9e8c",
+      "source_decoded_offset": "0xb9e8c",
+      "sha256": "5ee9e238fbdcdff535579066b13d31d6116b46031935d3d3e0d9c9941bd08de4",
+      "packet_count": 6,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp0-15fc",
+      "core": 0,
+      "logical_start": 5628,
+      "length_bytes": 700,
+      "source_runtime": "0x600b9bd0",
+      "source_decoded_offset": "0xb9bd0",
+      "sha256": "83cc36855588014cc3061243ff299dd02d6fb155029db29a6489cceceec638d2",
+      "packet_count": 61,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp0-0000",
+      "core": 0,
+      "logical_start": 0,
+      "length_bytes": 308,
+      "source_runtime": "0x600b85cc",
+      "source_decoded_offset": "0xb85cc",
+      "sha256": "52935c59c5b2d4b586e06004f2e15a82308aa7c8d8b79376414ae8445e62cee5",
+      "packet_count": 67,
+      "opaque_record_count": 1
+    },
+    {
+      "name": "dsp0-7000",
+      "core": 0,
+      "logical_start": 28672,
+      "length_bytes": 34,
+      "source_runtime": "0x600b9fb0",
+      "source_decoded_offset": "0xb9fb0",
+      "sha256": "4ed458f62f8276850b0cd6910d6b1af70ba267f8b6d8d61022ddd576d949526c",
+      "packet_count": 6,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp0-0134",
+      "core": 0,
+      "logical_start": 308,
+      "length_bytes": 486,
+      "source_runtime": "0x600b8700",
+      "source_decoded_offset": "0xb8700",
+      "sha256": "a2f98b7f51ac6651c0b9e79b3bc017783237d4a30d0bf5dc6f0442d1330c03dc",
+      "packet_count": 26,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp0-3000",
+      "core": 0,
+      "logical_start": 12288,
+      "length_bytes": 26,
+      "source_runtime": "0x600b9ea8",
+      "source_decoded_offset": "0xb9ea8",
+      "sha256": "f48842239f0b537304e3635405dcd10164c0710e9eeb1c3d3e0a94525cf90884",
+      "packet_count": 6,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp0-3500",
+      "core": 0,
+      "logical_start": 13568,
+      "length_bytes": 26,
+      "source_runtime": "0x600b9ec4",
+      "source_decoded_offset": "0xb9ec4",
+      "sha256": "8ea13ca7eb565d8691d59db1de57e2b63d25eb94d1e8243a5c47496be21a2b06",
+      "packet_count": 6,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp0-5000",
+      "core": 0,
+      "logical_start": 20480,
+      "length_bytes": 34,
+      "source_runtime": "0x600b9f20",
+      "source_decoded_offset": "0xb9f20",
+      "sha256": "5bee3b9efd246a0aa5c7ed3cd5cae2eca54ff87dd9f5a1920e219c7f19f322f0",
+      "packet_count": 6,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp0-4000",
+      "core": 0,
+      "logical_start": 16384,
+      "length_bytes": 26,
+      "source_runtime": "0x600b9ee0",
+      "source_decoded_offset": "0xb9ee0",
+      "sha256": "cf8315b86e66991adbd085318d219eefac4d598cd9a330b6833052856267870a",
+      "packet_count": 6,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp0-04fc",
+      "core": 0,
+      "logical_start": 1276,
+      "length_bytes": 642,
+      "source_runtime": "0x600b8acc",
+      "source_decoded_offset": "0xb8acc",
+      "sha256": "014b7c93f5bd122e50a0e0c3ec41e14311171ccb518fd709c53006063af94500",
+      "packet_count": 40,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp0-031a",
+      "core": 0,
+      "logical_start": 794,
+      "length_bytes": 482,
+      "source_runtime": "0x600b88e8",
+      "source_decoded_offset": "0xb88e8",
+      "sha256": "b31aa3bb06552762bca39bc755372574e97112b40a02379daad15947479f8b0a",
+      "packet_count": 29,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp0-7500",
+      "core": 0,
+      "logical_start": 29952,
+      "length_bytes": 34,
+      "source_runtime": "0x600b9fd4",
+      "source_decoded_offset": "0xb9fd4",
+      "sha256": "6939356abbd10e5f054eb120107716477773a5834e14588c93ed018e744a1544",
+      "packet_count": 6,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp0-5500",
+      "core": 0,
+      "logical_start": 21760,
+      "length_bytes": 34,
+      "source_runtime": "0x600b9f44",
+      "source_decoded_offset": "0xb9f44",
+      "sha256": "43604d5995af8e45595bdd36bddeaab79abf56bebc0a74f53a432fa6c405f8f3",
+      "packet_count": 6,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp0-4500",
+      "core": 0,
+      "logical_start": 17664,
+      "length_bytes": 34,
+      "source_runtime": "0x600b9efc",
+      "source_decoded_offset": "0xb9efc",
+      "sha256": "48440c1a03dfacbc2f5c2edfcd6bce510e14636d58b15dd4767578851baef748",
+      "packet_count": 6,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp0-6000",
+      "core": 0,
+      "logical_start": 24576,
+      "length_bytes": 34,
+      "source_runtime": "0x600b9f68",
+      "source_decoded_offset": "0xb9f68",
+      "sha256": "ba3d299097198be2ef8d04939b06e0b512d39e21454acb9f98791a104cc57592",
+      "packet_count": 6,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp0-077e",
+      "core": 0,
+      "logical_start": 1918,
+      "length_bytes": 3710,
+      "source_runtime": "0x600b8d50",
+      "source_decoded_offset": "0xb8d50",
+      "sha256": "d89b9b6263e51d7cfaef669b84dce296c351d6202781fdaded94c070adac74bf",
+      "packet_count": 262,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp0-7ff2",
+      "core": 0,
+      "logical_start": 32754,
+      "length_bytes": 14,
+      "source_runtime": "0x600b9ff8",
+      "source_decoded_offset": "0xb9ff8",
+      "sha256": "24ba1cebb517766d52774b7e8f8b6cf645f0d7c133b8a623e15cc674f1bf5137",
+      "packet_count": 2,
+      "opaque_record_count": 1
+    },
+    {
+      "name": "dsp0-6500",
+      "core": 0,
+      "logical_start": 25856,
+      "length_bytes": 34,
+      "source_runtime": "0x600b9f8c",
+      "source_decoded_offset": "0xb9f8c",
+      "sha256": "0bbffb0a7a56ae6abe9c8e13e8b879759293bd2bbf1cc50cfb4b63cd5c50af6d",
+      "packet_count": 6,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp1-1aca",
+      "core": 1,
+      "logical_start": 6858,
+      "length_bytes": 104,
+      "source_runtime": "0x600bbd4c",
+      "source_decoded_offset": "0xbbd4c",
+      "sha256": "f052d9e5e634d6803ccb203a1b2cf23b5c295840ca839d1de3d2900d2ae840f5",
+      "packet_count": 10,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp1-0000",
+      "core": 1,
+      "logical_start": 0,
+      "length_bytes": 106,
+      "source_runtime": "0x600ba250",
+      "source_decoded_offset": "0xba250",
+      "sha256": "5d871924e1b44bead867cd768e2cd1e2ce34162db06845b9cc505c5919bddf6c",
+      "packet_count": 21,
+      "opaque_record_count": 1
+    },
+    {
+      "name": "dsp1-1032",
+      "core": 1,
+      "logical_start": 4146,
+      "length_bytes": 408,
+      "source_runtime": "0x600bb2ac",
+      "source_decoded_offset": "0xbb2ac",
+      "sha256": "26f441aea4be737d5e8875a08b41c5998032e89ee036f3de3efa9a8e503c31cc",
+      "packet_count": 32,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp1-06ba",
+      "core": 1,
+      "logical_start": 1722,
+      "length_bytes": 404,
+      "source_runtime": "0x600ba91c",
+      "source_decoded_offset": "0xba91c",
+      "sha256": "4e0f673eaea2c751c59de74c735407f52c9fb954d1c8602c21599cdabaad6f06",
+      "packet_count": 31,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp1-0392",
+      "core": 1,
+      "logical_start": 914,
+      "length_bytes": 404,
+      "source_runtime": "0x600ba5ec",
+      "source_decoded_offset": "0xba5ec",
+      "sha256": "54d3718ac442ba46c43f2e41aa1cdfe6e6627f1c8959cfb19c4bd1499e2bda38",
+      "packet_count": 31,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp1-084e",
+      "core": 1,
+      "logical_start": 2126,
+      "length_bytes": 404,
+      "source_runtime": "0x600baab4",
+      "source_decoded_offset": "0xbaab4",
+      "sha256": "b15b059a4ab2993e77882307c1dc144e0b49b03294e7a4ee2d9c5aac2a86bb78",
+      "packet_count": 31,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp1-1b32",
+      "core": 1,
+      "logical_start": 6962,
+      "length_bytes": 188,
+      "source_runtime": "0x600bbdb8",
+      "source_decoded_offset": "0xbbdb8",
+      "sha256": "af954fd9cf9a2d9e870dc4b5b19f0a7afa7ccdce5b8e4b06cbdbfe4628adfed4",
+      "packet_count": 23,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp1-11ca",
+      "core": 1,
+      "logical_start": 4554,
+      "length_bytes": 2304,
+      "source_runtime": "0x600bb448",
+      "source_decoded_offset": "0xbb448",
+      "sha256": "3566a5b19edd9a868dbf2da4fcf36f1db1ec5f98196e0f49d2a59e4b375b3705",
+      "packet_count": 110,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp1-09e2",
+      "core": 1,
+      "logical_start": 2530,
+      "length_bytes": 404,
+      "source_runtime": "0x600bac4c",
+      "source_decoded_offset": "0xbac4c",
+      "sha256": "033999f52828ec77b2c2786882802e1f543266045c4009641027188a58181167",
+      "packet_count": 31,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp1-0e9e",
+      "core": 1,
+      "logical_start": 3742,
+      "length_bytes": 404,
+      "source_runtime": "0x600bb114",
+      "source_decoded_offset": "0xbb114",
+      "sha256": "19c5793fe29ea084db9b8219ca2fc1f56d64956de4f7ee2e0a25f859f9e53f36",
+      "packet_count": 31,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp1-0b76",
+      "core": 1,
+      "logical_start": 2934,
+      "length_bytes": 404,
+      "source_runtime": "0x600bade4",
+      "source_decoded_offset": "0xbade4",
+      "sha256": "7c79c361437a45ac157e8d9ea44e891960f71f63b067bd4913d274023d52ff3b",
+      "packet_count": 31,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp1-4000",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 34,
+      "source_runtime": "0x600bbe78",
+      "source_decoded_offset": "0xbbe78",
+      "sha256": "c3657d533d8c064394dc1f9449eb07c066b8d605821cf3225d256a1f6c1c3d1d",
+      "packet_count": 6,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp1-0d0a",
+      "core": 1,
+      "logical_start": 3338,
+      "length_bytes": 404,
+      "source_runtime": "0x600baf7c",
+      "source_decoded_offset": "0xbaf7c",
+      "sha256": "c97f87093e6fd6570c06ff47a43f9451220be3d2a8d1d3755d41a8e476ae15e4",
+      "packet_count": 31,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp1-006a",
+      "core": 1,
+      "logical_start": 106,
+      "length_bytes": 404,
+      "source_runtime": "0x600ba2bc",
+      "source_decoded_offset": "0xba2bc",
+      "sha256": "5d7c454b8c34a00622921c8881513c5a168ebde7def5055ee5762b0934685d2c",
+      "packet_count": 31,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp1-7ff2",
+      "core": 1,
+      "logical_start": 32754,
+      "length_bytes": 14,
+      "source_runtime": "0x600bbec0",
+      "source_decoded_offset": "0xbbec0",
+      "sha256": "083c2f1cb40dfbe0747ec300ef7a646d8b907b26e6591ab507ceaa6fdff02380",
+      "packet_count": 2,
+      "opaque_record_count": 1
+    },
+    {
+      "name": "dsp1-6000",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 34,
+      "source_runtime": "0x600bbe9c",
+      "source_decoded_offset": "0xbbe9c",
+      "sha256": "6d839863133174444c37ff11cf4fc62b78c7a2094ac4953fbe6982097affb80e",
+      "packet_count": 6,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp1-0526",
+      "core": 1,
+      "logical_start": 1318,
+      "length_bytes": 404,
+      "source_runtime": "0x600ba784",
+      "source_decoded_offset": "0xba784",
+      "sha256": "19d51116909531fa074650906d5ca3120f3c20c7064e1eb564ae839428beafe7",
+      "packet_count": 31,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "dsp1-01fe",
+      "core": 1,
+      "logical_start": 510,
+      "length_bytes": 404,
+      "source_runtime": "0x600ba454",
+      "source_decoded_offset": "0xba454",
+      "sha256": "d90e29299f6cf41103c028cd75f727cd994a3bf6096c2b46831bc3cee97d6b89",
+      "packet_count": 31,
+      "opaque_record_count": 0
+    },
+    {
+      "name": "factory-dsp0",
+      "core": 0,
+      "logical_start": 0,
+      "length_bytes": 2610,
+      "source_runtime": "0x600cad4c",
+      "source_decoded_offset": "0xcad4c",
+      "sha256": "b699dfc8c5a0d883d2f36418c53e8cfa01a4a0741bd32e1c7d2709c4c12247b4",
+      "packet_count": 240,
+      "opaque_record_count": 2
+    },
+    {
+      "name": "fx00-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 54,
+      "source_runtime": "0x600bf71c",
+      "source_decoded_offset": "0xbf71c",
+      "sha256": "6f8d6f92977d533233e75f7378c963439f53bdcf4f6e9f321d0b97de915f9e3c",
+      "packet_count": 8,
+      "opaque_record_count": 0,
+      "algorithm": 0,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600bf8e0",
+        "offset_bytes": 32,
+        "length_bytes": 184,
+        "source_runtime": "0x600bf7d4",
+        "raw_entries_u32": [
+          [
+            5054104,
+            1114112
+          ],
+          [
+            5630104,
+            1245184
+          ],
+          [
+            2152273152,
+            1048576
+          ],
+          [
+            2152849152,
+            1179648
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx00-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 54,
+      "source_runtime": "0x600bf754",
+      "source_decoded_offset": "0xbf754",
+      "sha256": "06b1ed283e73f6f5b42b99c4c6256af3b39e74beb97f3f3967198c6be2d027d5",
+      "packet_count": 8,
+      "opaque_record_count": 0,
+      "algorithm": 0,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600bf8bc",
+        "offset_bytes": 312,
+        "length_bytes": 40,
+        "source_runtime": "0x600bf88c",
+        "raw_entries_u32": [
+          [
+            6782104,
+            4259840
+          ],
+          [
+            7358104,
+            4390912
+          ],
+          [
+            2154001152,
+            4194304
+          ],
+          [
+            2154577152,
+            4325376
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx01-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 858,
+      "source_runtime": "0x600bf90c",
+      "source_decoded_offset": "0xbf90c",
+      "sha256": "b21baf53ff54fdcc8e8c8431193cbf3b3ca0bcc8dafc314c4a452449667c2087",
+      "packet_count": 77,
+      "opaque_record_count": 0,
+      "algorithm": 1,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600c0168",
+        "offset_bytes": 32,
+        "length_bytes": 280,
+        "source_runtime": "0x600c000c",
+        "raw_entries_u32": [
+          [
+            2152273152,
+            1048576
+          ],
+          [
+            2152849152,
+            1114112
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx01-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 858,
+      "source_runtime": "0x600bfc68",
+      "source_decoded_offset": "0xbfc68",
+      "sha256": "87891922a35fd1bbc446ac974949e67a0934bacd385ad459ce2f8a96986f614d",
+      "packet_count": 77,
+      "opaque_record_count": 0,
+      "algorithm": 1,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600c0144",
+        "offset_bytes": 312,
+        "length_bytes": 24,
+        "source_runtime": "0x600c0124",
+        "raw_entries_u32": [
+          [
+            2154001152,
+            4194304
+          ],
+          [
+            2154577152,
+            4259840
+          ],
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx02-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 1232,
+      "source_runtime": "0x600c0194",
+      "source_decoded_offset": "0xc0194",
+      "sha256": "780cdabf7ea759e60ac41d2b3493b8a3265555637e1eeba7a3fd8936b1adc4be",
+      "packet_count": 98,
+      "opaque_record_count": 0,
+      "algorithm": 2,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600c0cb8",
+        "offset_bytes": 32,
+        "length_bytes": 184,
+        "source_runtime": "0x600c0b7c",
+        "raw_entries_u32": [
+          [
+            2152273152,
+            1048576
+          ],
+          [
+            2152290912,
+            1310720
+          ],
+          [
+            2153154912,
+            1966080
+          ],
+          [
+            5671265,
+            2031619
+          ],
+          [
+            2153154914,
+            2097152
+          ],
+          [
+            5671267,
+            2162691
+          ],
+          [
+            2153154916,
+            2228224
+          ],
+          [
+            5671269,
+            2293763
+          ],
+          [
+            2153154918,
+            2359296
+          ],
+          [
+            5671271,
+            2424835
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx02-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 1232,
+      "source_runtime": "0x600c0664",
+      "source_decoded_offset": "0xc0664",
+      "sha256": "ae842d023770c62dc8141dfb02eb40641151030675df7cea13da38d14337b7c1",
+      "packet_count": 98,
+      "opaque_record_count": 0,
+      "algorithm": 2,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600c0c94",
+        "offset_bytes": 312,
+        "length_bytes": 88,
+        "source_runtime": "0x600c0c34",
+        "raw_entries_u32": [
+          [
+            2154001152,
+            4194304
+          ],
+          [
+            2154018912,
+            4456448
+          ],
+          [
+            2154882912,
+            5111808
+          ],
+          [
+            7399265,
+            5177347
+          ],
+          [
+            2154882914,
+            5242880
+          ],
+          [
+            7399267,
+            5308419
+          ],
+          [
+            2154882916,
+            5373952
+          ],
+          [
+            7399269,
+            5439491
+          ],
+          [
+            2154882918,
+            5505024
+          ],
+          [
+            7399271,
+            5570563
+          ],
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx03-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 1118,
+      "source_runtime": "0x600c0ce4",
+      "source_decoded_offset": "0xc0ce4",
+      "sha256": "a3cf39e4c8d38a3cb7ee161de36198fa568c41ff76c0d6eb21fec062e8eb1944",
+      "packet_count": 85,
+      "opaque_record_count": 0,
+      "algorithm": 3,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600c1740",
+        "offset_bytes": 32,
+        "length_bytes": 272,
+        "source_runtime": "0x600c15ec",
+        "raw_entries_u32": [
+          [
+            2152273152,
+            1048576
+          ],
+          [
+            2152319963,
+            1114112
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx03-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 1118,
+      "source_runtime": "0x600c1144",
+      "source_decoded_offset": "0xc1144",
+      "sha256": "a5ad2cb728f7c703074adf369c924947ac033a8491cf2a36aacd6ead45e3b2fb",
+      "packet_count": 85,
+      "opaque_record_count": 0,
+      "algorithm": 3,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600c171c",
+        "offset_bytes": 312,
+        "length_bytes": 24,
+        "source_runtime": "0x600c16fc",
+        "raw_entries_u32": [
+          [
+            2154001152,
+            4194304
+          ],
+          [
+            2154047963,
+            4259840
+          ],
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx04-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 864,
+      "source_runtime": "0x600c176c",
+      "source_decoded_offset": "0xc176c",
+      "sha256": "bda9b54608417158377c14dc344774aef600e7047d2cef1ddb35aebddf341a5b",
+      "packet_count": 61,
+      "opaque_record_count": 0,
+      "algorithm": 4,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600c20b0",
+        "offset_bytes": 32,
+        "length_bytes": 264,
+        "source_runtime": "0x600c1e74",
+        "raw_entries_u32": [
+          [
+            2152273152,
+            1048576
+          ],
+          [
+            2152283712,
+            1310720
+          ],
+          [
+            4802140,
+            1377211
+          ],
+          [
+            2152285791,
+            1441792
+          ],
+          [
+            4803790,
+            1508086
+          ],
+          [
+            2152287441,
+            1572864
+          ],
+          [
+            4804776,
+            1638853
+          ],
+          [
+            2152288427,
+            1703936
+          ],
+          [
+            4805168,
+            1769652
+          ],
+          [
+            2152288819,
+            1835008
+          ],
+          [
+            4806633,
+            1901217
+          ],
+          [
+            2152290284,
+            1966080
+          ],
+          [
+            4808092,
+            2032286
+          ],
+          [
+            2152291743,
+            2097152
+          ],
+          [
+            4809561,
+            2163363
+          ],
+          [
+            2152293212,
+            2228224
+          ],
+          [
+            4811026,
+            2294433
+          ],
+          [
+            2152294677,
+            2359296
+          ],
+          [
+            4815587,
+            2426926
+          ],
+          [
+            4818696,
+            2493890
+          ],
+          [
+            4818824,
+            2559486
+          ],
+          [
+            2152302475,
+            2621440
+          ],
+          [
+            4823124,
+            2688950
+          ],
+          [
+            4826855,
+            2756200
+          ],
+          [
+            4827111,
+            2821855
+          ],
+          [
+            2152310762,
+            2883584
+          ],
+          [
+            4830869,
+            2950845
+          ],
+          [
+            4836048,
+            3018760
+          ],
+          [
+            4837728,
+            3085069
+          ],
+          [
+            2152321379,
+            3145728
+          ],
+          [
+            4841745,
+            3213108
+          ],
+          [
+            4846924,
+            3281023
+          ],
+          [
+            4848601,
+            3347331
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx04-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 864,
+      "source_runtime": "0x600c1acc",
+      "source_decoded_offset": "0xc1acc",
+      "sha256": "20dd2b598212447b2e54f35e5e6d0f91b56a8907ca767ac68f5d70c876275e8f",
+      "packet_count": 61,
+      "opaque_record_count": 0,
+      "algorithm": 4,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600c208c",
+        "offset_bytes": 312,
+        "length_bytes": 264,
+        "source_runtime": "0x600c1f7c",
+        "raw_entries_u32": [
+          [
+            2154001152,
+            4194304
+          ],
+          [
+            2154011712,
+            4456448
+          ],
+          [
+            6530140,
+            4522939
+          ],
+          [
+            2154013791,
+            4587520
+          ],
+          [
+            6531790,
+            4653814
+          ],
+          [
+            2154015441,
+            4718592
+          ],
+          [
+            6532776,
+            4784581
+          ],
+          [
+            2154016427,
+            4849664
+          ],
+          [
+            6533168,
+            4915380
+          ],
+          [
+            2154016819,
+            4980736
+          ],
+          [
+            6534633,
+            5046945
+          ],
+          [
+            2154018284,
+            5111808
+          ],
+          [
+            6536092,
+            5178014
+          ],
+          [
+            2154019743,
+            5242880
+          ],
+          [
+            6537561,
+            5309091
+          ],
+          [
+            2154021212,
+            5373952
+          ],
+          [
+            6539026,
+            5440161
+          ],
+          [
+            2154022677,
+            5505024
+          ],
+          [
+            6543587,
+            5572654
+          ],
+          [
+            6546696,
+            5639618
+          ],
+          [
+            6546824,
+            5705214
+          ],
+          [
+            2154030475,
+            5767168
+          ],
+          [
+            6551124,
+            5834678
+          ],
+          [
+            6554855,
+            5901928
+          ],
+          [
+            6555111,
+            5967583
+          ],
+          [
+            2154038762,
+            6029312
+          ],
+          [
+            6558869,
+            6096573
+          ],
+          [
+            6564048,
+            6164488
+          ],
+          [
+            6565728,
+            6230797
+          ],
+          [
+            2154049379,
+            6291456
+          ],
+          [
+            6569745,
+            6358836
+          ],
+          [
+            6574924,
+            6426751
+          ],
+          [
+            6576601,
+            6493059
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx05-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 1398,
+      "source_runtime": "0x600c20dc",
+      "source_decoded_offset": "0xc20dc",
+      "sha256": "78704e373976206f48b752d4eaa7ad1b7036db21e626e72b6f26a9b1dea36773",
+      "packet_count": 96,
+      "opaque_record_count": 0,
+      "algorithm": 5,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600c2c48",
+        "offset_bytes": 32,
+        "length_bytes": 280,
+        "source_runtime": "0x605223bc",
+        "unresolved": "Source is runtime RAM; startup bytes are not assumed to be initialized effect data."
+      }
+    },
+    {
+      "name": "fx05-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 1398,
+      "source_runtime": "0x600c2654",
+      "source_decoded_offset": "0xc2654",
+      "sha256": "8463489c6fc3504a391d8a166baa4695a7ebbe0f6d64200726fc4aed47dc1c1d",
+      "packet_count": 96,
+      "opaque_record_count": 0,
+      "algorithm": 5,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600c2c24",
+        "offset_bytes": 312,
+        "length_bytes": 8,
+        "source_runtime": "0x600c2c14",
+        "raw_entries_u32": [
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx06-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 1374,
+      "source_runtime": "0x600c2c74",
+      "source_decoded_offset": "0xc2c74",
+      "sha256": "a4f1259f0bede589a3eeb3eb05a3d097e93c9bd53474e6949d0c1751637a79da",
+      "packet_count": 84,
+      "opaque_record_count": 0,
+      "algorithm": 6,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600c37b0",
+        "offset_bytes": 32,
+        "length_bytes": 280,
+        "source_runtime": "0x605224d4",
+        "unresolved": "Source is runtime RAM; startup bytes are not assumed to be initialized effect data."
+      }
+    },
+    {
+      "name": "fx06-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 1374,
+      "source_runtime": "0x600c31d4",
+      "source_decoded_offset": "0xc31d4",
+      "sha256": "1ee9271eb5fe26912f8b9d0b9365fc627d99daf1b5a9e372385bb6af7c030ae5",
+      "packet_count": 84,
+      "opaque_record_count": 0,
+      "algorithm": 6,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600c378c",
+        "offset_bytes": 312,
+        "length_bytes": 8,
+        "source_runtime": "0x600c377c",
+        "raw_entries_u32": [
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx07-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 750,
+      "source_runtime": "0x600c37dc",
+      "source_decoded_offset": "0xc37dc",
+      "sha256": "b1433fcb72005e89c78c54fd37da605a9cd8c44e10d33692d7b53f485a3b8444",
+      "packet_count": 46,
+      "opaque_record_count": 0,
+      "algorithm": 7,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600c3e38",
+        "offset_bytes": 32,
+        "length_bytes": 280,
+        "source_runtime": "0x605225ec",
+        "unresolved": "Source is runtime RAM; startup bytes are not assumed to be initialized effect data."
+      }
+    },
+    {
+      "name": "fx07-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 750,
+      "source_runtime": "0x600c3acc",
+      "source_decoded_offset": "0xc3acc",
+      "sha256": "ee6a036dbfe14bae1d830868b329fd112d0cb93f4f1850fdebdfbeca88c251d4",
+      "packet_count": 46,
+      "opaque_record_count": 0,
+      "algorithm": 7,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600c3e14",
+        "offset_bytes": 312,
+        "length_bytes": 8,
+        "source_runtime": "0x600c3e04",
+        "raw_entries_u32": [
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx08-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 520,
+      "source_runtime": "0x600c3e64",
+      "source_decoded_offset": "0xc3e64",
+      "sha256": "fa73a64924745a339b537d6c2444963cbda03c1e09f0c118c3d2c16a87fd00dd",
+      "packet_count": 43,
+      "opaque_record_count": 0,
+      "algorithm": 8,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600c4418",
+        "offset_bytes": 32,
+        "length_bytes": 280,
+        "source_runtime": "0x600c42bc",
+        "raw_entries_u32": [
+          [
+            2152273152,
+            1048576
+          ],
+          [
+            2152849152,
+            1310720
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx08-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 520,
+      "source_runtime": "0x600c406c",
+      "source_decoded_offset": "0xc406c",
+      "sha256": "5456dc9a8cba67df79debef8da73f619032a6bf5335a04434750d9416bd29989",
+      "packet_count": 43,
+      "opaque_record_count": 0,
+      "algorithm": 8,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600c43f4",
+        "offset_bytes": 312,
+        "length_bytes": 24,
+        "source_runtime": "0x600c43d4",
+        "raw_entries_u32": [
+          [
+            2154001152,
+            4194304
+          ],
+          [
+            2154577152,
+            4456448
+          ],
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx09-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 1090,
+      "source_runtime": "0x600c4444",
+      "source_decoded_offset": "0xc4444",
+      "sha256": "c78a12bd9a17c24df9c485ab7b19f436c464b2d612023adc86a4bd05ab1b7755",
+      "packet_count": 80,
+      "opaque_record_count": 0,
+      "algorithm": 9,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600c4d48",
+        "offset_bytes": 32,
+        "length_bytes": 280,
+        "source_runtime": "0x60522704",
+        "unresolved": "Source is runtime RAM; startup bytes are not assumed to be initialized effect data."
+      }
+    },
+    {
+      "name": "fx09-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 1090,
+      "source_runtime": "0x600c4888",
+      "source_decoded_offset": "0xc4888",
+      "sha256": "0128e1ed96be0861e70c37de954fd26f253f2d7ed029ed9acf8d7356a12ed771",
+      "packet_count": 80,
+      "opaque_record_count": 0,
+      "algorithm": 9,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600c4d24",
+        "offset_bytes": 312,
+        "length_bytes": 8,
+        "source_runtime": "0x600c4d14",
+        "raw_entries_u32": [
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx10-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 558,
+      "source_runtime": "0x600c4d74",
+      "source_decoded_offset": "0xc4d74",
+      "sha256": "723892267b306c23af09a4ef3f6dc7a657ee84d3766c5d9c3809f622225b4630",
+      "packet_count": 51,
+      "opaque_record_count": 0,
+      "algorithm": 10,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600c5368",
+        "offset_bytes": 32,
+        "length_bytes": 272,
+        "source_runtime": "0x600c521c",
+        "raw_entries_u32": [
+          [
+            2152273152,
+            1441792
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx10-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 558,
+      "source_runtime": "0x600c4fa4",
+      "source_decoded_offset": "0xc4fa4",
+      "sha256": "093e1d823235a59dcc7aaf0b37a27e956957eef5b4300b8ea3e1b0f3bf03a272",
+      "packet_count": 51,
+      "opaque_record_count": 0,
+      "algorithm": 10,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600c5344",
+        "offset_bytes": 312,
+        "length_bytes": 16,
+        "source_runtime": "0x600c532c",
+        "raw_entries_u32": [
+          [
+            2154001152,
+            4587520
+          ],
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx11-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 508,
+      "source_runtime": "0x600c5394",
+      "source_decoded_offset": "0xc5394",
+      "sha256": "72b1fd8b3452d4011dc871bd72dcac54691d4b2904c08743d03bbf576f9f6fc7",
+      "packet_count": 42,
+      "opaque_record_count": 0,
+      "algorithm": 11,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600c5808",
+        "offset_bytes": 32,
+        "length_bytes": 264,
+        "source_runtime": "0x6052281c",
+        "unresolved": "Source is runtime RAM; startup bytes are not assumed to be initialized effect data."
+      }
+    },
+    {
+      "name": "fx11-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 508,
+      "source_runtime": "0x600c5590",
+      "source_decoded_offset": "0xc5590",
+      "sha256": "95e0abb47cb4c2980b5ce9bcfc25a042e2d22c1daa14f67fdc6252c4938bcbf3",
+      "packet_count": 42,
+      "opaque_record_count": 0,
+      "algorithm": 11,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600c57e4",
+        "offset_bytes": 312,
+        "length_bytes": 8,
+        "source_runtime": "0x600c57d4",
+        "raw_entries_u32": [
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx12-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 1408,
+      "source_runtime": "0x600c5834",
+      "source_decoded_offset": "0xc5834",
+      "sha256": "e398f6d352bfb3237a9aa1dd83e676707a474277be02e10b29511febb7e5509e",
+      "packet_count": 82,
+      "opaque_record_count": 0,
+      "algorithm": 12,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600c63b0",
+        "offset_bytes": 32,
+        "length_bytes": 280,
+        "source_runtime": "0x60522924",
+        "unresolved": "Source is runtime RAM; startup bytes are not assumed to be initialized effect data."
+      }
+    },
+    {
+      "name": "fx12-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 1408,
+      "source_runtime": "0x600c5db4",
+      "source_decoded_offset": "0xc5db4",
+      "sha256": "ba822808876762e10469630f93afb631239daf5c89942fd50d3e9367e804450a",
+      "packet_count": 82,
+      "opaque_record_count": 0,
+      "algorithm": 12,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600c638c",
+        "offset_bytes": 312,
+        "length_bytes": 8,
+        "source_runtime": "0x600c637c",
+        "raw_entries_u32": [
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx13-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 974,
+      "source_runtime": "0x600c63dc",
+      "source_decoded_offset": "0xc63dc",
+      "sha256": "36e8e78610cc30b0e59fbb9a46fa63e8e76a7e2b7333bf9078bc5ed0b1e5c6e2",
+      "packet_count": 83,
+      "opaque_record_count": 0,
+      "algorithm": 13,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600c6d20",
+        "offset_bytes": 32,
+        "length_bytes": 280,
+        "source_runtime": "0x600c6bc4",
+        "raw_entries_u32": [
+          [
+            2152273152,
+            1048576
+          ],
+          [
+            4789578,
+            1114186
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx13-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 974,
+      "source_runtime": "0x600c67ac",
+      "source_decoded_offset": "0xc67ac",
+      "sha256": "10942991240cbd0b16a2d629b5232f76d685865b5f2d37bdbc6a8b7913473168",
+      "packet_count": 83,
+      "opaque_record_count": 0,
+      "algorithm": 13,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600c6cfc",
+        "offset_bytes": 312,
+        "length_bytes": 24,
+        "source_runtime": "0x600c6cdc",
+        "raw_entries_u32": [
+          [
+            2154001152,
+            4194304
+          ],
+          [
+            6517578,
+            4259914
+          ],
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx14-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 1020,
+      "source_runtime": "0x600c6d4c",
+      "source_decoded_offset": "0xc6d4c",
+      "sha256": "3a4e41d26d47a7a158ea37e1fa8a791b65f681eb558ae97c5ee09191f0350889",
+      "packet_count": 99,
+      "opaque_record_count": 0,
+      "algorithm": 14,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600c76e8",
+        "offset_bytes": 32,
+        "length_bytes": 280,
+        "source_runtime": "0x600c758c",
+        "raw_entries_u32": [
+          [
+            2152273152,
+            1441792
+          ],
+          [
+            2153137152,
+            1507328
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx14-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 1020,
+      "source_runtime": "0x600c7148",
+      "source_decoded_offset": "0xc7148",
+      "sha256": "679b7b32aa0677cf02055d82bfac8f4d6c3073501d67c0488d94b78464543fdc",
+      "packet_count": 99,
+      "opaque_record_count": 0,
+      "algorithm": 14,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600c76c4",
+        "offset_bytes": 312,
+        "length_bytes": 24,
+        "source_runtime": "0x600c76a4",
+        "raw_entries_u32": [
+          [
+            2154001152,
+            4587520
+          ],
+          [
+            2154865152,
+            4653056
+          ],
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx15-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 910,
+      "source_runtime": "0x600c7714",
+      "source_decoded_offset": "0xc7714",
+      "sha256": "965876671ca0d7e3c73cab8b3b46d315d57559b8be3c70c8c0189ec87f2ce2b9",
+      "packet_count": 89,
+      "opaque_record_count": 0,
+      "algorithm": 15,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600c7fd8",
+        "offset_bytes": 32,
+        "length_bytes": 280,
+        "source_runtime": "0x600c7e7c",
+        "raw_entries_u32": [
+          [
+            2152273152,
+            1441792
+          ],
+          [
+            2152849152,
+            1507328
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx15-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 910,
+      "source_runtime": "0x600c7aa4",
+      "source_decoded_offset": "0xc7aa4",
+      "sha256": "71a83bc90410512b8d9a2aa000b142e108664ab2d4173e81f71060173cc7d0cc",
+      "packet_count": 89,
+      "opaque_record_count": 0,
+      "algorithm": 15,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600c7fb4",
+        "offset_bytes": 312,
+        "length_bytes": 24,
+        "source_runtime": "0x600c7f94",
+        "raw_entries_u32": [
+          [
+            2154001152,
+            4587520
+          ],
+          [
+            2154577152,
+            4653056
+          ],
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx16-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 622,
+      "source_runtime": "0x600c8004",
+      "source_decoded_offset": "0xc8004",
+      "sha256": "d8ee9981991a282744d6bc9194d7e72e12faeb0d520aa30611bc1aabefa2165f",
+      "packet_count": 69,
+      "opaque_record_count": 0,
+      "algorithm": 16,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600c8688",
+        "offset_bytes": 32,
+        "length_bytes": 280,
+        "source_runtime": "0x600c852c",
+        "raw_entries_u32": [
+          [
+            2152273152,
+            1441792
+          ],
+          [
+            2153137152,
+            1507328
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx16-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 622,
+      "source_runtime": "0x600c8274",
+      "source_decoded_offset": "0xc8274",
+      "sha256": "6d100c5148c1d0119b052da2f5088fa63aa53aab962f53a0aff81291168cf86d",
+      "packet_count": 69,
+      "opaque_record_count": 0,
+      "algorithm": 16,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600c8664",
+        "offset_bytes": 312,
+        "length_bytes": 24,
+        "source_runtime": "0x600c8644",
+        "raw_entries_u32": [
+          [
+            2154001152,
+            4587520
+          ],
+          [
+            2154865152,
+            4653056
+          ],
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx17-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 808,
+      "source_runtime": "0x600c86b4",
+      "source_decoded_offset": "0xc86b4",
+      "sha256": "46c2ea82577ef90f4f046cad075c34c3c8cebc9260f74effb13650e0ac4bc0fd",
+      "packet_count": 80,
+      "opaque_record_count": 0,
+      "algorithm": 17,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600c8ea8",
+        "offset_bytes": 32,
+        "length_bytes": 280,
+        "source_runtime": "0x600c8d4c",
+        "raw_entries_u32": [
+          [
+            2152273152,
+            1835008
+          ],
+          [
+            2153137152,
+            1900544
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx17-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 808,
+      "source_runtime": "0x600c89dc",
+      "source_decoded_offset": "0xc89dc",
+      "sha256": "aeaa31ce160b950aa07ec12abc44cf0a3e5031a3ea49e6fa9e69c68cc2b71621",
+      "packet_count": 80,
+      "opaque_record_count": 0,
+      "algorithm": 17,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600c8e84",
+        "offset_bytes": 312,
+        "length_bytes": 24,
+        "source_runtime": "0x600c8e64",
+        "raw_entries_u32": [
+          [
+            2154001152,
+            4980736
+          ],
+          [
+            2154865152,
+            5046272
+          ],
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx18-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 2348,
+      "source_runtime": "0x600c8ed4",
+      "source_decoded_offset": "0xc8ed4",
+      "sha256": "ba354e5d80be0e45b69f6ae7bb467b8452a38cdca1bcf5f18ab8048f37831ae8",
+      "packet_count": 214,
+      "opaque_record_count": 0,
+      "algorithm": 18,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600ca2d0",
+        "offset_bytes": 32,
+        "length_bytes": 280,
+        "source_runtime": "0x600ca174",
+        "raw_entries_u32": [
+          [
+            2152273152,
+            1835008
+          ],
+          [
+            2152849152,
+            1900544
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx18-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 2348,
+      "source_runtime": "0x600c9800",
+      "source_decoded_offset": "0xc9800",
+      "sha256": "a2ef89909ed4bb9b23b0a4e758550bd7d3e85793897de0b42b4a7dba8d9f957e",
+      "packet_count": 214,
+      "opaque_record_count": 0,
+      "algorithm": 18,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600ca2ac",
+        "offset_bytes": 312,
+        "length_bytes": 24,
+        "source_runtime": "0x600ca28c",
+        "raw_entries_u32": [
+          [
+            2154001152,
+            4980736
+          ],
+          [
+            2154577152,
+            5046272
+          ],
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx19-slot0",
+      "core": 1,
+      "logical_start": 16384,
+      "length_bytes": 586,
+      "source_runtime": "0x600ca2fc",
+      "source_decoded_offset": "0xca2fc",
+      "sha256": "3b4a543040da1a377a183681baceeaab5aa06ac1f972c69363c76b3b7afb69fd",
+      "packet_count": 53,
+      "opaque_record_count": 0,
+      "algorithm": 19,
+      "slot": 0,
+      "data": {
+        "descriptor_runtime": "0x600ca940",
+        "offset_bytes": 32,
+        "length_bytes": 280,
+        "source_runtime": "0x600ca7dc",
+        "raw_entries_u32": [
+          [
+            2152273152,
+            1048576
+          ],
+          [
+            4789504,
+            1118522
+          ],
+          [
+            4789504,
+            1181853
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ],
+          [
+            0,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "fx19-slot1",
+      "core": 1,
+      "logical_start": 24576,
+      "length_bytes": 586,
+      "source_runtime": "0x600ca548",
+      "source_decoded_offset": "0xca548",
+      "sha256": "4b9737f425651105fae508ea986f688b317987352a0d83c6588380d3863c5ceb",
+      "packet_count": 53,
+      "opaque_record_count": 0,
+      "algorithm": 19,
+      "slot": 1,
+      "data": {
+        "descriptor_runtime": "0x600ca91c",
+        "offset_bytes": 312,
+        "length_bytes": 32,
+        "source_runtime": "0x600ca8f4",
+        "raw_entries_u32": [
+          [
+            2154001152,
+            4194304
+          ],
+          [
+            6517504,
+            4264250
+          ],
+          [
+            6517504,
+            4327581
+          ],
+          [
+            2155872255,
+            0
+          ]
+        ]
+      }
+    }
+  ],
+  "packet_count": 4393,
+  "header_histogram": {
+    "0001": 132,
+    "0803": 82,
+    "0804": 2,
+    "0805": 39,
+    "0806": 47,
+    "0807": 1,
+    "0902": 79,
+    "0903": 12,
+    "0904": 24,
+    "0a02": 263,
+    "0a03": 28,
+    "0b02": 62,
+    "0b03": 22,
+    "0c02": 18,
+    "0c03": 168,
+    "1005": 28,
+    "1007": 2,
+    "1008": 13,
+    "1104": 24,
+    "1105": 6,
+    "1106": 67,
+    "1107": 34,
+    "1108": 5,
+    "1204": 29,
+    "1205": 6,
+    "1206": 19,
+    "1207": 16,
+    "1305": 4,
+    "1404": 12,
+    "1405": 107,
+    "1406": 16,
+    "1407": 16,
+    "1408": 73,
+    "1503": 57,
+    "1504": 7,
+    "1505": 16,
+    "1603": 35,
+    "1604": 17,
+    "1605": 11,
+    "1606": 8,
+    "1703": 2,
+    "1704": 8,
+    "1705": 16,
+    "1706": 4,
+    "1804": 47,
+    "1805": 22,
+    "1806": 24,
+    "1903": 4,
+    "1b03": 2,
+    "1b04": 82,
+    "1b05": 11,
+    "1c03": 2,
+    "1c04": 9,
+    "1d04": 10,
+    "1d05": 48,
+    "1d06": 6,
+    "1e04": 4,
+    "1e05": 385,
+    "2006": 1,
+    "2008": 2,
+    "2009": 3,
+    "200a": 1,
+    "210a": 4,
+    "2207": 20,
+    "2209": 4,
+    "220a": 3,
+    "2306": 2,
+    "2307": 6,
+    "2308": 17,
+    "230a": 11,
+    "2406": 2,
+    "240b": 2,
+    "2506": 14,
+    "2507": 30,
+    "2508": 41,
+    "2509": 5,
+    "250a": 24,
+    "2607": 3,
+    "2806": 20,
+    "2807": 2,
+    "2808": 29,
+    "2809": 19,
+    "280a": 3,
+    "2907": 2,
+    "2a07": 2,
+    "2b06": 8,
+    "2b07": 53,
+    "2b09": 32,
+    "2b0a": 82,
+    "2b0b": 11,
+    "2c04": 6,
+    "2c05": 4,
+    "2c06": 8,
+    "2c07": 4,
+    "2c08": 5,
+    "2d04": 23,
+    "2d06": 4,
+    "2e05": 54,
+    "2e06": 9,
+    "2e07": 28,
+    "2e08": 3,
+    "3004": 2,
+    "3006": 2,
+    "3105": 20,
+    "3106": 11,
+    "3107": 7,
+    "3204": 2,
+    "3305": 5,
+    "3306": 1,
+    "3307": 8,
+    "3308": 6,
+    "3405": 2,
+    "3406": 44,
+    "3407": 11,
+    "3408": 47,
+    "3705": 2,
+    "3706": 2,
+    "3806": 28,
+    "3a05": 2,
+    "3a06": 25,
+    "3d06": 8,
+    "3d07": 16,
+    "3d08": 18,
+    "3e06": 2,
+    "3e07": 61,
+    "4408": 4,
+    "440b": 2,
+    "440c": 1,
+    "4709": 7,
+    "470b": 6,
+    "470c": 21,
+    "4809": 3,
+    "4907": 11,
+    "4b07": 14,
+    "4b08": 2,
+    "4b09": 1,
+    "4b0b": 16,
+    "4d08": 2,
+    "4d0d": 2,
+    "4e07": 4,
+    "4e08": 56,
+    "4e09": 15,
+    "4e0a": 12,
+    "4e0b": 12,
+    "5006": 2,
+    "5307": 2,
+    "5407": 4,
+    "5408": 6,
+    "540a": 7,
+    "540b": 2,
+    "5809": 77,
+    "580a": 2,
+    "580b": 8,
+    "580c": 48,
+    "5905": 6,
+    "5907": 1,
+    "5a05": 2,
+    "5b05": 6,
+    "5b07": 2,
+    "5c06": 11,
+    "5c07": 26,
+    "5c08": 13,
+    "5c09": 1,
+    "5c0a": 4,
+    "5c0b": 2,
+    "5e06": 6,
+    "5e08": 6,
+    "5f07": 59,
+    "5f08": 6,
+    "5f09": 28,
+    "5f0a": 6,
+    "6206": 2,
+    "6409": 2,
+    "6507": 5,
+    "6508": 10,
+    "6509": 7,
+    "6807": 2,
+    "6809": 10,
+    "6908": 28,
+    "6909": 5,
+    "690a": 8,
+    "6b05": 2,
+    "6f08": 4,
+    "7106": 2,
+    "7207": 2,
+    "7208": 4,
+    "7308": 10,
+    "7309": 2,
+    "7708": 6,
+    "7709": 8,
+    "770a": 6,
+    "7809": 35,
+    "8b0a": 4,
+    "8b0c": 4,
+    "8b4c": 8,
+    "8b8e": 10,
+    "8f0b": 18,
+    "8f0c": 2,
+    "8f0e": 2,
+    "8f4d": 6,
+    "8f4e": 2,
+    "8f8f": 19,
+    "9209": 3,
+    "920a": 2,
+    "924a": 2,
+    "9409": 1,
+    "948e": 2,
+    "950c": 2,
+    "980a": 1,
+    "980b": 2,
+    "980d": 2,
+    "9b0a": 2,
+    "9b0c": 2,
+    "9b4c": 2,
+    "9c0a": 17,
+    "9c0b": 4,
+    "9c0c": 8,
+    "9c0d": 12,
+    "9c0e": 6,
+    "9c4c": 8,
+    "9c4d": 4,
+    "a20c": 2,
+    "a24e": 2,
+    "a609": 2,
+    "a60c": 2,
+    "a60d": 1,
+    "ab0b": 20,
+    "ab0c": 2,
+    "ab0d": 10,
+    "ab0e": 4,
+    "ac48": 2,
+    "ae07": 2,
+    "ae08": 2,
+    "ae09": 2,
+    "ae49": 4,
+    "ae4c": 2,
+    "b006": 2,
+    "b14e": 2,
+    "b18b": 10,
+    "b2cf": 2,
+    "b34b": 2,
+    "b38b": 2,
+    "b38f": 2,
+    "b408": 23,
+    "b409": 4,
+    "b40a": 9,
+    "b40c": 2,
+    "b44a": 3,
+    "b48c": 6,
+    "b48d": 10,
+    "b48e": 2,
+    "b708": 6,
+    "b70a": 17,
+    "b70b": 2,
+    "b70d": 2,
+    "b74a": 6,
+    "b74c": 2,
+    "b809": 45,
+    "b80a": 4,
+    "b80b": 8,
+    "b80c": 1,
+    "b84b": 20,
+    "b84e": 11,
+    "b88d": 9,
+    "c108": 4,
+    "c18d": 2,
+    "c209": 4,
+    "c20a": 2,
+    "c20b": 4,
+    "c608": 2,
+    "c60a": 2,
+    "c64b": 2,
+    "c70a": 1,
+    "c70b": 4,
+    "c78f": 1,
+    "d84a": 2,
+    "d94c": 2,
+    "e30a": 4,
+    "e30c": 2
+  },
+  "slot_comparisons": [
+    {
+      "algorithm": 0,
+      "same_packet_headers": true,
+      "changed_halfwords": 4,
+      "classes": {
+        "low_operand_delta_100": 2,
+        "unclassified": 2
+      }
+    },
+    {
+      "algorithm": 1,
+      "same_packet_headers": true,
+      "changed_halfwords": 81,
+      "classes": {
+        "coefficient_encoding_delta_10": 12,
+        "low_operand_delta_100": 45,
+        "unclassified": 24
+      }
+    },
+    {
+      "algorithm": 2,
+      "same_packet_headers": true,
+      "changed_halfwords": 112,
+      "classes": {
+        "coefficient_encoding_delta_10": 15,
+        "low_operand_delta_100": 64,
+        "unclassified": 33
+      }
+    },
+    {
+      "algorithm": 3,
+      "same_packet_headers": true,
+      "changed_halfwords": 116,
+      "classes": {
+        "coefficient_encoding_delta_10": 25,
+        "low_operand_delta_100": 61,
+        "unclassified": 30
+      }
+    },
+    {
+      "algorithm": 4,
+      "same_packet_headers": true,
+      "changed_halfwords": 99,
+      "classes": {
+        "coefficient_encoding_delta_10": 10,
+        "low_operand_delta_100": 48,
+        "unclassified": 41
+      }
+    },
+    {
+      "algorithm": 5,
+      "same_packet_headers": true,
+      "changed_halfwords": 139,
+      "classes": {
+        "coefficient_encoding_delta_10": 41,
+        "low_operand_delta_100": 96,
+        "unclassified": 2
+      }
+    },
+    {
+      "algorithm": 6,
+      "same_packet_headers": true,
+      "changed_halfwords": 124,
+      "classes": {
+        "coefficient_encoding_delta_10": 19,
+        "low_operand_delta_100": 103,
+        "unclassified": 2
+      }
+    },
+    {
+      "algorithm": 7,
+      "same_packet_headers": true,
+      "changed_halfwords": 87,
+      "classes": {
+        "coefficient_encoding_delta_10": 21,
+        "low_operand_delta_100": 64,
+        "unclassified": 2
+      }
+    },
+    {
+      "algorithm": 8,
+      "same_packet_headers": true,
+      "changed_halfwords": 50,
+      "classes": {
+        "coefficient_encoding_delta_10": 6,
+        "low_operand_delta_100": 27,
+        "unclassified": 17
+      }
+    },
+    {
+      "algorithm": 9,
+      "same_packet_headers": true,
+      "changed_halfwords": 112,
+      "classes": {
+        "coefficient_encoding_delta_10": 9,
+        "low_operand_delta_100": 101,
+        "unclassified": 2
+      }
+    },
+    {
+      "algorithm": 10,
+      "same_packet_headers": true,
+      "changed_halfwords": 48,
+      "classes": {
+        "coefficient_encoding_delta_10": 6,
+        "low_operand_delta_100": 28,
+        "unclassified": 14
+      }
+    },
+    {
+      "algorithm": 11,
+      "same_packet_headers": true,
+      "changed_halfwords": 41,
+      "classes": {
+        "coefficient_encoding_delta_10": 10,
+        "low_operand_delta_100": 29,
+        "unclassified": 2
+      }
+    },
+    {
+      "algorithm": 12,
+      "same_packet_headers": true,
+      "changed_halfwords": 109,
+      "classes": {
+        "coefficient_encoding_delta_10": 10,
+        "low_operand_delta_100": 97,
+        "unclassified": 2
+      }
+    },
+    {
+      "algorithm": 13,
+      "same_packet_headers": true,
+      "changed_halfwords": 76,
+      "classes": {
+        "coefficient_encoding_delta_10": 8,
+        "low_operand_delta_100": 64,
+        "unclassified": 4
+      }
+    },
+    {
+      "algorithm": 14,
+      "same_packet_headers": true,
+      "changed_halfwords": 95,
+      "classes": {
+        "coefficient_encoding_delta_10": 8,
+        "low_operand_delta_100": 64,
+        "unclassified": 23
+      }
+    },
+    {
+      "algorithm": 15,
+      "same_packet_headers": true,
+      "changed_halfwords": 84,
+      "classes": {
+        "coefficient_encoding_delta_10": 8,
+        "low_operand_delta_100": 59,
+        "unclassified": 17
+      }
+    },
+    {
+      "algorithm": 16,
+      "same_packet_headers": true,
+      "changed_halfwords": 55,
+      "classes": {
+        "coefficient_encoding_delta_10": 8,
+        "low_operand_delta_100": 32,
+        "unclassified": 15
+      }
+    },
+    {
+      "algorithm": 17,
+      "same_packet_headers": true,
+      "changed_halfwords": 78,
+      "classes": {
+        "coefficient_encoding_delta_10": 7,
+        "low_operand_delta_100": 48,
+        "unclassified": 23
+      }
+    },
+    {
+      "algorithm": 18,
+      "same_packet_headers": true,
+      "changed_halfwords": 316,
+      "classes": {
+        "coefficient_encoding_delta_10": 12,
+        "low_operand_delta_100": 170,
+        "unclassified": 134
+      }
+    },
+    {
+      "algorithm": 19,
+      "same_packet_headers": true,
+      "changed_halfwords": 62,
+      "classes": {
+        "coefficient_encoding_delta_10": 21,
+        "low_operand_delta_100": 36,
+        "unclassified": 5
+      }
+    }
+  ],
+  "candidate_flow_targets": [
+    {
+      "chunk": "dsp0-0000",
+      "offset": 4,
+      "mode": 160,
+      "target": 308,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp0-0000",
+      "offset": 42,
+      "mode": 160,
+      "target": 794,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp0-0000",
+      "offset": 64,
+      "mode": 6304,
+      "target": 9472,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp0-0000",
+      "offset": 86,
+      "mode": 6304,
+      "target": 12288,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp0-0000",
+      "offset": 108,
+      "mode": 6304,
+      "target": 13568,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp0-0000",
+      "offset": 130,
+      "mode": 6304,
+      "target": 16384,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp0-0000",
+      "offset": 152,
+      "mode": 6304,
+      "target": 17664,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp0-0000",
+      "offset": 174,
+      "mode": 6304,
+      "target": 20480,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp0-0000",
+      "offset": 196,
+      "mode": 6304,
+      "target": 21760,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp0-0000",
+      "offset": 218,
+      "mode": 6304,
+      "target": 24576,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp0-0000",
+      "offset": 240,
+      "mode": 6304,
+      "target": 25856,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp0-0000",
+      "offset": 262,
+      "mode": 6304,
+      "target": 28672,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp0-0000",
+      "offset": 284,
+      "mode": 6304,
+      "target": 29952,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp0-0000",
+      "offset": 292,
+      "mode": 160,
+      "target": 1918,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp0-0000",
+      "offset": 300,
+      "mode": 128,
+      "target": 32754,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp1-0000",
+      "offset": 34,
+      "mode": 160,
+      "target": 102,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp1-0000",
+      "offset": 56,
+      "mode": 6304,
+      "target": 16384,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp1-0000",
+      "offset": 78,
+      "mode": 6304,
+      "target": 24576,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp1-0000",
+      "offset": 86,
+      "mode": 160,
+      "target": 6858,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "dsp1-0000",
+      "offset": 94,
+      "mode": 128,
+      "target": 32754,
+      "target_is_packet_start": true
+    },
+    {
+      "chunk": "factory-dsp0",
+      "offset": 2494,
+      "mode": 128,
+      "target": 2608,
+      "target_is_packet_start": false
+    },
+    {
+      "chunk": "factory-dsp0",
+      "offset": 2600,
+      "mode": 128,
+      "target": 2608,
+      "target_is_packet_start": false
+    }
+  ],
+  "mixer_control_anchors": [
+    {
+      "parameter_id": 293,
+      "name": "PAN(1)",
+      "callback_runtime": "0x6002988c",
+      "callback_decoded_offset": "0x2988c",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 1,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 12,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 1,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 12,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 1,
+              "float_bits": 0,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 12,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 304,
+      "name": "AUX SEND LEVEL(1)",
+      "callback_runtime": "0x600299d6",
+      "callback_decoded_offset": "0x299d6",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 45,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 45,
+              "float_bits": 1048136623,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 45,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 348,
+      "name": "MASTER FX SW(1)",
+      "callback_runtime": "0x60029b20",
+      "callback_decoded_offset": "0x29b20",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 67,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 1,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 67,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 359,
+      "name": "LEVEL FADER(1)",
+      "callback_runtime": "0x60029a44",
+      "callback_decoded_offset": "0x29a44",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 56,
+              "float_bits": 0,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 56,
+              "float_bits": 1048136623,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 56,
+              "float_bits": 1065353216,
+              "smoothing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 294,
+      "name": "PAN(2)",
+      "callback_runtime": "0x60029896",
+      "callback_decoded_offset": "0x29896",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 2,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 13,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 2,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 13,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 2,
+              "float_bits": 0,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 13,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 305,
+      "name": "AUX SEND LEVEL(2)",
+      "callback_runtime": "0x600299e0",
+      "callback_decoded_offset": "0x299e0",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 46,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 46,
+              "float_bits": 1048136623,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 46,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 349,
+      "name": "MASTER FX SW(2)",
+      "callback_runtime": "0x60029b2a",
+      "callback_decoded_offset": "0x29b2a",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 68,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 1,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 68,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 360,
+      "name": "LEVEL FADER(2)",
+      "callback_runtime": "0x60029a4e",
+      "callback_decoded_offset": "0x29a4e",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 57,
+              "float_bits": 0,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 57,
+              "float_bits": 1048136623,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 57,
+              "float_bits": 1065353216,
+              "smoothing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 295,
+      "name": "PAN(3)",
+      "callback_runtime": "0x600298a0",
+      "callback_decoded_offset": "0x298a0",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 3,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 14,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 3,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 14,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 3,
+              "float_bits": 0,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 14,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 306,
+      "name": "AUX SEND LEVEL(3)",
+      "callback_runtime": "0x600299ea",
+      "callback_decoded_offset": "0x299ea",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 47,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 47,
+              "float_bits": 1048136623,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 47,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 350,
+      "name": "MASTER FX SW(3)",
+      "callback_runtime": "0x60029b34",
+      "callback_decoded_offset": "0x29b34",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 69,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 1,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 69,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 361,
+      "name": "LEVEL FADER(3)",
+      "callback_runtime": "0x60029a58",
+      "callback_decoded_offset": "0x29a58",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 58,
+              "float_bits": 0,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 58,
+              "float_bits": 1048136623,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 58,
+              "float_bits": 1065353216,
+              "smoothing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 296,
+      "name": "PAN(4)",
+      "callback_runtime": "0x600298aa",
+      "callback_decoded_offset": "0x298aa",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 4,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 15,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 4,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 15,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 4,
+              "float_bits": 0,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 15,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 307,
+      "name": "AUX SEND LEVEL(4)",
+      "callback_runtime": "0x600299f4",
+      "callback_decoded_offset": "0x299f4",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 48,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 48,
+              "float_bits": 1048136623,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 48,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 351,
+      "name": "MASTER FX SW(4)",
+      "callback_runtime": "0x60029b3e",
+      "callback_decoded_offset": "0x29b3e",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 70,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 1,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 70,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 362,
+      "name": "LEVEL FADER(4)",
+      "callback_runtime": "0x60029a62",
+      "callback_decoded_offset": "0x29a62",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 59,
+              "float_bits": 0,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 59,
+              "float_bits": 1048136623,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 59,
+              "float_bits": 1065353216,
+              "smoothing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 297,
+      "name": "PAN(5)",
+      "callback_runtime": "0x600298b4",
+      "callback_decoded_offset": "0x298b4",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 5,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 16,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 5,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 16,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 5,
+              "float_bits": 0,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 16,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 308,
+      "name": "AUX SEND LEVEL(5)",
+      "callback_runtime": "0x600299fe",
+      "callback_decoded_offset": "0x299fe",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 49,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 49,
+              "float_bits": 1048136623,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 49,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 352,
+      "name": "MASTER FX SW(5)",
+      "callback_runtime": "0x60029b48",
+      "callback_decoded_offset": "0x29b48",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 71,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 1,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 71,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 363,
+      "name": "LEVEL FADER(5)",
+      "callback_runtime": "0x60029a6c",
+      "callback_decoded_offset": "0x29a6c",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 60,
+              "float_bits": 0,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 60,
+              "float_bits": 1048136623,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 60,
+              "float_bits": 1065353216,
+              "smoothing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 298,
+      "name": "PAN(6)",
+      "callback_runtime": "0x600298be",
+      "callback_decoded_offset": "0x298be",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 6,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 17,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 6,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 17,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 6,
+              "float_bits": 0,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 17,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 309,
+      "name": "AUX SEND LEVEL(6)",
+      "callback_runtime": "0x60029a08",
+      "callback_decoded_offset": "0x29a08",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 50,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 50,
+              "float_bits": 1048136623,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 50,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 353,
+      "name": "MASTER FX SW(6)",
+      "callback_runtime": "0x60029b52",
+      "callback_decoded_offset": "0x29b52",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 72,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 1,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 72,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 364,
+      "name": "LEVEL FADER(6)",
+      "callback_runtime": "0x60029a76",
+      "callback_decoded_offset": "0x29a76",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 61,
+              "float_bits": 0,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 61,
+              "float_bits": 1048136623,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 61,
+              "float_bits": 1065353216,
+              "smoothing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 299,
+      "name": "PAN(7)",
+      "callback_runtime": "0x600298c8",
+      "callback_decoded_offset": "0x298c8",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 7,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 18,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 7,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 18,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 7,
+              "float_bits": 0,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 18,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 310,
+      "name": "AUX SEND LEVEL(7)",
+      "callback_runtime": "0x60029a12",
+      "callback_decoded_offset": "0x29a12",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 51,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 51,
+              "float_bits": 1048136623,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 51,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 354,
+      "name": "MASTER FX SW(7)",
+      "callback_runtime": "0x60029b5c",
+      "callback_decoded_offset": "0x29b5c",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 73,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 1,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 73,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 365,
+      "name": "LEVEL FADER(7)",
+      "callback_runtime": "0x60029a80",
+      "callback_decoded_offset": "0x29a80",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 62,
+              "float_bits": 0,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 62,
+              "float_bits": 1048136623,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 62,
+              "float_bits": 1065353216,
+              "smoothing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 300,
+      "name": "PAN(8)",
+      "callback_runtime": "0x600298d2",
+      "callback_decoded_offset": "0x298d2",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 8,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 19,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 8,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 19,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 8,
+              "float_bits": 0,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 19,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 311,
+      "name": "AUX SEND LEVEL(8)",
+      "callback_runtime": "0x60029a1c",
+      "callback_decoded_offset": "0x29a1c",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 52,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 52,
+              "float_bits": 1048136623,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 52,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 355,
+      "name": "MASTER FX SW(8)",
+      "callback_runtime": "0x60029b66",
+      "callback_decoded_offset": "0x29b66",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 74,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 1,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 74,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 366,
+      "name": "LEVEL FADER(8)",
+      "callback_runtime": "0x60029a8a",
+      "callback_decoded_offset": "0x29a8a",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 63,
+              "float_bits": 0,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 63,
+              "float_bits": 1048136623,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 63,
+              "float_bits": 1065353216,
+              "smoothing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 301,
+      "name": "PAN(9)",
+      "callback_runtime": "0x600298dc",
+      "callback_decoded_offset": "0x298dc",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 9,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 20,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 9,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 20,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 9,
+              "float_bits": 0,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 20,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 312,
+      "name": "AUX SEND LEVEL(9)",
+      "callback_runtime": "0x60029a26",
+      "callback_decoded_offset": "0x29a26",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 53,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 53,
+              "float_bits": 1048136623,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 53,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 356,
+      "name": "MASTER FX SW(9)",
+      "callback_runtime": "0x60029b70",
+      "callback_decoded_offset": "0x29b70",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 75,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 1,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 75,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 367,
+      "name": "LEVEL FADER(9)",
+      "callback_runtime": "0x60029a94",
+      "callback_decoded_offset": "0x29a94",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 64,
+              "float_bits": 0,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 64,
+              "float_bits": 1048136623,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 64,
+              "float_bits": 1065353216,
+              "smoothing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 302,
+      "name": "PAN(10)",
+      "callback_runtime": "0x600298e6",
+      "callback_decoded_offset": "0x298e6",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 10,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 21,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 10,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 21,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 10,
+              "float_bits": 0,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 21,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 313,
+      "name": "AUX SEND LEVEL(10)",
+      "callback_runtime": "0x60029a30",
+      "callback_decoded_offset": "0x29a30",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 54,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 54,
+              "float_bits": 1048136623,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 54,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 357,
+      "name": "MASTER FX SW(10)",
+      "callback_runtime": "0x60029b7a",
+      "callback_decoded_offset": "0x29b7a",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 76,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 1,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 76,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 368,
+      "name": "LEVEL FADER(10)",
+      "callback_runtime": "0x60029a9e",
+      "callback_decoded_offset": "0x29a9e",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 65,
+              "float_bits": 0,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 65,
+              "float_bits": 1048136623,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 65,
+              "float_bits": 1065353216,
+              "smoothing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 303,
+      "name": "PAN(11)",
+      "callback_runtime": "0x600298f0",
+      "callback_decoded_offset": "0x298f0",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 11,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 22,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 11,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 22,
+              "float_bits": 1065406165,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 11,
+              "float_bits": 0,
+              "smoothing": 0
+            },
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 22,
+              "float_bits": 1068813832,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 314,
+      "name": "AUX SEND LEVEL(11)",
+      "callback_runtime": "0x60029a3a",
+      "callback_decoded_offset": "0x29a3a",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 55,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 55,
+              "float_bits": 1048136623,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 55,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 358,
+      "name": "MASTER FX SW(11)",
+      "callback_runtime": "0x60029b84",
+      "callback_decoded_offset": "0x29b84",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 77,
+              "float_bits": 0,
+              "smoothing": 0
+            }
+          ]
+        },
+        {
+          "value": 1,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 77,
+              "float_bits": 1065353216,
+              "smoothing": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 369,
+      "name": "LEVEL FADER(11)",
+      "callback_runtime": "0x60029aa8",
+      "callback_decoded_offset": "0x29aa8",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 66,
+              "float_bits": 0,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 66,
+              "float_bits": 1048136623,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 66,
+              "float_bits": 1065353216,
+              "smoothing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 174,
+      "name": "AUX SEND LEVEL",
+      "callback_runtime": "0x60029b8e",
+      "callback_decoded_offset": "0x29b8e",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 79,
+              "float_bits": 0,
+              "smoothing": 15
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 79,
+              "float_bits": 1048136623,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 79,
+              "float_bits": 1065353216,
+              "smoothing": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "parameter_id": 175,
+      "name": "AUX RETURN LEVEL",
+      "callback_runtime": "0x60029ba2",
+      "callback_decoded_offset": "0x29ba2",
+      "cases": [
+        {
+          "value": 0,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 78,
+              "float_bits": 0,
+              "smoothing": 15
+            }
+          ]
+        },
+        {
+          "value": 64,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 78,
+              "float_bits": 1048136623,
+              "smoothing": 2
+            }
+          ]
+        },
+        {
+          "value": 127,
+          "requests": [
+            {
+              "kind": "coefficient",
+              "core": 1,
+              "index": 78,
+              "float_bits": 1065353216,
+              "smoothing": 2
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "contexts_and_data_updates": {
+    "constructor_runtime": "0x60024228",
+    "constructor_decoded_offset": "0x24228",
+    "context_runtime": "0x60515440",
+    "context_fields": [
+      "core",
+      "source_program_halfword",
+      "destination_program_halfword",
+      "data_entry_base",
+      "coefficient_base",
+      "shared_port_base"
+    ],
+    "slot_contexts": [
+      [
+        1,
+        12288,
+        8192,
+        4,
+        96,
+        80
+      ],
+      [
+        1,
+        12288,
+        12288,
+        39,
+        112,
+        168
+      ]
+    ],
+    "metadata_runtime": "0x6009ade8",
+    "metadata_decoded_offset": "0x9ade8",
+    "executed_runtime": [
+      "0x600238d4",
+      "0x60023b2e",
+      "0x0100c7ca",
+      "0x0100c206",
+      "0x0100c0d0"
+    ],
+    "executed_decoded_offsets": [
+      "0x238d4",
+      "0x23b2e",
+      "0xdd056",
+      "0xdca92",
+      "0xdc95c"
+    ],
+    "cases": [
+      {
+        "slot": 0,
+        "value": 0,
+        "writes": [
+          {
+            "runtime": "0x4016e038",
+            "width": 4,
+            "value": "0x568961"
+          },
+          {
+            "runtime": "0x4016e03c",
+            "width": 4,
+            "value": "0x1f0000"
+          }
+        ]
+      },
+      {
+        "slot": 0,
+        "value": 1,
+        "writes": [
+          {
+            "runtime": "0x4016e038",
+            "width": 4,
+            "value": "0x568961"
+          },
+          {
+            "runtime": "0x4016e03c",
+            "width": 4,
+            "value": "0x1f0001"
+          }
+        ]
+      },
+      {
+        "slot": 0,
+        "value": 17833,
+        "writes": [
+          {
+            "runtime": "0x4016e038",
+            "width": 4,
+            "value": "0x568961"
+          },
+          {
+            "runtime": "0x4016e03c",
+            "width": 4,
+            "value": "0x1f45a9"
+          }
+        ]
+      },
+      {
+        "slot": 0,
+        "value": 65535,
+        "writes": [
+          {
+            "runtime": "0x4016e038",
+            "width": 4,
+            "value": "0x568961"
+          },
+          {
+            "runtime": "0x4016e03c",
+            "width": 4,
+            "value": "0x1fffff"
+          }
+        ]
+      },
+      {
+        "slot": 1,
+        "value": 0,
+        "writes": [
+          {
+            "runtime": "0x4016e150",
+            "width": 4,
+            "value": "0x70e761"
+          },
+          {
+            "runtime": "0x4016e154",
+            "width": 4,
+            "value": "0x4f0000"
+          }
+        ]
+      },
+      {
+        "slot": 1,
+        "value": 1,
+        "writes": [
+          {
+            "runtime": "0x4016e150",
+            "width": 4,
+            "value": "0x70e761"
+          },
+          {
+            "runtime": "0x4016e154",
+            "width": 4,
+            "value": "0x4f0001"
+          }
+        ]
+      },
+      {
+        "slot": 1,
+        "value": 17833,
+        "writes": [
+          {
+            "runtime": "0x4016e150",
+            "width": 4,
+            "value": "0x70e761"
+          },
+          {
+            "runtime": "0x4016e154",
+            "width": 4,
+            "value": "0x4f45a9"
+          }
+        ]
+      },
+      {
+        "slot": 1,
+        "value": 65535,
+        "writes": [
+          {
+            "runtime": "0x4016e150",
+            "width": 4,
+            "value": "0x70e761"
+          },
+          {
+            "runtime": "0x4016e154",
+            "width": 4,
+            "value": "0x4fffff"
+          }
+        ]
+      }
+    ],
+    "coefficient_cases": [
+      {
+        "slot": 0,
+        "requests": [
+          {
+            "kind": "coefficient",
+            "core": 1,
+            "index": 99,
+            "float_bits": 0,
+            "smoothing": 0
+          }
+        ],
+        "writes": [
+          {
+            "runtime": "0x4016c630",
+            "width": 4,
+            "value": "0x80000000"
+          },
+          {
+            "runtime": "0x4016c634",
+            "width": 4,
+            "value": "0x0"
+          },
+          {
+            "runtime": "0x4016c630",
+            "width": 4,
+            "value": "0x80000000"
+          },
+          {
+            "runtime": "0x4016c634",
+            "width": 4,
+            "value": "0x0"
+          }
+        ]
+      },
+      {
+        "slot": 0,
+        "requests": [
+          {
+            "kind": "coefficient",
+            "core": 1,
+            "index": 99,
+            "float_bits": 1065353216,
+            "smoothing": 0
+          }
+        ],
+        "writes": [
+          {
+            "runtime": "0x4016c630",
+            "width": 4,
+            "value": "0x80000000"
+          },
+          {
+            "runtime": "0x4016c634",
+            "width": 4,
+            "value": "0x3f800000"
+          },
+          {
+            "runtime": "0x4016c630",
+            "width": 4,
+            "value": "0x80000000"
+          },
+          {
+            "runtime": "0x4016c634",
+            "width": 4,
+            "value": "0x3f800000"
+          }
+        ]
+      },
+      {
+        "slot": 1,
+        "requests": [
+          {
+            "kind": "coefficient",
+            "core": 1,
+            "index": 115,
+            "float_bits": 0,
+            "smoothing": 0
+          }
+        ],
+        "writes": [
+          {
+            "runtime": "0x4016c730",
+            "width": 4,
+            "value": "0x80000000"
+          },
+          {
+            "runtime": "0x4016c734",
+            "width": 4,
+            "value": "0x0"
+          },
+          {
+            "runtime": "0x4016c730",
+            "width": 4,
+            "value": "0x80000000"
+          },
+          {
+            "runtime": "0x4016c734",
+            "width": 4,
+            "value": "0x0"
+          }
+        ]
+      },
+      {
+        "slot": 1,
+        "requests": [
+          {
+            "kind": "coefficient",
+            "core": 1,
+            "index": 115,
+            "float_bits": 1065353216,
+            "smoothing": 0
+          }
+        ],
+        "writes": [
+          {
+            "runtime": "0x4016c730",
+            "width": 4,
+            "value": "0x80000000"
+          },
+          {
+            "runtime": "0x4016c734",
+            "width": 4,
+            "value": "0x3f800000"
+          },
+          {
+            "runtime": "0x4016c730",
+            "width": 4,
+            "value": "0x80000000"
+          },
+          {
+            "runtime": "0x4016c734",
+            "width": 4,
+            "value": "0x3f800000"
+          }
+        ]
+      }
+    ],
+    "address_cases": [
+      {
+        "slot": 0,
+        "delta": 0,
+        "base_word": "0x80491500",
+        "before": [
+          "0x491500",
+          "0x11113a"
+        ],
+        "writes": [
+          {
+            "runtime": "0x4016e028",
+            "width": 4,
+            "value": "0x491500"
+          },
+          {
+            "runtime": "0x4016e02c",
+            "width": 4,
+            "value": "0x11113a"
+          }
+        ]
+      },
+      {
+        "slot": 0,
+        "delta": 1,
+        "base_word": "0x80491500",
+        "before": [
+          "0x491500",
+          "0x11113a"
+        ],
+        "writes": [
+          {
+            "runtime": "0x4016e028",
+            "width": 4,
+            "value": "0x491501"
+          },
+          {
+            "runtime": "0x4016e02c",
+            "width": 4,
+            "value": "0x11113a"
+          }
+        ]
+      },
+      {
+        "slot": 0,
+        "delta": 123,
+        "base_word": "0x80491500",
+        "before": [
+          "0x491500",
+          "0x11113a"
+        ],
+        "writes": [
+          {
+            "runtime": "0x4016e028",
+            "width": 4,
+            "value": "0x49157b"
+          },
+          {
+            "runtime": "0x4016e02c",
+            "width": 4,
+            "value": "0x11113a"
+          }
+        ]
+      },
+      {
+        "slot": 0,
+        "delta": 4410,
+        "base_word": "0x80491500",
+        "before": [
+          "0x491500",
+          "0x11113a"
+        ],
+        "writes": [
+          {
+            "runtime": "0x4016e028",
+            "width": 4,
+            "value": "0x49263a"
+          },
+          {
+            "runtime": "0x4016e02c",
+            "width": 4,
+            "value": "0x11113a"
+          }
+        ]
+      },
+      {
+        "slot": 1,
+        "delta": 0,
+        "base_word": "0x80637300",
+        "before": [
+          "0x637300",
+          "0x41113a"
+        ],
+        "writes": [
+          {
+            "runtime": "0x4016e140",
+            "width": 4,
+            "value": "0x637300"
+          },
+          {
+            "runtime": "0x4016e144",
+            "width": 4,
+            "value": "0x41113a"
+          }
+        ]
+      },
+      {
+        "slot": 1,
+        "delta": 1,
+        "base_word": "0x80637300",
+        "before": [
+          "0x637300",
+          "0x41113a"
+        ],
+        "writes": [
+          {
+            "runtime": "0x4016e140",
+            "width": 4,
+            "value": "0x637301"
+          },
+          {
+            "runtime": "0x4016e144",
+            "width": 4,
+            "value": "0x41113a"
+          }
+        ]
+      },
+      {
+        "slot": 1,
+        "delta": 123,
+        "base_word": "0x80637300",
+        "before": [
+          "0x637300",
+          "0x41113a"
+        ],
+        "writes": [
+          {
+            "runtime": "0x4016e140",
+            "width": 4,
+            "value": "0x63737b"
+          },
+          {
+            "runtime": "0x4016e144",
+            "width": 4,
+            "value": "0x41113a"
+          }
+        ]
+      },
+      {
+        "slot": 1,
+        "delta": 4410,
+        "base_word": "0x80637300",
+        "before": [
+          "0x637300",
+          "0x41113a"
+        ],
+        "writes": [
+          {
+            "runtime": "0x4016e140",
+            "width": 4,
+            "value": "0x63843a"
+          },
+          {
+            "runtime": "0x4016e144",
+            "width": 4,
+            "value": "0x41113a"
+          }
+        ]
+      }
+    ],
+    "address_metadata_runtime": "0x600a39dc",
+    "address_wrapper_runtime": "0x6002397e",
+    "address_wrapper_decoded_offset": "0x2397e",
+    "address_helper_runtime": "0x0100c5da",
+    "address_helper_decoded_offset": "0xdce66",
+    "coefficient_metadata_runtime": "0x6007c0d0",
+    "coefficient_wrapper_runtime": "0x60023a24",
+    "coefficient_wrapper_decoded_offset": "0x23a24",
+    "coefficient_writer_runtime": "0x0100b5ea",
+    "coefficient_writer_decoded_offset": "0xdbe76",
+    "stubs": [],
+    "modeled": [
+      "DSP data-memory window is ordinary read/write storage seeded with stock table entries",
+      "MMIO storage and readiness responses use the existing AuditMachine model"
+    ],
+    "finding": "Stock relative metadata resolves to distinct slot coefficients and data records; address updates use the selected slot base field.",
+    "not_established": [
+      "Full delay-buffer extents",
+      "Time units",
+      "DSP execution or MMIO timing"
+    ]
+  },
+  "limitations": [
+    "Low-five-bit framing is corpus-supported inference, not a complete ISA definition.",
+    "Bindings and control flow are hypotheses; unknown operations remain raw.",
+    "Original ARM uploader runs; bulk DMA is modeled as copying and command writes as storage.",
+    "No DSP arithmetic, external delay RAM, cycle budget or physical audio is emulated."
+  ]
+}

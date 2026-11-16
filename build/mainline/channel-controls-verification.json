@@ -1,14 +1,14 @@
 {
   "status": "pass",
-  "candidate_container_sha256": "dad7fbf2825a7a7ec82470cd7e4127d5567aa1cb1bed5ff3efb09c971a329ca3",
-  "patched_app_sha256": "dfacf026df61a49aae72bf31303ad89b2fe51661564fc0f0c53ba478d5e8c614",
+  "candidate_container_sha256": "0cff93760693e41e18e8091332c16bf425b05613242637ee498c43f8e3be975d",
+  "patched_app_sha256": "46eaa5814fd55eab4000793fef46c74b6ff6e34f77b833ecf6c1c64a6e262302",
   "groups": [
     {
       "name": "System lookup matches all 141 IDs and invalid diagnostics; original return and external references preserved",
       "status": "pass"
     },
     {
-      "name": "All 11 stock SELECT toggle paths, four empty pages, signed dial boundaries and asynchronous LED isolation",
+      "name": "All 11 stock SELECT toggle paths, four channel pages, signed dial boundaries and asynchronous LED isolation",
       "status": "pass",
       "cases": 44
     },
@@ -58,6 +58,10 @@
     },
     {
       "name": "Original linked and multiple selection retain their current channel",
+      "status": "pass"
+    },
+    {
+      "name": "Send level end stops, all destination/effect choices, parameter versus held time, cross-strip holds and blocked modes",
       "status": "pass"
     }
   ],

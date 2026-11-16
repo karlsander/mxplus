@@ -124,3 +124,15 @@ test("published directory is an explicit allowlist with no full firmware or repo
         assert.notEqual(await sha256(bytes), manifest.output.sha256);
     }
 });
+
+
+test("installation uses the original updater filename without a hyphen", async () => {
+    const updater = await read("analysis/container_updater.bin");
+    const expected = new TextDecoder().decode(updater.subarray(0x59c4, 0x59cf));
+    assert.equal(expected, "MX1_UPD.BIN");
+    const html = await readFile(new URL("build/web-patcher/index.html", root), "utf8");
+    const installation = html.match(/<section id="installation"[\s\S]*?<\/section>/)?.[0];
+    assert.ok(installation);
+    assert.ok(installation.includes(`<code>${expected}</code>`));
+    assert.ok(!installation.includes("MX-1_UPD.BIN"));
+});

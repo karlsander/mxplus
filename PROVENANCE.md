@@ -88,3 +88,14 @@ as a geometry reference. It is an annotated concept, not an official panel
 or a print-to-scale template. The [prompt](docs/images/mastering-overlay-prompt.txt)
 records the generation and slot-selector revision. Product imagery and marks
 remain attributable to Roland.
+
+## Additional-send DSP emitter
+
+`tools/extra_sends_dsp.py` and the numerical test model are independently
+written for this repository. ISA facts were cross-referenced with enorrmann's
+[primary Roland DSP investigation](https://github.com/enorrmann/roland-plugout-reveng/tree/34a25b46b63d807e3b42407914258ac46d369515),
+particularly the A arithmetic, FE transfers and parallel operand reads. No code
+from that project is imported or distributed here. Its hardware measurements
+concern related devices and do not establish MX-1 hardware acceptance. The
+reused factory effects remain Roland firmware under the existing provenance
+and licensing boundaries.

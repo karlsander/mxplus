@@ -1,29 +1,29 @@
 {
   "status": "pass",
   "original_app_sha256": "256ab535bc55c3e3dbe7c6b609d28da710192f0676e7f4cbbd5ec260ab364a2b",
-  "patched_app_sha256": "dfacf026df61a49aae72bf31303ad89b2fe51661564fc0f0c53ba478d5e8c614",
-  "candidate_container_sha256": "dad7fbf2825a7a7ec82470cd7e4127d5567aa1cb1bed5ff3efb09c971a329ca3",
-  "extension_sha256": "46ed550adae54568125abff11f28d272a889dfd6fbd9a906243d75f64b8cb816",
+  "patched_app_sha256": "46eaa5814fd55eab4000793fef46c74b6ff6e34f77b833ecf6c1c64a6e262302",
+  "candidate_container_sha256": "0cff93760693e41e18e8091332c16bf425b05613242637ee498c43f8e3be975d",
+  "extension_sha256": "081648edbd2b94e9b95f87550ff557a95a52c63c6a9867c2634b339203e9a22e",
   "groups": [
     {
       "name": "Every application change matches recorded guarded patches and scatter insertion",
       "status": "pass",
-      "patch_sites": 21,
-      "extension_bytes": 2744,
-      "sram_bytes_remaining": 88
+      "patch_sites": 41,
+      "extension_bytes": 6088,
+      "sram_bytes_remaining": 72
     },
     {
       "name": "Actual original startup installs routing code and preserves existing initialized data and BSS",
       "status": "pass",
       "runtime_interval": [
         "0x0100f6a4",
-        "0x100ffa8"
+        "0x100ffb8"
       ],
       "existing_nonempty_destinations_unchanged": true,
       "repurposed_empty_copy": "USB descriptor at 0x0101727c"
     },
     {
-      "name": "Generator callback, transport, extra SELECT UI and SDRAM heap patches are absent",
+      "name": "Generator callback, transport and extra SELECT UI patches are absent",
       "status": "pass",
       "component": "app_main",
       "unchanged_sites": [
@@ -71,15 +71,9 @@
           "decoded_offset": "0x13740",
           "runtime_address": "0x60013740",
           "length": 8
-        },
-        {
-          "decoded_offset": "0xd76c",
-          "runtime_address": "0x6000d76c",
-          "length": 4
         }
       ],
-      "callback_target": "0x01009841",
-      "stock_heap_start": "0x606634d0"
+      "callback_target": "0x01009841"
     },
     {
       "name": "Original MPU makes injected code read-only and new route state read-write",
@@ -87,7 +81,7 @@
       "code_protection": "0x01001000..0x0100ffff enforced in all UI/audio instruction cases",
       "state_interval": [
         "0x1017264",
-        "0x10174e0"
+        "0x1017508"
       ]
     },
     {
@@ -101,7 +95,7 @@
         "0x01020000",
         "0x01028000"
       ],
-      "state_reservation_bytes": 636,
+      "state_reservation_bytes": 676,
       "descriptor_initialized_bytes": 436,
       "patterns": [
         85,
@@ -157,7 +151,7 @@
       "status": "pass"
     },
     {
-      "name": "All 11 stock SELECT toggle paths, four empty pages, signed dial boundaries and asynchronous LED isolation",
+      "name": "All 11 stock SELECT toggle paths, four channel pages, signed dial boundaries and asynchronous LED isolation",
       "status": "pass",
       "cases": 44
     },
@@ -210,9 +204,602 @@
       "status": "pass"
     },
     {
+      "name": "Send level end stops, all destination/effect choices, parameter versus held time, cross-strip holds and blocked modes",
+      "status": "pass"
+    },
+    {
+      "name": "Numerical send mixing, pre/post mute/fader, pan isolation, destinations and wet-return placement",
+      "status": "pass",
+      "cases": 480
+    },
+    {
+      "name": "Compiled ARM send policy, all eight factory variations, live edits, destinations and reset/diagnostic guards",
+      "status": "pass",
+      "parameter_cases": 24,
+      "loader_calls": 30,
+      "master_algorithm_isolation_cases": 20,
+      "original_effect_load_and_initializers": true,
+      "graph_prefix_cases": 2,
+      "original_mute_marker_cases": 6,
+      "graph_prefix_boundaries": [
+        "Original graph stop call",
+        "Original graph continuation after displaced prologue"
+      ],
+      "modeled_boundaries": {
+        "0x6000c59e": "MASTER parameter view construction",
+        "0x600249dc": "MASTER parameter callback lookup (no replay)",
+        "0x60054c14": "DSP command completion",
+        "0x60054c32": "DSP synchronization wait",
+        "0x6005513c": "Data descriptor clear transport",
+        "0x60054bec": "Data descriptor upload transport",
+        "0x60054c46": "Delay RAM clear transport",
+        "0x60054c50": "Delay RAM completion",
+        "0x6005507e": "Coefficient smoothing completion",
+        "0x6000f1bc": "Current DSP task boot-mode query",
+        "0x6000bd6c": "Empty parameter queue",
+        "0x600550ba": "DSP1 delay RAM completion",
+        "0x600550c4": "DSP0 delay RAM completion"
+      }
+    },
+    {
+      "name": "Original ARM uploader installs both kernels and only two guarded normal-graph branches",
+      "status": "pass",
+      "chunks": 38,
+      "modeled": [
+        "bulk DMA byte copying",
+        "DSP programming-command storage semantics"
+      ]
+    },
+    {
+      "name": "All MASTER programs unchanged; only three internal algorithms receive independent input operands",
+      "status": "pass",
+      "upload_cases": 40
+    },
+    {
+      "name": "Original delay descriptors use disjoint slot entries and encoded address bands; payloads preserved",
+      "status": "pass",
+      "cases": 40,
+      "descriptors": [
+        {
+          "algorithm": 0,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 23,
+          "encoded_bases": [
+            "0x4d1e98",
+            "0x55e898",
+            "0x491500",
+            "0x51df00"
+          ]
+        },
+        {
+          "algorithm": 0,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 5,
+          "encoded_bases": [
+            "0x677c98",
+            "0x704698",
+            "0x637300",
+            "0x6c3d00"
+          ]
+        },
+        {
+          "algorithm": 1,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 35,
+          "encoded_bases": [
+            "0x491500",
+            "0x51df00"
+          ]
+        },
+        {
+          "algorithm": 1,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 3,
+          "encoded_bases": [
+            "0x637300",
+            "0x6c3d00",
+            "0x7fffff"
+          ]
+        },
+        {
+          "algorithm": 2,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 23,
+          "encoded_bases": [
+            "0x491500",
+            "0x495a60",
+            "0x568960",
+            "0x568961",
+            "0x568962",
+            "0x568963",
+            "0x568964",
+            "0x568965",
+            "0x568966",
+            "0x568967"
+          ]
+        },
+        {
+          "algorithm": 2,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 11,
+          "encoded_bases": [
+            "0x637300",
+            "0x63b860",
+            "0x70e760",
+            "0x70e761",
+            "0x70e762",
+            "0x70e763",
+            "0x70e764",
+            "0x70e765",
+            "0x70e766",
+            "0x70e767",
+            "0x7fffff"
+          ]
+        },
+        {
+          "algorithm": 3,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 34,
+          "encoded_bases": [
+            "0x491500",
+            "0x49cbdb"
+          ]
+        },
+        {
+          "algorithm": 3,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 3,
+          "encoded_bases": [
+            "0x637300",
+            "0x6429db",
+            "0x7fffff"
+          ]
+        },
+        {
+          "algorithm": 4,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 33,
+          "encoded_bases": [
+            "0x491500",
+            "0x493e40",
+            "0x49465c",
+            "0x49465f",
+            "0x494cce",
+            "0x494cd1",
+            "0x4950a8",
+            "0x4950ab",
+            "0x495230",
+            "0x495233",
+            "0x4957e9",
+            "0x4957ec",
+            "0x495d9c",
+            "0x495d9f",
+            "0x496359",
+            "0x49635c",
+            "0x496912",
+            "0x496915",
+            "0x497ae3",
+            "0x498708",
+            "0x498788",
+            "0x49878b",
+            "0x499854",
+            "0x49a6e7",
+            "0x49a7e7",
+            "0x49a7ea",
+            "0x49b695",
+            "0x49cad0",
+            "0x49d160",
+            "0x49d163",
+            "0x49e111",
+            "0x49f54c",
+            "0x49fbd9"
+          ]
+        },
+        {
+          "algorithm": 4,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 33,
+          "encoded_bases": [
+            "0x637300",
+            "0x639c40",
+            "0x63a45c",
+            "0x63a45f",
+            "0x63aace",
+            "0x63aad1",
+            "0x63aea8",
+            "0x63aeab",
+            "0x63b030",
+            "0x63b033",
+            "0x63b5e9",
+            "0x63b5ec",
+            "0x63bb9c",
+            "0x63bb9f",
+            "0x63c159",
+            "0x63c15c",
+            "0x63c712",
+            "0x63c715",
+            "0x63d8e3",
+            "0x63e508",
+            "0x63e588",
+            "0x63e58b",
+            "0x63f654",
+            "0x6404e7",
+            "0x6405e7",
+            "0x6405ea",
+            "0x641495",
+            "0x6428d0",
+            "0x642f60",
+            "0x642f63",
+            "0x643f11",
+            "0x64534c",
+            "0x6459d9"
+          ]
+        },
+        {
+          "algorithm": 5,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 35,
+          "encoded_bases": []
+        },
+        {
+          "algorithm": 5,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 1,
+          "encoded_bases": [
+            "0x7fffff"
+          ]
+        },
+        {
+          "algorithm": 6,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 35,
+          "encoded_bases": []
+        },
+        {
+          "algorithm": 6,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 1,
+          "encoded_bases": [
+            "0x7fffff"
+          ]
+        },
+        {
+          "algorithm": 7,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 35,
+          "encoded_bases": []
+        },
+        {
+          "algorithm": 7,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 1,
+          "encoded_bases": [
+            "0x7fffff"
+          ]
+        },
+        {
+          "algorithm": 8,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 35,
+          "encoded_bases": [
+            "0x491500",
+            "0x51df00"
+          ]
+        },
+        {
+          "algorithm": 8,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 3,
+          "encoded_bases": [
+            "0x637300",
+            "0x6c3d00",
+            "0x7fffff"
+          ]
+        },
+        {
+          "algorithm": 9,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 35,
+          "encoded_bases": []
+        },
+        {
+          "algorithm": 9,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 1,
+          "encoded_bases": [
+            "0x7fffff"
+          ]
+        },
+        {
+          "algorithm": 10,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 34,
+          "encoded_bases": [
+            "0x491500"
+          ]
+        },
+        {
+          "algorithm": 10,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 2,
+          "encoded_bases": [
+            "0x637300",
+            "0x7fffff"
+          ]
+        },
+        {
+          "algorithm": 11,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 33,
+          "encoded_bases": []
+        },
+        {
+          "algorithm": 11,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 1,
+          "encoded_bases": [
+            "0x7fffff"
+          ]
+        },
+        {
+          "algorithm": 12,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 35,
+          "encoded_bases": []
+        },
+        {
+          "algorithm": 12,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 1,
+          "encoded_bases": [
+            "0x7fffff"
+          ]
+        },
+        {
+          "algorithm": 13,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 35,
+          "encoded_bases": [
+            "0x491500",
+            "0x49154a"
+          ]
+        },
+        {
+          "algorithm": 13,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 3,
+          "encoded_bases": [
+            "0x637300",
+            "0x63734a",
+            "0x7fffff"
+          ]
+        },
+        {
+          "algorithm": 14,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 35,
+          "encoded_bases": [
+            "0x491500",
+            "0x564400"
+          ]
+        },
+        {
+          "algorithm": 14,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 3,
+          "encoded_bases": [
+            "0x637300",
+            "0x70a200",
+            "0x7fffff"
+          ]
+        },
+        {
+          "algorithm": 15,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 35,
+          "encoded_bases": [
+            "0x491500",
+            "0x51df00"
+          ]
+        },
+        {
+          "algorithm": 15,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 3,
+          "encoded_bases": [
+            "0x637300",
+            "0x6c3d00",
+            "0x7fffff"
+          ]
+        },
+        {
+          "algorithm": 16,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 35,
+          "encoded_bases": [
+            "0x491500",
+            "0x564400"
+          ]
+        },
+        {
+          "algorithm": 16,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 3,
+          "encoded_bases": [
+            "0x637300",
+            "0x70a200",
+            "0x7fffff"
+          ]
+        },
+        {
+          "algorithm": 17,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 35,
+          "encoded_bases": [
+            "0x491500",
+            "0x564400"
+          ]
+        },
+        {
+          "algorithm": 17,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 3,
+          "encoded_bases": [
+            "0x637300",
+            "0x70a200",
+            "0x7fffff"
+          ]
+        },
+        {
+          "algorithm": 18,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 35,
+          "encoded_bases": [
+            "0x491500",
+            "0x51df00"
+          ]
+        },
+        {
+          "algorithm": 18,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 3,
+          "encoded_bases": [
+            "0x637300",
+            "0x6c3d00",
+            "0x7fffff"
+          ]
+        },
+        {
+          "algorithm": 19,
+          "slot": 0,
+          "first_entry": 4,
+          "entries": 35,
+          "encoded_bases": [
+            "0x491500",
+            "0x491500",
+            "0x491500"
+          ]
+        },
+        {
+          "algorithm": 19,
+          "slot": 1,
+          "first_entry": 39,
+          "entries": 4,
+          "encoded_bases": [
+            "0x637300",
+            "0x637300",
+            "0x637300",
+            "0x7fffff"
+          ]
+        }
+      ],
+      "limit": "Encoded address bands are static evidence, not complete execution of dynamic delay addresses or physical RAM."
+    },
+    {
+      "name": "Stock SDRAM heap creation and allocation exclude reserved code through exhaustion",
+      "status": "pass",
+      "heap_initializer": "0x6000d6f4",
+      "pool_creator": "0x010033b8",
+      "allocation_primitive": "0x01007604",
+      "heap_base_literal_decoded": "0xd76c",
+      "reserved_bytes": 11056,
+      "cases": [
+        {
+          "image": "stock",
+          "heap_start": "0x606634d0",
+          "heap_bytes": 26856240,
+          "allocations": [
+            {
+              "address": "0x606634d8",
+              "requested_bytes": 16
+            },
+            {
+              "address": "0x606634f0",
+              "requested_bytes": 4096
+            },
+            {
+              "address": "0x606644f8",
+              "requested_bytes": 1048576
+            },
+            {
+              "address": "0x60764500",
+              "requested_bytes": 25803520
+            }
+          ],
+          "exhausted_request_returns_null": true,
+          "lowest_allocator_write": "0x606634d0",
+          "reservation_unchanged": false
+        },
+        {
+          "image": "candidate",
+          "heap_start": "0x60666000",
+          "heap_bytes": 26845184,
+          "allocations": [
+            {
+              "address": "0x60666008",
+              "requested_bytes": 16
+            },
+            {
+              "address": "0x60666020",
+              "requested_bytes": 4096
+            },
+            {
+              "address": "0x60667028",
+              "requested_bytes": 1048576
+            },
+            {
+              "address": "0x60767030",
+              "requested_bytes": 25792464
+            }
+          ],
+          "exhausted_request_returns_null": true,
+          "lowest_allocator_write": "0x60666000",
+          "reservation_unchanged": true
+        }
+      ]
+    },
+    {
       "name": "Actual startup copies extension and preserves existing initialized data",
       "status": "pass",
-      "extension_bytes": 2744
+      "extension_bytes": 6088
     },
     {
       "name": "Patched initializer veneer, original registration, and live rate descriptors",
@@ -1748,7 +2335,7 @@
       "endpoints_clamp_without_event_posts": true,
       "inward_turn_resumes": true,
       "largest_single_route_drain_commands": 4,
-      "largest_single_route_drain_instructions": 581
+      "largest_single_route_drain_instructions": 586
     },
     {
       "name": "Analog 5/6 split produces independent original-5/6 and USB2 input reads; own PC summand suppressed",

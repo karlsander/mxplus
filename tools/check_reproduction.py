@@ -143,6 +143,11 @@ def audit(check_committed: bool = False) -> dict:
         require(channel.get("status") == "pass" and channel.get("patched_app_sha256") == actual["patched_app_sha256"]
                 and channel.get("candidate_container_sha256") == actual["container_sha256"],
                 "Channel control evidence missing or belongs to another candidate")
+        for filename in ('extra-sends-verification.json','sends-memory-verification.json'):
+            sends = read(prefix + filename)
+            require(sends.get('status') == 'pass' and sends.get('patched_app_sha256') == actual['patched_app_sha256']
+                    and sends.get('candidate_container_sha256') == actual['container_sha256'],
+                    'Send evidence missing or belongs to another candidate: ' + filename)
         storage = read(prefix + "storage-verification.json")
         require(storage.get("status") == "pass" and storage.get("patched_app_sha256") == actual["patched_app_sha256"],
                 "Mainline storage evidence missing or belongs to another candidate")

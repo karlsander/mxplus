@@ -1,5 +1,5 @@
 /* Channel-owned tempo surface; independently written 2026-11-15.
- * Empty pages only: no parameter, audio, storage or clock changes. */
+ * Independent send pages; tempo remains available with no selected channel. */
 #pragma clang section text=".channel_head" rodata=".channel_rodata" bss=".channel_state"
 typedef unsigned char u8;
 typedef unsigned short u16;
@@ -8,6 +8,10 @@ typedef unsigned short u16;
 #define DIRTY (*(volatile u16 *)0x605141ccu)
 #define KEYS ((volatile u8 *)0x605129a4u)
 extern int mx1_master_is_active(void);
+extern void mx1_sends_label(unsigned,unsigned,char *);
+extern void mx1_sends_adjust(unsigned,unsigned,int);
+extern void mx1_sends_press(unsigned,unsigned);
+extern void mx1_sends_release(unsigned);
 struct channel_state { u8 page[11], swallowed, shown; };
 struct channel_state mx1_channel_state;
 #define S mx1_channel_state
@@ -30,7 +34,8 @@ void mx1_channel_refresh(void) {
     if (shown!=S.shown) { S.shown=(u8)shown; DIRTY|=0x500; }
 }
 void mx1_channel_display(unsigned strip) {
-    char label[4]={'P',(char)('1'+S.page[strip]),'-','-'};
+    char label[4];
+    mx1_sends_label(strip,S.page[strip],label);
     FN(0x60054f85u,void (*)(void *,unsigned,const char *,unsigned))
         ((void *)0x60512984u,1,label,0);
 }
@@ -57,7 +62,7 @@ int mx1_channel_owned_event(const u8 *event) {
     if (type<1 || type>3 || page>=4) return 0;
     unsigned bit=1u<<page;
     if (!(S.swallowed&bit)) return 0;
-    if (type==1) { S.swallowed&=(u8)~bit; DIRTY|=0x500; }
+    if (type==1) { S.swallowed&=(u8)~bit; mx1_sends_release(page); DIRTY|=0x500; }
     return 1;
 }
 /* Return nonzero only for owned controls. Stock-held releases are delivered
@@ -65,7 +70,13 @@ int mx1_channel_owned_event(const u8 *event) {
  * menu and mode transitions. SELECT + TEMPO routing is handled first. */
 int mx1_channel_event(const u8 *event) {
     unsigned type=event[0],id=event[1];
-    if (type==4 && id==1) return mx1_channel_selected()>=0;
+    if (type==4 && id==1) {
+        int strip=mx1_channel_selected();
+        if (strip<0) return 0;
+        int delta=(short)((unsigned)event[2]|((unsigned)event[3]<<8));
+        mx1_sends_adjust((unsigned)strip,S.page[strip],delta);
+        DIRTY|=0x500; mx1_channel_display((unsigned)strip); return 1;
+    }
     if (type<1 || type>3) return 0;
     unsigned page=button_page(id);
     if (page>=4) return 0;
@@ -74,6 +85,7 @@ int mx1_channel_event(const u8 *event) {
         /* A duplicate stock-held press must not steal its eventual release. */
         if (KEYS[id/8]&(1u<<(id&7))) return 1;
         S.swallowed|=(u8)(1u<<page); S.page[strip]=(u8)page;
+        mx1_sends_press((unsigned)strip,page);
         DIRTY|=0x500; mx1_channel_display((unsigned)strip); return 1;
     }
     /* A key pressed in stock mode must get its release, even after selection.

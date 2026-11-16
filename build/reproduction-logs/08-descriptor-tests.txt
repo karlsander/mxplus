@@ -15,6 +15,7 @@ test_mastering_report_must_match_candidate (test_repository_integrity.Reproducti
 test_matching_working_artifacts_and_committed_bytes_pass (test_repository_integrity.ReproductionIdentityTests.test_matching_working_artifacts_and_committed_bytes_pass) ... ok
 test_packet_report_must_match_candidate (test_repository_integrity.ReproductionIdentityTests.test_packet_report_must_match_candidate) ... ok
 test_retired_parallel_build_is_rejected (test_repository_integrity.ReproductionIdentityTests.test_retired_parallel_build_is_rejected) ... ok
+test_send_evidence_must_match_candidate (test_repository_integrity.ReproductionIdentityTests.test_send_evidence_must_match_candidate) ... ok
 test_stale_committed_binary_is_rejected_even_when_reports_match_rebuild (test_repository_integrity.ReproductionIdentityTests.test_stale_committed_binary_is_rejected_even_when_reports_match_rebuild) ... ok
 test_storage_report_must_match_candidate (test_repository_integrity.ReproductionIdentityTests.test_storage_report_must_match_candidate) ... ok
 test_absolute_veneer_preserves_registers_stack_and_flags (test_routing_build_guards.RoutingGuardTests.test_absolute_veneer_preserves_registers_stack_and_flags) ... ok
@@ -37,6 +38,6 @@ test_reject_broken_graph (test_usb_midi.MIDIConfigurationTests.test_reject_broke
 test_reject_truncated_or_zero_length (test_usb_midi.MIDIConfigurationTests.test_reject_truncated_or_zero_length) ... ok
 
 ----------------------------------------------------------------------
-Ran 37 tests in 0.582s
+Ran 38 tests in 0.575s
 
 OK

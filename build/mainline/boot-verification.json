@@ -1,7 +1,7 @@
 {
   "status": "pass",
   "input_sha256": "26f195d7325adf5534a476d1fb24170decd08586ca059cffa6020a8055cbf84e",
-  "candidate_sha256": "dad7fbf2825a7a7ec82470cd7e4127d5567aa1cb1bed5ff3efb09c971a329ca3",
+  "candidate_sha256": "0cff93760693e41e18e8091332c16bf425b05613242637ee498c43f8e3be975d",
   "hardware_access": false,
   "hardware_recovery_verified": false,
   "checks": [
@@ -147,7 +147,7 @@
         },
         {
           "image": "routing",
-          "decoded_main_sha256": "dfacf026df61a49aae72bf31303ad89b2fe51661564fc0f0c53ba478d5e8c614",
+          "decoded_main_sha256": "46eaa5814fd55eab4000793fef46c74b6ff6e34f77b833ecf6c1c64a6e262302",
           "loads": [
             "0x3200000",
             "0x3080000"
@@ -198,15 +198,15 @@
           "dirty_byte": "0x55",
           "routes": "all Auto",
           "desired_and_applied_state_zero": true,
-          "extension_end": "0x100ffa8",
-          "untouched_gap_bytes": 88
+          "extension_end": "0x100ffb8",
+          "untouched_gap_bytes": 72
         },
         {
           "dirty_byte": "0xaa",
           "routes": "all Auto",
           "desired_and_applied_state_zero": true,
-          "extension_end": "0x100ffa8",
-          "untouched_gap_bytes": 88
+          "extension_end": "0x100ffb8",
+          "untouched_gap_bytes": 72
         }
       ]
     },

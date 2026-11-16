@@ -1,8 +1,9 @@
 # Channel pages on the tempo surface
 
 **Status: offline tested candidate, not installed or physically accepted.**
-This first stage changes control ownership only. It adds no effect sends,
-parameter values, DSP, MIDI mapping or persistent storage.
+The ownership foundation now hosts [two additional sends](FX_SENDS.md).
+Their levels and global bus settings are volatile; no new MIDI mapping or
+persistent storage is added.
 
 On the normal mixer and channel-setting pages, selecting a channel assigns
 the right display, TEMPO dial and four buttons to that channel. The existing
@@ -10,17 +11,18 @@ SELECT behavior is retained: tap another channel to switch, or tap the current
 channel again to clear selection. Linked and multiple selection keep Roland's
 current-channel rules; the page belongs to the current selected channel.
 
-| Button | Empty page | Display |
+| Button | Channel page | Hold and turn |
 | --- | --- | --- |
-| SHUFFLE | 1 | `P1--` |
-| FINE | 2 | `P2--` |
-| SYNC | 3 | `P3--` |
-| TAP | 4 | `P4--` |
+| SHUFFLE | Alternate level, `A000..A127` | Off / SEND R / PHONES destination |
+| FINE | Internal level, `F000..F127` | Internal effect variation |
+| SYNC | Effect parameter, `P000..P127` | Time, `t000..t127` |
+| TAP | Reserved, `----` | Reserved |
 
 The selected page button lights steadily. TAP's background beat indicator cannot
-overwrite that page indication. The dial is intentionally inactive on these
-empty pages, including with another modifier held. Each channel remembers its
-page in RAM; all start on page 1 after boot. Scenes and restart do not save pages.
+overwrite that page indication. Each channel remembers its page in RAM; all
+start on page 1 after boot. Scenes and restart do not save pages. The send
+implementation retains these gestures and delegates value/display operations
+from the reclaimed UI slots to the reserved send code.
 
 With no channel selected, the tempo display, dial, SHUFFLE, FINE, SYNC and TAP
 retain their original operation and settings. Running tempo, incoming clock and
@@ -52,8 +54,9 @@ returns its input for IDs 0–140. Its replacement retains the unsigned bounds
 check and original invalid-input diagnostic. The original zero-return epilogue
 at `0x6001a654..0x6001a658` and diagnostic at `0x6001a888..0x6001a896` remain
 byte-identical. The remaining lookup footprint holds the new UI, the existing
-routing held-key guard and the existing mastering eligibility guard. No new
-executable memory region, MPU setting, heap reservation or sample callback is used.
+routing held-key guard and the existing mastering eligibility guard. These ownership slots add no new executable region. The send implementation
+adds a separate [SDRAM reservation](FX_SENDS.md#dsp-and-memory-design); MPU setup
+and sample callbacks remain unchanged.
 
 | Main decoded interval | Runtime interval | Purpose |
 | --- | --- | --- |
@@ -61,12 +64,14 @@ executable memory region, MPU setting, heap reservation or sample callback is us
 | `0x1a41c..0x1a654` | `0x6001a41c..0x6001a654` | UI code, 568-byte capacity |
 | `0x1a658..0x1a888` | `0x6001a658..0x6001a888` | UI code, 560-byte capacity |
 | `0x14a78..0x14a80` | `0x60014a78..0x60014a80` | Mono LED helper veneer |
-| `0x108..0x10c` | `0x60000108..0x6000010c` | BSS clear extends through `0x010174e0` |
+| `0x108..0x10c` | `0x60000108..0x6000010c` | BSS clear now extends through `0x01017508` |
 
 Thirteen state bytes, padded to 16, occupy writable SRAM
 `0x010174d0..0x010174e0`: eleven page indices, button ownership and the last
-rendered selection. The complete mainline reservation grows from 620 to 636
-bytes. Original allocators and all preceding state addresses are unchanged.
+rendered selection. The send state adds 40 bytes immediately afterward, bringing the complete
+mainline writable reservation to 676 bytes. All preceding state addresses and
+private RTOS pools are unchanged; the separate SDRAM reservation excludes send
+code from the main heap.
 
 Original SELECT action at decoded `0x16532` / runtime `0x60016532` owns channel
 selection. The new code reads mixer index `0xfb` and confirms that channel's

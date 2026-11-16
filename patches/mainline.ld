@@ -54,5 +54,10 @@ SECTIONS {
     .channel_state (DEFINED(mx1_host_image) ? ADDR(.host_state) + SIZEOF(.host_state) : 0x010174d0) (NOLOAD) : { *(.channel_state) . = ALIGN(4); }
     ASSERT(SIZEOF(.channel_state) == (DEFINED(mx1_host_image) ? 0 : 16), "Unexpected channel state")
     ASSERT(ADDR(.channel_state) + SIZEOF(.channel_state) <= 0x01018000, "Channel state overflow")
+    .sends_text (DEFINED(mx1_host_image) ? ADDR(.host_state) + SIZEOF(.host_state) : 0x60664000) : { *(.sends_text) *(.sends_rodata) . = ALIGN(4); }
+    ASSERT(SIZEOF(.sends_text) <= 0x2000, "Extra send code exceeds reserved SDRAM")
+    .sends_state (DEFINED(mx1_host_image) ? ADDR(.host_state) + SIZEOF(.host_state) : 0x010174e0) (NOLOAD) : { *(.sends_state) . = ALIGN(4); }
+    ASSERT(SIZEOF(.sends_state) == (DEFINED(mx1_host_image) ? 0 : 40), "Unexpected send state")
+    ASSERT(ADDR(.sends_state) + SIZEOF(.sends_state) <= 0x01018000, "Send state overflow")
     /DISCARD/ : { *(.comment*) *(.ARM.exidx*) *(.ARM.extab*) *(.eh_frame*) }
 }

@@ -3,7 +3,7 @@
   "groups": [
     "Every application change matches recorded guarded patches and scatter insertion",
     "Actual original startup installs routing code and preserves existing initialized data and BSS",
-    "Generator callback, transport, extra SELECT UI and SDRAM heap patches are absent",
+    "Generator callback, transport and extra SELECT UI patches are absent",
     "Original MPU makes injected code read-only and new route state read-write",
     "Dirty cold startup clears state; original RTOS pools cannot allocate its reservation",
     "Reclaimed stock mixer lookup agrees for all 263 valid IDs and invalid boundaries; external literal/shared returns preserved",
@@ -18,7 +18,7 @@
     "Entire edit surface isolated; held-button releases cannot leak after exit",
     "Mastering entry pickup and forced mixer-return pickup in Jump and Pass modes; stock fader blink encoding",
     "System lookup matches all 141 IDs and invalid diagnostics; original return and external references preserved",
-    "All 11 stock SELECT toggle paths, four empty pages, signed dial boundaries and asynchronous LED isolation",
+    "All 11 stock SELECT toggle paths, four channel pages, signed dial boundaries and asynchronous LED isolation",
     "Per-channel page memory and switching; no parameter writes from page controls",
     "Channel-owned duplicate press, release and repeat isolation across deselection",
     "Held channel-page button blocks mastering entry until released",
@@ -31,6 +31,13 @@
     "Source-routing hold priority, original deselection and VALUE delivery",
     "Channel-owned held keys participate in the source-routing modifier guard",
     "Original linked and multiple selection retain their current channel",
+    "Send level end stops, all destination/effect choices, parameter versus held time, cross-strip holds and blocked modes",
+    "Numerical send mixing, pre/post mute/fader, pan isolation, destinations and wet-return placement",
+    "Compiled ARM send policy, all eight factory variations, live edits, destinations and reset/diagnostic guards",
+    "Original ARM uploader installs both kernels and only two guarded normal-graph branches",
+    "All MASTER programs unchanged; only three internal algorithms receive independent input operands",
+    "Original delay descriptors use disjoint slot entries and encoded address bands; payloads preserved",
+    "Stock SDRAM heap creation and allocation exclude reserved code through exhaustion",
     "Actual startup copies extension and preserves existing initialized data",
     "Patched initializer veneer, original registration, and live rate descriptors",
     "Original request dispatch reaches compiled UAC2 handler with correct replies",
@@ -109,5 +116,5 @@
     "Notes, controllers and SysEx survive RX unchanged",
     "Background queue overload leaves sync output running"
   ],
-  "patched_app_sha256": "dfacf026df61a49aae72bf31303ad89b2fe51661564fc0f0c53ba478d5e8c614"
+  "patched_app_sha256": "46eaa5814fd55eab4000793fef46c74b6ff6e34f77b833ecf6c1c64a6e262302"
 }

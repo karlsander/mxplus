@@ -1,5 +1,6 @@
-> Historical experiment, retired 2 November 2026. Current mainline restores
-> internal code and the stock heap. This document describes commit
+> Historical generator experiment, retired 2 November 2026. The current
+> [additional sends](FX_SENDS.md) reuse this placement with their own explicit
+> reservation and offline evidence. This document describes commit
 > `cb0124c49333ce0f54b091a0d7a60908fef26537`; referenced tools/reports belong to
 > that historical tree. See [the final DSP handoff](GENERATOR_RESEARCH.md) for
 > the later callback-bypass result and unresolved timing hypothesis.

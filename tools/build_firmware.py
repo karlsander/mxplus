@@ -69,7 +69,9 @@ def build(firmware: Path, out: Path) -> dict:
     env = dict(os.environ, ZIG_GLOBAL_CACHE_DIR=str(cache.resolve()),
                ZIG_LOCAL_CACHE_DIR=str(cache.resolve()))
     sources = [ROOT / "patches" / p for p in (
-        "channel_routing_audio.c", "channel_routing_ui.c", "channel_routing_ui.S", "usb_audio.c", "usb_playback.S", "mastering_ui.c", "mastering_ui.S", "channel_controls.c", "channel_controls.S")]
+        "channel_routing_audio.c", "channel_routing_ui.c", "channel_routing_ui.S", "usb_audio.c", "usb_playback.S", "mastering_ui.c", "mastering_ui.S", "channel_controls.c", "channel_controls.S", "extra_sends.c")]
+    from extra_sends_patch import header, integrate as integrate_sends, CODE_START, HEAP_START, STATE_START
+    (out / "extra_sends_data.h").write_text(header(original))
     from usb_midi_descriptors import mainline_configuration, validate_configuration
     config = mainline_configuration()
     (out / "uac2_configuration.h").write_text("#define MX1_UAC2_CONFIGURATION_BYTES {" +
@@ -85,6 +87,7 @@ def build(firmware: Path, out: Path) -> dict:
                 "mx1_route_adjust", "mx1_route_label", "mx1_route_recall", "mx1_uac2_initialize",
                 "mx1_master_ui_event", "mx1_master_tick", "mx1_master_redraw", "mx1_mixer_parameter_id",
                 "mx1_channel_selected", "mx1_channel_event", "mx1_channel_display", "mx1_channel_refresh", "mx1_channel_led", "mx1_system_parameter_id",
+                "mx1_sends_load", "mx1_sends_graph", "mx1_sends_flush", "mx1_sends_adjust", "mx1_sends_label",
                 "mx1_uac2_set_rate", "mx1_uac2_class_request", "mx1_uac2_start", *REQUIRED_SYMBOLS)
     for name in required:
         command += ["--force_undefined", name]
@@ -104,7 +107,7 @@ def build(firmware: Path, out: Path) -> dict:
             raise FormatError("Unresolved extension relocation")
         allocated = [s.name for s in ef.iter_sections()
                      if s["sh_flags"] & 2 and s["sh_size"]]
-        if allocated != [".usb_playback_patch", ".text", ".route_state", ".usb_data", ".usb_state", ".master_lookup", ".master_head", ".master_text", ".master_state", ".channel_lookup", ".channel_head", ".channel_text", ".channel_state"] or text["sh_type"] != "SHT_PROGBITS":
+        if allocated != [".usb_playback_patch", ".text", ".route_state", ".usb_data", ".usb_state", ".master_lookup", ".master_head", ".master_text", ".master_state", ".channel_lookup", ".channel_head", ".channel_text", ".channel_state", ".sends_text", ".sends_state"] or text["sh_type"] != "SHT_PROGBITS":
             raise FormatError("ELF contains allocated bytes outside the injected section")
         playback = ef.get_section_by_name(".usb_playback_patch")
         if (playback["sh_addr"] != 0x01009860 or playback["sh_size"] != 438 or
@@ -123,6 +126,14 @@ def build(firmware: Path, out: Path) -> dict:
             usb_state["sh_type"] != "SHT_NOBITS" or usb_state["sh_flags"] & 7 != 3):
             raise FormatError("Unexpected USB writable sections")
         descriptor_blob = usb_data.data()
+        sends = ef.get_section_by_name('.sends_text')
+        sends_state = ef.get_section_by_name('.sends_state')
+        if (sends['sh_addr'] != CODE_START or not 0 < sends['sh_size'] <= HEAP_START-CODE_START or
+            sends['sh_type'] != 'SHT_PROGBITS' or sends['sh_flags'] & 7 != 6 or
+            sends_state['sh_addr'] != STATE_START or sends_state['sh_size'] != 40 or
+            sends_state['sh_type'] != 'SHT_NOBITS' or sends_state['sh_flags'] & 7 != 3):
+            raise FormatError('Unexpected sends code/state reservation')
+        sends_blob = sends.data()
         table = ef.get_section_by_name(".symtab")
         playback_symbols = table.get_symbol_by_name("mx1_usb_playback_patch") or []
         if (len(playback_symbols) != 1 or playback_symbols[0]["st_value"] != 0x01009861 or
@@ -169,7 +180,7 @@ def build(firmware: Path, out: Path) -> dict:
             is_master = name.startswith('mx1_master_') or name == 'mx1_mixer_parameter_id'
             section_name = ef.get_section(symbol['st_shndx']).name if isinstance(symbol['st_shndx'], int) else ''
             is_channel = name.startswith('mx1_channel_') or name == 'mx1_system_parameter_id'
-            valid_location = (section_name in ('.channel_lookup', '.channel_head', '.channel_text') if is_channel else section_name in ('.master_lookup', '.master_head', '.master_text') if is_master else
+            valid_location = (section_name == '.sends_text' if name.startswith('mx1_sends_') else section_name in ('.channel_lookup', '.channel_head', '.channel_text', '.sends_text') if is_channel else section_name in ('.master_lookup', '.master_head', '.master_text') if is_master else
                               section_name == '.text' and ENTRY <= (symbol['st_value'] & ~1) < ENTRY + len(blob))
             if (symbol["st_info"]["type"] != "STT_FUNC" or
                 not isinstance(symbol["st_shndx"], int) or
@@ -199,16 +210,17 @@ def build(firmware: Path, out: Path) -> dict:
         raise FormatError("Compiler omitted required routing exports")
     modified, scatter = inject(original, blob)
     cut = scatter['insert_offset'] + len(blob)
-    modified[cut:cut] = descriptor_blob
+    modified[cut:cut] = descriptor_blob + sends_blob
     for update in scatter['startup_updates']:
         if update['offset'] == 0xe8: continue
         value = (0x60000000 + cut if update['offset'] == 0x114
-                 else update['after'] + len(descriptor_blob))
+                 else 0x60000000 + cut + len(descriptor_blob) if update['offset'] == 0x13c
+                 else update['after'] + len(descriptor_blob) + len(sends_blob))
         struct.pack_into('<I', modified, update['offset'], value)
         update['after'] = value
     scatter['code_length'] = len(blob)
-    scatter['insert_length'] += len(descriptor_blob)
-    blob += descriptor_blob
+    scatter['insert_length'] += len(descriptor_blob) + len(sends_blob)
+    blob += descriptor_blob + sends_blob
     changes: list[dict] = []
     # Original BSS ends exactly at the reserved state start. Extend only its
     # zero count, preserving every existing destination and allocator record.
@@ -218,12 +230,21 @@ def build(firmware: Path, out: Path) -> dict:
                "length": 0x71dc}:
         raise FormatError("Unexpected original writable SRAM BSS")
     exact_patch(modified, 0x108, struct.pack("<I", 0x71dc),
-                struct.pack("<I", 0x7458), changes,
-                "Zero 636-byte mainline writable state reservation after original writable SRAM BSS")
+                struct.pack("<I", 0x7480), changes,
+                "Zero 676-byte mainline writable state reservation after original writable SRAM BSS")
     exact_patch(modified, 0x10c, struct.pack('<I', 0x01020000), struct.pack('<I', 0x0101727c), changes,
                 "Repurpose zero-length startup copy for writable USB descriptor")
     exact_patch(modified, 0x110, bytes(4), struct.pack('<I', 436), changes,
                 "Initialize 436-byte USB descriptor storage after writable BSS clear")
+    exact_patch(modified, 0x134, struct.pack('<I', 0x40008000), struct.pack('<I', CODE_START), changes,
+                "Repurpose empty startup copy eight for sends code in reserved SDRAM")
+    exact_patch(modified, 0x138, bytes(4), struct.pack('<I', len(sends_blob)), changes,
+                "Initialize sends code before DSP graph construction")
+    exact_patch(modified, 0xd76c, struct.pack('<I', 0x606634d0), struct.pack('<I', HEAP_START), changes,
+                "Exclude sends code and alignment gap from stock SDRAM heap")
+    sends_evidence = integrate_sends(modified, original, symbols, changes, absolute_jump)
+    sends_evidence.update(code_start=CODE_START, code_bytes=len(sends_blob), heap_start=HEAP_START,
+                          state_start=STATE_START, state_bytes=40)
     exact_patch(modified, 0xd980, bytes.fromhex('10b500f01ff80d48'),
                 absolute_jump(0x6000d980, symbols['mx1_uac2_initialize']), changes, "USB-B UAC2 initializer")
     exact_patch(modified, 0xb4afc, struct.pack('<I', 0x600b499c),
@@ -278,20 +299,21 @@ def build(firmware: Path, out: Path) -> dict:
         "sources": {str(p.relative_to(ROOT)): sha256(p.read_bytes()) for p in [
             *sources, ROOT / "patches/channel_routing.h", ROOT / "patches/mainline.ld", ROOT / "patches/mastering_sites.json", ROOT / "patches/channel_control_sites.json",
             Path(__file__).resolve(), ROOT / "tools/routing_audio_patch.py",
+            ROOT / "tools/extra_sends_patch.py", ROOT / "tools/extra_sends_dsp.py",
             ROOT / "tools/firmware_patch.py", ROOT / "tools/uac2_design.py", ROOT / "tools/usb_midi_descriptors.py", ROOT / "tools/usb_playback_patch.py"]},
         "scatter_extension": scatter, "patches": changes,
-        "writable_state": {"start": 0x01017264, "size": 636, "end_exclusive": 0x010174e0, "startup_zero_length_offset": 0x108},
+        "writable_state": {"start": 0x01017264, "size": 676, "end_exclusive": 0x01017508, "startup_zero_length_offset": 0x108},
         "channel_controls": {"placement": "Reclaimed system lookup; no new heap or executable memory reservation",
             "sections": {name: {"runtime": 0x60000000+site['offset'], "capacity": site['size'],
                 "used": len(channel_sections[name])} for name, site in channel_sites.items()},
             "preserved_zero_return": "0x6001a654", "preserved_invalid_path": "0x6001a888",
-            "state_start": 0x010174d0, "state_size": 16, "pages": "Four empty per-channel pages; volatile only"},
+            "state_start": 0x010174d0, "state_size": 16, "pages": "Alternate send, internal send, parameter/time, reserved; volatile only"},
         "mastering_ui": {"placement": "Reclaimed original mixer lookup; no heap or additional code-memory reservation",
             "sections": {name: {"runtime": 0x60000000+site['offset'], "capacity": site['size'],
                 "used": len(master_sections[name])} for name, site in sites.items()},
             "preserved_literal": "0x6001de08", "preserved_shared_return": "0x6001e5ec",
             "state_start": 0x01017444, "state_size": 140},
-        "audio_routing": audio, "usb_playback": playback_evidence,
+        "extra_sends": sends_evidence, "audio_routing": audio, "usb_playback": playback_evidence,
         "usb_midi": {**validate_configuration(config),
             "original_descriptor_component": "app_main", "original_descriptor_offset": "0xb4a6a",
             "original_descriptor_runtime": "0x600b4a6a",

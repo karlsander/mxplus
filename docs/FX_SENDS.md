@@ -1,5 +1,7 @@
 # Additional channel sends
 
+[Effects and DSP findings](DSP_FINDINGS.md) · [Factory knob mappings](FX_MACRO_MAPPINGS.md)
+
 **Offline candidate only; no physical audio, DSP deadline or installation acceptance.**
 The sole mainline build implements an alternate external send and an independent
 internal effect send. Both follow the existing AUX pre/post setting. Their

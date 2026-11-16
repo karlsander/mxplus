@@ -1,3 +1,9 @@
+> Historical retirement report, scoped to 2 November 2026. References below to
+> the restored image, free bytes and removed SDRAM reservation describe that
+> stage. Current sends reuse an explicitly reserved SDRAM region without an ARM
+> sample renderer; see [current DSP findings](DSP_FINDINGS.md) and
+> [mainline layout](MAINLINE.md). The generator experiment remains retired.
+
 # Generator/DSP handoff — retired 2 November 2026
 
 ## Current decision

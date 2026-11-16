@@ -1,5 +1,7 @@
 # Internal performance FX engines and parameters
 
+[Effects and DSP findings](DSP_FINDINGS.md) · [All 48 factory macro mappings](FX_MACRO_MAPPINGS.md)
+
 The supported original main application enumerates **20 algorithm IDs: bypass
 plus 19 effect engines**. The panel variations are presets of these engines;
 Room, Hall and Reverb Mod, for example, use the same reverb algorithm.

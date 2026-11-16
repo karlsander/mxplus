@@ -17,6 +17,13 @@ USB-B MIDI class support is now an offline-tested experiment: the build advertis
 two USB-MIDI 1.0 ports alongside audio. It still needs testing with a real host.
 See [MIDI status and test procedure](docs/USB_MIDI.md).
 
+## Effects and DSP research
+
+The [effects and DSP findings](docs/DSP_FINDINGS.md) collect the internal engine
+and parameter inventory, all 48 factory knob mappings, mode/type values, effect
+slot and memory ownership, and the additional sends. Each report distinguishes
+original firmware evidence, implemented behavior and remaining hardware tests.
+
 ## Install
 
 Download the original Roland firmware and use the [web patcher](https://karlsander.github.io/mxplus/) to modify it. The patcher also explains how to install the resulting file.

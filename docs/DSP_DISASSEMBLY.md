@@ -1,3 +1,4 @@
+> [Current effects and DSP findings](DSP_FINDINGS.md).
 > Historical stock-disassembly investigation. The current [send implementation](FX_SENDS.md)
 > adds separate arithmetic, routing and verification evidence. Statements below
 > about unimplemented sends describe the earlier research stage.

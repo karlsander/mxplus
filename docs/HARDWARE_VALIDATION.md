@@ -129,8 +129,13 @@ Before a candidate reaches the mixer, establish:
 
 Do not combine the host-port and USB-B candidates for the first tests. Use the
 device-specific update procedure only after this preparation; this plan does
-not replace it. Keep the original filename/candidate identity unambiguous, and
-do not place raw-ROM or other competing image files on the update disk.
+not replace it. For this supported updater, place the candidate at the drive
+root as **`MX1_UPD.BIN` (no hyphen)**. Its original filename literal is in the
+updater component at decoded `0x59c4` / runtime `0x600059c4`; the hyphenated
+name in Roland's download instructions differs from this binary. Verify the
+copied bytes after remounting, safely eject, disconnect USB, and let the user
+press TAP. Do not place raw-ROM or other competing image files on the update
+disk. [Filename search evidence](../research/container.md).
 
 ## 5. Test mainline USB-B audio and MIDI in small steps
 

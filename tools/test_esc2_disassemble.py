@@ -57,5 +57,20 @@ class DecoderTests(unittest.TestCase):
         self.assertEqual(binding_tail(Packet(0, (0x0c03, 0x0fe1, 0xa001))), [])
 
 
+class ParameterRegistryTests(unittest.TestCase):
+    def test_dummy_record_does_not_hide_last_oscillator_controls(self):
+        from fx_sends_audit import (ROOT, ORIGINAL_SHA256, MAIN_SHA256, digest,
+                                   callback_registry, component_unpacked, COMPONENT_BY_NAME)
+        stock = (ROOT / 'inputs/MX1_UPD.original.bin').read_bytes()
+        self.assertEqual(digest(stock), ORIGINAL_SHA256)
+        blob = component_unpacked(stock, COMPONENT_BY_NAME['app_main'])
+        self.assertEqual(digest(blob), MAIN_SHA256)
+        records = callback_registry(blob)
+        self.assertNotIn(0x45a, records)
+        self.assertEqual(records[0x45b], (0x6002c01c, 0xb7118))
+        self.assertEqual(records[0x45c], (0x6002c058, 0xb7124))
+        self.assertEqual(sum(i in records for i in range(0x453, 0x45d)), 9)
+
+
 if __name__ == '__main__':
     unittest.main()

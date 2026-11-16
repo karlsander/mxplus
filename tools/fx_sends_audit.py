@@ -101,9 +101,15 @@ def callback_registry(blob):
     # The original registration records are {global ID, callback, secondary}.
     # Strings live in a separate, ID-indexed table at decoded 0x6f278.
     records = {}
-    for offset in range(0xb5594, 0xb710c, 12):
+    for offset in range(0xb5594, 0xb7130, 12):
         parameter, callback, secondary = struct.unpack_from('<III', blob, offset)
-        assert parameter < 0x700 and 0x60000000 < callback < 0x60060000
+        assert parameter < 0x700
+        if callback == 0:
+            # OSC DUMMY is a hole, not the end of the registry. Its delay
+            # effect level and noise level callbacks follow this record.
+            assert parameter == 0x45a and secondary == 0
+            continue
+        assert 0x60000000 < callback < 0x60060000
         assert parameter not in records
         records[parameter] = (callback & ~1, offset)
     return records
